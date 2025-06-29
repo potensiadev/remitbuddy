@@ -22,19 +22,7 @@ const useTranslation = (lang) => (key) => {
     const translation = translations[lang]?.[key] || key;
     return translation;
 };
-// 올바른 이미지 경로로 수정합니다. /public 폴더는 URL에서 생략됩니다.
-const COUNTRIES = [ 
-    { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" }, 
-    { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" }, 
-    { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" }, 
-    { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" }, 
-    { code: "TH", currency: "THB", name: "Thailand", flag: "/images/flags/th.png" }, 
-    { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/flags/uz.png" }, 
-    { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" }, 
-    { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" }, 
-    { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" }, 
-    { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' }, 
-];
+const COUNTRIES = [ { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/vn.png" }, { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/ph.png" }, { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/kh.png" }, { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/mm.png" }, { code: "TH", currency: "THB", name: "Thailand", flag: "/images/th.png" }, { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/uz.png" }, { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/id.png" }, { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/lk.png" }, { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/bd.png" }, { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/np.png' }, ];
 const MOCK_DATA = { "Vietnam": [ { provider: "Sentbe", base_rate: 18.5, fee: 2500, link: "https://www.sentbe.com/" }, { provider: "Hanpass", base_rate: 18.4, fee: 3000, link: "https://www.hanpass.com/" }, { provider: "Wirebarley", base_rate: 18.45, fee: 2700, link: "https://www.wirebarley.com/" }, { provider: "GME", base_rate: 18.2, fee: 2800, link: "https://www.gmeremit.com/" }, { provider: "E9Pay", base_rate: 18.3, fee: 2200, link: "https://www.e9pay.co.kr/" }, ], "Philippines": [ { provider: "Sentbe", base_rate: 45.2, fee: 3000, link: "https://www.sentbe.com/" } ], "Cambodia": [{ provider: "Sentbe", base_rate: 33.1, fee: 5000, link: "https://www.sentbe.com/" }], "Myanmar": [{ provider: "Hanpass", base_rate: 15.2, fee: 5000, link: "https://www.hanpass.com/" }], "Thailand": [{ provider: "Wirebarley", base_rate: 3.0, fee: 4000, link: "https://www.wirebarley.com/" }], "Uzbekistan": [{ provider: "GME", base_rate: 10.5, fee: 6000, link: "https://www.gmeremit.com/" }], "Indonesia": [{ provider: "Sentbe", base_rate: 130.0, fee: 3500, link: "https://www.sentbe.com/" }], "SriLanka": [{ provider: "E9Pay", base_rate: 2.5, fee: 5500, link: "https://www.e9pay.co.kr/" }], "Bangladesh": [{ provider: "Hanpass", base_rate: 1.0, fee: 6000, link: "https://www.hanpass.com/" }], "Nepal": [ { provider: "Sentbe", base_rate: 110.5, fee: 4000, link: "https://www.sentbe.com/" } ] };
 const mockApiCall = ({ receive_country, send_amount, mode }) => { return new Promise((resolve, reject) => { const delay = mode === 'fast' ? 800 : 1500; setTimeout(() => { const countryData = MOCK_DATA[receive_country]; if (!countryData) return reject(new Error("No providers for this country")); const getDynamicRate = (base) => base + (Math.random() - 0.5) * 0.1; const providers = mode === 'fast' ? countryData.slice(0, 2) : countryData.slice(2); const results = providers.map(p => { const exchange_rate = getDynamicRate(p.base_rate); const recipient_gets = parseFloat(send_amount); const send_krw = (recipient_gets / exchange_rate) + p.fee; return { provider: p.provider, exchange_rate, fee: p.fee, recipient_gets, send_krw, transfer_method: "Bank Deposit", link: p.link }; }); resolve({ country: receive_country, currency: COUNTRIES.find(c => c.name === receive_country)?.currency || 'USD', amount: parseInt(send_amount), results }); }, delay); }); };
 
@@ -49,6 +37,7 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
     useEffect(() => {
         const fetchQuotes = async () => {
             setLoadingState('fast');
+            setResults([]); // Reset results on new search
             const fastData = await mockApiCall({ ...queryParams, mode: 'fast' });
             setResults(fastData.results);
             
@@ -66,7 +55,24 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
     const skeletonCount = loadingState === 'fast' ? 5 : (loadingState === 'slow' ? 3 : 0);
     const SkeletonCard = () => ( <div className="w-full p-4 mb-3 bg-white border border-slate-200 rounded-xl shadow-sm animate-pulse"> <div className="flex justify-between items-center"><div className="h-6 bg-slate-300 rounded-md w-1/3"></div><div className="h-4 bg-slate-300 rounded-md w-1/4"></div></div> <div className="mt-4 h-8 bg-slate-300 rounded-md w-1/2"></div><div className="mt-2 h-4 bg-slate-300 rounded-md w-3/4"></div> </div> );
 
-    return ( <div className="w-full max-w-sm mx-auto mt-8"> <div className="bg-white/80 backdrop-blur-lg p-4 rounded-2xl shadow-lg mb-6 sticky top-4 z-10"> <h2 className="text-sm font-semibold text-slate-500">{t('real_time_summary')}</h2> <p className="text-xl font-bold text-slate-800 flex items-center"> {parseInt(queryParams.send_amount).toLocaleString()} {currency} <ArrowRightIcon className="inline-block mx-2 h-5 w-5 text-slate-400" /> {queryParams.receive_country} </p> {loadingState !== 'done' && <p className="text-xs text-indigo-500 mt-1 animate-pulse">{t(loadingState === 'fast' ? 'loading_fast' : 'loading_slow')}</p>} </div> <div className="space-y-3"> {results.map(provider => <ProviderCard key={provider.provider} providerData={provider} isBest={bestRateProvider && provider.provider === bestRateProvider.provider} currency={currency} t={t} />)} {Array(skeletonCount).fill(0).map((_, index) => <SkeletonCard key={index} />)} </div> <button onClick={onCompareAgain} className="mt-8 w-full bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition">{t('compare_again_button')}</button> </div> );
+    return ( 
+        <div className="w-full">
+            <div className="bg-white/80 backdrop-blur-lg p-4 rounded-2xl shadow-lg mb-6 sticky top-4 z-10"> 
+                <h2 className="text-sm font-semibold text-slate-500">{t('real_time_summary')}</h2> 
+                <p className="text-xl font-bold text-slate-800 flex items-center"> 
+                    {parseInt(queryParams.send_amount).toLocaleString()} {currency} 
+                    <ArrowRightIcon className="inline-block mx-2 h-5 w-5 text-slate-400" /> 
+                    {queryParams.receive_country} 
+                </p> 
+                {loadingState !== 'done' && <p className="text-xs text-indigo-500 mt-1 animate-pulse">{t(loadingState === 'fast' ? 'loading_fast' : 'loading_slow')}</p>} 
+            </div> 
+            <div className="space-y-3"> 
+                {results.map(provider => <ProviderCard key={provider.provider} providerData={provider} isBest={bestRateProvider && provider.provider === bestRateProvider.provider} currency={currency} t={t} />)} 
+                {Array(skeletonCount).fill(0).map((_, index) => <SkeletonCard key={index} />)} 
+            </div> 
+            <button onClick={onCompareAgain} className="mt-8 w-full bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition">{t('compare_again_button')}</button> 
+        </div> 
+    );
 }
 
 // --- Main Page Component ---
@@ -77,18 +83,10 @@ export default function MainPage() {
     const [showResults, setShowResults] = useState(false);
     const [queryParams, setQueryParams] = useState({});
     const resultsRef = useRef(null);
-
+    
     const [amount, setAmount] = useState("1000000");
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
-
-    useEffect(() => {
-        // You can re-enable browser language detection if you want
-        // const browserLang = typeof window !== 'undefined' ? navigator.language.split('-')[0] : 'en';
-        // if (['en', 'ko'].includes(browserLang)) {
-        //     setLang(browserLang);
-        // }
-    }, []);
 
     useEffect(() => {
         if(showResults && resultsRef.current) {
@@ -115,10 +113,10 @@ export default function MainPage() {
         setShowResults(false);
         window.scrollTo({ top: 0, behavior: 'smooth'});
     }
-
+    
     return (
-        <div className="bg-[#F5F7FA] min-h-screen font-sans flex flex-col items-start pt-8 px-4">
-             <div className="w-full max-w-sm mx-auto">
+        <div className="bg-[#F5F7FA] min-h-screen font-sans flex flex-col items-center pt-8 px-4">
+            <div className="w-full max-w-sm mx-auto">
                 <header className="w-full flex items-center mb-10 pl-2">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 20L19 12L5 4V20Z" fill="url(#paint0_linear_header_page)"/>
@@ -132,8 +130,10 @@ export default function MainPage() {
                     <span className="text-2xl font-extrabold text-[#1E293B] ml-2">SendHome</span>
                 </header>
     
+                {/* Main content area */}
                 <main className="w-full">
-                     <div className="w-full max-w-sm mx-auto">
+                    {/* Form Section */}
+                    <div className="w-full max-w-sm mx-auto">
                         <div className="bg-white rounded-[28px] shadow-2xl shadow-slate-200/60 p-6 sm:p-8 flex flex-col items-center">
                             <h1 className="text-center text-slate-800 text-3xl sm:text-4xl font-extrabold mb-8 leading-tight" dangerouslySetInnerHTML={{ __html: t('title') }} />
         
@@ -181,7 +181,8 @@ export default function MainPage() {
                         {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} />}
                     </div>
     
-                    <div ref={resultsRef} className="w-full transition-opacity duration-500" style={{ opacity: showResults ? 1 : 0, maxHeight: showResults ? '2000px' : '0' }}>
+                    {/* Results Section: Now appears below the form on all screen sizes */}
+                    <div ref={resultsRef} className="w-full transition-opacity duration-500" style={{ opacity: showResults ? 1 : 0, maxHeight: showResults ? '2000px' : '0', overflow: 'hidden' }}>
                         {showResults && <ComparisonResults queryParams={queryParams} t={t} onCompareAgain={handleCompareAgain} />}
                     </div>
                 </main>

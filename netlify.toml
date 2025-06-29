@@ -8,7 +8,7 @@
   command = "next build"
   
   # 빌드 결과물이 생성되는 디렉토리 (저장소 루트 기준)
-  publish = "frontend/.next"
+  publish = ".next"
 
 # 모든 요청을 Next.js가 처리하도록 하는 리디렉션 규칙
 [[redirects]]

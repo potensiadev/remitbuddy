@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true, // React의 Strict Mode 활성화(개발 시 권장)
-  swcMinify: true, // SWC 기반의 빠른 빌드 및 최적화 사용
-  // 필요에 따라 추가 옵션을 여기에 작성할 수 있습니다.
+  // 이 설정을 추가하여 정적 HTML로 결과물을 생성합니다.
+  output: 'export',
+
+  // next/image를 사용하지 않으므로 이 설정은 비활성화하거나 제거합니다.
+  // images: {
+  //   unoptimized: true,
+  // },
 };
 
 module.exports = nextConfig;

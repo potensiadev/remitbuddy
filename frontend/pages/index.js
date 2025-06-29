@@ -20,9 +20,9 @@ const translations = {
 };
 const useTranslation = (lang) => (key) => {
     const translation = translations[lang]?.[key] || key;
-    return translation.replace(/<br\/>/g, ' '); // Replace <br/> for non-HTML contexts if needed, but for dangerouslySetInnerHTML it's fine.
+    return translation;
 };
-const COUNTRIES = [ { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" }, { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" }, { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" }, { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" }, { code: "TH", currency: "THB", name: "Thailand", flag: "/images/flags/th.png" }, { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/flags/uz.png" }, { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" }, { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" }, { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" }, { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' }, ];
+const COUNTRIES = [ { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/vn.png" }, { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/ph.png" }, { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/kh.png" }, { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/mm.png" }, { code: "TH", currency: "THB", name: "Thailand", flag: "/images/th.png" }, { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/uz.png" }, { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/id.png" }, { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/lk.png" }, { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/bd.png" }, { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/np.png' }, ];
 const MOCK_DATA = { "Vietnam": [ { provider: "Sentbe", base_rate: 18.5, fee: 2500, link: "https://www.sentbe.com/" }, { provider: "Hanpass", base_rate: 18.4, fee: 3000, link: "https://www.hanpass.com/" }, { provider: "Wirebarley", base_rate: 18.45, fee: 2700, link: "https://www.wirebarley.com/" }, { provider: "GME", base_rate: 18.2, fee: 2800, link: "https://www.gmeremit.com/" }, { provider: "E9Pay", base_rate: 18.3, fee: 2200, link: "https://www.e9pay.co.kr/" }, ], "Philippines": [ { provider: "Sentbe", base_rate: 45.2, fee: 3000, link: "https://www.sentbe.com/" } ], "Cambodia": [{ provider: "Sentbe", base_rate: 33.1, fee: 5000, link: "https://www.sentbe.com/" }], "Myanmar": [{ provider: "Hanpass", base_rate: 15.2, fee: 5000, link: "https://www.hanpass.com/" }], "Thailand": [{ provider: "Wirebarley", base_rate: 3.0, fee: 4000, link: "https://www.wirebarley.com/" }], "Uzbekistan": [{ provider: "GME", base_rate: 10.5, fee: 6000, link: "https://www.gmeremit.com/" }], "Indonesia": [{ provider: "Sentbe", base_rate: 130.0, fee: 3500, link: "https://www.sentbe.com/" }], "SriLanka": [{ provider: "E9Pay", base_rate: 2.5, fee: 5500, link: "https://www.e9pay.co.kr/" }], "Bangladesh": [{ provider: "Hanpass", base_rate: 1.0, fee: 6000, link: "https://www.hanpass.com/" }], "Nepal": [ { provider: "Sentbe", base_rate: 110.5, fee: 4000, link: "https://www.sentbe.com/" } ] };
 const mockApiCall = ({ receive_country, send_amount, mode }) => { return new Promise((resolve, reject) => { const delay = mode === 'fast' ? 800 : 1500; setTimeout(() => { const countryData = MOCK_DATA[receive_country]; if (!countryData) return reject(new Error("No providers for this country")); const getDynamicRate = (base) => base + (Math.random() - 0.5) * 0.1; const providers = mode === 'fast' ? countryData.slice(0, 2) : countryData.slice(2); const results = providers.map(p => { const exchange_rate = getDynamicRate(p.base_rate); const recipient_gets = parseFloat(send_amount); const send_krw = (recipient_gets / exchange_rate) + p.fee; return { provider: p.provider, exchange_rate, fee: p.fee, recipient_gets, send_krw, transfer_method: "Bank Deposit", link: p.link }; }); resolve({ country: receive_country, currency: COUNTRIES.find(c => c.name === receive_country)?.currency || 'USD', amount: parseInt(send_amount), results }); }, delay); }); };
 
@@ -72,7 +72,7 @@ export default function MainPage() {
 
     useEffect(() => {
         // You can re-enable browser language detection if you want
-        // const browserLang = navigator.language.split('-')[0];
+        // const browserLang = typeof window !== 'undefined' ? navigator.language.split('-')[0] : 'en';
         // if (['en', 'ko'].includes(browserLang)) {
         //     setLang(browserLang);
         // }
@@ -140,7 +140,7 @@ export default function MainPage() {
                                         className="absolute right-2 top-2 flex items-center justify-between gap-2 px-3 h-12 bg-white border border-[#E2E8F0] rounded-lg hover:bg-slate-50 transition-colors"
                                         onClick={() => setShowDropdown(true)}
                                     >
-                                        <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={28} height={28} className="rounded-full" />
+                                        <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={28} height={28} className="rounded-full object-cover" />
                                         <span className="mx-1 font-semibold text-slate-800">{selectedCountry.currency}</span>
                                         <ChevronDownIcon className="h-4 w-4 text-slate-600" />
                                     </button>

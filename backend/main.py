@@ -1,3 +1,7 @@
+@app.get("/")
+def read_root():
+    return {"status": "ok", "message": "Welcome to Sendhome Backend API"}
+
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 from datetime import datetime

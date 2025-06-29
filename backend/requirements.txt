@@ -1,0 +1,12 @@
+# FastAPI 및 서버 실행
+fastapi
+uvicorn[standard]
+
+# 비동기 HTTP 요청 (스크래핑용)
+aiohttp
+
+# (선택사항이지만 강력히 추천) 캐싱 기능용
+cachetools
+
+# (선택사항이지만 강력히 추천) .env 파일 관리용
+python-dotenv

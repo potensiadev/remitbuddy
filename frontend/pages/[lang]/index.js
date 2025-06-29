@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 
-// --- 아이콘 컴포넌트 (React 속성에 맞게 수정됨) ---
+// --- Icon Components (React-compliant SVG properties) ---
 const ChevronDownIcon = ({ className }) => (
     <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -14,7 +14,7 @@ const ArrowRightIcon = ({ className }) => (
     </svg>
 );
 
-// --- 다국어 처리 (i18n) ---
+// --- i18n Translation Logic ---
 const translations = {
   en: {
     title: "How much should your<br/>family receive?",
@@ -60,7 +60,7 @@ const useTranslation = (lang) => (key, params = {}) => {
     return translation;
 };
 
-// --- 상수 데이터 ---
+// --- Static Data ---
 const COUNTRIES = [ 
     { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" }, 
     { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" }, 
@@ -74,7 +74,7 @@ const COUNTRIES = [
     { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' }, 
 ];
 
-// --- Mock API 데이터 및 로직 ---
+// --- Mock API Logic ---
 const MOCK_DATA = { "Vietnam": [ { provider: "Sentbe", base_rate: 18.5, fee: 2500, link: "https://www.sentbe.com/" }, { provider: "Hanpass", base_rate: 18.4, fee: 3000, link: "https://www.hanpass.com/" }, { provider: "Wirebarley", base_rate: 18.45, fee: 2700, link: "https://www.wirebarley.com/" }, { provider: "GME", base_rate: 18.2, fee: 2800, link: "https://www.gmeremit.com/" }, { provider: "E9Pay", base_rate: 18.3, fee: 2200, link: "https://www.e9pay.co.kr/" }, ], "Philippines": [ { provider: "Sentbe", base_rate: 45.2, fee: 3000, link: "https://www.sentbe.com/" } ], "Cambodia": [{ provider: "Sentbe", base_rate: 33.1, fee: 5000, link: "https://www.sentbe.com/" }], "Myanmar": [{ provider: "Hanpass", base_rate: 15.2, fee: 5000, link: "https://www.hanpass.com/" }], "Thailand": [{ provider: "Wirebarley", base_rate: 3.0, fee: 4000, link: "https://www.wirebarley.com/" }], "Uzbekistan": [{ provider: "GME", base_rate: 10.5, fee: 6000, link: "https://www.gmeremit.com/" }], "Indonesia": [{ provider: "Sentbe", base_rate: 130.0, fee: 3500, link: "https://www.sentbe.com/" }], "SriLanka": [{ provider: "E9Pay", base_rate: 2.5, fee: 5500, link: "https://www.e9pay.co.kr/" }], "Bangladesh": [{ provider: "Hanpass", base_rate: 1.0, fee: 6000, link: "https://www.hanpass.com/" }], "Nepal": [ { provider: "Sentbe", base_rate: 110.5, fee: 4000, link: "https://www.sentbe.com/" } ] };
 
 const mockApiCall = ({ receive_country, send_amount, mode }) => {
@@ -96,10 +96,9 @@ const mockApiCall = ({ receive_country, send_amount, mode }) => {
     });
 };
 
-// --- 컴포넌트 ---
+// --- Components ---
 const SkeletonCard = () => ( <div className="w-full p-4 mb-3 bg-white border border-slate-200 rounded-xl shadow-sm animate-pulse"> <div className="flex justify-between items-center"><div className="h-6 bg-slate-300 rounded-md w-1/3"></div><div className="h-4 bg-slate-300 rounded-md w-1/4"></div></div> <div className="mt-4 h-8 bg-slate-300 rounded-md w-1/2"></div><div className="mt-2 h-4 bg-slate-300 rounded-md w-3/4"></div> </div> );
 const ProviderCard = ({ providerData, isBest, currency, t }) => { const { provider, send_krw, exchange_rate, fee, link } = providerData; return ( <a href={link} target="_blank" rel="noopener noreferrer" className="block w-full p-4 mb-3 bg-white border rounded-xl shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" style={isBest ? { borderColor: '#10B981', boxShadow: '0 4px 14px 0 rgba(16, 185, 129, 0.2)' } : { borderColor: '#E2E8F0' }}> <div className="flex justify-between items-start"> <h3 className="text-xl font-bold text-slate-800">{provider}</h3> {isBest && <span className="text-xs font-semibold text-white bg-emerald-500 px-3 py-1 rounded-full">{t('best_rate_badge')}</span>} </div> <div className="mt-3"> <p className="text-sm text-slate-500">{t('total_needed')}</p> <p className="text-2xl font-extrabold text-indigo-600"> {Math.round(send_krw).toLocaleString('en-US')} <span className="ml-2 text-xl font-bold text-slate-700">KRW</span> </p> </div> <div className="mt-3 text-xs text-slate-500"> <span>1 KRW ≈ {exchange_rate.toFixed(4)} {currency}</span> <span className="mx-2">|</span> <span>{t('fee')}: {fee.toLocaleString()} KRW</span> </div> </a> );};
-
 const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t }) => ( <div className="fixed inset-0 z-40 bg-black bg-opacity-20 flex justify-center items-center" onClick={() => setShowDropdown(false)}> <div className="w-[263px] h-auto max-h-[80vh] bg-white rounded-[15px] shadow-2xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()} style={{ boxShadow: "0px 16px 40px rgba(0,0,0,0.09)" }}> <div className="p-4 border-b font-bold text-lg text-[#232B3A]">{t('select_country_title')}</div> <div className="flex-1 overflow-y-auto"> {COUNTRIES.map(c => ( <div key={c.code} className="flex items-center gap-3 px-4 py-4 cursor-pointer hover:bg-gray-50 text-lg" onClick={() => { setSelectedCountry(c); setShowDropdown(false); }}> <img src={c.flag} alt={`${c.name} flag`} width={28} height={28} className="rounded-full" /> <div> <div className="font-bold text-sm text-slate-800">{c.name}</div> <div className="text-gray-500 text-xs">{c.currency}</div> </div> </div> ))} </div> </div> </div> );
 
 function ComparisonResults({ queryParams, t, onCompareAgain }) {
@@ -160,12 +159,12 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
     );
 }
 
-// --- 메인 페이지 컴포넌트 ---
-export default function MainPage() {
+// --- Main Page Component ---
+export default function LangIndexPage({ lang }) {
+    const t = useTranslation(lang || 'en');
+    
     const [showResults, setShowResults] = useState(false);
     const [queryParams, setQueryParams] = useState({});
-    const [lang, setLang] = useState('en');
-    const t = useTranslation(lang);
     const resultsRef = useRef(null);
 
     const [amount, setAmount] = useState("1000000");
@@ -270,4 +269,26 @@ export default function MainPage() {
             </div>
         </div>
     );
+}
+
+// --- Next.js 데이터 호출 함수 ---
+export async function getStaticPaths() {
+    // '/en', '/ko' 경로를 미리 생성하도록 설정
+    const paths = ['en', 'ko'].map(lang => ({
+        params: { lang },
+    }));
+
+    return {
+        paths,
+        fallback: false, // 정의되지 않은 경로는 404 페이지 표시
+    };
+}
+
+export async function getStaticProps({ params }) {
+    // URL의 [lang] 파라미터를 페이지의 prop으로 전달
+    return {
+        props: {
+            lang: params.lang,
+        },
+    };
 }

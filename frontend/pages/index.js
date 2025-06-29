@@ -20,7 +20,7 @@ const translations = {
 };
 const useTranslation = (lang) => (key) => {
     const translation = translations[lang]?.[key] || key;
-    return translation;
+    return translation.replace(/<br\/>/g, ' '); // Replace <br/> for non-HTML contexts if needed, but for dangerouslySetInnerHTML it's fine.
 };
 const COUNTRIES = [ { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" }, { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" }, { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" }, { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" }, { code: "TH", currency: "THB", name: "Thailand", flag: "/images/flags/th.png" }, { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/flags/uz.png" }, { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" }, { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" }, { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" }, { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' }, ];
 const MOCK_DATA = { "Vietnam": [ { provider: "Sentbe", base_rate: 18.5, fee: 2500, link: "https://www.sentbe.com/" }, { provider: "Hanpass", base_rate: 18.4, fee: 3000, link: "https://www.hanpass.com/" }, { provider: "Wirebarley", base_rate: 18.45, fee: 2700, link: "https://www.wirebarley.com/" }, { provider: "GME", base_rate: 18.2, fee: 2800, link: "https://www.gmeremit.com/" }, { provider: "E9Pay", base_rate: 18.3, fee: 2200, link: "https://www.e9pay.co.kr/" }, ], "Philippines": [ { provider: "Sentbe", base_rate: 45.2, fee: 3000, link: "https://www.sentbe.com/" } ], "Cambodia": [{ provider: "Sentbe", base_rate: 33.1, fee: 5000, link: "https://www.sentbe.com/" }], "Myanmar": [{ provider: "Hanpass", base_rate: 15.2, fee: 5000, link: "https://www.hanpass.com/" }], "Thailand": [{ provider: "Wirebarley", base_rate: 3.0, fee: 4000, link: "https://www.wirebarley.com/" }], "Uzbekistan": [{ provider: "GME", base_rate: 10.5, fee: 6000, link: "https://www.gmeremit.com/" }], "Indonesia": [{ provider: "Sentbe", base_rate: 130.0, fee: 3500, link: "https://www.sentbe.com/" }], "SriLanka": [{ provider: "E9Pay", base_rate: 2.5, fee: 5500, link: "https://www.e9pay.co.kr/" }], "Bangladesh": [{ provider: "Hanpass", base_rate: 1.0, fee: 6000, link: "https://www.hanpass.com/" }], "Nepal": [ { provider: "Sentbe", base_rate: 110.5, fee: 4000, link: "https://www.sentbe.com/" } ] };
@@ -71,14 +71,11 @@ export default function MainPage() {
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
 
     useEffect(() => {
-        // Switch language for demo purposes by pressing 'l' key
-        const langSwitcher = (e) => {
-            if (e.key === 'l') {
-                setLang(prev => prev === 'en' ? 'ko' : 'en');
-            }
-        }
-        window.addEventListener('keydown', langSwitcher);
-        return () => window.removeEventListener('keydown', langSwitcher);
+        // You can re-enable browser language detection if you want
+        // const browserLang = navigator.language.split('-')[0];
+        // if (['en', 'ko'].includes(browserLang)) {
+        //     setLang(browserLang);
+        // }
     }, []);
 
     useEffect(() => {

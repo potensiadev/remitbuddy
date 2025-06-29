@@ -10,4 +10,4 @@
 
   # 빌드 결과물이 생성되는 디렉토리입니다. (base 디렉토리 기준)
   # .next 폴더는 frontend 안에 있으므로, 이렇게만 적는 것이 정확합니다.
-  publish = ".next"
+  publish = ".next"git

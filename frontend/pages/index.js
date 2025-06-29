@@ -140,7 +140,7 @@ export default function MainPage() {
                                         className="absolute right-2 top-2 flex items-center justify-between gap-2 px-3 h-12 bg-white border border-[#E2E8F0] rounded-lg hover:bg-slate-50 transition-colors"
                                         onClick={() => setShowDropdown(true)}
                                     >
-                                        <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={28} height={28} className="rounded-full object-cover" />
+                                        <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={28} height={28} className="rounded-full" />
                                         <span className="mx-1 font-semibold text-slate-800">{selectedCountry.currency}</span>
                                         <ChevronDownIcon className="h-4 w-4 text-slate-600" />
                                     </button>

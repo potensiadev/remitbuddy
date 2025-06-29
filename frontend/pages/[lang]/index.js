@@ -14,14 +14,6 @@ const ArrowRightIcon = ({ className }) => (
     </svg>
 );
 
-const CurrencyIconPlaceholder = () => (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="14" cy="14" r="14" fill="#EF4444"/>
-        <path d="M14.7551 16.2949C14.3051 16.5949 13.7851 16.7449 13.1951 16.7449C12.3351 16.7449 11.6251 16.5199 11.0651 16.0699C10.5051 15.6199 10.2251 14.9949 10.2251 14.1949C10.2251 13.3549 10.5051 12.6949 11.0651 12.2149C11.6251 11.7349 12.3251 11.4949 13.1651 11.4949C13.7751 11.4949 14.2951 11.6349 14.7251 11.9149V10.2349C14.2351 10.0249 13.7151 9.91992 13.1651 9.91992C12.0051 9.91992 11.0551 10.2349 10.3151 10.8649C9.5751 11.4949 9.20508 12.3549 9.20508 13.4449V14.5449C9.20508 15.6549 9.58508 16.5449 10.3451 17.2149C11.1051 17.8849 12.0551 18.2199 13.1951 18.2199C13.7151 18.2199 14.2351 18.1099 14.7551 17.8899V16.2949Z" fill="white"/>
-    </svg>
-);
-
-
 // --- 다국어 처리 (i18n) ---
 const translations = {
   en: {
@@ -68,9 +60,22 @@ const useTranslation = (lang) => (key, params = {}) => {
     return translation;
 };
 
+// --- 상수 데이터 ---
+const COUNTRIES = [ 
+    { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" }, 
+    { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" }, 
+    { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" }, 
+    { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" }, 
+    { code: "TH", currency: "THB", name: "Thailand", flag: "/images/flags/th.png" }, 
+    { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/flags/uz.png" }, 
+    { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" }, 
+    { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" }, 
+    { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" }, 
+    { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' }, 
+];
+
 // --- Mock API 데이터 및 로직 ---
 const MOCK_DATA = { "Vietnam": [ { provider: "Sentbe", base_rate: 18.5, fee: 2500, link: "https://www.sentbe.com/" }, { provider: "Hanpass", base_rate: 18.4, fee: 3000, link: "https://www.hanpass.com/" }, { provider: "Wirebarley", base_rate: 18.45, fee: 2700, link: "https://www.wirebarley.com/" }, { provider: "GME", base_rate: 18.2, fee: 2800, link: "https://www.gmeremit.com/" }, { provider: "E9Pay", base_rate: 18.3, fee: 2200, link: "https://www.e9pay.co.kr/" }, ], "Philippines": [ { provider: "Sentbe", base_rate: 45.2, fee: 3000, link: "https://www.sentbe.com/" } ], "Cambodia": [{ provider: "Sentbe", base_rate: 33.1, fee: 5000, link: "https://www.sentbe.com/" }], "Myanmar": [{ provider: "Hanpass", base_rate: 15.2, fee: 5000, link: "https://www.hanpass.com/" }], "Thailand": [{ provider: "Wirebarley", base_rate: 3.0, fee: 4000, link: "https://www.wirebarley.com/" }], "Uzbekistan": [{ provider: "GME", base_rate: 10.5, fee: 6000, link: "https://www.gmeremit.com/" }], "Indonesia": [{ provider: "Sentbe", base_rate: 130.0, fee: 3500, link: "https://www.sentbe.com/" }], "SriLanka": [{ provider: "E9Pay", base_rate: 2.5, fee: 5500, link: "https://www.e9pay.co.kr/" }], "Bangladesh": [{ provider: "Hanpass", base_rate: 1.0, fee: 6000, link: "https://www.hanpass.com/" }], "Nepal": [ { provider: "Sentbe", base_rate: 110.5, fee: 4000, link: "https://www.sentbe.com/" } ] };
-const COUNTRIES = [ { code: "VN", currency: "VND", name: "Vietnam", flag: "🇻🇳" }, { code: "PH", currency: "PHP", name: "Philippines", flag: "🇵🇭" }, { code: "KH", currency: "KHR", name: "Cambodia", flag: "🇰🇭" }, { code: "MM", currency: "MMK", name: "Myanmar", flag: "🇲🇲" }, { code: "TH", currency: "THB", name: "Thailand", flag: "🇹🇭" }, { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "🇺🇿" }, { code: "ID", currency: "IDR", name: "Indonesia", flag: "🇮🇩" }, { code: "LK", currency: "LKR", name: "SriLanka", flag: "🇱🇰" }, { code: "BD", currency: "BDT", name: "Bangladesh", flag: "🇧🇩" }, { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '🇳🇵' }, ];
 
 const mockApiCall = ({ receive_country, send_amount, mode }) => {
     return new Promise((resolve, reject) => {
@@ -95,7 +100,7 @@ const mockApiCall = ({ receive_country, send_amount, mode }) => {
 const SkeletonCard = () => ( <div className="w-full p-4 mb-3 bg-white border border-slate-200 rounded-xl shadow-sm animate-pulse"> <div className="flex justify-between items-center"><div className="h-6 bg-slate-300 rounded-md w-1/3"></div><div className="h-4 bg-slate-300 rounded-md w-1/4"></div></div> <div className="mt-4 h-8 bg-slate-300 rounded-md w-1/2"></div><div className="mt-2 h-4 bg-slate-300 rounded-md w-3/4"></div> </div> );
 const ProviderCard = ({ providerData, isBest, currency, t }) => { const { provider, send_krw, exchange_rate, fee, link } = providerData; return ( <a href={link} target="_blank" rel="noopener noreferrer" className="block w-full p-4 mb-3 bg-white border rounded-xl shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" style={isBest ? { borderColor: '#10B981', boxShadow: '0 4px 14px 0 rgba(16, 185, 129, 0.2)' } : { borderColor: '#E2E8F0' }}> <div className="flex justify-between items-start"> <h3 className="text-xl font-bold text-slate-800">{provider}</h3> {isBest && <span className="text-xs font-semibold text-white bg-emerald-500 px-3 py-1 rounded-full">{t('best_rate_badge')}</span>} </div> <div className="mt-3"> <p className="text-sm text-slate-500">{t('total_needed')}</p> <p className="text-2xl font-extrabold text-indigo-600"> {Math.round(send_krw).toLocaleString('en-US')} <span className="ml-2 text-xl font-bold text-slate-700">KRW</span> </p> </div> <div className="mt-3 text-xs text-slate-500"> <span>1 KRW ≈ {exchange_rate.toFixed(4)} {currency}</span> <span className="mx-2">|</span> <span>{t('fee')}: {fee.toLocaleString()} KRW</span> </div> </a> );};
 
-const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t }) => ( <div className="fixed inset-0 z-40 bg-black bg-opacity-20 flex justify-center items-center" onClick={() => setShowDropdown(false)}> <div className="w-[263px] h-auto max-h-[80vh] bg-white rounded-[15px] shadow-2xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()} style={{ boxShadow: "0px 16px 40px rgba(0,0,0,0.09)" }}> <div className="p-4 border-b font-bold text-lg text-[#232B3A]">{t('select_country_title')}</div> <div className="flex-1 overflow-y-auto"> {COUNTRIES.map(c => ( <div key={c.code} className="flex items-center gap-3 px-4 py-4 cursor-pointer hover:bg-gray-50 text-lg" onClick={() => { setSelectedCountry(c); setShowDropdown(false); }}> <span className="text-2xl">{c.flag}</span> <div> <div className="font-bold text-sm text-slate-800">{c.name}</div> <div className="text-gray-500 text-xs">{c.currency}</div> </div> </div> ))} </div> </div> </div> );
+const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t }) => ( <div className="fixed inset-0 z-40 bg-black bg-opacity-20 flex justify-center items-center" onClick={() => setShowDropdown(false)}> <div className="w-[263px] h-auto max-h-[80vh] bg-white rounded-[15px] shadow-2xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()} style={{ boxShadow: "0px 16px 40px rgba(0,0,0,0.09)" }}> <div className="p-4 border-b font-bold text-lg text-[#232B3A]">{t('select_country_title')}</div> <div className="flex-1 overflow-y-auto"> {COUNTRIES.map(c => ( <div key={c.code} className="flex items-center gap-3 px-4 py-4 cursor-pointer hover:bg-gray-50 text-lg" onClick={() => { setSelectedCountry(c); setShowDropdown(false); }}> <img src={c.flag} alt={`${c.name} flag`} width={28} height={28} className="rounded-full" /> <div> <div className="font-bold text-sm text-slate-800">{c.name}</div> <div className="text-gray-500 text-xs">{c.currency}</div> </div> </div> ))} </div> </div> </div> );
 
 function ComparisonResults({ queryParams, t, onCompareAgain }) {
     const [results, setResults] = useState([]);
@@ -159,7 +164,6 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
 export default function MainPage() {
     const [showResults, setShowResults] = useState(false);
     const [queryParams, setQueryParams] = useState({});
-    // 기본 언어를 'en'으로 설정
     const [lang, setLang] = useState('en');
     const t = useTranslation(lang);
     const resultsRef = useRef(null);
@@ -167,16 +171,6 @@ export default function MainPage() {
     const [amount, setAmount] = useState("1000000");
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
-
-    // 브라우저 언어 감지 로직 제거
-    // useEffect(() => {
-    //     if (typeof window !== "undefined") {
-    //         const browserLang = (navigator.language || navigator.userLanguage).split('-')[0];
-    //         if (['en', 'ko'].includes(browserLang)) {
-    //             setLang(browserLang);
-    //         }
-    //     }
-    // }, [])
 
     useEffect(() => {
         if(showResults && resultsRef.current) {
@@ -240,7 +234,7 @@ export default function MainPage() {
                                         className="absolute right-2 top-2 flex items-center justify-between gap-2 px-3 h-12 bg-white border border-[#E2E8F0] rounded-lg hover:bg-slate-50 transition-colors"
                                         onClick={() => setShowDropdown(true)}
                                     >
-                                        <CurrencyIconPlaceholder />
+                                        <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={28} height={28} className="rounded-full" />
                                         <span className="mx-1 font-semibold text-slate-800">{selectedCountry.currency}</span>
                                         <ChevronDownIcon className="h-4 w-4 text-slate-600" />
                                     </button>

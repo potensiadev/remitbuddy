@@ -1,0 +1,13 @@
+# /sendhome/netlify.toml
+
+# 빌드 관련 기본 설정
+[build]
+  # 이 설정은 'frontend' 폴더 안에서 모든 빌드 명령이 실행되도록 합니다.
+  base = "frontend"
+
+  # 'frontend' 폴더 안에서 실행될 빌드 명령어입니다.
+  command = "next build"
+
+  # 빌드 결과물이 생성되는 디렉토리입니다. (base 디렉토리 기준)
+  # .next 폴더는 frontend 안에 있으므로, 이렇게만 적는 것이 정확합니다.
+  publish = ".next"

@@ -21,18 +21,7 @@ const translations = {
 const useTranslation = (lang) => (key) => {
     return translations[lang]?.[key] || key;
 };
-const COUNTRIES = [ 
-    { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" }, 
-    { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" }, 
-    { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" }, 
-    { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" }, 
-    { code: "TH", currency: "THB", name: "Thailand", flag: "/images/flags/th.png" }, 
-    { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/flags/uz.png" }, 
-    { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" }, 
-    { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" }, 
-    { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" }, 
-    { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' }, 
-];
+const COUNTRIES = [ { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" }, { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" }, { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" }, { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" }, { code: "TH", currency: "THB", name: "Thailand", flag: "/images/flags/th.png" }, { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/flags/uz.png" }, { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" }, { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" }, { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" }, { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' }, ];
 const MOCK_DATA = { "Vietnam": [ { provider: "Sentbe", base_rate: 18.5, fee: 2500, link: "https://www.sentbe.com/" }, { provider: "Hanpass", base_rate: 18.4, fee: 3000, link: "https://www.hanpass.com/" }, { provider: "Wirebarley", base_rate: 18.45, fee: 2700, link: "https://www.wirebarley.com/" }, { provider: "GME", base_rate: 18.2, fee: 2800, link: "https://www.gmeremit.com/" }, { provider: "E9Pay", base_rate: 18.3, fee: 2200, link: "https://www.e9pay.co.kr/" }, ], "Philippines": [ { provider: "Sentbe", base_rate: 45.2, fee: 3000, link: "https://www.sentbe.com/" } ], "Cambodia": [{ provider: "Sentbe", base_rate: 33.1, fee: 5000, link: "https://www.sentbe.com/" }], "Myanmar": [{ provider: "Hanpass", base_rate: 15.2, fee: 5000, link: "https://www.hanpass.com/" }], "Thailand": [{ provider: "Wirebarley", base_rate: 3.0, fee: 4000, link: "https://www.wirebarley.com/" }], "Uzbekistan": [{ provider: "GME", base_rate: 10.5, fee: 6000, link: "https://www.gmeremit.com/" }], "Indonesia": [{ provider: "Sentbe", base_rate: 130.0, fee: 3500, link: "https://www.sentbe.com/" }], "SriLanka": [{ provider: "E9Pay", base_rate: 2.5, fee: 5500, link: "https://www.e9pay.co.kr/" }], "Bangladesh": [{ provider: "Hanpass", base_rate: 1.0, fee: 6000, link: "https://www.hanpass.com/" }], "Nepal": [ { provider: "Sentbe", base_rate: 110.5, fee: 4000, link: "https://www.sentbe.com/" } ] };
 const mockApiCall = ({ receive_country, send_amount, mode }) => { return new Promise((resolve, reject) => { const delay = mode === 'fast' ? 800 : 1500; setTimeout(() => { const countryData = MOCK_DATA[receive_country]; if (!countryData) return reject(new Error("No providers for this country")); const getDynamicRate = (base) => base + (Math.random() - 0.5) * 0.1; const providers = mode === 'fast' ? countryData.slice(0, 2) : countryData.slice(2); const results = providers.map(p => { const exchange_rate = getDynamicRate(p.base_rate); const recipient_gets = parseFloat(send_amount); const send_krw = (recipient_gets / exchange_rate) + p.fee; return { provider: p.provider, exchange_rate, fee: p.fee, recipient_gets, send_krw, transfer_method: "Bank Deposit", link: p.link }; }); resolve({ country: receive_country, currency: COUNTRIES.find(c => c.name === receive_country)?.currency || 'USD', amount: parseInt(send_amount), results }); }, delay); }); };
 
@@ -201,25 +190,26 @@ export default function MainPage() {
                                   {t('subtitle')}
                                 </div>
 
-                                <div className="relative mb-4">
-                                    <div className="flex justify-center items-center h-10">
-                                      <div className="relative inline-block bg-[#FEF3C7] rounded-full py-1.5 px-4">
-                                          <span className="flex items-center text-slate-600 font-semibold text-sm">
-                                              <span>{selectedCountry.currency}</span>
-                                              <ArrowRightIcon className="h-4 w-4 mx-1.5 text-slate-500" />
-                                              <span>KRW</span>
-                                          </span>
-                                          <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-[#FEF3C7]"></div>
-                                      </div>
+                                <div className="relative pt-10">
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-auto whitespace-nowrap">
+                                        <div className="relative bg-[#FEF3C7] rounded-full py-1.5 px-4">
+                                            <span className="flex items-center text-slate-600 font-semibold text-sm">
+                                                <span>{selectedCountry.currency}</span>
+                                                <ArrowRightIcon className="h-4 w-4 mx-1.5 text-slate-500" />
+                                                <span>KRW</span>
+                                            </span>
+                                            {/* Speech bubble arrow */}
+                                            <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-[#FEF3C7]"></div>
+                                        </div>
                                     </div>
-                                </div>
                                 
-                                <button
-                                    type="submit"
-                                    className="w-full h-14 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-600 text-white font-bold text-lg shadow-lg shadow-indigo-500/30 transition-all duration-200 hover:scale-105 hover:shadow-xl"
-                                >
-                                    {t('compare_button')}
-                                </button>
+                                    <button
+                                        type="submit"
+                                        className="w-full h-14 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-600 text-white font-bold text-lg shadow-lg shadow-indigo-500/30 transition-all duration-200 hover:scale-105 hover:shadow-xl"
+                                    >
+                                        {t('compare_button')}
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>

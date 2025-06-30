@@ -105,7 +105,6 @@ export default function MainPage() {
     const formRef = useRef(null);
 
     useEffect(() => {
-        // Close dropdown if clicked outside
         function handleClickOutside(event) {
             if (formRef.current && !formRef.current.contains(event.target)) {
                 setShowDropdown(false);
@@ -159,15 +158,14 @@ export default function MainPage() {
                 </header>
     
                 <main className="w-full">
-                     {/* Form Section */}
                     <div className="w-full">
                         <div className="bg-white rounded-[28px] shadow-2xl shadow-slate-200/60 p-6 sm:p-8 flex flex-col items-center">
                             <h1 className="text-center text-slate-800 text-3xl sm:text-4xl font-extrabold mb-8 leading-tight" dangerouslySetInnerHTML={{ __html: t('title') }} />
         
-                            <form onSubmit={handleSubmit} className="w-full" ref={formRef}>
+                            <form onSubmit={handleSubmit} className="w-full">
                                 <label className="w-full text-left text-sm font-semibold text-slate-800 mb-2 block">{t('amount_to_receive')}</label>
                                 
-                                <div className="relative w-full mb-5">
+                                <div className="relative w-full mb-5" ref={formRef}>
                                     <input
                                         type="text"
                                         value={parseInt(amount || "0").toLocaleString()}
@@ -192,11 +190,17 @@ export default function MainPage() {
                                   {t('subtitle')}
                                 </div>
 
-                                <div className="flex justify-center items-center mb-8">
-                                    <div className="flex items-center text-slate-600 font-semibold bg-[#FEF3C7] rounded-full py-1.5 px-4 text-sm">
-                                        <span>{selectedCountry.currency}</span>
-                                        <ArrowRightIcon className="h-4 w-4 mx-1.5 text-slate-500" />
-                                        <span>KRW</span>
+                                <div className="relative mb-8">
+                                    <div className="flex justify-center">
+                                        <div className="relative inline-block bg-[#FEF3C7] rounded-full py-1.5 px-4">
+                                            <span className="flex items-center text-slate-600 font-semibold text-sm">
+                                                <span>{selectedCountry.currency}</span>
+                                                <ArrowRightIcon className="h-4 w-4 mx-1.5 text-slate-500" />
+                                                <span>KRW</span>
+                                            </span>
+                                            {/* Speech bubble arrow */}
+                                            <div className="absolute left-1/2 -translate-x-1/2 bottom-[-8px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-[#FEF3C7]"></div>
+                                        </div>
                                     </div>
                                 </div>
                                 

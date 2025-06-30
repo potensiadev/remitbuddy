@@ -200,10 +200,9 @@ export default function MainPage() {
                                             </span>
                                             {/* Speech bubble arrow */}
                                             <div className="absolute left-1/2 -translate-x-1/2 bottom-[-8px] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-[#FEF3C7]"></div>
+                                            </div>
                                         </div>
-                                    </div>
                                 </div>
-                                
                                 <button
                                     type="submit"
                                     className="w-full h-14 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-600 text-white font-bold text-lg shadow-lg shadow-indigo-500/30 transition-all duration-200 hover:scale-105 hover:shadow-xl"

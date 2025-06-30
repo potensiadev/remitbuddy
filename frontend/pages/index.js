@@ -21,7 +21,7 @@ const translations = {
 const useTranslation = (lang) => (key) => {
     return translations[lang]?.[key] || key;
 };
-const COUNTRIES = [ { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" }, { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" }, { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" }, { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" }, { code: "TH", currency: "THB", name: "Thailand", flag: "/images/flags/th.png" }, { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/flags/uz.png" }, { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" }, { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" }, { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" }, { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' }, ];
+const COUNTRIES = [ { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/vn.png" }, { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/ph.png" }, { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/kh.png" }, { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/mm.png" }, { code: "TH", currency: "THB", name: "Thailand", flag: "/images/th.png" }, { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/uz.png" }, { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/id.png" }, { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/lk.png" }, { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/bd.png" }, { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/np.png' }, ];
 const MOCK_DATA = { "Vietnam": [ { provider: "Sentbe", base_rate: 18.5, fee: 2500, link: "https://www.sentbe.com/" }, { provider: "Hanpass", base_rate: 18.4, fee: 3000, link: "https://www.hanpass.com/" }, { provider: "Wirebarley", base_rate: 18.45, fee: 2700, link: "https://www.wirebarley.com/" }, { provider: "GME", base_rate: 18.2, fee: 2800, link: "https://www.gmeremit.com/" }, { provider: "E9Pay", base_rate: 18.3, fee: 2200, link: "https://www.e9pay.co.kr/" }, ], "Philippines": [ { provider: "Sentbe", base_rate: 45.2, fee: 3000, link: "https://www.sentbe.com/" } ], "Cambodia": [{ provider: "Sentbe", base_rate: 33.1, fee: 5000, link: "https://www.sentbe.com/" }], "Myanmar": [{ provider: "Hanpass", base_rate: 15.2, fee: 5000, link: "https://www.hanpass.com/" }], "Thailand": [{ provider: "Wirebarley", base_rate: 3.0, fee: 4000, link: "https://www.wirebarley.com/" }], "Uzbekistan": [{ provider: "GME", base_rate: 10.5, fee: 6000, link: "https://www.gmeremit.com/" }], "Indonesia": [{ provider: "Sentbe", base_rate: 130.0, fee: 3500, link: "https://www.sentbe.com/" }], "SriLanka": [{ provider: "E9Pay", base_rate: 2.5, fee: 5500, link: "https://www.e9pay.co.kr/" }], "Bangladesh": [{ provider: "Hanpass", base_rate: 1.0, fee: 6000, link: "https://www.hanpass.com/" }], "Nepal": [ { provider: "Sentbe", base_rate: 110.5, fee: 4000, link: "https://www.sentbe.com/" } ] };
 const mockApiCall = ({ receive_country, send_amount, mode }) => { return new Promise((resolve, reject) => { const delay = mode === 'fast' ? 800 : 1500; setTimeout(() => { const countryData = MOCK_DATA[receive_country]; if (!countryData) return reject(new Error("No providers for this country")); const getDynamicRate = (base) => base + (Math.random() - 0.5) * 0.1; const providers = mode === 'fast' ? countryData.slice(0, 2) : countryData.slice(2); const results = providers.map(p => { const exchange_rate = getDynamicRate(p.base_rate); const recipient_gets = parseFloat(send_amount); const send_krw = (recipient_gets / exchange_rate) + p.fee; return { provider: p.provider, exchange_rate, fee: p.fee, recipient_gets, send_krw, transfer_method: "Bank Deposit", link: p.link }; }); resolve({ country: receive_country, currency: COUNTRIES.find(c => c.name === receive_country)?.currency || 'USD', amount: parseInt(send_amount), results }); }, delay); }); };
 
@@ -42,6 +42,7 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t }) => (
         </div>
     </div>
 );
+
 function ComparisonResults({ queryParams, t, onCompareAgain }) {
     const [results, setResults] = useState([]);
     const [loadingState, setLoadingState] = useState('fast'); 
@@ -101,6 +102,19 @@ export default function MainPage() {
     const [amount, setAmount] = useState("1000000");
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+    const formRef = useRef(null);
+
+    useEffect(() => {
+        // Close dropdown if clicked outside
+        function handleClickOutside(event) {
+            if (formRef.current && !formRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [formRef]);
+
 
     useEffect(() => {
         if(showResults && resultsRef.current) {
@@ -150,7 +164,7 @@ export default function MainPage() {
                         <div className="bg-white rounded-[28px] shadow-2xl shadow-slate-200/60 p-6 sm:p-8 flex flex-col items-center">
                             <h1 className="text-center text-slate-800 text-3xl sm:text-4xl font-extrabold mb-8 leading-tight" dangerouslySetInnerHTML={{ __html: t('title') }} />
         
-                            <form onSubmit={handleSubmit} className="w-full">
+                            <form onSubmit={handleSubmit} className="w-full" ref={formRef}>
                                 <label className="w-full text-left text-sm font-semibold text-slate-800 mb-2 block">{t('amount_to_receive')}</label>
                                 
                                 <div className="relative w-full mb-5">
@@ -160,15 +174,18 @@ export default function MainPage() {
                                         onChange={handleAmountChange}
                                         className="w-full h-16 rounded-xl bg-[#F8FAFC] border-2 border-[#E2E8F0] px-4 text-2xl font-bold focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none pr-32"
                                     />
-                                    <button
-                                        type="button"
-                                        className="absolute right-2 top-2 flex items-center justify-between gap-2 px-3 h-12 bg-white border border-[#E2E8F0] rounded-lg hover:bg-slate-50 transition-colors"
-                                        onClick={() => setShowDropdown(true)}
-                                    >
-                                        <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={28} height={28} className="rounded-full" />
-                                        <span className="mx-1 font-semibold text-slate-800">{selectedCountry.currency}</span>
-                                        <ChevronDownIcon className="h-4 w-4 text-slate-600" />
-                                    </button>
+                                    <div className="absolute right-2 top-2">
+                                        <button
+                                            type="button"
+                                            className="flex items-center justify-between gap-2 px-3 h-12 bg-white border border-[#E2E8F0] rounded-lg hover:bg-slate-50 transition-colors"
+                                            onClick={() => setShowDropdown(prev => !prev)}
+                                        >
+                                            <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={28} height={28} className="rounded-full" />
+                                            <span className="mx-1 font-semibold text-slate-800">{selectedCountry.currency}</span>
+                                            <ChevronDownIcon className="h-4 w-4 text-slate-600" />
+                                        </button>
+                                        {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} />}
+                                    </div>
                                 </div>
         
                                 <div className="text-slate-500 text-center text-base mb-6">
@@ -191,7 +208,6 @@ export default function MainPage() {
                                 </button>
                             </form>
                         </div>
-                        {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} />}
                     </div>
     
                     {/* Results Section */}

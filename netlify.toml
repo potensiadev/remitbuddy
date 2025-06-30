@@ -1,4 +1,4 @@
-# Netlify 빌드 설정 (최종 수정본)
+# Netlify 빌드 및 리디렉션 설정
 
 [build]
   # 빌드 명령을 실행할 기본 디렉토리
@@ -7,5 +7,11 @@
   # Next.js 프로젝트의 빌드 명령어
   command = "next build"
   
-  # 빌드 결과물이 생성되는 디렉토리를 'out'으로 변경합니다.
+  # 빌드 결과물이 생성되는 디렉토리 (저장소 루트 기준)
   publish = "out"
+
+# 모든 요청을 Next.js가 처리하도록 하는 리디렉션 규칙
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -15,12 +15,11 @@ const ArrowRightIcon = ({ className }) => (
 
 // --- i18n & Static Data ---
 const translations = {
-  en: { title: "How much should your<br/>family receive?", subtitle: "We’ll find the best exchange rate for you", amount_to_receive: "Amount to Receive", compare_button: "Find out the Best Rate", compare_again_button: "New Comparison", best_rate_badge: "Best Rate", real_time_summary: "Real-time Summary", loading_fast: "Finding best rates...", loading_slow: "Checking more options...", fee: "Fee", error_title: "Oops! Something went wrong.", error_message: "We couldn't fetch the remittance data. Please try again later.", select_country_title: "Select Country", total_needed: "Total KRW needed (estimation)", results_placeholder_title: "Results will appear here", results_placeholder_desc: "Enter the details on the left to see the real-time comparison." },
-  ko: { title: "가족이 받을 금액은<br/>얼마인가요?", subtitle: "최고의 환율을 찾아드릴게요", amount_to_receive: "받는 금액", compare_button: "최고 환율 찾아보기", compare_again_button: "새로 비교하기", best_rate_badge: "최고 환율", real_time_summary: "실시간 비교 결과", loading_fast: "최고 환율을 찾고 있어요...", loading_slow: "더 많은 업체를 확인 중입니다...", fee: "수수료", error_title: "오류가 발생했습니다.", error_message: "송금 정보를 가져오는 데 실패했습니다. 잠시 후 다시 시도해주세요.", select_country_title: "국가 선택", total_needed: "예상 총 필요 원화", results_placeholder_title: "결과는 여기에 표시됩니다", results_placeholder_desc: "왼쪽 양식에 정보를 입력하여 실시간 비교 결과를 확인하세요." },
+  en: { title: "How much should your<br/>family receive?", subtitle: "We’ll find the best exchange rate for you", amount_to_receive: "Amount to Receive", compare_button: "Find out the Best Rate", compare_again_button: "New Comparison", best_rate_badge: "Best Rate", real_time_summary: "Real-time Summary", loading_fast: "Finding best rates...", loading_slow: "Checking more options...", fee: "Fee", error_title: "Oops! Something went wrong.", error_message: "We couldn't fetch the remittance data. Please try again later.", select_country_title: "Select Country", total_needed: "Total KRW needed (estimation)" },
+  ko: { title: "가족이 받을 금액은<br/>얼마인가요?", subtitle: "최고의 환율을 찾아드릴게요", amount_to_receive: "받는 금액", compare_button: "최고 환율 찾아보기", compare_again_button: "새로 비교하기", best_rate_badge: "최고 환율", real_time_summary: "실시간 비교 결과", loading_fast: "최고 환율을 찾고 있어요...", loading_slow: "더 많은 업체를 확인 중입니다...", fee: "수수료", error_title: "오류가 발생했습니다.", error_message: "송금 정보를 가져오는 데 실패했습니다. 잠시 후 다시 시도해주세요.", select_country_title: "국가 선택", total_needed: "예상 총 필요 원화" },
 };
 const useTranslation = (lang) => (key) => {
-    const translation = translations[lang]?.[key] || key;
-    return translation;
+    return translations[lang]?.[key] || key;
 };
 const COUNTRIES = [ { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/vn.png" }, { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/ph.png" }, { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/kh.png" }, { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/mm.png" }, { code: "TH", currency: "THB", name: "Thailand", flag: "/images/th.png" }, { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/uz.png" }, { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/id.png" }, { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/lk.png" }, { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/bd.png" }, { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/np.png' }, ];
 const MOCK_DATA = { "Vietnam": [ { provider: "Sentbe", base_rate: 18.5, fee: 2500, link: "https://www.sentbe.com/" }, { provider: "Hanpass", base_rate: 18.4, fee: 3000, link: "https://www.hanpass.com/" }, { provider: "Wirebarley", base_rate: 18.45, fee: 2700, link: "https://www.wirebarley.com/" }, { provider: "GME", base_rate: 18.2, fee: 2800, link: "https://www.gmeremit.com/" }, { provider: "E9Pay", base_rate: 18.3, fee: 2200, link: "https://www.e9pay.co.kr/" }, ], "Philippines": [ { provider: "Sentbe", base_rate: 45.2, fee: 3000, link: "https://www.sentbe.com/" } ], "Cambodia": [{ provider: "Sentbe", base_rate: 33.1, fee: 5000, link: "https://www.sentbe.com/" }], "Myanmar": [{ provider: "Hanpass", base_rate: 15.2, fee: 5000, link: "https://www.hanpass.com/" }], "Thailand": [{ provider: "Wirebarley", base_rate: 3.0, fee: 4000, link: "https://www.wirebarley.com/" }], "Uzbekistan": [{ provider: "GME", base_rate: 10.5, fee: 6000, link: "https://www.gmeremit.com/" }], "Indonesia": [{ provider: "Sentbe", base_rate: 130.0, fee: 3500, link: "https://www.sentbe.com/" }], "SriLanka": [{ provider: "E9Pay", base_rate: 2.5, fee: 5500, link: "https://www.e9pay.co.kr/" }], "Bangladesh": [{ provider: "Hanpass", base_rate: 1.0, fee: 6000, link: "https://www.hanpass.com/" }], "Nepal": [ { provider: "Sentbe", base_rate: 110.5, fee: 4000, link: "https://www.sentbe.com/" } ] };
@@ -30,7 +29,7 @@ const mockApiCall = ({ receive_country, send_amount, mode }) => { return new Pro
 const ProviderCard = ({ providerData, isBest, currency, t }) => { const { provider, send_krw, exchange_rate, fee, link } = providerData; return ( <a href={link} target="_blank" rel="noopener noreferrer" className="block w-full p-4 mb-3 bg-white border rounded-xl shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" style={isBest ? { borderColor: '#10B981', boxShadow: '0 4px 14px 0 rgba(16, 185, 129, 0.2)' } : { borderColor: '#E2E8F0' }}> <div className="flex justify-between items-start"> <h3 className="text-xl font-bold text-slate-800">{provider}</h3> {isBest && <span className="text-xs font-semibold text-white bg-emerald-500 px-3 py-1 rounded-full">{t('best_rate_badge')}</span>} </div> <div className="mt-3"> <p className="text-sm text-slate-500">{t('total_needed')}</p> <p className="text-2xl font-extrabold text-indigo-600"> {Math.round(send_krw).toLocaleString('en-US')} <span className="ml-2 text-xl font-bold text-slate-700">KRW</span> </p> </div> <div className="mt-3 text-xs text-slate-500"> <span>1 KRW ≈ {exchange_rate.toFixed(4)} {currency}</span> <span className="mx-2">|</span> <span>{t('fee')}: {fee.toLocaleString()} KRW</span> </div> </a> );};
 const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t }) => ( <div className="fixed inset-0 z-40 bg-black bg-opacity-20 flex justify-center items-center" onClick={() => setShowDropdown(false)}> <div className="w-[263px] h-auto max-h-[80vh] bg-white rounded-[15px] shadow-2xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()} style={{ boxShadow: "0px 16px 40px rgba(0,0,0,0.09)" }}> <div className="p-4 border-b font-bold text-lg text-[#232B3A]">{t('select_country_title')}</div> <div className="flex-1 overflow-y-auto"> {COUNTRIES.map(c => ( <div key={c.code} className="flex items-center gap-3 px-4 py-4 cursor-pointer hover:bg-gray-50 text-lg" onClick={() => { setSelectedCountry(c); setShowDropdown(false); }}> <img src={c.flag} alt={`${c.name} flag`} width={28} height={28} className="rounded-full" /> <div> <div className="font-bold text-sm text-slate-800">{c.name}</div> <div className="text-gray-500 text-xs">{c.currency}</div> </div> </div> ))} </div> </div> </div> );
 
-function ComparisonResults({ queryParams, t }) {
+function ComparisonResults({ queryParams, t, onCompareAgain }) {
     const [results, setResults] = useState([]);
     const [loadingState, setLoadingState] = useState('fast'); 
     
@@ -72,30 +71,29 @@ function ComparisonResults({ queryParams, t }) {
                 {results.map(provider => <ProviderCard key={provider.provider} providerData={provider} isBest={bestRateProvider && provider.provider === bestRateProvider.provider} currency={currency} t={t} />)} 
                 {Array(skeletonCount).fill(0).map((_, index) => <SkeletonCard key={index} />)} 
             </div> 
+            <button onClick={onCompareAgain} className="mt-8 w-full bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-lg hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition">{t('compare_again_button')}</button> 
         </div> 
     );
 }
-
-const ResultsPlaceholder = ({ t }) => (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 rounded-2xl p-8 text-center">
-        <svg className="w-16 h-16 text-slate-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 10v-1m0 0c-1.657 0-3-.895-3-2s1.343-2 3-2 3-.895 3-2-1.343-2-3-2m0 10c1.11 0 2.08-.402 2.599-1M12 16v1M4 12h.01M20 12h.01M6.343 6.343l.01.01M17.657 17.657l.01.01M6.343 17.657l.01-.01M17.657 6.343l.01.01" /></svg>
-        <h3 className="text-xl font-bold text-slate-600">{t('results_placeholder_title')}</h3>
-        <p className="text-slate-500 mt-2 max-w-xs">{t('results_placeholder_desc')}</p>
-    </div>
-);
-
 
 // --- Main Page Component ---
 export default function MainPage() {
     const [lang, setLang] = useState('en'); // Default to English
     const t = useTranslation(lang);
     
-    const [hasSearched, setHasSearched] = useState(false);
+    const [showResults, setShowResults] = useState(false);
     const [queryParams, setQueryParams] = useState({});
+    const resultsRef = useRef(null);
     
     const [amount, setAmount] = useState("1000000");
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+
+    useEffect(() => {
+        if(showResults && resultsRef.current) {
+            resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [showResults]);
 
     const handleAmountChange = (e) => {
         const value = e.target.value.replace(/,/g, '');
@@ -108,13 +106,18 @@ export default function MainPage() {
         e.preventDefault();
         if (selectedCountry && amount) {
             setQueryParams({ receive_country: selectedCountry.name, send_amount: amount });
-            setHasSearched(true);
+            setShowResults(true);
         }
+    }
+    
+    const handleCompareAgain = () => {
+        setShowResults(false);
+        window.scrollTo({ top: 0, behavior: 'smooth'});
     }
         
     return (
         <div className="bg-[#F5F7FA] min-h-screen font-sans flex flex-col items-center pt-8 px-4">
-            <div className="w-full max-w-sm lg:max-w-6xl mx-auto">
+            <div className="w-full max-w-sm lg:max-w-3xl mx-auto">
                 <header className="w-full flex items-center mb-10 pl-2">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 20L19 12L5 4V20Z" fill="url(#paint0_linear_header_page)"/>
@@ -128,10 +131,9 @@ export default function MainPage() {
                     <span className="text-2xl font-extrabold text-[#1E293B] ml-2">SendHome</span>
                 </header>
     
-                {/* Responsive Layout Grid */}
-                <main className="w-full grid grid-cols-1 lg:grid-cols-2 lg:gap-12">
-                    {/* Left Column: Form */}
-                    <div className="w-full max-w-sm mx-auto lg:mx-0">
+                <main className="w-full">
+                     {/* Form Section */}
+                    <div className="w-full">
                         <div className="bg-white rounded-[28px] shadow-2xl shadow-slate-200/60 p-6 sm:p-8 flex flex-col items-center">
                             <h1 className="text-center text-slate-800 text-3xl sm:text-4xl font-extrabold mb-8 leading-tight" dangerouslySetInnerHTML={{ __html: t('title') }} />
         
@@ -179,15 +181,9 @@ export default function MainPage() {
                         {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} />}
                     </div>
     
-                    {/* Right Column: Results */}
-                    <div className="w-full mt-8 lg:mt-0">
-                        {hasSearched ? (
-                            <ComparisonResults queryParams={queryParams} t={t} />
-                        ) : (
-                           <div className="hidden lg:flex w-full h-full">
-                                <ResultsPlaceholder t={t} />
-                           </div>
-                        )}
+                    {/* Results Section */}
+                    <div ref={resultsRef} className="w-full mt-8 transition-opacity duration-500" style={{ opacity: showResults ? 1 : 0, maxHeight: showResults ? '2000px' : '0' }}>
+                        {showResults && <ComparisonResults queryParams={queryParams} t={t} onCompareAgain={handleCompareAgain} />}
                     </div>
                 </main>
             </div>

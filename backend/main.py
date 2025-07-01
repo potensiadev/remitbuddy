@@ -1,3 +1,4 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import JSONResponse
 from datetime import datetime
@@ -10,6 +11,18 @@ from typing import Optional, Dict, List
 from cachetools import TTLCache
 
 app = FastAPI()
+origins = [
+    "http://localhost:3000",      # 로컬 개발용
+    "https://sendhome.netlify.app", # 실제 배포된 프론트엔드 주소
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --- Configuration ---
 
@@ -64,6 +77,14 @@ JPREMIT_COUNTRY_CODES = {
     "nepal": "2", "thailand": "5", "cambodia": "12",
     "myanmar": "13", "uzbekistan": "7", "srilanka": "3",
     "bangladesh": "11", "mongolia": "8",
+}
+
+# Specific country code mapping for SBI Cosmoney
+SBICOSMONEY_COUNTRY_CODES = {
+    "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN",
+    "nepal": "NPL", "thailand": "THA", "cambodia": "KHM",
+    "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA",
+    "bangladesh": "BGD", "mongolia": "MNG",
 }
 
 
@@ -233,37 +254,57 @@ async def get_jpremit_quote(session: aiohttp.ClientSession, send_amount: int, re
     """Fetches remittance quote from JPRemit."""
     url = "https://www.jpremit.co.kr/default.aspx/calcfee"
     country_code = JPREMIT_COUNTRY_CODES.get(receive_country)
-    if not country_code:
-        return None
-    
+    if not country_code: return None
     headers = {'Content-Type': 'application/json; charset=utf-8'}
     json_data = {'amount': str(send_amount), 'country': country_code}
-    
     try:
         async with session.post(url, headers=headers, json=json_data, proxy=get_random_proxy()) as response:
             response.raise_for_status()
-            # The response is a JSON object with a key "d" which contains a JSON string.
-            # It needs to be parsed twice.
             outer_json = await response.json()
             inner_json_str = outer_json.get("d")
             if not inner_json_str: return None
-            
             data = json.loads(inner_json_str)
-            
             exchange_rate = float(data.get('Exrate', 0))
             fee = float(data.get('Fee', 0))
             recipient_gets = float(data.get('PayAmt', 0))
+            return {"provider": "JPRemit", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "transfer_method": "Bank Transfer", "link": "https://www.jpremit.co.kr/"}
+    except Exception as e:
+        print(f"JPRemit error: {str(e)}")
+        return None
+
+async def get_sbicosmoney_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    """Fetches remittance quote from SBI Cosmoney."""
+    url = "https://www.sbicosmoney.com/calc/amount"
+    country_code = SBICOSMONEY_COUNTRY_CODES.get(receive_country)
+    if not country_code:
+        return None
+
+    headers = {'Content-Type': 'application/json;charset=UTF-8'}
+    json_data = {
+        "send_amt": str(send_amount),
+        "recv_country": country_code,
+        "send_currency": "KRW",
+        "recv_currency": receive_currency
+    }
+    try:
+        async with session.post(url, headers=headers, json=json_data, proxy=get_random_proxy()) as response:
+            response.raise_for_status()
+            data = await response.json()
+            
+            exchange_rate = float(data.get('exrate', 0))
+            fee = float(data.get('fee', 0))
+            recipient_gets = float(data.get('recv_amt', 0))
 
             return {
-                "provider": "JPRemit",
+                "provider": "SBI Cosmoney",
                 "exchange_rate": exchange_rate,
                 "fee": fee,
                 "recipient_gets": recipient_gets,
                 "transfer_method": "Bank Transfer",
-                "link": "https://www.jpremit.co.kr/"
+                "link": "https://www.sbicosmoney.com/"
             }
     except Exception as e:
-        print(f"JPRemit error: {str(e)}")
+        print(f"SBI Cosmoney error: {str(e)}")
         return None
 
 # --- Main API Logic ---
@@ -281,7 +322,8 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
             get_sentbe_quote(session, send_amount, receive_currency, receive_country),
             get_moin_quote(session, send_amount, receive_currency, receive_country),
             get_gmoneytrans_quote(session, send_amount, receive_currency, receive_country),
-            get_jpremit_quote(session, send_amount, receive_currency, receive_country), # Added JPRemit
+            get_jpremit_quote(session, send_amount, receive_currency, receive_country),
+            get_sbicosmoney_quote(session, send_amount, receive_currency, receive_country), # Added SBI Cosmoney
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         return [r for r in results if isinstance(r, dict)]

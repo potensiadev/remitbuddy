@@ -5,6 +5,7 @@ import asyncio
 import aiohttp
 import time
 import random
+import json
 from typing import Optional, Dict, List
 from cachetools import TTLCache
 
@@ -23,23 +24,48 @@ cache = TTLCache(maxsize=1024, ttl=300)
 # Proxy list (Replace with your actual proxy list in a .env file for production)
 PROXIES = [
     # "http://proxy1.example.com:8080",
-    # "http://proxy2.example.com:8080",
 ]
 
 # Mapping for country names to provider-specific codes
-# Cross는 국가 코드를 사용하지 않으므로, 다른 스크레이퍼를 위해 유지합니다.
 COUNTRY_CODES = {
-    "vietnam": "VN",
-    "philippines": "PH",
-    "indonesia": "ID",
-    "cambodia": "KH",
-    "nepal": "NP",
-    "myanmar": "MM",
-    "thailand": "TH",
-    "uzbekistan": "UZ",
-    "srilanka": "LK",
-    "bangladesh": "BD"
+    "vietnam": "VN", "philippines": "PH", "indonesia": "ID",
+    "cambodia": "KH", "nepal": "NP", "myanmar": "MM",
+    "thailand": "TH", "uzbekistan": "UZ", "srilanka": "LK",
+    "bangladesh": "BD", "mongolia": "MN"
 }
+
+# Specific country code mapping for WireBarley (3-letter ISO)
+WIREBARLEY_COUNTRY_CODES = {
+    "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN",
+    "nepal": "NPL", "thailand": "THA", "cambodia": "KHM",
+    "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA",
+    "bangladesh": "BGD", "mongolia": "MNG",
+}
+
+# Specific country code mapping for Sentbe
+SENTBE_COUNTRY_CODES = {
+    "vietnam": 209, "philippines": 154, "indonesia": 92,
+    "nepal": 139, "thailand": 194, "cambodia": 35,
+    "myanmar": 134, "uzbekistan": 205, "srilanka": 189,
+    "bangladesh": 17, "mongolia": 132,
+}
+
+# Specific country code mapping for Moin (3-letter ISO)
+MOIN_COUNTRY_CODES = {
+    "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN",
+    "nepal": "NPL", "thailand": "THA", "cambodia": "KHM",
+    "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA",
+    "bangladesh": "BGD", "mongolia": "MNG",
+}
+
+# Specific country code mapping for JPRemit
+JPREMIT_COUNTRY_CODES = {
+    "vietnam": "4", "philippines": "1", "indonesia": "10",
+    "nepal": "2", "thailand": "5", "cambodia": "12",
+    "myanmar": "13", "uzbekistan": "7", "srilanka": "3",
+    "bangladesh": "11", "mongolia": "8",
+}
+
 
 # --- Helper Functions ---
 
@@ -51,7 +77,6 @@ def check_rate_limit(client_ip: str):
     """Checks and enforces rate limiting for a given IP address."""
     current_time = time.time()
     timestamps = request_timestamps.get(client_ip, [])
-    # Filter out timestamps older than the window
     valid_timestamps = [ts for ts in timestamps if current_time - ts < RATE_LIMIT_WINDOW]
 
     if len(valid_timestamps) >= RATE_LIMIT:
@@ -63,10 +88,7 @@ def check_rate_limit(client_ip: str):
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request: Request, exc: HTTPException):
     """Custom exception handler to format HTTP exceptions as JSON."""
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"error": exc.detail}
-    )
+    return JSONResponse(status_code=exc.status_code, content={"error": exc.detail})
 
 # --- Scraper Functions ---
 
@@ -74,30 +96,17 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
     """Fetches remittance quote from Hanpass."""
     url = 'https://www.hanpass.com/getCost'
     country_code = COUNTRY_CODES.get(receive_country)
-    if not country_code:
-        return None
-
+    if not country_code: return None
     headers = {'Content-Type': 'application/json'}
-    json_data = {
-        'inputAmount': str(send_amount), 'inputCurrencyCode': 'KRW',
-        'toCurrencyCode': receive_currency, 'toCountryCode': country_code, 'lang': 'en'
-    }
-    
+    json_data = {'inputAmount': str(send_amount), 'inputCurrencyCode': 'KRW', 'toCurrencyCode': receive_currency, 'toCountryCode': country_code, 'lang': 'en'}
     try:
         async with session.post(url, headers=headers, json=json_data, proxy=get_random_proxy()) as response:
-            if response.status != 200:
-                print(f"Hanpass API error: HTTP {response.status}")
-                return None
+            if response.status != 200: return None
             data = await response.json()
             exchange_rate = float(data.get('exchangeRate') or 0)
             fee = float(data.get('transferFee') or 0)
             recipient_gets = round((send_amount - fee) * exchange_rate, 2)
-
-            return {
-                "provider": "Hanpass", "exchange_rate": exchange_rate, "fee": fee,
-                "recipient_gets": recipient_gets, "transfer_method": "Bank Transfer",
-                "link": "https://www.hanpass.com/"
-            }
+            return {"provider": "Hanpass", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "transfer_method": "Bank Transfer", "link": "https://www.hanpass.com/"}
     except Exception as e:
         print(f"Hanpass error: {str(e)}")
         return None
@@ -106,33 +115,18 @@ async def get_e9pay_quote(session: aiohttp.ClientSession, send_amount: int, rece
     """Fetches remittance quote from E9Pay."""
     url = 'https://www.e9pay.co.kr/cmm/calcExchangeRate.do'
     country_code = COUNTRY_CODES.get(receive_country)
-    if not country_code:
-        return None
-        
+    if not country_code: return None
     headers = {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
-    data = {
-        "calcKind": "SE", "sendCountryCd": "KR", "recvCountryCd": country_code,
-        "recvCurrencyCd": receive_currency, "sendAmt": str(send_amount)
-    }
-
+    data = {"calcKind": "SE", "sendCountryCd": "KR", "recvCountryCd": country_code, "recvCurrencyCd": receive_currency, "sendAmt": str(send_amount)}
     try:
         async with session.post(url, headers=headers, data=data, proxy=get_random_proxy()) as response:
-            if response.status != 200:
-                print(f"E9Pay API error: HTTP {response.status}")
-                return None
+            if response.status != 200: return None
             resp_json = await response.json()
-            if resp_json.get("resultCd") != "0000":
-                return None
-            
+            if resp_json.get("resultCd") != "0000": return None
             exchange_rate = float(resp_json.get('exchRate') or 0)
             fee = float(resp_json.get('chargeAmt') or 0)
             recipient_gets = round((send_amount - fee) * exchange_rate, 2)
-
-            return {
-                "provider": "E9Pay", "exchange_rate": exchange_rate, "fee": fee,
-                "recipient_gets": recipient_gets, "transfer_method": "Bank Deposit",
-                "link": "https://www.e9pay.co.kr/"
-            }
+            return {"provider": "E9Pay", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "transfer_method": "Bank Deposit", "link": "https://www.e9pay.co.kr/"}
     except Exception as e:
         print(f"E9Pay error: {str(e)}")
         return None
@@ -141,12 +135,7 @@ async def get_gme_quote(session: aiohttp.ClientSession, send_amount: int, receiv
     """Fetches remittance quote from GME."""
     url = 'https://online.gmeremit.com/ExchangeRate.aspx/GetExRate'
     headers = {'Content-Type': 'application/json; charset=UTF-8'}
-    json_data = {
-        'pCurr': receive_currency, 'pCountryName': receive_country.capitalize(),
-        'collCurr': 'KRW', 'deliveryMethod': '2', 'cAmt': str(send_amount),
-        'pAmt': '0', 'cardOnline': 'false', 'calBy': 'C'
-    }
-
+    json_data = {'pCurr': receive_currency, 'pCountryName': receive_country.capitalize(), 'collCurr': 'KRW', 'deliveryMethod': '2', 'cAmt': str(send_amount), 'pAmt': '0', 'cardOnline': 'false', 'calBy': 'C'}
     try:
         async with session.post(url, headers=headers, json=json_data, proxy=get_random_proxy()) as response:
             response.raise_for_status()
@@ -154,147 +143,182 @@ async def get_gme_quote(session: aiohttp.ClientSession, send_amount: int, receiv
             exchange_rate = float(result.get('exRate', '0').replace(',', ''))
             fee = float(result.get('scCharge', '0').replace(',', ''))
             recipient_gets = round((send_amount - fee) * exchange_rate, 2)
-
-            return {
-                "provider": "GME", "exchange_rate": exchange_rate, "fee": fee,
-                "recipient_gets": recipient_gets, "transfer_method": "Bank Deposit",
-                "link": "https://online.gmeremit.com/"
-            }
+            return {"provider": "GME", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "transfer_method": "Bank Deposit", "link": "https://online.gmeremit.com/"}
     except Exception as e:
         print(f"GME error: {str(e)}")
         return None
 
 async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
-    """
-    Fetches remittance quote from Cross using their v4 API.
-    This function is updated based on the new API endpoint.
-    """
+    """Fetches remittance quote from Cross using their v4 API."""
     url = 'https://crossenf.com/api/v4/remit/quote/'
-    
-    # Cross API v4 uses platform_id instead of country code for some destinations.
-    # We will use a mapping for this. This might need updates for other countries.
     platform_mapping = {
-        "vietnam": 60,
-        "philippines": 2,
-        # Add other country mappings here as you discover them
+        "vietnam": 144, "philippines": 20, "indonesia": 68, "thailand": 60,
+        "nepal": 85, "cambodia": 150, "myanmar": 235, "uzbekistan": 233,
+        "bangladesh": 76, "mongolia": 250,
     }
     platform_id = platform_mapping.get(receive_country.lower())
-    if not platform_id:
-        print(f"Cross Error: Unsupported country or missing platform_id for {receive_country}")
-        return None
-
-    params = {
-        "apply_user_limit": 0,
-        "deposit_type": "Manual",
-        "platform_id": platform_id,
-        "quote_type": "send",
-        "sending_amount": send_amount
-    }
-
+    if not platform_id: return None
+    params = {"apply_user_limit": 0, "deposit_type": "Manual", "platform_id": platform_id, "quote_type": "send", "sending_amount": send_amount}
     try:
         async with session.get(url, params=params, proxy=get_random_proxy()) as response:
-            if response.status != 200:
-                print(f"Cross API error: HTTP {response.status}")
-                return None
+            if response.status != 200: return None
             data = await response.json()
-            
-            # Extract data from the new response structure
             exchange_rate = float(data.get('exchange_rate') or 0)
             fee = float(data.get('fees', '0').replace(',', ''))
             recipient_gets = float(data.get('receiving_amount', '0').replace(',', ''))
+            return {"provider": "Cross", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "transfer_method": "Bank Transfer", "link": "https://crossenf.com/"}
+    except Exception as e:
+        print(f"Cross error: {str(e)}")
+        return None
+
+async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    """Fetches remittance quote from WireBarley."""
+    url = "https://api.wirebarley.com/v2/calculator/quotes"
+    country_code = WIREBARLEY_COUNTRY_CODES.get(receive_country)
+    if not country_code: return None
+    params = {"sendingAmount": send_amount, "sendingCurrency": "KRW", "receivingCurrency": receive_currency, "receivingCountry": country_code, "method": "BANK_TRANSFER"}
+    try:
+        async with session.get(url, params=params, proxy=get_random_proxy()) as response:
+            response.raise_for_status()
+            data = await response.json()
+            quote = data.get('data', {}).get('quote', {})
+            exchange_rate = float(quote.get('fxrate', 0))
+            fee = float(quote.get('fees', {}).get('total', 0))
+            recipient_gets = float(quote.get('receivingAmount', 0))
+            return {"provider": "WireBarley", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "transfer_method": "Bank Transfer", "link": "https://www.wirebarley.com/"}
+    except Exception as e:
+        print(f"WireBarley error: {str(e)}")
+        return None
+
+async def get_sentbe_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    """Fetches remittance quote from Sentbe."""
+    url = "https://oxygen.sentbe.com/api/terms"
+    country_code = SENTBE_COUNTRY_CODES.get(receive_country)
+    if not country_code: return None
+    params = {"source_country": country_code, "is_third": "false"}
+    try:
+        async with session.get(url, params=params, proxy=get_random_proxy()) as response:
+            response.raise_for_status()
+            data = await response.json()
+            terms = data[0] if data else {}
+            exchange_rate = float(terms.get('rate', 0))
+            fee = float(terms.get('fee', 0))
+            recipient_gets = round((send_amount - fee) * exchange_rate, 2)
+            return {"provider": "Sentbe", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "transfer_method": "Bank Transfer", "link": "https://www.sentbe.com/"}
+    except Exception as e:
+        print(f"Sentbe error: {str(e)}")
+        return None
+
+async def get_moin_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    """Fetches remittance quote from Moin using the new API endpoint."""
+    url = "https://web-api.ma.prd.themoin.com/v0/quote/ma"
+    country_code = MOIN_COUNTRY_CODES.get(receive_country)
+    if not country_code: return None
+    headers = {'Content-Type': 'application/json'}
+    json_data = {"sendCountry": "KOR", "receiveCountry": country_code, "sendAmount": send_amount, "sendCurrency": "KRW", "receiveCurrency": receive_currency, "transferMethod": "remit"}
+    try:
+        async with session.post(url, headers=headers, json=json_data, proxy=get_random_proxy()) as response:
+            response.raise_for_status()
+            data = await response.json()
+            quote = data.get('quote', {})
+            exchange_rate = float(quote.get('exchangeRate', 0))
+            fee = float(quote.get('fee', 0))
+            recipient_gets = float(quote.get('targetAmount', 0))
+            return {"provider": "Moin", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "transfer_method": "Bank Transfer", "link": "https://www.themoin.com/"}
+    except Exception as e:
+        print(f"Moin error: {str(e)}")
+        return None
+
+async def get_jpremit_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    """Fetches remittance quote from JPRemit."""
+    url = "https://www.jpremit.co.kr/default.aspx/calcfee"
+    country_code = JPREMIT_COUNTRY_CODES.get(receive_country)
+    if not country_code:
+        return None
+    
+    headers = {'Content-Type': 'application/json; charset=utf-8'}
+    json_data = {'amount': str(send_amount), 'country': country_code}
+    
+    try:
+        async with session.post(url, headers=headers, json=json_data, proxy=get_random_proxy()) as response:
+            response.raise_for_status()
+            # The response is a JSON object with a key "d" which contains a JSON string.
+            # It needs to be parsed twice.
+            outer_json = await response.json()
+            inner_json_str = outer_json.get("d")
+            if not inner_json_str: return None
+            
+            data = json.loads(inner_json_str)
+            
+            exchange_rate = float(data.get('Exrate', 0))
+            fee = float(data.get('Fee', 0))
+            recipient_gets = float(data.get('PayAmt', 0))
 
             return {
-                "provider": "Cross",
+                "provider": "JPRemit",
                 "exchange_rate": exchange_rate,
                 "fee": fee,
                 "recipient_gets": recipient_gets,
                 "transfer_method": "Bank Transfer",
-                "link": "https://crossenf.com/"
+                "link": "https://www.jpremit.co.kr/"
             }
     except Exception as e:
-        print(f"Cross error: {str(e)}")
+        print(f"JPRemit error: {str(e)}")
         return None
 
 # --- Main API Logic ---
 
 async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_country: str) -> List[Dict]:
     """Gathers quotes from all available providers concurrently."""
-    timeout = aiohttp.ClientTimeout(total=5) # 5-second timeout for each request
+    timeout = aiohttp.ClientTimeout(total=5)
     async with aiohttp.ClientSession(timeout=timeout) as session:
         tasks = [
             get_hanpass_quote(session, send_amount, receive_currency, receive_country),
             get_gme_quote(session, send_amount, receive_currency, receive_country),
             get_e9pay_quote(session, send_amount, receive_currency, receive_country),
-            get_cross_quote(session, send_amount, receive_currency, receive_country), # Updated scraper
+            get_cross_quote(session, send_amount, receive_currency, receive_country),
+            get_wirebarley_quote(session, send_amount, receive_currency, receive_country),
+            get_sentbe_quote(session, send_amount, receive_currency, receive_country),
+            get_moin_quote(session, send_amount, receive_currency, receive_country),
+            get_gmoneytrans_quote(session, send_amount, receive_currency, receive_country),
+            get_jpremit_quote(session, send_amount, receive_currency, receive_country), # Added JPRemit
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        # Filter out None results or exceptions
         return [r for r in results if isinstance(r, dict)]
 
 # --- API Endpoints ---
 
 @app.get("/")
 def read_root():
-    """Root endpoint for health checks."""
     return {"status": "ok", "message": "Welcome to Sendhome Backend API"}
 
 @app.get("/api/getRemittanceQuote")
-async def get_remittance_quote(
-    request: Request,
-    receive_country: str = Query(..., min_length=2),
-    receive_currency: str = Query(..., min_length=3, max_length=3),
-    send_amount: int = Query(..., gt=0),
-    send_currency: str = Query(default="KRW", min_length=3, max_length=3)
-):
-    """
-    Provides real-time remittance quotes by scraping multiple providers.
-    Implements rate limiting and caching.
-    """
+async def get_remittance_quote(request: Request, receive_country: str = Query(...), receive_currency: str = Query(...), send_amount: int = Query(...), send_currency: str = Query("KRW")):
     client_ip = request.client.host
     check_rate_limit(client_ip)
-
-    # Normalize inputs for caching and processing
     country_lower = receive_country.lower()
     currency_upper = receive_currency.upper()
-
-    # Check cache first
     cache_key = f"{country_lower}:{currency_upper}:{send_amount}"
+    
     if cache_key in cache:
         print(f"Serving from cache: {cache_key}")
         return cache[cache_key]
 
     try:
-        # Fetch quotes with a total timeout for the entire operation
-        quotes = await asyncio.wait_for(
-            fetch_all_quotes(send_amount, currency_upper, country_lower),
-            timeout=10
-        )
-
+        quotes = await asyncio.wait_for(fetch_all_quotes(send_amount, currency_upper, country_lower), timeout=10)
         if not quotes:
-            raise HTTPException(
-                status_code=404,
-                detail="No remittance providers available for the selected country."
-            )
+            raise HTTPException(status_code=404, detail="No remittance providers available.")
 
-        # Sort by recipient_gets to find the best provider
         sorted_quotes = sorted(quotes, key=lambda x: x['recipient_gets'], reverse=True)
-        best_provider = sorted_quotes[0] if sorted_quotes else None
-
         response_data = {
-            "country": receive_country.capitalize(),
-            "currency": currency_upper,
-            "amount": send_amount,
-            "best_rate_provider": best_provider,
-            "results": sorted_quotes,
-            "request_timestamp": datetime.now().isoformat()
+            "country": receive_country.capitalize(), "currency": currency_upper, "amount": send_amount,
+            "best_rate_provider": sorted_quotes[0] if sorted_quotes else None,
+            "results": sorted_quotes, "request_timestamp": datetime.now().isoformat()
         }
-        
-        # Store result in cache
         cache[cache_key] = response_data
         return response_data
-
     except asyncio.TimeoutError:
-        raise HTTPException(status_code=408, detail="Request timed out. Please try again later.")
+        raise HTTPException(status_code=408, detail="Request timed out.")
     except Exception as e:
         print(f"Unhandled API error: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve remittance data.")

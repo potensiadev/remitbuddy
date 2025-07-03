@@ -1,5 +1,5 @@
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.middleware.cors import CORSMiddleware  # 이 import가 있는지 확인
 from fastapi.responses import JSONResponse
 from datetime import datetime
 import asyncio

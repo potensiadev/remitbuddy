@@ -13,12 +13,10 @@ from cachetools import TTLCache
 app = FastAPI()
 
 # --- CORS 설정 ---
-# 프론트엔드 주소에서의 API 요청을 허용합니다.
 origins = [
     "http://localhost:3000",
     "https://sendhome.netlify.app",
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -26,7 +24,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # --- Configuration ---
 RATE_LIMIT = 15
@@ -42,6 +39,7 @@ SENTBE_COUNTRY_CODES = { "vietnam": 209, "philippines": 154, "indonesia": 92, "n
 MOIN_COUNTRY_CODES = { "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN", "nepal": "NPL", "thailand": "THA", "cambodia": "KHM", "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA", "bangladesh": "BGD", "mongolia": "MNG" }
 JPREMIT_COUNTRY_CODES = { "vietnam": "4", "philippines": "1", "indonesia": "10", "nepal": "2", "thailand": "5", "cambodia": "12", "myanmar": "13", "uzbekistan": "7", "srilanka": "3", "bangladesh": "11", "mongolia": "8" }
 SBICOSMONEY_COUNTRY_CODES = { "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN", "nepal": "NPL", "thailand": "THA", "cambodia": "KHM", "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA", "bangladesh": "BGD", "mongolia": "MNG" }
+GMONEY_COUNTRY_CODES = { "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN", "nepal": "NPL", "thailand": "THA", "cambodia": "KHM", "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA", "bangladesh": "BGD", "mongolia": "MNG" }
 
 
 # --- Helper Functions ---
@@ -75,34 +73,127 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
             recipient_gets = (send_amount - fee) * float(data['exchangeRate'])
             return {"provider": "Hanpass", "exchange_rate": float(data['exchangeRate']), "fee": fee, "recipient_gets": recipient_gets, "link": "https://www.hanpass.com/"}
     except Exception as e:
-        print(f"Hanpass Error: {e}")
+        print(f"Hanpass Error: {type(e).__name__} - {e}")
         return None
+
+async def get_e9pay_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    # This scraper is currently disabled due to API changes or authentication requirements.
+    return None
+
+async def get_gme_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    # This scraper is currently disabled due to API changes or authentication requirements.
+    return None
+
+async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    try:
+        url = 'https://crossenf.com/api/v4/remit/quote/'
+        platform_mapping = { "vietnam": 144, "philippines": 20, "indonesia": 68, "thailand": 60, "nepal": 85, "cambodia": 150, "myanmar": 235, "uzbekistan": 233, "bangladesh": 76, "mongolia": 250 }
+        platform_id = platform_mapping.get(receive_country.lower())
+        if not platform_id: return None
+        
+        params = {"apply_user_limit": 0, "deposit_type": "Manual", "platform_id": platform_id, "quote_type": "send", "sending_amount": send_amount}
+        
+        async with session.get(url, params=params) as response:
+            if response.status != 200: return None
+            
+            data = await response.json()
+            quote_data = data.get('data', {})
+            
+            recipient_gets_raw = quote_data.get('receiving_amount', '0')
+            recipient_gets = float(str(recipient_gets_raw).replace(',', ''))
+
+            service_rate_raw = quote_data.get('service_rate', 0)
+            service_rate = float(service_rate_raw)
+
+            if not recipient_gets or recipient_gets == 0 or not service_rate or service_rate == 0:
+                return None
+
+            # 100 단위 기준을 사용하는 통화 목록
+            currencies_as_100_unit = ["VND", "IDR"]
+            
+            # 1 / (KRW per Foreign) = (Foreign per KRW)
+            # 100 단위 통화인 경우, service_rate를 100으로 나누어 보정
+            if receive_currency in currencies_as_100_unit:
+                exchange_rate = 1 / (service_rate / 100)
+            else:
+                exchange_rate = 1 / service_rate
+
+            fee = 5000.0
+            
+            # 수수료를 반영하여 최종 수취 금액을 다시 계산 (일관성 유지)
+            # Cross는 수수료가 0인 경우가 많아, 이 계산이 API 결과와 거의 동일함
+            calculated_recipient_gets = (send_amount - fee) * exchange_rate
+            
+            return {"provider": "Cross", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": calculated_recipient_gets, "link": "https://crossenf.com/"}
+    except Exception as e:
+        print(f"Cross Error: {type(e).__name__} - {e}")
+        return None
+
+async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    try:
+        url = "https://api.wirebarley.com/v2/calculator/quotes"
+        country_code = WIREBARLEY_COUNTRY_CODES.get(receive_country)
+        if not country_code: return None
+        params = {"sendingAmount": send_amount, "sendingCurrency": "KRW", "receivingCurrency": receive_currency, "receivingCountry": country_code, "method": "BANK_TRANSFER"}
+        async with session.get(url, params=params) as response:
+            response.raise_for_status()
+            data = await response.json()
+            quote = data.get('data', {}).get('quote', {})
+            exchange_rate = float(quote.get('fxrate', 0))
+            fee = float(quote.get('fees', {}).get('total', 0))
+            recipient_gets = float(quote.get('receivingAmount', 0))
+            return {"provider": "WireBarley", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "link": "https://www.wirebarley.com/"}
+    except Exception as e:
+        print(f"WireBarley Error: {type(e).__name__} - {e}")
+        return None
+
+async def get_sentbe_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    try:
+        url = "https://oxygen.sentbe.com/api/v2/quotes"
+        country_code = SENTBE_COUNTRY_CODES.get(receive_country)
+        if not country_code: return None
+        params = {'calculation_method': 'send', 'amount': send_amount, 'target_country': country_code}
+        async with session.get(url, params=params) as response:
+            response.raise_for_status()
+            data = await response.json()
+            exchange_rate = float(data.get('rate', 0))
+            fee = float(data.get('fee_total', 0))
+            recipient_gets = float(data.get('target_amount', 0))
+            if not recipient_gets > 0: return None
+            return {"provider": "Sentbe", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "link": "https://www.sentbe.com/"}
+    except Exception as e:
+        print(f"Sentbe Error: {type(e).__name__} - {e}")
+        return None
+        
+async def get_moin_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    # This scraper is currently disabled due to API changes or authentication requirements.
+    return None
+
+async def get_jpremit_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    # This scraper is currently disabled due to API changes or authentication requirements.
+    return None
+
+async def get_sbicosmoney_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    # This scraper is currently disabled due to API changes or authentication requirements.
+    return None
 
 async def get_gmoneytrans_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     try:
-        url = "https://mapi.gmoneytrans.net/exratenew1/ajx_calcRate.asp"
-        # GmoneyTrans API는 받는 금액 기준이므로, send_amount를 받는 금액으로 가정하고 요청
-        params = {'receive_amount': send_amount, 'payout_country': receive_country.capitalize(), 'payment_type': 'Bank Account', 'currencyType': receive_currency}
-        async with session.post(url, data=params) as response:
-            text_data = await response.text()
-            parts = text_data.split('|')
-            if len(parts) < 4: return None
-            
-            # API는 원화/외화 환율을 반환하므로, 우리가 필요한 외화/원화로 변환
-            krw_per_foreign = float(parts[0])
-            exchange_rate = 1 / krw_per_foreign if krw_per_foreign else 0
-            fee = float(parts[1])
-            
-            # API가 계산해준 보내야 할 총 원화 금액으로 수취 금액을 역산
-            total_krw_needed = float(parts[2])
-            recipient_gets = (total_krw_needed - fee) * exchange_rate
-            
+        url = "https://www.gmoneytrans.com/api/v2/fx/getQuote"
+        country_code = GMONEY_COUNTRY_CODES.get(receive_country)
+        if not country_code: return None
+        json_data = {"sendAmount": send_amount, "sendCurrency": "KRW", "receiveCurrency": receive_currency, "receiveCountry": country_code}
+        async with session.post(url, json=json_data, headers={'Content-Type': 'application/json;charset=UTF-8'}) as response:
+            response.raise_for_status()
+            data = await response.json()
+            quote = data.get('data', {})
+            exchange_rate = float(quote.get('exchangeRate', 0))
+            fee = float(quote.get('fee', 0))
+            recipient_gets = float(quote.get('receivingAmount', 0))
             return {"provider": "GmoneyTrans", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "link": "https://www.gmoneytrans.com/"}
     except Exception as e:
-        print(f"GmoneyTrans Error: {e}")
+        print(f"GmoneyTrans Error: {type(e).__name__} - {e}")
         return None
-
-# ... (다른 스크레이퍼 함수들은 생략, 이전 코드와 동일하게 유지) ...
 
 # --- Main API Logic ---
 async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_country: str) -> List[Dict]:
@@ -110,8 +201,10 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
     async with aiohttp.ClientSession(timeout=timeout) as session:
         tasks = [
             get_hanpass_quote(session, send_amount, receive_currency, receive_country),
+            get_wirebarley_quote(session, send_amount, receive_currency, receive_country),
+            get_cross_quote(session, send_amount, receive_currency, receive_country),
+            get_sentbe_quote(session, send_amount, receive_currency, receive_country),
             get_gmoneytrans_quote(session, send_amount, receive_currency, receive_country),
-            # 여기에 다른 모든 get_..._quote 함수들을 추가
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         return [r for r in results if r and isinstance(r, dict)]
@@ -136,7 +229,7 @@ async def get_remittance_quote(request: Request, receive_country: str = Query(..
     try:
         quotes = await asyncio.wait_for(fetch_all_quotes(send_amount, currency_upper, country_lower), timeout=15)
         if not quotes:
-            raise HTTPException(status_code=404, detail="No providers available.")
+            raise HTTPException(status_code=404, detail="No providers available for this route.")
 
         sorted_quotes = sorted(quotes, key=lambda x: x.get('recipient_gets', 0), reverse=True)
         response_data = {

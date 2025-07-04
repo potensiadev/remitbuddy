@@ -70,7 +70,7 @@ export default function MainPage() {
     const [showResults, setShowResults] = useState(false);
     const [queryParams, setQueryParams] = useState({});
     const resultsRef = useRef(null);
-    const [amount, setAmount] = useState("500000");
+    const [amount, setAmount] = useState("1000000");
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
     const formRef = useRef(null);

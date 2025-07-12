@@ -6,21 +6,21 @@ from typing import Coroutine
 from main import (
     get_hanpass_quote,
     get_e9pay_quote,
-    get_gme_quote,
+ #   get_gme_quote,
     get_cross_quote,
-    get_wirebarley_quote,
-    get_sentbe_quote,
-    get_moin_quote,
-    get_jpremit_quote,
-    get_sbicosmoney_quote,
+ #   get_wirebarley_quote,
+  #  get_sentbe_quote,
+   # get_moin_quote,
+    #get_jpremit_quote,
+    #get_sbicosmoney_quote,
     get_gmoneytrans_quote
 )
 
 # --- 테스트 설정 ---
 # 여기서 값을 바꾸어 여러 국가와 금액을 테스트할 수 있습니다.
 TEST_SEND_AMOUNT = 1000000  # 테스트할 송금액 (원)
-TEST_RECEIVE_COUNTRY = "indonesia" # 테스트할 국가 (소문자)
-TEST_RECEIVE_CURRENCY = "IDR"    # 테스트할 통화
+TEST_RECEIVE_COUNTRY = "mongolia" # 테스트할 국가 (소문자)
+TEST_RECEIVE_CURRENCY = "MNT"    # 테스트할 통화
 
 async def run_scraper_test(scraper_func: Coroutine, name: str):
     """개별 스크레이퍼 함수를 실행하고 결과를 출력하는 함수"""
@@ -49,14 +49,14 @@ async def main():
     scrapers_to_test = [
      (get_hanpass_quote, "Hanpass"),
      (get_e9pay_quote, "E9Pay"),
-     (get_gme_quote, "GME"),
+     #(get_gme_quote, "GME"),
      (get_cross_quote, "Cross"),
-     (get_wirebarley_quote, "WireBarley"),
-     (get_sentbe_quote, "Sentbe"),
-     (get_moin_quote, "Moin"),
-     (get_jpremit_quote, "JPRemit"),
-     (get_sbicosmoney_quote, "SBI Cosmoney"),
-     (get_gmoneytrans_quote, "GmoneyTrans"),
+     #(get_wirebarley_quote, "WireBarley"),
+     #(get_sentbe_quote, "Sentbe"),
+     #(get_moin_quote, "Moin"),
+     #(get_jpremit_quote, "JPRemit"),
+     #(get_sbicosmoney_quote, "SBI Cosmoney"),
+     (get_gmoneytrans_quote, "GmoneyTrans")
     ]
 
     for scraper, name in scrapers_to_test:

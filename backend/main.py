@@ -45,6 +45,12 @@ E9PAY_RECV_CODES = {
     "srilanka": "LK03", "bangladesh": "BD01"
 }
 
+# Coinshot Currency Mapping
+COINSHOT_CURRENCIES = {
+    "vietnam": "VND", "philippines": "PHP", "indonesia": "IDR", "thailand": "THB",
+    "nepal": "NPR", "myanmar": "MMK", "uzbekistan": "UZS",
+    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT"
+}
 
 # --- Helper Functions ---
 def get_random_proxy():
@@ -81,24 +87,6 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
         print(f"Hanpass Error: {type(e).__name__} - {e}")
         return None
 
-async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
-    try:
-        url = "https://api.wirebarley.com/v2/calculator/quotes"
-        country_code = WIREBARLEY_COUNTRY_CODES.get(receive_country)
-        if not country_code: return None
-        params = {"sendingAmount": send_amount, "sendingCurrency": "KRW", "receivingCurrency": receive_currency, "receivingCountry": country_code, "method": "BANK_TRANSFER"}
-        async with session.get(url, params=params) as response:
-            response.raise_for_status()
-            data = await response.json()
-            quote = data.get('data', {}).get('quote', {})
-            exchange_rate = float(quote.get('fxrate', 0))
-            fee = float(quote.get('fees', {}).get('total', 0))
-            recipient_gets = float(quote.get('receivingAmount', 0))
-            return {"provider": "WireBarley", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "link": "https://www.wirebarley.com/"}
-    except Exception as e:
-        print(f"WireBarley Error: {type(e).__name__} - {e}")
-        return None
-
 async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     try:
         url = 'https://crossenf.com/api/v4/remit/quote/'
@@ -132,24 +120,6 @@ async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, rece
             return {"provider": "Cross", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": calculated_recipient_gets, "link": "https://crossenf.com/"}
     except Exception as e:
         print(f"Cross Error: {type(e).__name__} - {e}")
-        return None
-
-async def get_sentbe_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
-    try:
-        url = "https://oxygen.sentbe.com/api/v2/quotes"
-        country_code = SENTBE_COUNTRY_CODES.get(receive_country)
-        if not country_code: return None
-        params = {'calculation_method': 'send', 'amount': send_amount, 'target_country': country_code}
-        async with session.get(url, params=params) as response:
-            response.raise_for_status()
-            data = await response.json()
-            exchange_rate = float(data.get('rate', 0))
-            fee = float(data.get('fee_total', 0))
-            recipient_gets = float(data.get('target_amount', 0))
-            if not recipient_gets > 0: return None
-            return {"provider": "Sentbe", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "link": "https://www.sentbe.com/"}
-    except Exception as e:
-        print(f"Sentbe Error: {type(e).__name__} - {e}")
         return None
         
 async def get_gmoneytrans_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
@@ -201,56 +171,58 @@ async def get_gmoneytrans_quote(session: aiohttp.ClientSession, send_amount: int
         print(f"GmoneyTrans Error: {type(e).__name__} - {e}")
         return None
     
-async def get_e9pay_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
-    """Fetches remittance quote from E9Pay with dynamic payment type."""
+async def get_coinshot_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    """Fetches remittance quote from Coinshot using their API endpoint."""
     try:
-        url = 'https://www.e9pay.co.kr/cmm/calcExchangeRate.do'
-        recv_code = E9PAY_RECV_CODES.get(receive_country)
-        if not recv_code: return None
+        url = "https://coinshot.org/calculate/receiving/i"
         
+        # Check if the country is supported by Coinshot
+        coinshot_currency = COINSHOT_CURRENCIES.get(receive_country)
+        if not coinshot_currency or coinshot_currency != receive_currency:
+            return None
+        
+        # Prepare form data
         data = {
-            "DEFRAY_AMOUNT": str(send_amount),
-            "SEND_NATN_COD": "KR",
-            "CRNCY_COD": "KRW",
-            "RCVER_EXPECT_NATN_COD": recv_code,
-            "RCVER_EXPECT_CRNCY_COD": receive_currency,
-            "SIMULATION_YN": "Y",
-            "OVSE_FEE_PROMOTION_YN": "N",
-            "LANG_COD": "en"
+            'receivingCurrency': receive_currency,
+            'sendingCurrency': 'KRW',
+            'sendingAmount': str(send_amount)
         }
-        headers = {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"}
+        
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Origin': 'https://coinshot.org',
+            'Referer': 'https://coinshot.org/view/calculate?language=kr'
+        }
         
         async with session.post(url, data=data, headers=headers) as response:
-            if response.status != 200: return None
+            if response.status != 200:
+                return None
             
-            resp_json = await response.json()
-            if resp_json.get("responseCode") != "S": return None
+            data = await response.json()
             
-            inner_data_str = resp_json.get('data')
-            if not inner_data_str: return None
-            inner_data = json.loads(inner_data_str)
-
-            fee = float(inner_data.get('REMIT_FEE') or 0)
-            recipient_gets = float(inner_data.get('LAST_RECPTN_AMOUNT') or 0)
+            # Extract data from response
+            recipient_gets = float(data.get('toAmount', 0))
+            fee = float(data.get('fromFee', 0))
             
-            # "EX_RATE":"1,000 KRW = 23.7 THB" 형식의 문자열에서 환율 추출
-            ex_rate_str = inner_data.get('EX_RATE', '')
-            rate_match = re.search(r'=\s*([\d,.]+)\s*' + receive_currency, ex_rate_str)
-            if not rate_match: return None
+            if not recipient_gets or recipient_gets <= 0:
+                return None
             
-            # 1000 KRW 기준 환율을 1 KRW 기준으로 변환
-            rate_for_1000_krw = float(rate_match.group(1).replace(',', ''))
-            exchange_rate = rate_for_1000_krw / 1000
+            # Calculate exchange rate: receiving_amount / sending_amount
+            exchange_rate = recipient_gets / send_amount
             
             return {
-                "provider": "E9Pay",
+                "provider": "Coinshot",
                 "exchange_rate": exchange_rate,
                 "fee": fee,
                 "recipient_gets": recipient_gets,
-                "link": "https://www.e9pay.co.kr/"
+                "link": "https://coinshot.org/"
             }
+            
     except Exception as e:
-        print(f"E9Pay Error: {type(e).__name__} - {e}")
+        print(f"Coinshot Error: {type(e).__name__} - {e}")
         return None
 
 # --- Main API Logic ---
@@ -259,12 +231,9 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
     async with aiohttp.ClientSession(timeout=timeout) as session:
         tasks = [
             get_hanpass_quote(session, send_amount, receive_currency, receive_country),
-            get_wirebarley_quote(session, send_amount, receive_currency, receive_country),
             get_cross_quote(session, send_amount, receive_currency, receive_country),
-            get_sentbe_quote(session, send_amount, receive_currency, receive_country),
             get_gmoneytrans_quote(session, send_amount, receive_currency, receive_country),
-            get_e9pay_quote(session, send_amount, receive_currency, receive_country),
-
+            get_coinshot_quote(session, send_amount, receive_currency, receive_country)
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         return [r for r in results if r and isinstance(r, dict)]

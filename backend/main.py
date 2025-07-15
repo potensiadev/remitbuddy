@@ -52,6 +52,74 @@ COINSHOT_CURRENCIES = {
     "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT"
 }
 
+# GME Remit Country Mappings
+GMEREMIT_COUNTRY_NAMES = {
+    "vietnam": "Vietnam", "philippines": "Philippines", "indonesia": "Indonesia",
+    "thailand": "Thailand", "nepal": "Nepal", "myanmar": "Myanmar",
+    "uzbekistan": "Uzbekistan", "srilanka": "Sri Lanka", "bangladesh": "Bangladesh",
+    "cambodia": "Cambodia", "mongolia": "Mongolia"
+}
+
+# GME Remit Delivery Methods by Country
+GMEREMIT_DELIVERY_METHODS = {
+    "vietnam": "2",  # Bank Deposit
+    "philippines": "2",  # Bank Deposit
+    "indonesia": "2",  # Bank Deposit
+    "thailand": "2",  # Bank Deposit
+    "nepal": "2",  # Bank Deposit
+    "myanmar": "2",  # Bank Deposit
+    "uzbekistan": "1",  # Cash Payment (trying different method)
+    "srilanka": "2",  # Bank Deposit
+    "bangladesh": "2",  # Bank Deposit
+    "cambodia": "2",  # Bank Deposit
+    "mongolia": "2"  # Bank Deposit
+}
+
+# JP Remit Currency Mappings
+JPREMIT_CURRENCIES = {
+    "vietnam": "VND", "philippines": "PHP", "indonesia": "IDR", "thailand": "THB",
+    "nepal": "NPR", "myanmar": "MMK", "uzbekistan": "UZS",
+    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT"
+}
+
+# The Moin Country/Currency Mappings
+THEMOIN_COUNTRY_CODES = {
+    "japan": "JP",
+    "thailand": "TH"
+}
+
+THEMOIN_CURRENCIES = {
+    "japan": "JPY",
+    "thailand": "THB"
+}
+
+# Wirebarley Country Mappings
+WIREBARLEY_COUNTRIES = {
+    "australia": "AU", "newzealand": "NZ", "philippines": "PH", "vietnam": "VN", 
+    "nepal": "NP", "indonesia": "ID", "china": "CN", "singapore": "SG", 
+    "malaysia": "MY", "thailand": "TH", "uk": "GB", "france": "FR", 
+    "germany": "DE", "usa": "US", "japan": "JP", "india": "IN", 
+    "cambodia": "KH", "bangladesh": "BD", "hongkong": "HK", "canada": "CA",
+    "uzbekistan": "UZ"
+}
+
+# SBI Cosmoney Country/Currency Mappings
+SBICOSMONEY_COUNTRIES = {
+    "vietnam": "VIETNAM", "philippines": "PHILIPPINES", "indonesia": "INDONESIA",
+    "thailand": "THAILAND", "nepal": "NEPAL", "myanmar": "MYANMAR",
+    "uzbekistan": "UZBEKISTAN", "srilanka": "SRILANKA", "bangladesh": "BANGLADESH",
+    "cambodia": "CAMBODIA", "mongolia": "MONGOLIA"
+}
+
+SBICOSMONEY_CURRENCIES = {
+    "vietnam": "VND", "philippines": "PHP", "indonesia": "IDR", "thailand": "THB",
+    "nepal": "NPR", "myanmar": "MMK", "uzbekistan": "UZS",
+    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT"
+}
+
+# E9Pay uses existing E9PAY_RECV_CODES mapping
+
+
 # --- Helper Functions ---
 def get_random_proxy():
     return random.choice(PROXIES) if PROXIES else None
@@ -90,7 +158,7 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
 async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     try:
         url = 'https://crossenf.com/api/v4/remit/quote/'
-        platform_mapping = { "vietnam": 144, "philippines": 20, "indonesia": 68, "thailand": 60, "nepal": 85, "cambodia": 150, "myanmar": 235, "uzbekistan": 233, "bangladesh": 76, "mongolia": 250 }
+        platform_mapping = { "vietnam": 144, "philippines": 20, "indonesia": 68, "thailand": 60, "nepal": 85, "cambodia": 150, "myanmar": 235, "uzbekistan": 233, "bangladesh": 76, "mongolia": 250, "srilanka": 75 }
         platform_id = platform_mapping.get(receive_country.lower())
         if not platform_id: return None
         
@@ -107,15 +175,21 @@ async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, rece
 
             if not service_rate or service_rate == 0: return None
 
-            currencies_as_100_unit = ["VND", "IDR"]
+            fee = quote_data.get('fee', 0)
+            if fee == 0:
+                fee = 5000.0  # Default fee if not provided
             
-            if receive_currency in currencies_as_100_unit:
-                exchange_rate = 1 / (service_rate / 100)
+            # Calculate recipient gets using service_rate (foreign currency per KRW)
+            calculated_recipient_gets = (send_amount - fee) * service_rate
+            
+            # Calculate exchange rate as sending_amount / receiving_amount
+            if calculated_recipient_gets > 0:
+                exchange_rate = send_amount / calculated_recipient_gets
+                # For VND and IDR, multiply by 100 to match display format
+                if receive_currency == "VND" or receive_currency == "IDR":
+                    exchange_rate = exchange_rate * 100
             else:
-                exchange_rate = 1 / service_rate
-
-            fee = 5000.0
-            calculated_recipient_gets = (send_amount - fee) * exchange_rate
+                exchange_rate = 0
             
             return {"provider": "Cross", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": calculated_recipient_gets, "link": "https://crossenf.com/"}
     except Exception as e:
@@ -169,6 +243,497 @@ async def get_gmoneytrans_quote(session: aiohttp.ClientSession, send_amount: int
             }
     except Exception as e:
         print(f"GmoneyTrans Error: {type(e).__name__} - {e}")
+        return None
+
+async def get_gmeremit_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    try:
+        url = "https://online.gmeremit.com/ExchangeRate.aspx"
+        
+        country_name = GMEREMIT_COUNTRY_NAMES.get(receive_country)
+        delivery_method = GMEREMIT_DELIVERY_METHODS.get(receive_country, "2")
+        
+        if not country_name:
+            return None
+        
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Origin': 'https://online.gmeremit.com',
+            'Referer': 'https://online.gmeremit.com/ExchangeRate.aspx?width=auto'
+        }
+        
+        data = {
+            'method': 'GetExRate',
+            'pCurr': receive_currency,
+            'pCountryName': country_name,
+            'collCurr': 'KRW',
+            'deliveryMethod': delivery_method,
+            'cAmt': str(send_amount),
+            'pAmt': '-',
+            'cardOnline': 'false',
+            'calBy': 'C'
+        }
+        
+        async with session.post(url, data=data, headers=headers) as response:
+            if response.status != 200:
+                return None
+            
+            result = await response.json()
+            
+            if result.get('errorCode') != '0':
+                return None
+            
+            sc_charge = result.get('scCharge')
+            ex_rate = result.get('exRate')
+            p_amt = result.get('pAmt')
+            
+            if (not sc_charge or sc_charge == 'null' or 
+                not ex_rate or ex_rate == 'null' or 
+                not p_amt or p_amt == 'null'):
+                return None
+            
+            try:
+                fee = float(sc_charge.replace(',', ''))
+                exchange_rate = float(ex_rate)
+                recipient_gets = float(p_amt.replace(',', ''))
+            except (ValueError, TypeError):
+                return None
+            
+            if exchange_rate <= 0 or recipient_gets <= 0:
+                return None
+            
+            return {
+                "provider": "GME Remit",
+                "exchange_rate": exchange_rate,
+                "fee": fee,
+                "recipient_gets": recipient_gets,
+                "link": "https://www.gmeremit.com/"
+            }
+            
+    except Exception as e:
+        print(f"GME Remit Error: {type(e).__name__} - {e}")
+        return None
+
+async def get_jpremit_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    try:
+        url = "https://www.jpremit.co.kr/default.aspx/calcfee"
+        
+        # Check if currency is supported by JP Remit
+        jpremit_currency = JPREMIT_CURRENCIES.get(receive_country)
+        if not jpremit_currency or jpremit_currency != receive_currency:
+            return None
+        
+        headers = {
+            'Content-Type': 'application/json;',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Origin': 'https://www.jpremit.co.kr',
+            'Referer': 'https://www.jpremit.co.kr/'
+        }
+        
+        data = {
+            'sendmoney': f"{send_amount:,}",
+            'receiveMoney': 0,
+            'type': 'Bank Transfer',
+            'country': receive_currency,
+            'id': 'country'
+        }
+        
+        async with session.post(url, json=data, headers=headers) as response:
+            if response.status != 200:
+                return None
+            
+            result = await response.json()
+            d_data = result.get('d', {})
+            
+            service_fee = d_data.get('ServiceFee')
+            customer_rate = d_data.get('customer_rate')
+            
+            if not service_fee or not customer_rate:
+                return None
+            
+            try:
+                fee = float(service_fee)
+                exchange_rate = float(customer_rate)
+            except (ValueError, TypeError):
+                return None
+            
+            if exchange_rate <= 0:
+                return None
+            
+            recipient_gets = (send_amount - fee) * exchange_rate
+            
+            return {
+                "provider": "JP Remit",
+                "exchange_rate": exchange_rate,
+                "fee": fee,
+                "recipient_gets": recipient_gets,
+                "link": "https://www.jpremit.co.kr/"
+            }
+            
+    except Exception as e:
+        print(f"JP Remit Error: {type(e).__name__} - {e}")
+        return None
+
+async def get_themoin_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    try:
+        url = "https://web-api.ma.prd.themoin.com/v0/quote/ma"
+        
+        # Check if country/currency is supported by The Moin
+        themoin_country = THEMOIN_COUNTRY_CODES.get(receive_country)
+        themoin_currency = THEMOIN_CURRENCIES.get(receive_country)
+        
+        if (not themoin_country or not themoin_currency or 
+            themoin_currency != receive_currency):
+            return None
+        
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': '*/*',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'Origin': 'https://www.themoin.com',
+            'Referer': 'https://www.themoin.com/',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        }
+        
+        data = {
+            'targetCountry': themoin_country,
+            'targetCurrency': receive_currency,
+            'fixedSide': 'SEND',
+            'transferAmount': send_amount,
+            'couponTicketId': ''
+        }
+        
+        async with session.post(url, json=data, headers=headers) as response:
+            if response.status != 200:
+                return None
+            
+            result = await response.json()
+            
+            if result.get('ret') != 'success':
+                return None
+            
+            quote_v2 = result.get('quoteV2', {})
+            
+            fee_amount = quote_v2.get('feeAmount', {})
+            destination_amount = quote_v2.get('destinationAmount', {})
+            
+            if not fee_amount or not destination_amount:
+                return None
+            
+            fee = fee_amount.get('amount', 0)
+            recipient_gets = destination_amount.get('amount', 0)
+            
+            if fee is None or recipient_gets is None or recipient_gets <= 0:
+                return None
+            
+            # Calculate exchange rate: recipient_gets / (send_amount - fee)
+            exchange_rate = recipient_gets / (send_amount - fee)
+            
+            return {
+                "provider": "The Moin",
+                "exchange_rate": exchange_rate,
+                "fee": fee,
+                "recipient_gets": recipient_gets,
+                "link": "https://www.themoin.com/"
+            }
+            
+    except Exception as e:
+        print(f"The Moin Error: {type(e).__name__} - {e}")
+        return None
+
+async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    try:
+        # Get country code for Wirebarley
+        country_code = WIREBARLEY_COUNTRIES.get(receive_country)
+        if not country_code:
+            return None
+            
+        url = f"https://www.wirebarley.com/my/remittance/api/v1/exrate/KR/KRW"
+        
+        headers = {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'Referer': 'https://www.wirebarley.com/',
+            'device-type': 'WEB',
+            'device-model': 'Safari',
+            'device-version': '604.1',
+            'lang': 'ko'
+        }
+        
+        async with session.get(url, headers=headers) as response:
+            if response.status != 200:
+                return None
+                
+            result = await response.json()
+            
+            if result.get('status') != 0:
+                return None
+                
+            data = result.get('data', {})
+            ex_rates = data.get('exRates', [])
+            
+            # Find matching country and currency
+            matching_rate = None
+            for rate in ex_rates:
+                if (rate.get('country') == country_code and 
+                    rate.get('currency') == receive_currency):
+                    matching_rate = rate
+                    break
+            
+            if not matching_rate:
+                return None
+                
+            wb_rate_data = matching_rate.get('wbRateData', {})
+            transfer_fees = matching_rate.get('transferFees', [])
+            
+            # Get appropriate exchange rate based on send amount
+            exchange_rate = wb_rate_data.get('wbRate', 0)
+            
+            # Apply amount-based rate tiers
+            threshold1 = wb_rate_data.get('threshold1')
+            if threshold1 and send_amount >= threshold1:
+                exchange_rate = wb_rate_data.get('wbRate1', exchange_rate)
+            
+            threshold2 = wb_rate_data.get('threshold2')  
+            if threshold2 and send_amount >= threshold2:
+                exchange_rate = wb_rate_data.get('wbRate2', exchange_rate)
+                
+            threshold3 = wb_rate_data.get('threshold3')
+            if threshold3 and send_amount >= threshold3:
+                exchange_rate = wb_rate_data.get('wbRate3', exchange_rate)
+                
+            threshold4 = wb_rate_data.get('threshold4')
+            if threshold4 and send_amount >= threshold4:
+                exchange_rate = wb_rate_data.get('wbRate4', exchange_rate)
+                
+            threshold5 = wb_rate_data.get('threshold5')
+            if threshold5 and send_amount >= threshold5:
+                exchange_rate = wb_rate_data.get('wbRate5', exchange_rate)
+                
+            threshold6 = wb_rate_data.get('threshold6')
+            if threshold6 and send_amount >= threshold6:
+                exchange_rate = wb_rate_data.get('wbRate6', exchange_rate)
+                
+            threshold7 = wb_rate_data.get('threshold7')
+            if threshold7 and send_amount >= threshold7:
+                exchange_rate = wb_rate_data.get('wbRate7', exchange_rate)
+                
+            threshold8 = wb_rate_data.get('threshold8')
+            if threshold8 and send_amount >= threshold8:
+                exchange_rate = wb_rate_data.get('wbRate8', exchange_rate)
+                
+            # wbRate9 is usually the highest tier rate
+            if wb_rate_data.get('wbRate9'):
+                exchange_rate = wb_rate_data.get('wbRate9', exchange_rate)
+            
+            if not exchange_rate or exchange_rate <= 0:
+                return None
+                
+            # Get fee for send amount
+            fee = 0
+            for fee_info in transfer_fees:
+                if (fee_info.get('min', 0) <= send_amount <= fee_info.get('max', float('inf'))):
+                    threshold1 = fee_info.get('threshold1')
+                    if threshold1 and send_amount >= threshold1:
+                        fee = fee_info.get('fee2', 0) or 0
+                    else:
+                        fee = fee_info.get('fee1', 0) or 0
+                    break
+            
+            recipient_gets = (send_amount - fee) * exchange_rate
+            
+            return {
+                "provider": "Wirebarley",
+                "exchange_rate": exchange_rate,
+                "fee": fee,
+                "recipient_gets": recipient_gets,
+                "link": "https://www.wirebarley.com/"
+            }
+            
+    except Exception as e:
+        print(f"Wirebarley Error: {type(e).__name__} - {e}")
+        return None
+
+async def get_sbicosmoney_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    try:
+        # Get country and currency for SBI Cosmoney
+        country_id = SBICOSMONEY_COUNTRIES.get(receive_country)
+        sbi_currency = SBICOSMONEY_CURRENCIES.get(receive_country)
+        
+        if (not country_id or not sbi_currency or 
+            sbi_currency != receive_currency):
+            return None
+        
+        url = "https://www.sbicosmoney.com/calc/amount"
+        
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Origin': 'https://www.sbicosmoney.com',
+            'Referer': 'https://www.sbicosmoney.com/',
+            'device': 'Safari',
+            'deviceid': 'hardware1',
+            'hardware2': '6',
+            'os': 'MOBILE-WEB',
+            'sbicosmoney_locale': 'ko'
+        }
+        
+        data = {
+            'countryId': country_id,
+            'currency': receive_currency,
+            'osInfo': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+        }
+        
+        async with session.post(url, json=data, headers=headers) as response:
+            # Check content type to see if we got JSON
+            content_type = response.headers.get('content-type', '')
+            if 'application/json' not in content_type:
+                return None
+                
+            if response.status != 200:
+                return None
+                
+            result = await response.json()
+            
+            exchange_rate = result.get('exchangeRate')
+            
+            if not exchange_rate or exchange_rate <= 0:
+                return None
+            
+            # No fee for now - just exchange rate calculation
+            fee = 0.0
+            recipient_gets = send_amount * exchange_rate
+            
+            return {
+                "provider": "SBI Cosmoney",
+                "exchange_rate": exchange_rate,
+                "fee": fee,
+                "recipient_gets": recipient_gets,
+                "link": "https://www.sbicosmoney.com/"
+            }
+            
+    except Exception as e:
+        print(f"SBI Cosmoney Error: {type(e).__name__} - {e}")
+        return None
+
+async def get_e9pay_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    try:
+        url = "https://www.e9pay.co.kr/cmm/calcExchangeRate.do"
+        
+        # Get country code for E9Pay
+        recv_code = E9PAY_RECV_CODES.get(receive_country)
+        if not recv_code:
+            return None
+        
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Accept': '*/*',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Origin': 'https://www.e9pay.co.kr',
+            'Referer': 'https://www.e9pay.co.kr/'
+        }
+        
+        data = {
+            'DEFRAY_AMOUNT': str(send_amount),
+            'SEND_NATN_COD': 'KR',
+            'CRNCY_COD': 'KRW',
+            'RCVER_EXPECT_NATN_COD': recv_code,
+            'RCVER_EXPECT_CRNCY_COD': receive_currency,
+            'SIMULATION_YN': 'Y',
+            'OVSE_FEE_PROMOTION_YN': 'N',
+            'LANG_COD': ''
+        }
+        
+        async with session.post(url, data=data, headers=headers) as response:
+            if response.status != 200:
+                return None
+            
+            result = await response.json()
+            
+            if result.get('responseCode') != 'S':
+                return None
+            
+            # Parse the nested JSON data
+            data_str = result.get('data', '{}')
+            try:
+                parsed_data = json.loads(data_str)
+            except json.JSONDecodeError:
+                return None
+            
+            if parsed_data.get('RESULT_COD') != 'S':
+                return None
+            
+            # Get recipient amount
+            recipient_amount_str = parsed_data.get('RCVER_EXPECT_RECPT_AMOUNT', '0')
+            
+            try:
+                recipient_gets = float(recipient_amount_str)
+                
+                # E9Pay uses fixed fees based on remittance method from their frontend
+                # These are predefined fees, not calculated by API
+                fee_mapping = {
+                    "PH15": 3000,  # Gcash
+                    "PH13": 5000,  # BDO 계좌송금
+                    "PH03": 5000,  # 캐시픽업 PHP
+                    "PH11": 5000,  # 계좌송금 PHP
+                    "PH09": 5000,  # PAYMAYA
+                    "PH07": 5000,  # COINS.PH
+                    "VN15": 5000,  # 베트남 계좌송금
+                    "VN14": 5000,  # 베트남 모바일월렛
+                    "VN06": 7000,  # 베트남 캐시픽업
+                    "VN07": 10000, # 베트남 홈딜리버리
+                    "VN05": 7000,  # 베트남 캐시픽업 USD
+                    "VN08": 10000, # 베트남 홈딜리버리 USD
+                    "LK03": 5000,  # 스리랑카 계좌송금
+                    "LK09": 5000,  # 스리랑카 FINANCE AND LEASING
+                    "LK08": 5000,  # 스리랑카 계좌송금 USD
+                    "ID01": 5000,  # 인도네시아 계좌송금
+                    "TH03": 5000,  # 태국 카시콘 계좌송금
+                    "TH02": 5000,  # 태국 계좌송금
+                    "MM01": 8000,  # 미얀마 계좌송금 CB
+                    "MM05": 8000,  # 미얀마 계좌송금 KBZ
+                    "MM04": 5000,  # 미얀마 KBZ 월렛송금
+                    "NP": 5000,    # 네팔 계좌송금
+                    "NP01": 5000,  # 네팔 캐시픽업
+                    "NP04": 5000,  # 네팔 E-WALLET
+                    "BD01": 5000,  # 방글라데시 캐시픽업
+                    "BD02": 3000   # 방글라데시 BKASH
+                }
+                
+                fee = fee_mapping.get(recv_code, 5000)  # Default to 5000 if not found
+                    
+            except (ValueError, TypeError):
+                return None
+            
+            if recipient_gets <= 0:
+                return None
+            
+            # Calculate exchange rate: recipient_gets / (send_amount - fee)
+            effective_send_amount = send_amount - fee
+            if effective_send_amount <= 0:
+                return None
+                
+            exchange_rate = recipient_gets / effective_send_amount
+            
+            return {
+                "provider": "E9Pay",
+                "exchange_rate": exchange_rate,
+                "fee": fee,
+                "recipient_gets": recipient_gets,
+                "link": "https://www.e9pay.co.kr/"
+            }
+            
+    except Exception as e:
+        print(f"E9Pay Error: {type(e).__name__} - {e}")
         return None
     
 async def get_coinshot_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
@@ -233,7 +798,13 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
             get_hanpass_quote(session, send_amount, receive_currency, receive_country),
             get_cross_quote(session, send_amount, receive_currency, receive_country),
             get_gmoneytrans_quote(session, send_amount, receive_currency, receive_country),
-            get_coinshot_quote(session, send_amount, receive_currency, receive_country)
+            get_coinshot_quote(session, send_amount, receive_currency, receive_country),
+            get_gmeremit_quote(session, send_amount, receive_currency, receive_country),
+            get_jpremit_quote(session, send_amount, receive_currency, receive_country),
+            get_themoin_quote(session, send_amount, receive_currency, receive_country),
+            get_wirebarley_quote(session, send_amount, receive_currency, receive_country),
+            get_e9pay_quote(session, send_amount, receive_currency, receive_country),
+            # get_sbicosmoney_quote(session, send_amount, receive_currency, receive_country)  # Requires authentication
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         return [r for r in results if r and isinstance(r, dict)]

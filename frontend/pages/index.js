@@ -122,9 +122,9 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
             console.log('=== DEBUG INFO ===');
             console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
             console.log('Query Params:', queryParams);
-            console.log('All env vars:', process.env);
             
-            const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://sendhome.onrender.com';
+            // 하드코딩된 URL 사용 (환경 변수 문제 우회)
+            const API_BASE_URL = 'https://sendhome.onrender.com';
             console.log('Using API_BASE_URL:', API_BASE_URL);
             
             const url = `${API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${queryParams.send_amount}`;
@@ -216,7 +216,7 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
             }
         };
 
-        // 실제 함수 호출 (이 부분이 누락되어 있었음)
+        // 실제 함수 호출
         fetchRealQuotes();
     }, [queryParams]);
 

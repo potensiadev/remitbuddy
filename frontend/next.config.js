@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // output: 'export',  // 이 줄 주석 처리 또는 제거
   trailingSlash: true,
   images: {
     unoptimized: true
   },
-  // 기본 경로 설정 (필요한 경우)
-  // basePath: '',
-  // assetPrefix: '',
 }
 
 module.exports = nextConfig

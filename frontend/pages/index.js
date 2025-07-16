@@ -112,167 +112,112 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
 
     useEffect(() => {
         if (!queryParams.receive_country) return;
-// ComparisonResults 컴포넌트에서 fetchRealQuotes 함수를 이렇게 교체하세요
 
-const fetchRealQuotes = async () => {
-    setIsLoading(true);
-    setError(null);
-    setResults([]);
+        const fetchRealQuotes = async () => {
+            setIsLoading(true);
+            setError(null);
+            setResults([]);
 
-    // 환경 변수 디버깅
-    console.log('=== DEBUG INFO ===');
-    console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
-    console.log('Query Params:', queryParams);
-    
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://sendhome.onrender.com';
-    console.log('Using API_BASE_URL:', API_BASE_URL);
-    
-    const url = `${API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${queryParams.send_amount}`;
-    console.log('Full API URL:', url);
-
-    try {
-        // 1단계: 백엔드 서버 헬스체크
-        console.log('🔍 Step 1: Health check...');
-        const healthCheck = await fetch(`${API_BASE_URL}/`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        
-        console.log('Health check status:', healthCheck.status);
-        console.log('Health check ok:', healthCheck.ok);
-        
-        if (!healthCheck.ok) {
-            throw new Error(`Backend server is not responding (Status: ${healthCheck.status})`);
-        }
-        
-        const healthData = await healthCheck.text();
-        console.log('Health check response:', healthData);
-        
-        // 2단계: 실제 API 호출
-        console.log('🚀 Step 2: Making API call...');
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => {
-            console.log('⏰ Request timeout after 30 seconds');
-            controller.abort();
-        }, 30000);
-
-        const response = await fetch(url, {
-            signal: controller.signal,
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-        });
-        
-        clearTimeout(timeoutId);
-        
-        console.log('API response status:', response.status);
-        console.log('API response ok:', response.ok);
-        console.log('API response headers:', [...response.headers.entries()]);
-        
-        if (!response.ok) {
-            const errText = await response.text();
-            console.log('Error response text:', errText);
+            // 환경 변수 디버깅
+            console.log('=== DEBUG INFO ===');
+            console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+            console.log('Query Params:', queryParams);
+            console.log('All env vars:', process.env);
             
-            let errData = {};
+            const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://sendhome.onrender.com';
+            console.log('Using API_BASE_URL:', API_BASE_URL);
+            
+            const url = `${API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${queryParams.send_amount}`;
+            console.log('Full API URL:', url);
+
             try {
-                errData = JSON.parse(errText);
-            } catch (e) {
-                console.log('Could not parse error as JSON');
+                // 1단계: 백엔드 서버 헬스체크
+                console.log('🔍 Step 1: Health check...');
+                const healthCheck = await fetch(`${API_BASE_URL}/`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                console.log('Health check status:', healthCheck.status);
+                console.log('Health check ok:', healthCheck.ok);
+                
+                if (!healthCheck.ok) {
+                    throw new Error(`Backend server is not responding (Status: ${healthCheck.status})`);
+                }
+                
+                const healthData = await healthCheck.text();
+                console.log('Health check response:', healthData);
+                
+                // 2단계: 실제 API 호출
+                console.log('🚀 Step 2: Making API call...');
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => {
+                    console.log('⏰ Request timeout after 30 seconds');
+                    controller.abort();
+                }, 30000);
+
+                const response = await fetch(url, {
+                    signal: controller.signal,
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                });
+                
+                clearTimeout(timeoutId);
+                
+                console.log('API response status:', response.status);
+                console.log('API response ok:', response.ok);
+                console.log('API response headers:', [...response.headers.entries()]);
+                
+                if (!response.ok) {
+                    const errText = await response.text();
+                    console.log('Error response text:', errText);
+                    
+                    let errData = {};
+                    try {
+                        errData = JSON.parse(errText);
+                    } catch (e) {
+                        console.log('Could not parse error as JSON');
+                    }
+                    
+                    throw new Error(errData.detail || `API Error: ${response.status} - ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('✅ API Success! Data:', data);
+                setResults(data.results || []);
+                
+            } catch (err) {
+                console.error("❌ API Fetch Error:", err);
+                console.error("Error name:", err.name);
+                console.error("Error message:", err.message);
+                console.error("Error stack:", err.stack);
+                
+                if (err.name === 'AbortError') {
+                    setError("Request timed out. The server might be waking up. Please try again in a few minutes.");
+                } else if (err.message.includes('CORS')) {
+                    setError("CORS error. Please contact support.");
+                } else if (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed to fetch')) {
+                    setError(`Network error: ${err.message}. The server might be sleeping. Please try again in a few minutes.`);
+                } else if (err.message.includes('404')) {
+                    setError("Server not found. Please contact support.");
+                } else {
+                    setError(`Error: ${err.message}`);
+                }
+            } finally {
+                setIsLoading(false);
+                console.log('=== DEBUG END ===');
             }
-            
-            throw new Error(errData.detail || `API Error: ${response.status} - ${response.statusText}`);
-        }
-        
-        const data = await response.json();
-        console.log('✅ API Success! Data:', data);
-        setResults(data.results || []);
-        
-    } catch (err) {
-        console.error("❌ API Fetch Error:", err);
-        console.error("Error name:", err.name);
-        console.error("Error message:", err.message);
-        
-        if (err.name === 'AbortError') {
-            setError("Request timed out. The server might be waking up. Please try again in a few minutes.");
-        } else if (err.message.includes('CORS')) {
-            setError("CORS error. Please contact support.");
-        } else if (err.message.includes('fetch')) {
-            setError(`Network error: ${err.message}. Please check your internet connection.`);
-        } else {
-            setError(`Error: ${err.message}`);
-        }
-    } finally {
-        setIsLoading(false);
-        console.log('=== DEBUG END ===');
-    }
-};
+        };
 
-        // const fetchRealQuotes = async () => {
-        //     setIsLoading(true);
-        //     setError(null);
-        //     setResults([]);
-
-        //     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-        //     if (!API_BASE_URL) {
-        //         setError("API URL is not configured.");
-        //         setIsLoading(false);
-        //         return;
-        //     }
-            
-        //     const url = `${API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${queryParams.send_amount}`;
-            
-        //     console.log('API URL:', url); // 디버깅용
-
-        //     try {
-        //         // 먼저 백엔드 서버가 살아있는지 확인
-        //         const healthCheck = await fetch(`${API_BASE_URL}/`);
-        //         if (!healthCheck.ok) {
-        //             throw new Error('Backend server is not responding');
-        //         }
-                
-        //         // 실제 API 호출 (타임아웃 설정)
-        //         const controller = new AbortController();
-        //         const timeoutId = setTimeout(() => controller.abort(), 30000); // 30초 타임아웃
-
-        //         const response = await fetch(url, {
-        //             signal: controller.signal,
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //         });
-                
-        //         clearTimeout(timeoutId);
-                
-        //         if (!response.ok) {
-        //             const errData = await response.json().catch(() => ({}));
-        //             throw new Error(errData.detail || `API Error: ${response.status} - ${response.statusText}`);
-        //         }
-                
-        //         const data = await response.json();
-        //         setResults(data.results || []);
-                
-        //     } catch (err) {
-        //         console.error("API Fetch Error:", err);
-                
-        //         if (err.name === 'AbortError') {
-        //             setError("Request timed out. The server might be waking up. Please try again.");
-        //         } else if (err.message.includes('fetch')) {
-        //             setError("Network error. Please check your internet connection or try again later.");
-        //         } else {
-        //             setError(err.message || "An unexpected error occurred");
-        //         }
-        //     } finally {
-        //         setIsLoading(false);
-        //     }
-        // };
-
-        // fetchRealQuotes();
+        // 실제 함수 호출 (이 부분이 누락되어 있었음)
+        fetchRealQuotes();
     }, [queryParams]);
 
     const bestRateProvider = useMemo(() => (!results || results.length === 0) ? null : results[0], [results]);
@@ -302,6 +247,12 @@ const fetchRealQuotes = async () => {
                 <div className="text-center p-8 bg-red-50 border border-red-200 rounded-lg">
                     <h3 className="text-xl font-bold text-red-700">{t('error_title')}</h3>
                     <p className="text-red-600 mt-2">{error}</p>
+                    <button 
+                        onClick={() => window.location.reload()} 
+                        className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                    >
+                        새로고침
+                    </button>
                 </div>
             )} 
             

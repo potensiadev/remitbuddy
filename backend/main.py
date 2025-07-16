@@ -18,13 +18,15 @@ origins = [
     "http://localhost:3000",
     "https://sendhome.netlify.app",
 ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # 임시로 모든 origin 허용
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # --- Configuration ---
 RATE_LIMIT = 15

@@ -1,12 +1,12 @@
 [build]
   base = "frontend"
   command = "npm ci && npm run build"
-  publish = "out"  # .next가 아닌 out 디렉토리
+  publish = ".next"
 
 [build.environment]
-  NEXT_PUBLIC_API_URL = "your-api-url"
+  NEXT_PUBLIC_API_URL = "https://sendhome.onrender.com"
 
 [[redirects]]
   from = "/*"
-  to = "/404.html"
-  status = 404
+  to = "/index.html"
+  status = 200

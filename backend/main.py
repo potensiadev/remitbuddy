@@ -17,6 +17,8 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "https://sendhome.netlify.app",
+    "https://*.netlify.app",  # 모든 netlify 서브도메인 허용
+    "https://sendhome.onrender.com"  # 자기 자신도 포함
 ]
 
 app.add_middleware(

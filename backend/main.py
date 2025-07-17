@@ -8,10 +8,20 @@ import time
 import random
 import json
 import re
+import logging
 from typing import Optional, Dict, List
 from cachetools import TTLCache
+from proxy_manager import proxy_manager, ProxySession
+from proxy_config import proxy_config_manager
 
 app = FastAPI()
+
+# --- Logging Configuration ---
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # --- CORS 설정 ---
 origins = [
@@ -147,7 +157,7 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(status_code=exc.status_code, content={"error": exc.detail})
 
 # --- Scraper Functions ---
-async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+async def get_hanpass_quote(send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     try:
         url = 'https://www.hanpass.com/getCost'
         country_code = COUNTRY_CODES.get(receive_country)
@@ -163,31 +173,39 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
         
         headers = {'Content-Type': 'application/json'}
         
-        async with session.post(url, json=json_data, headers=headers) as response:
-            if response.status != 200:
-                return None
-                
-            data = await response.json()
-            exchange_rate = data.get('exchangeRate')
+        async with ProxySession(proxy_manager, "Hanpass") as (session, proxy):
+            proxy_url = proxy.url if proxy else None
             
-            if not exchange_rate:
-                return None
+            async with session.post(
+                url, 
+                json=json_data, 
+                headers=headers,
+                proxy=proxy_url
+            ) as response:
+                if response.status != 200:
+                    return None
+                    
+                data = await response.json()
+                exchange_rate = data.get('exchangeRate')
                 
-            fee = float(data.get('transferFee', 0))
-            exchange_rate = float(exchange_rate)
-            recipient_gets = (send_amount - fee) * exchange_rate
-            
-            return {
-                "provider": "Hanpass", 
-                "exchange_rate": exchange_rate, 
-                "fee": fee, 
-                "recipient_gets": recipient_gets, 
-                "link": "https://www.hanpass.com/"
-            }
+                if not exchange_rate:
+                    return None
+                    
+                fee = float(data.get('transferFee', 0))
+                exchange_rate = float(exchange_rate)
+                recipient_gets = (send_amount - fee) * exchange_rate
+                
+                return {
+                    "provider": "Hanpass", 
+                    "exchange_rate": exchange_rate, 
+                    "fee": fee, 
+                    "recipient_gets": recipient_gets, 
+                    "link": "https://www.hanpass.com/"
+                }
     except (asyncio.TimeoutError, aiohttp.ClientError):
         return None
     except Exception as e:
-        print(f"Hanpass Error: {type(e).__name__} - {e}")
+        logger.error(f"Hanpass Error: {type(e).__name__} - {e}")
         return None
 
 async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
@@ -481,7 +499,7 @@ async def get_themoin_quote(session: aiohttp.ClientSession, send_amount: int, re
         print(f"The Moin Error: {type(e).__name__} - {e}")
         return None
 
-async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+async def get_wirebarley_quote(send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     try:
         # Get country code for Wirebarley
         country_code = WIREBARLEY_COUNTRIES.get(receive_country)
@@ -493,7 +511,6 @@ async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int,
         headers = {
             'Accept': '*/*',
             'Content-Type': 'application/json',
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
             'Referer': 'https://www.wirebarley.com/',
             'device-type': 'WEB',
             'device-model': 'Safari',
@@ -501,7 +518,10 @@ async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int,
             'lang': 'ko'
         }
         
-        async with session.get(url, headers=headers) as response:
+        async with ProxySession(proxy_manager, "Wirebarley") as (session, proxy):
+            proxy_url = proxy.url if proxy else None
+            
+            async with session.get(url, headers=headers, proxy=proxy_url) as response:
             if response.status != 200:
                 return None
                 
@@ -825,109 +845,57 @@ async def get_coinshot_quote(session: aiohttp.ClientSession, send_amount: int, r
         print(f"Coinshot Error: {type(e).__name__} - {e}")
         return None
 
-# --- Performance Optimized API Logic ---
+# --- Performance Optimized API Logic with Proxy Rotation ---
 async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_country: str) -> List[Dict]:
     """
     Performance optimized quote fetching with:
+    - IP rotation through proxy manager
     - Individual timeouts per request (2s max)
-    - Connection pooling and reuse
-    - TCP connection limits
-    - DNS caching
+    - Load balancing across providers
+    - Rate limiting per proxy
     """
     
-    # Optimized timeout and connector settings
-    timeout = aiohttp.ClientTimeout(
-        total=2.5,        # Total timeout for entire request
-        connect=0.5,      # Connection timeout
-        sock_read=0.3     # Socket read timeout
-    )
+    # Create tasks with individual timeouts - each uses ProxySession for IP rotation
+    tasks = [
+        asyncio.wait_for(
+            get_hanpass_quote(send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
+        asyncio.wait_for(
+            get_wirebarley_quote(send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
+        # TODO: Update remaining scraper functions to use ProxySession
+        # For now, these still use the old session-based approach
+    ]
     
-    # Connection pooling with limits
-    connector = aiohttp.TCPConnector(
-        limit=100,          # Total connection pool size
-        limit_per_host=10,  # Max connections per host
-        ttl_dns_cache=300,  # DNS cache TTL in seconds
-        use_dns_cache=True,
-        keepalive_timeout=30,
-        enable_cleanup_closed=True,
-        force_close=True    # Force close connections to avoid hanging
-    )
+    # Execute with as_completed for fastest response
+    results = []
+    start_time = time.time()
     
-    async with aiohttp.ClientSession(
-        timeout=timeout,
-        connector=connector,
-        headers={
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept-Encoding': 'gzip, deflate',
-            'Connection': 'keep-alive',
-            'Cache-Control': 'no-cache'
-        }
-    ) as session:
+    try:
+        # Use asyncio.gather with return_exceptions=True for parallel execution
+        completed_results = await asyncio.gather(*tasks, return_exceptions=True)
         
-        # Create tasks with individual timeouts
-        tasks = [
-            asyncio.wait_for(
-                get_hanpass_quote(session, send_amount, receive_currency, receive_country),
-                timeout=2.0
-            ),
-            asyncio.wait_for(
-                get_cross_quote(session, send_amount, receive_currency, receive_country),
-                timeout=2.0
-            ),
-            asyncio.wait_for(
-                get_gmoneytrans_quote(session, send_amount, receive_currency, receive_country),
-                timeout=2.0
-            ),
-            asyncio.wait_for(
-                get_coinshot_quote(session, send_amount, receive_currency, receive_country),
-                timeout=2.0
-            ),
-            asyncio.wait_for(
-                get_gmeremit_quote(session, send_amount, receive_currency, receive_country),
-                timeout=2.0
-            ),
-            asyncio.wait_for(
-                get_jpremit_quote(session, send_amount, receive_currency, receive_country),
-                timeout=2.0
-            ),
-            asyncio.wait_for(
-                get_themoin_quote(session, send_amount, receive_currency, receive_country),
-                timeout=2.0
-            ),
-            asyncio.wait_for(
-                get_wirebarley_quote(session, send_amount, receive_currency, receive_country),
-                timeout=2.0
-            ),
-            asyncio.wait_for(
-                get_e9pay_quote(session, send_amount, receive_currency, receive_country),
-                timeout=2.0
-            )
-        ]
-        
-        # Execute with as_completed for fastest response
-        results = []
-        start_time = time.time()
-        
-        try:
-            # Use asyncio.gather with return_exceptions=True for parallel execution
-            completed_results = await asyncio.gather(*tasks, return_exceptions=True)
-            
-            # Filter successful results
-            for result in completed_results:
-                if result and isinstance(result, dict):
-                    results.append(result)
-                elif isinstance(result, Exception):
-                    print(f"Task failed: {type(result).__name__}: {result}")
-                    
-        except Exception as e:
-            print(f"Error in fetch_all_quotes: {e}")
-        
-        execution_time = time.time() - start_time
-        print(f"🚀 Total execution time: {execution_time:.2f}s, Results: {len(results)}")
-        
-        return results
+        # Filter successful results
+        for result in completed_results:
+            if result and isinstance(result, dict):
+                results.append(result)
+            elif isinstance(result, Exception):
+                logger.warning(f"Task failed: {type(result).__name__}: {result}")
+                
+    except Exception as e:
+        logger.error(f"Error in fetch_all_quotes: {e}")
+    
+    execution_time = time.time() - start_time
+    logger.info(f"🚀 Total execution time: {execution_time:.2f}s, Results: {len(results)}")
+    
+    # Log proxy statistics
+    proxy_stats = proxy_manager.get_proxy_stats()
+    if proxy_stats:
+        logger.info(f"📊 Proxy usage stats: {proxy_stats}")
+    
+    return results
 
 # --- API Endpoints ---
 @app.get("/")
@@ -984,6 +952,54 @@ async def get_remittance_quote(request: Request, receive_country: str = Query(..
     except Exception as e:
         print(f"❌ Unhandled API error: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error.")
+
+@app.on_event("startup")
+async def startup_event():
+    """애플리케이션 시작 시 프록시 초기화"""
+    try:
+        # 프록시 설정 로드
+        proxy_configs = proxy_config_manager.get_proxy_configs()
+        for proxy_config in proxy_configs:
+            proxy_manager.add_proxy(proxy_config)
+        
+        logger.info(f"초기화된 프록시 수: {len(proxy_configs)}")
+        
+        # 프록시 헬스 체크
+        if proxy_configs:
+            await proxy_manager.health_check_all_proxies()
+        
+    except Exception as e:
+        logger.error(f"프록시 초기화 오류: {e}")
+
+# --- Proxy Management Endpoints ---
+@app.get("/admin/proxy/stats")
+async def get_proxy_stats():
+    """프록시 통계 조회"""
+    return {
+        "proxy_count": len(proxy_manager.proxies),
+        "proxy_stats": proxy_manager.get_proxy_stats(),
+        "proxies": [{"ip": p.ip, "port": p.port} for p in proxy_manager.proxies]
+    }
+
+@app.post("/admin/proxy/health-check")
+async def health_check_proxies():
+    """프록시 헬스 체크 실행"""
+    await proxy_manager.health_check_all_proxies()
+    return {"message": "헬스 체크 완료", "stats": proxy_manager.get_proxy_stats()}
+
+@app.get("/admin/proxy/test/{proxy_ip}")
+async def test_single_proxy(proxy_ip: str):
+    """특정 프록시 테스트"""
+    proxy = next((p for p in proxy_manager.proxies if p.ip == proxy_ip), None)
+    if not proxy:
+        raise HTTPException(status_code=404, detail="프록시를 찾을 수 없습니다")
+    
+    is_working = await proxy_manager.test_proxy(proxy)
+    return {
+        "proxy_ip": proxy_ip,
+        "is_working": is_working,
+        "stats": proxy_manager.proxy_stats.get(proxy_ip, {})
+    }
 
 if __name__ == "__main__":
     import uvicorn

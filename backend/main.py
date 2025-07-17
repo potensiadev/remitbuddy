@@ -15,9 +15,6 @@ app = FastAPI()
 
 # --- CORS 설정 ---
 origins = [
-    "http://localhost:3000",
-    "https://sendhome.netlify.app",
-    "https://*.netlify.app",  # 추가
     "*"  # 임시로 모든 origin 허용
 ]
 

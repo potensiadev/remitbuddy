@@ -92,11 +92,11 @@ const ProviderCard = ({ providerData, isBest, currency, t }) => {
     );
 };
 
-const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t }) => ( 
+const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange }) => ( 
     <div className="absolute top-full right-0 mt-2 w-[280px] h-auto max-h-[60vh] bg-white rounded-xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden z-40"> 
         <div className="flex-1 overflow-y-auto"> 
             {COUNTRIES.map(c => ( 
-                <div key={c.code} className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 text-lg" onClick={() => { setSelectedCountry(c); setShowDropdown(false); }}> 
+                <div key={c.code} className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 text-lg" onClick={() => { setSelectedCountry(c); setShowDropdown(false); onCountryChange(c); }}> 
                     <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" /> 
                     <div> 
                         <div className="font-bold text-sm text-slate-800">{c.name}</div> 
@@ -332,6 +332,30 @@ export default function MainPage() {
         setShowResults(false); 
         window.scrollTo({ top: 0, behavior: 'smooth'}); 
     };
+
+    // 🔥 Auto-trigger API call when country changes
+    const handleCountryChange = (newCountry) => {
+        console.log('🔥 Country changed to:', newCountry.name);
+        if (amount) {
+            setQueryParams({ 
+                receive_country: newCountry.name, 
+                receive_currency: newCountry.currency, 
+                send_amount: amount 
+            }); 
+            setShowResults(true);
+        }
+    };
+
+    // 🔥 Auto-trigger API call when amount changes (if country is already selected)
+    useEffect(() => {
+        if (selectedCountry && amount && showResults) {
+            setQueryParams({ 
+                receive_country: selectedCountry.name, 
+                receive_currency: selectedCountry.currency, 
+                send_amount: amount 
+            });
+        }
+    }, [amount, selectedCountry, showResults]);
         
     return (
         <div className="bg-[#F5F7FA] min-h-screen font-sans flex flex-col items-center pt-8 px-4">
@@ -355,7 +379,7 @@ export default function MainPage() {
                             <h1 className="text-center text-slate-800 text-3xl sm:text-4xl font-extrabold mb-8 leading-tight" dangerouslySetInnerHTML={{ __html: t('title') }} />
         
                             <form onSubmit={handleSubmit} className="w-full">
-                                <label className="w-full text-left text-sm font-semibold text-slate-800 mb-2 block">보내는 금액 (KRW)</label>
+                                <label className="w-full text-left text-sm font-semibold text-slate-800 mb-2 block">You Send (KRW)</label>
                                 
                                 <div className="relative w-full mb-5" ref={formRef}>
                                     <input
@@ -374,7 +398,7 @@ export default function MainPage() {
                                             <span className="mx-1 font-semibold text-slate-800">{selectedCountry.currency}</span>
                                             <ChevronDownIcon className="h-4 w-4 text-slate-600" />
                                         </button>
-                                        {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} />}
+                                        {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} />}
                                     </div>
                                 </div>
         

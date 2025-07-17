@@ -43,13 +43,12 @@ const COUNTRIES = [
 // Provider name mapping for analytics
 const PROVIDER_ANALYTICS_MAP = {
     'Hanpass': 'hanpass',
-    'GMoney Trans': 'gmoneytrans',
     'GmoneyTrans': 'gmoneytrans',
     'E9Pay': 'e9pay',
-    'Coinshot': 'finshot',
+    'Finshot': 'finshot',
     'Cross': 'cross',
     'GME Remit': 'gmeremit',
-    'JP Remit': 'JRF',
+    'JRF': 'JRF',
     'Wirebarley': 'wirebarley',
     'Moin': 'moin'
 };
@@ -306,8 +305,22 @@ export default function MainPage() {
         // Log compare again click
         logCompareAgain();
         
-        setShowResults(false); 
-        window.scrollTo({ top: 0, behavior: 'smooth'}); 
+        // Instead of hiding results, trigger a new API call with current parameters
+        if (selectedCountry && amount) {
+            const newQueryParams = { 
+                receive_country: selectedCountry.name, 
+                receive_currency: selectedCountry.currency, 
+                send_amount: amount 
+            };
+            
+            // Update query params to trigger new API call
+            setQueryParams(newQueryParams);
+            
+            // Scroll to results section
+            if (resultsRef.current) {
+                resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
     };
 
     // Auto-trigger API call when country changes

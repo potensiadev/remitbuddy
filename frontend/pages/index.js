@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 
+// 🔥 FORCE CONFIGURATION - 환경 변수 완전 무시
+const FORCE_API_BASE_URL = 'https://sendhome.onrender.com';
+
 // --- Icon Components ---
 const ChevronDownIcon = ({ className }) => ( 
     <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}> 
@@ -118,105 +121,78 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
             setError(null);
             setResults([]);
 
-            // 환경 변수 디버깅
-            console.log('=== DEBUG INFO ===');
-            console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
-            console.log('Query Params:', queryParams);
+            console.log('🔥 FORCE DEBUG - Component Version:', Date.now());
+            console.log('🔥 FORCE_API_BASE_URL:', FORCE_API_BASE_URL);
+            console.log('🔥 Query Params:', queryParams);
             
-            // 하드코딩된 URL 사용 (환경 변수 문제 우회)
-            const API_BASE_URL = 'https://sendhome.onrender.com';
-            console.log('Using API_BASE_URL:', API_BASE_URL);
+            const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${queryParams.send_amount}`;
+            console.log('🎯 Final API URL:', url);
             
-            const url = `${API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${queryParams.send_amount}`;
-            console.log('Full API URL:', url);
+            // URL 안전성 검증
+            if (!url.includes('sendhome.onrender.com')) {
+                console.error('🚨 CRITICAL ERROR: URL is not using correct domain!');
+                setError('Configuration error: Invalid API URL detected');
+                setIsLoading(false);
+                return;
+            }
 
             try {
-                // 1단계: 백엔드 서버 헬스체크
-                console.log('🔍 Step 1: Health check...');
-                const healthCheck = await fetch(`${API_BASE_URL}/`, {
-                    method: 'GET',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+                console.log('🔍 Starting API call...');
                 
-                console.log('Health check status:', healthCheck.status);
-                console.log('Health check ok:', healthCheck.ok);
-                
-                if (!healthCheck.ok) {
-                    throw new Error(`Backend server is not responding (Status: ${healthCheck.status})`);
-                }
-                
-                const healthData = await healthCheck.text();
-                console.log('Health check response:', healthData);
-                
-                // 2단계: 실제 API 호출
-                console.log('🚀 Step 2: Making API call...');
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => {
-                    console.log('⏰ Request timeout after 30 seconds');
-                    controller.abort();
-                }, 30000);
-
                 const response = await fetch(url, {
-                    signal: controller.signal,
                     method: 'GET',
                     mode: 'cors',
+                    cache: 'no-cache',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                     },
                 });
                 
-                clearTimeout(timeoutId);
-                
-                console.log('API response status:', response.status);
-                console.log('API response ok:', response.ok);
-                console.log('API response headers:', [...response.headers.entries()]);
+                console.log('📊 Response details:', {
+                    status: response.status,
+                    ok: response.ok,
+                    url: response.url,
+                    statusText: response.statusText
+                });
                 
                 if (!response.ok) {
-                    const errText = await response.text();
-                    console.log('Error response text:', errText);
-                    
-                    let errData = {};
-                    try {
-                        errData = JSON.parse(errText);
-                    } catch (e) {
-                        console.log('Could not parse error as JSON');
-                    }
-                    
-                    throw new Error(errData.detail || `API Error: ${response.status} - ${response.statusText}`);
+                    const errorText = await response.text();
+                    console.error('❌ API Error Response:', errorText);
+                    throw new Error(`API Error: ${response.status} - ${response.statusText}`);
                 }
                 
                 const data = await response.json();
-                console.log('✅ API Success! Data:', data);
-                setResults(data.results || []);
+                console.log('✅ API Success Response:', data);
+                
+                if (data.results && data.results.length > 0) {
+                    setResults(data.results);
+                } else {
+                    setError('No exchange rate providers available');
+                }
                 
             } catch (err) {
-                console.error("❌ API Fetch Error:", err);
-                console.error("Error name:", err.name);
-                console.error("Error message:", err.message);
-                console.error("Error stack:", err.stack);
+                console.error('🚨 Fetch Error Details:', {
+                    name: err.name,
+                    message: err.message,
+                    stack: err.stack
+                });
                 
-                if (err.name === 'AbortError') {
-                    setError("Request timed out. The server might be waking up. Please try again in a few minutes.");
+                // 매우 구체적인 에러 처리
+                if (err.message.includes('127.0.0.1') || err.message.includes('localhost')) {
+                    setError('CRITICAL: Code deployment failed. Still using localhost.');
+                } else if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
+                    setError('Network error: Cannot connect to server. Please check your internet connection.');
                 } else if (err.message.includes('CORS')) {
-                    setError("CORS error. Please contact support.");
-                } else if (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed to fetch')) {
-                    setError(`Network error: ${err.message}. The server might be sleeping. Please try again in a few minutes.`);
-                } else if (err.message.includes('404')) {
-                    setError("Server not found. Please contact support.");
+                    setError('CORS error: Server configuration issue.');
                 } else {
-                    setError(`Error: ${err.message}`);
+                    setError(`API Error: ${err.message}`);
                 }
             } finally {
                 setIsLoading(false);
-                console.log('=== DEBUG END ===');
             }
         };
 
-        // 실제 함수 호출
         fetchRealQuotes();
     }, [queryParams]);
 
@@ -246,13 +222,26 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
             {error && (
                 <div className="text-center p-8 bg-red-50 border border-red-200 rounded-lg">
                     <h3 className="text-xl font-bold text-red-700">{t('error_title')}</h3>
-                    <p className="text-red-600 mt-2">{error}</p>
-                    <button 
-                        onClick={() => window.location.reload()} 
-                        className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-                    >
-                        새로고침
-                    </button>
+                    <p className="text-red-600 mt-2 text-sm">{error}</p>
+                    <div className="mt-4 space-x-2">
+                        <button 
+                            onClick={() => window.location.reload()} 
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                        >
+                            새로고침
+                        </button>
+                        <button 
+                            onClick={() => {
+                                console.log('🔧 Manual debug info:');
+                                console.log('FORCE_API_BASE_URL:', FORCE_API_BASE_URL);
+                                console.log('Current URL:', window.location.href);
+                                console.log('User agent:', navigator.userAgent);
+                            }}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                        >
+                            디버그 정보
+                        </button>
+                    </div>
                 </div>
             )} 
             
@@ -294,6 +283,14 @@ export default function MainPage() {
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
     const formRef = useRef(null);
 
+    // 🔥 컴포넌트 로드 시 강제 디버깅
+    useEffect(() => {
+        console.log('🚨 MainPage Component Loaded');
+        console.log('🚨 FORCE_API_BASE_URL:', FORCE_API_BASE_URL);
+        console.log('🚨 Current timestamp:', new Date().toISOString());
+        console.log('🚨 Window location:', window.location.href);
+    }, []);
+
     useEffect(() => { 
         function handleClickOutside(event) { 
             if (formRef.current && !formRef.current.contains(event.target)) { 
@@ -318,7 +315,9 @@ export default function MainPage() {
     };
 
     const handleSubmit = (e) => { 
-        e.preventDefault(); 
+        e.preventDefault();
+        console.log('🔥 Form submitted, API URL will be:', FORCE_API_BASE_URL);
+        
         if (selectedCountry && amount) { 
             setQueryParams({ 
                 receive_country: selectedCountry.name, 

@@ -1,0 +1,19 @@
+{
+  "title": "가족이 받을 금액은<br/>얼마인가요?",
+  "subtitle": "최고의 환율을 찾아드릴게요",
+  "amount_to_receive": "받는 금액",
+  "compare_button": "최고 환율 찾아보기",
+  "compare_again_button": "새로 비교하기",
+  "best_rate_badge": "최고 환율",
+  "real_time_summary": "실시간 비교 결과",
+  "loading_text": "환율을 비교 중입니다...",
+  "fee": "수수료",
+  "exchange_rate": "환율",
+  "error_title": "오류가 발생했습니다.",
+  "error_message": "송금 정보를 가져오는 데 실패했습니다. 잠시 후 다시 시도해주세요.",
+  "select_country_title": "국가 선택",
+  "total_needed": "예상 총 필요 원화",
+  "you_send": "보내는 금액 (KRW)",
+  "refresh": "새로고침",
+  "debug_info": "디버그 정보"
+}

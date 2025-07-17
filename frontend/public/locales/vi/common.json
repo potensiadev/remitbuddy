@@ -1,0 +1,19 @@
+{
+  "title": "Gia đình bạn sẽ nhận<br/>được bao nhiêu?",
+  "subtitle": "Chúng tôi sẽ tìm tỷ giá tốt nhất cho bạn",
+  "amount_to_receive": "Số tiền nhận được",
+  "compare_button": "So sánh tỷ giá tốt nhất",
+  "compare_again_button": "So sánh lại",
+  "best_rate_badge": "Tỷ giá tốt nhất",
+  "real_time_summary": "Tóm tắt thời gian thực",
+  "loading_text": "Đang so sánh tỷ giá...",
+  "fee": "Phí",
+  "exchange_rate": "Tỷ giá",
+  "error_title": "Oops! Có lỗi xảy ra.",
+  "error_message": "Chúng tôi không thể lấy dữ liệu chuyển tiền. Vui lòng thử lại sau.",
+  "select_country_title": "Chọn quốc gia",
+  "total_needed": "Bạn gửi (ước tính)",
+  "you_send": "Bạn gửi (KRW)",
+  "refresh": "Làm mới",
+  "debug_info": "Thông tin debug"
+}

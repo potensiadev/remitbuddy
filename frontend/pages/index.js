@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import { 
+  logClickedCTA, 
+  logCompareAgain, 
+  logClickedProvider, 
+  logSendingCountrySwitch 
+} from '../utils/analytics';
 
-// 🔥 FORCE CONFIGURATION - 환경 변수 완전 무시
+// API Configuration
 const FORCE_API_BASE_URL = 'https://sendhome.onrender.com';
 
-// --- Icon Components ---
+// Icon Components
 const ChevronDownIcon = ({ className }) => ( 
     <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}> 
         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /> 
@@ -17,42 +26,7 @@ const ArrowRightIcon = ({ className }) => (
     </svg> 
 );
 
-// --- i18n & Static Data ---
-const translations = {
-    en: { 
-        title: "How much should your<br/>family receive?", 
-        subtitle: "We'll find the best exchange rate for you", 
-        amount_to_receive: "Amount to Receive", 
-        compare_button: "Find out the Best Rate", 
-        compare_again_button: "New Comparison", 
-        best_rate_badge: "Best Rate", 
-        real_time_summary: "Real-time Summary", 
-        loading_text: "Comparing rates...", 
-        fee: "Fee", 
-        error_title: "Oops! Something went wrong.", 
-        error_message: "We couldn't fetch the remittance data. Please try again later.", 
-        select_country_title: "Select Country", 
-        total_needed: "You Send (est.)" 
-    },
-    ko: { 
-        title: "가족이 받을 금액은<br/>얼마인가요?", 
-        subtitle: "최고의 환율을 찾아드릴게요", 
-        amount_to_receive: "받는 금액", 
-        compare_button: "최고 환율 찾아보기", 
-        compare_again_button: "새로 비교하기", 
-        best_rate_badge: "최고 환율", 
-        real_time_summary: "실시간 비교 결과", 
-        loading_text: "환율을 비교 중입니다...", 
-        fee: "수수료", 
-        error_title: "오류가 발생했습니다.", 
-        error_message: "송금 정보를 가져오는 데 실패했습니다. 잠시 후 다시 시도해주세요.", 
-        select_country_title: "국가 선택", 
-        total_needed: "예상 총 필요 원화" 
-    },
-};
-
-const useTranslation = (lang) => (key) => translations[lang]?.[key] || key;
-
+// Country data with supported currencies
 const COUNTRIES = [
     { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" },
     { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" },
@@ -66,12 +40,37 @@ const COUNTRIES = [
     { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' },
 ];
 
-// --- Reusable Components ---
+// Provider name mapping for analytics
+const PROVIDER_ANALYTICS_MAP = {
+    'Hanpass': 'hanpass',
+    'GMoney Trans': 'gmoneytrans',
+    'GmoneyTrans': 'gmoneytrans',
+    'E9Pay': 'e9pay',
+    'Coinshot': 'finshot',
+    'Cross': 'cross',
+    'GME Remit': 'gmeremit',
+    'JP Remit': 'JRF',
+    'Wirebarley': 'wirebarley',
+    'Moin': 'moin'
+};
+
+// Provider Card Component
 const ProviderCard = ({ providerData, isBest, currency, t }) => { 
     const { provider, recipient_gets, exchange_rate, fee } = providerData; 
     
+    const handleProviderClick = () => {
+        const analyticsName = PROVIDER_ANALYTICS_MAP[provider] || provider.toLowerCase();
+        logClickedProvider(analyticsName);
+    };
+    
     return ( 
-        <a href={providerData.link} target="_blank" rel="noopener noreferrer" className={`block w-full p-4 lg:p-6 mb-3 lg:mb-4 bg-white border rounded-xl lg:rounded-2xl shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isBest ? 'border-emerald-500 border-2' : 'border-slate-200'}`}> 
+        <a 
+            href={providerData.link} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            onClick={handleProviderClick}
+            className={`block w-full p-4 lg:p-6 mb-3 lg:mb-4 bg-white border rounded-xl lg:rounded-2xl shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isBest ? 'border-emerald-500 border-2' : 'border-slate-200'}`}
+        > 
             <div className="flex justify-between items-start"> 
                 <h3 className="text-xl lg:text-2xl font-bold text-slate-800">{provider}</h3> 
                 {isBest && <span className="text-xs lg:text-sm font-semibold text-white bg-emerald-500 px-3 py-1 lg:px-4 lg:py-2 rounded-full">{t('best_rate_badge')}</span>} 
@@ -84,7 +83,7 @@ const ProviderCard = ({ providerData, isBest, currency, t }) => {
                 </p> 
             </div> 
             <div className="mt-3 lg:mt-4 text-xs lg:text-sm text-slate-500 flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-0"> 
-                <span>1 KRW ≈ {exchange_rate.toFixed(4)} {currency}</span> 
+                <span>100 {currency} = {(100 / exchange_rate).toFixed(2)} KRW</span> 
                 <span className="hidden lg:inline mx-2">|</span> 
                 <span>{t('fee')}: {fee.toLocaleString()} KRW</span> 
             </div> 
@@ -92,11 +91,20 @@ const ProviderCard = ({ providerData, isBest, currency, t }) => {
     );
 };
 
+// Country Dropdown Component
 const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange }) => ( 
     <div className="absolute top-full right-0 mt-2 w-[280px] lg:w-[320px] h-auto max-h-[60vh] bg-white rounded-xl lg:rounded-2xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden z-40"> 
         <div className="flex-1 overflow-y-auto"> 
             {COUNTRIES.map(c => ( 
-                <div key={c.code} className="flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 cursor-pointer hover:bg-gray-50 text-lg" onClick={() => { setSelectedCountry(c); setShowDropdown(false); onCountryChange(c); }}> 
+                <div 
+                    key={c.code} 
+                    className="flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 cursor-pointer hover:bg-gray-50 text-lg" 
+                    onClick={() => { 
+                        setSelectedCountry(c); 
+                        setShowDropdown(false); 
+                        onCountryChange(c); 
+                    }}
+                > 
                     <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" /> 
                     <div> 
                         <div className="font-bold text-sm lg:text-base text-slate-800">{c.name}</div> 
@@ -108,6 +116,7 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
     </div> 
 );
 
+// Comparison Results Component
 function ComparisonResults({ queryParams, t, onCompareAgain }) {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -121,24 +130,12 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
             setError(null);
             setResults([]);
 
-            console.log('🔥 FORCE DEBUG - Component Version:', Date.now());
-            console.log('🔥 FORCE_API_BASE_URL:', FORCE_API_BASE_URL);
-            console.log('🔥 Query Params:', queryParams);
+            console.log('🔥 API Call - Query Params:', queryParams);
             
             const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${queryParams.send_amount}`;
-            console.log('🎯 Final API URL:', url);
-            
-            // URL 안전성 검증
-            if (!url.includes('sendhome.onrender.com')) {
-                console.error('🚨 CRITICAL ERROR: URL is not using correct domain!');
-                setError('Configuration error: Invalid API URL detected');
-                setIsLoading(false);
-                return;
-            }
+            console.log('🎯 API URL:', url);
 
             try {
-                console.log('🔍 Starting API call...');
-                
                 const response = await fetch(url, {
                     method: 'GET',
                     mode: 'cors',
@@ -149,21 +146,12 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
                     },
                 });
                 
-                console.log('📊 Response details:', {
-                    status: response.status,
-                    ok: response.ok,
-                    url: response.url,
-                    statusText: response.statusText
-                });
-                
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('❌ API Error Response:', errorText);
                     throw new Error(`API Error: ${response.status} - ${response.statusText}`);
                 }
                 
                 const data = await response.json();
-                console.log('✅ API Success Response:', data);
+                console.log('✅ API Response:', data);
                 
                 if (data.results && data.results.length > 0) {
                     setResults(data.results);
@@ -172,22 +160,8 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
                 }
                 
             } catch (err) {
-                console.error('🚨 Fetch Error Details:', {
-                    name: err.name,
-                    message: err.message,
-                    stack: err.stack
-                });
-                
-                // 매우 구체적인 에러 처리
-                if (err.message.includes('127.0.0.1') || err.message.includes('localhost')) {
-                    setError('CRITICAL: Code deployment failed. Still using localhost.');
-                } else if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
-                    setError('Network error: Cannot connect to server. Please check your internet connection.');
-                } else if (err.message.includes('CORS')) {
-                    setError('CORS error: Server configuration issue.');
-                } else {
-                    setError(`API Error: ${err.message}`);
-                }
+                console.error('🚨 API Error:', err);
+                setError(`API Error: ${err.message}`);
             } finally {
                 setIsLoading(false);
             }
@@ -228,18 +202,18 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
                             onClick={() => window.location.reload()} 
                             className="px-4 lg:px-6 py-2 lg:py-3 bg-red-600 text-white rounded-lg lg:rounded-xl hover:bg-red-700 transition text-sm lg:text-base"
                         >
-                            새로고침
+                            {t('refresh')}
                         </button>
                         <button 
                             onClick={() => {
-                                console.log('🔧 Manual debug info:');
-                                console.log('FORCE_API_BASE_URL:', FORCE_API_BASE_URL);
+                                console.log('🔧 Debug Info:');
+                                console.log('API Base URL:', FORCE_API_BASE_URL);
                                 console.log('Current URL:', window.location.href);
-                                console.log('User agent:', navigator.userAgent);
+                                console.log('User Agent:', navigator.userAgent);
                             }}
                             className="px-4 lg:px-6 py-2 lg:py-3 bg-blue-600 text-white rounded-lg lg:rounded-xl hover:bg-blue-700 transition text-sm lg:text-base"
                         >
-                            디버그 정보
+                            {t('debug_info')}
                         </button>
                     </div>
                 </div>
@@ -271,10 +245,10 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
     );
 }
 
-// --- Main Page Component ---
+// Main Page Component
 export default function MainPage() {
-    const [lang, setLang] = useState('en');
-    const t = useTranslation(lang);
+    const { t } = useTranslation('common');
+    const router = useRouter();
     const [showResults, setShowResults] = useState(false);
     const [queryParams, setQueryParams] = useState({});
     const resultsRef = useRef(null);
@@ -283,13 +257,11 @@ export default function MainPage() {
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
     const formRef = useRef(null);
 
-    // 🔥 컴포넌트 로드 시 강제 디버깅
+    // Debug logging
     useEffect(() => {
-        console.log('🚨 MainPage Component Loaded');
-        console.log('🚨 FORCE_API_BASE_URL:', FORCE_API_BASE_URL);
-        console.log('🚨 Current timestamp:', new Date().toISOString());
-        console.log('🚨 Window location:', window.location.href);
-    }, []);
+        console.log('🌍 Language:', router.locale);
+        console.log('🔗 Current URL:', window.location.href);
+    }, [router.locale]);
 
     useEffect(() => { 
         function handleClickOutside(event) { 
@@ -316,7 +288,9 @@ export default function MainPage() {
 
     const handleSubmit = (e) => { 
         e.preventDefault();
-        console.log('🔥 Form submitted, API URL will be:', FORCE_API_BASE_URL);
+        
+        // Log CTA click
+        logClickedCTA();
         
         if (selectedCountry && amount) { 
             setQueryParams({ 
@@ -329,13 +303,20 @@ export default function MainPage() {
     };
 
     const handleCompareAgain = () => { 
+        // Log compare again click
+        logCompareAgain();
+        
         setShowResults(false); 
         window.scrollTo({ top: 0, behavior: 'smooth'}); 
     };
 
-    // 🔥 Auto-trigger API call when country changes
+    // Auto-trigger API call when country changes
     const handleCountryChange = (newCountry) => {
-        console.log('🔥 Country changed to:', newCountry.name);
+        console.log('🏁 Country changed to:', newCountry.name);
+        
+        // Log country switch
+        logSendingCountrySwitch(newCountry.currency);
+        
         if (amount) {
             setQueryParams({ 
                 receive_country: newCountry.name, 
@@ -346,7 +327,7 @@ export default function MainPage() {
         }
     };
 
-    // 🔥 Auto-trigger API call when amount changes (if country is already selected)
+    // Auto-trigger API call when amount changes (if country is already selected)
     useEffect(() => {
         if (selectedCountry && amount && showResults) {
             setQueryParams({ 
@@ -356,7 +337,7 @@ export default function MainPage() {
             });
         }
     }, [amount, selectedCountry, showResults]);
-        
+
     return (
         <div className="bg-[#F5F7FA] min-h-screen font-sans flex flex-col items-center pt-8 px-4 lg:px-8">
             <div className="w-full max-w-sm lg:max-w-6xl xl:max-w-7xl mx-auto">
@@ -381,7 +362,7 @@ export default function MainPage() {
                                 <h1 className="text-center text-slate-800 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold mb-8 lg:mb-12 leading-tight" dangerouslySetInnerHTML={{ __html: t('title') }} />
             
                                 <form onSubmit={handleSubmit} className="w-full">
-                                    <label className="w-full text-left text-sm lg:text-base font-semibold text-slate-800 mb-2 lg:mb-3 block">You Send (KRW)</label>
+                                    <label className="w-full text-left text-sm lg:text-base font-semibold text-slate-800 mb-2 lg:mb-3 block">{t('you_send')}</label>
                                     
                                     <div className="relative w-full mb-5 lg:mb-8" ref={formRef}>
                                         <input
@@ -424,7 +405,7 @@ export default function MainPage() {
                                             type="submit"
                                             className="w-full h-14 lg:h-16 rounded-xl lg:rounded-2xl bg-gradient-to-r from-cyan-400 to-indigo-600 text-white font-bold text-lg lg:text-xl shadow-lg shadow-indigo-500/30 transition-all duration-200 hover:scale-105 hover:shadow-xl"
                                         >
-                                            {t('compare_button')}
+                                            {showResults ? t('compare_again_button') : t('compare_button')}
                                         </button>
                                     </div>
                                 </form>
@@ -440,4 +421,13 @@ export default function MainPage() {
             </div>
         </div>
     );
+}
+
+// Server-side translations
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }

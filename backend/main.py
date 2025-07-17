@@ -38,7 +38,8 @@ app.add_middleware(
 RATE_LIMIT = 15
 RATE_LIMIT_WINDOW = 60
 request_timestamps = {}
-cache = TTLCache(maxsize=1024, ttl=300)
+# Reduced TTL to 60 seconds for fresher data with more cache slots
+cache = TTLCache(maxsize=2048, ttl=60)
 PROXIES = [] 
 
 # --- Country Code Mappings ---
@@ -151,14 +152,40 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
         url = 'https://www.hanpass.com/getCost'
         country_code = COUNTRY_CODES.get(receive_country)
         if not country_code: return None
-        json_data = {'inputAmount': str(send_amount), 'inputCurrencyCode': 'KRW', 'toCurrencyCode': receive_currency, 'toCountryCode': country_code, 'lang': 'en'}
-        async with session.post(url, json=json_data, headers={'Content-Type': 'application/json'}) as response:
+        
+        json_data = {
+            'inputAmount': str(send_amount), 
+            'inputCurrencyCode': 'KRW', 
+            'toCurrencyCode': receive_currency, 
+            'toCountryCode': country_code, 
+            'lang': 'en'
+        }
+        
+        headers = {'Content-Type': 'application/json'}
+        
+        async with session.post(url, json=json_data, headers=headers) as response:
+            if response.status != 200:
+                return None
+                
             data = await response.json()
-            if response.status != 200 or not data.get('exchangeRate'): return None
+            exchange_rate = data.get('exchangeRate')
+            
+            if not exchange_rate:
+                return None
+                
             fee = float(data.get('transferFee', 0))
-            exchange_rate = float(data['exchangeRate'])
+            exchange_rate = float(exchange_rate)
             recipient_gets = (send_amount - fee) * exchange_rate
-            return {"provider": "Hanpass", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": recipient_gets, "link": "https://www.hanpass.com/"}
+            
+            return {
+                "provider": "Hanpass", 
+                "exchange_rate": exchange_rate, 
+                "fee": fee, 
+                "recipient_gets": recipient_gets, 
+                "link": "https://www.hanpass.com/"
+            }
+    except (asyncio.TimeoutError, aiohttp.ClientError):
+        return None
     except Exception as e:
         print(f"Hanpass Error: {type(e).__name__} - {e}")
         return None
@@ -798,24 +825,109 @@ async def get_coinshot_quote(session: aiohttp.ClientSession, send_amount: int, r
         print(f"Coinshot Error: {type(e).__name__} - {e}")
         return None
 
-# --- Main API Logic ---
+# --- Performance Optimized API Logic ---
 async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_country: str) -> List[Dict]:
-    timeout = aiohttp.ClientTimeout(total=7)
-    async with aiohttp.ClientSession(timeout=timeout) as session:
+    """
+    Performance optimized quote fetching with:
+    - Individual timeouts per request (2s max)
+    - Connection pooling and reuse
+    - TCP connection limits
+    - DNS caching
+    """
+    
+    # Optimized timeout and connector settings
+    timeout = aiohttp.ClientTimeout(
+        total=2.5,        # Total timeout for entire request
+        connect=0.5,      # Connection timeout
+        sock_read=0.3     # Socket read timeout
+    )
+    
+    # Connection pooling with limits
+    connector = aiohttp.TCPConnector(
+        limit=100,          # Total connection pool size
+        limit_per_host=10,  # Max connections per host
+        ttl_dns_cache=300,  # DNS cache TTL in seconds
+        use_dns_cache=True,
+        keepalive_timeout=30,
+        enable_cleanup_closed=True,
+        force_close=True    # Force close connections to avoid hanging
+    )
+    
+    async with aiohttp.ClientSession(
+        timeout=timeout,
+        connector=connector,
+        headers={
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate',
+            'Connection': 'keep-alive',
+            'Cache-Control': 'no-cache'
+        }
+    ) as session:
+        
+        # Create tasks with individual timeouts
         tasks = [
-            get_hanpass_quote(session, send_amount, receive_currency, receive_country),
-            get_cross_quote(session, send_amount, receive_currency, receive_country),
-            get_gmoneytrans_quote(session, send_amount, receive_currency, receive_country),
-            get_coinshot_quote(session, send_amount, receive_currency, receive_country),
-            get_gmeremit_quote(session, send_amount, receive_currency, receive_country),
-            get_jpremit_quote(session, send_amount, receive_currency, receive_country),
-            get_themoin_quote(session, send_amount, receive_currency, receive_country),
-            get_wirebarley_quote(session, send_amount, receive_currency, receive_country),
-            get_e9pay_quote(session, send_amount, receive_currency, receive_country),
-            # get_sbicosmoney_quote(session, send_amount, receive_currency, receive_country)  # Requires authentication
+            asyncio.wait_for(
+                get_hanpass_quote(session, send_amount, receive_currency, receive_country),
+                timeout=2.0
+            ),
+            asyncio.wait_for(
+                get_cross_quote(session, send_amount, receive_currency, receive_country),
+                timeout=2.0
+            ),
+            asyncio.wait_for(
+                get_gmoneytrans_quote(session, send_amount, receive_currency, receive_country),
+                timeout=2.0
+            ),
+            asyncio.wait_for(
+                get_coinshot_quote(session, send_amount, receive_currency, receive_country),
+                timeout=2.0
+            ),
+            asyncio.wait_for(
+                get_gmeremit_quote(session, send_amount, receive_currency, receive_country),
+                timeout=2.0
+            ),
+            asyncio.wait_for(
+                get_jpremit_quote(session, send_amount, receive_currency, receive_country),
+                timeout=2.0
+            ),
+            asyncio.wait_for(
+                get_themoin_quote(session, send_amount, receive_currency, receive_country),
+                timeout=2.0
+            ),
+            asyncio.wait_for(
+                get_wirebarley_quote(session, send_amount, receive_currency, receive_country),
+                timeout=2.0
+            ),
+            asyncio.wait_for(
+                get_e9pay_quote(session, send_amount, receive_currency, receive_country),
+                timeout=2.0
+            )
         ]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-        return [r for r in results if r and isinstance(r, dict)]
+        
+        # Execute with as_completed for fastest response
+        results = []
+        start_time = time.time()
+        
+        try:
+            # Use asyncio.gather with return_exceptions=True for parallel execution
+            completed_results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            # Filter successful results
+            for result in completed_results:
+                if result and isinstance(result, dict):
+                    results.append(result)
+                elif isinstance(result, Exception):
+                    print(f"Task failed: {type(result).__name__}: {result}")
+                    
+        except Exception as e:
+            print(f"Error in fetch_all_quotes: {e}")
+        
+        execution_time = time.time() - start_time
+        print(f"🚀 Total execution time: {execution_time:.2f}s, Results: {len(results)}")
+        
+        return results
 
 # --- API Endpoints ---
 @app.get("/")
@@ -831,25 +943,46 @@ async def get_remittance_quote(request: Request, receive_country: str = Query(..
     currency_upper = receive_currency.upper()
     cache_key = f"{country_lower}:{currency_upper}:{send_amount}"
     
+    # Check cache first
     if cache_key in cache:
-        return cache[cache_key]
+        cached_data = cache[cache_key]
+        print(f"📋 Cache hit for {cache_key}")
+        return cached_data
 
+    start_time = time.time()
+    print(f"🔄 Processing request: {country_lower} -> {currency_upper}, Amount: {send_amount}")
+    
     try:
-        quotes = await asyncio.wait_for(fetch_all_quotes(send_amount, currency_upper, country_lower), timeout=15)
+        # Reduced timeout to 3 seconds total
+        quotes = await asyncio.wait_for(
+            fetch_all_quotes(send_amount, currency_upper, country_lower), 
+            timeout=3.0
+        )
+        
         if not quotes:
             raise HTTPException(status_code=404, detail="No providers available for this route.")
 
+        # Sort by recipient_gets (highest first)
         sorted_quotes = sorted(quotes, key=lambda x: x.get('recipient_gets', 0), reverse=True)
+        
         response_data = {
             "results": sorted_quotes,
             "best_rate_provider": sorted_quotes[0] if sorted_quotes else None,
         }
+        
+        # Cache the response
         cache[cache_key] = response_data
+        
+        total_time = time.time() - start_time
+        print(f"✅ Request completed in {total_time:.2f}s, Found {len(quotes)} quotes")
+        
         return response_data
+        
     except asyncio.TimeoutError:
+        print(f"⏰ Request timed out after 3s")
         raise HTTPException(status_code=408, detail="Request timed out.")
     except Exception as e:
-        print(f"Unhandled API error: {e}")
+        print(f"❌ Unhandled API error: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error.")
 
 if __name__ == "__main__":

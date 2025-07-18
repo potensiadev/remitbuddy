@@ -850,8 +850,15 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
     - Rate limiting per proxy
     """
     
-    # Create tasks with individual timeouts - each uses ProxySession for IP rotation
+    # Create session-based wrapper functions for all providers
+    async def create_session_wrapper(func, *args):
+        timeout = aiohttp.ClientTimeout(total=2.0)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            return await func(session, *args)
+    
+    # Create tasks with individual timeouts
     tasks = [
+        # Proxy-based providers (no session needed)
         asyncio.wait_for(
             get_hanpass_quote(send_amount, receive_currency, receive_country),
             timeout=2.0
@@ -860,17 +867,40 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
             get_wirebarley_quote(send_amount, receive_currency, receive_country),
             timeout=2.0
         ),
-        # TODO: Update remaining scraper functions to use ProxySession
-        # For now, these still use the old session-based approach
+        # Session-based providers
+        asyncio.wait_for(
+            create_session_wrapper(get_cross_quote, send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
+        asyncio.wait_for(
+            create_session_wrapper(get_gmoneytrans_quote, send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
+        asyncio.wait_for(
+            create_session_wrapper(get_gmeremit_quote, send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
+        asyncio.wait_for(
+            create_session_wrapper(get_jpremit_quote, send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
+        asyncio.wait_for(
+            create_session_wrapper(get_themoin_quote, send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
+        asyncio.wait_for(
+            create_session_wrapper(get_sbicosmoney_quote, send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
+        asyncio.wait_for(
+            create_session_wrapper(get_e9pay_quote, send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
+        asyncio.wait_for(
+            create_session_wrapper(get_coinshot_quote, send_amount, receive_currency, receive_country),
+            timeout=2.0
+        ),
     ]
-    
-    # Add Cross function temporarily with session until we update it
-    async def temp_cross_wrapper():
-        timeout = aiohttp.ClientTimeout(total=2.0)
-        async with aiohttp.ClientSession(timeout=timeout) as session:
-            return await get_cross_quote(session, send_amount, receive_currency, receive_country)
-    
-    tasks.append(asyncio.wait_for(temp_cross_wrapper(), timeout=2.0))
     
     # Execute with as_completed for fastest response
     results = []

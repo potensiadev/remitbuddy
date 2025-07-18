@@ -1,0 +1,19 @@
+{
+  "title": "Magkano ang dapat<br/>matanggap ng inyong pamilya?",
+  "subtitle": "Hanapin namin ang pinakamabuting exchange rate para sa inyo",
+  "amount_to_receive": "Halagang Matatanggap",
+  "compare_button": "Ikumpara ang Pinakamabuting Rate",
+  "compare_again_button": "Ikumpara Ulit",
+  "best_rate_badge": "Pinakamabuting Rate",
+  "real_time_summary": "Real-time na Buod",
+  "loading_text": "Ini-ikumpara ang mga rate...",
+  "fee": "Bayad",
+  "exchange_rate": "Exchange Rate",
+  "error_title": "Ay! May problema!",
+  "error_message": "Hindi namin makuha ang remittance data. Subukan ulit mamaya.",
+  "select_country_title": "Pumili ng Bansa",
+  "total_needed": "Ipapadala Ninyo (tantiya)",
+  "you_send": "Ipapadala Ninyo (KRW)",
+  "refresh": "I-refresh",
+  "debug_info": "Debug Info"
+}

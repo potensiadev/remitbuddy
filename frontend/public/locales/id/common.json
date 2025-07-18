@@ -1,0 +1,19 @@
+{
+  "title": "Berapa yang seharusnya<br/>keluarga Anda terima?",
+  "subtitle": "Kami akan menemukan nilai tukar terbaik untuk Anda",
+  "amount_to_receive": "Jumlah yang Diterima",
+  "compare_button": "Bandingkan Nilai Tukar Terbaik",
+  "compare_again_button": "Bandingkan Lagi",
+  "best_rate_badge": "Nilai Tukar Terbaik",
+  "real_time_summary": "Ringkasan Real-time",
+  "loading_text": "Membandingkan nilai tukar...",
+  "fee": "Biaya",
+  "exchange_rate": "Nilai Tukar",
+  "error_title": "Ups! Ada yang salah.",
+  "error_message": "Kami tidak bisa mengambil data remitansi. Silakan coba lagi nanti.",
+  "select_country_title": "Pilih Negara",
+  "total_needed": "Anda Kirim (perkiraan)",
+  "you_send": "Anda Kirim (KRW)",
+  "refresh": "Segarkan",
+  "debug_info": "Info Debug"
+}

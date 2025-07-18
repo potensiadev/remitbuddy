@@ -1,0 +1,19 @@
+{
+  "title": "Sizning oilangiz<br/>qancha olishi kerak?",
+  "subtitle": "Biz siz uchun eng yaxshi ayirboshlash kursini topamiz",
+  "amount_to_receive": "Olinadigan miqdor",
+  "compare_button": "Eng yaxshi kursni solishtiring",
+  "compare_again_button": "Yana solishtiring",
+  "best_rate_badge": "Eng yaxshi kurs",
+  "real_time_summary": "Real vaqt xulosasi",
+  "loading_text": "Kurslar solishtirilmoqda...",
+  "fee": "To'lov",
+  "exchange_rate": "Ayirboshlash kursi",
+  "error_title": "Voy! Nimadir noto'g'ri ketdi!",
+  "error_message": "Pul o'tkazmalari ma'lumotlarini ololmadik. Keyinroq qaytadan urinib ko'ring.",
+  "select_country_title": "Davlatni tanlang",
+  "total_needed": "Siz jo'natasiz (taxminan)",
+  "you_send": "Siz jo'natasiz (KRW)",
+  "refresh": "Yangilash",
+  "debug_info": "Debug ma'lumotlari"
+}

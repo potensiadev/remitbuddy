@@ -1,0 +1,31 @@
+{
+  "proxies": [
+    {
+      "ip": "proxy1.example.com",
+      "port": 8080,
+      "username": "user1",
+      "password": "pass1",
+      "protocol": "http",
+      "max_concurrent": 3,
+      "rate_limit_per_minute": 20
+    },
+    {
+      "ip": "proxy2.example.com",
+      "port": 8080,
+      "username": "user2",
+      "password": "pass2",
+      "protocol": "http",
+      "max_concurrent": 3,
+      "rate_limit_per_minute": 20
+    },
+    {
+      "ip": "proxy3.example.com",
+      "port": 8080,
+      "username": "user3",
+      "password": "pass3",
+      "protocol": "http",
+      "max_concurrent": 3,
+      "rate_limit_per_minute": 20
+    }
+  ]
+}

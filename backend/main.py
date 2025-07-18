@@ -232,17 +232,31 @@ async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, rece
             if fee == 0:
                 fee = 5000.0  # Default fee if not provided
             
-            # Calculate recipient gets using service_rate (foreign currency per KRW)
+            # Cross API returns service_rate as foreign currency per KRW
+            # For correct calculation, we need to understand the service_rate format
+            
+            # Debug: Log the service_rate to understand its format
+            print(f"Cross Debug - service_rate: {service_rate}, currency: {receive_currency}")
+            
+            # Calculate recipient gets using service_rate
+            # service_rate seems to be the exchange rate (foreign currency per KRW)
             calculated_recipient_gets = (send_amount - fee) * service_rate
             
-            # Calculate exchange rate as sending_amount / receiving_amount
-            if calculated_recipient_gets > 0:
-                exchange_rate = send_amount / calculated_recipient_gets
-                # For VND and IDR, multiply by 100 to match display format
-                if receive_currency == "VND" or receive_currency == "IDR":
-                    exchange_rate = exchange_rate * 100
+            # However, if the result is too large, service_rate might be inverted
+            # Let's check if we need to invert it
+            if calculated_recipient_gets > 1000000:  # Unreasonably large amount
+                # service_rate might be KRW per foreign currency, so invert it
+                service_rate_corrected = 1 / service_rate
+                calculated_recipient_gets = (send_amount - fee) * service_rate_corrected
+                exchange_rate = service_rate  # Use original as exchange rate
             else:
-                exchange_rate = 0
+                # service_rate is correct (foreign currency per KRW)
+                exchange_rate = service_rate
+            
+            print(f"Cross Debug - final recipient_gets: {calculated_recipient_gets}")
+            
+            if calculated_recipient_gets <= 0:
+                return None
             
             return {"provider": "Cross", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": calculated_recipient_gets, "link": "https://crossenf.com/"}
     except Exception as e:
@@ -522,10 +536,10 @@ async def get_wirebarley_quote(send_amount: int, receive_currency: str, receive_
             proxy_url = proxy.url if proxy else None
             
             async with session.get(url, headers=headers, proxy=proxy_url) as response:
-            if response.status != 200:
-                return None
-                
-            result = await response.json()
+                if response.status != 200:
+                    return None
+                    
+                result = await response.json()
             
             if result.get('status') != 0:
                 return None
@@ -868,6 +882,14 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
         # TODO: Update remaining scraper functions to use ProxySession
         # For now, these still use the old session-based approach
     ]
+    
+    # Add Cross function temporarily with session until we update it
+    async def temp_cross_wrapper():
+        timeout = aiohttp.ClientTimeout(total=2.0)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            return await get_cross_quote(session, send_amount, receive_currency, receive_country)
+    
+    tasks.append(asyncio.wait_for(temp_cross_wrapper(), timeout=2.0))
     
     # Execute with as_completed for fastest response
     results = []

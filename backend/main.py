@@ -223,42 +223,23 @@ async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, rece
             data = await response.json()
             quote_data = data.get('data', {})
             
-            service_rate_raw = quote_data.get('service_rate', 0)
-            service_rate = float(service_rate_raw)
-
-            if not service_rate or service_rate == 0: return None
-
-            fee = quote_data.get('fee', 0)
-            if fee == 0:
-                fee = 5000.0  # Default fee if not provided
-            
-            # Cross API returns service_rate as foreign currency per KRW
-            # For correct calculation, we need to understand the service_rate format
-            
-            # Debug: Log the service_rate to understand its format
-            print(f"Cross Debug - service_rate: {service_rate}, currency: {receive_currency}")
-            
-            # Calculate recipient gets using service_rate
-            # service_rate seems to be the exchange rate (foreign currency per KRW)
-            calculated_recipient_gets = (send_amount - fee) * service_rate
-            
-            # However, if the result is too large, service_rate might be inverted
-            # Let's check if we need to invert it
-            if calculated_recipient_gets > 1000000:  # Unreasonably large amount
-                # service_rate might be KRW per foreign currency, so invert it
-                service_rate_corrected = 1 / service_rate
-                calculated_recipient_gets = (send_amount - fee) * service_rate_corrected
-                exchange_rate = service_rate  # Use original as exchange rate
-            else:
-                # service_rate is correct (foreign currency per KRW)
-                exchange_rate = service_rate
-            
-            print(f"Cross Debug - final recipient_gets: {calculated_recipient_gets}")
-            
-            if calculated_recipient_gets <= 0:
+            # Use receiving_amount directly from API response
+            receiving_amount = quote_data.get('receiving_amount', 0)
+            if not receiving_amount or receiving_amount <= 0:
                 return None
             
-            return {"provider": "Cross", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": calculated_recipient_gets, "link": "https://crossenf.com/"}
+            fee = quote_data.get('fee', 0)
+            pay_amount = quote_data.get('pay_amount', send_amount)
+            
+            # Calculate exchange rate from the actual amounts
+            if pay_amount > 0:
+                exchange_rate = receiving_amount / pay_amount
+            else:
+                exchange_rate = 0
+            
+            print(f"Cross Debug - receiving_amount: {receiving_amount}, pay_amount: {pay_amount}, exchange_rate: {exchange_rate}")
+            
+            return {"provider": "Cross", "exchange_rate": exchange_rate, "fee": fee, "recipient_gets": receiving_amount, "link": "https://crossenf.com/"}
     except Exception as e:
         print(f"Cross Error: {type(e).__name__} - {e}")
         return None

@@ -323,7 +323,7 @@ export default function MainPage() {
         }
     };
 
-    // Auto-trigger API call when country changes
+    // Handle country change - auto-trigger API only after first comparison
     const handleCountryChange = (newCountry) => {
         console.log('🏁 Country changed to:', newCountry.name);
         
@@ -331,12 +331,25 @@ export default function MainPage() {
         logSendingCountrySwitch(newCountry.currency);
         
         if (amount) {
-            setQueryParams({ 
+            const newQueryParams = { 
                 receive_country: newCountry.name, 
                 receive_currency: newCountry.currency, 
                 send_amount: amount 
-            }); 
-            setShowResults(true);
+            };
+            
+            // Only auto-trigger API if we already have results (showResults is true)
+            if (showResults) {
+                setQueryParams(newQueryParams);
+                
+                // Scroll to results section
+                if (resultsRef.current) {
+                    resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            } else {
+                // Just update the selected country without triggering API
+                // The API will be called when user clicks the button
+                console.log('🔄 Country changed but not triggering API yet (first time)');
+            }
         }
     };
 

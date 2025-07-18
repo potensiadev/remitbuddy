@@ -120,9 +120,18 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currentApiCall, setCurrentApiCall] = useState(null);
 
     useEffect(() => {
         if (!queryParams.receive_country) return;
+
+        // Cancel previous API call if it's still running
+        if (currentApiCall) {
+            currentApiCall.abort();
+        }
+
+        const abortController = new AbortController();
+        setCurrentApiCall(abortController);
 
         const fetchRealQuotes = async () => {
             setIsLoading(true);
@@ -139,6 +148,7 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
                     method: 'GET',
                     mode: 'cors',
                     cache: 'no-cache',
+                    signal: abortController.signal,
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
@@ -159,15 +169,27 @@ function ComparisonResults({ queryParams, t, onCompareAgain }) {
                 }
                 
             } catch (err) {
+                if (err.name === 'AbortError') {
+                    console.log('🛑 API call was aborted');
+                    return;
+                }
                 console.error('🚨 API Error:', err);
                 setError(`API Error: ${err.message}`);
             } finally {
                 setIsLoading(false);
+                setCurrentApiCall(null);
             }
         };
 
         fetchRealQuotes();
-    }, [queryParams]);
+
+        // Cleanup function to abort API call if component unmounts
+        return () => {
+            if (abortController) {
+                abortController.abort();
+            }
+        };
+    }, [queryParams.receive_country, queryParams.receive_currency, queryParams.send_amount]);
 
     const bestRateProvider = useMemo(() => (!results || results.length === 0) ? null : results[0], [results]);
     

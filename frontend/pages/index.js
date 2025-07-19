@@ -446,17 +446,10 @@ export default function MainPage() {
                         <div className="logo-icon"></div>
                         <div className="logo-text">RemitBuddy</div>
                     </div>
-                    <h1 className="main-title">
-                        {hasComparedOnce ? 'Compare More Rates' : 'Send Money Home'}<br />
-                        with Confidence
-                    </h1>
-                    <p className="subtitle">Compare Rates from top Korean remittance providers</p>
-                    <div className="trust-indicator">
-                        <span>🛡️</span>
-                        <span>Licensed & Secure Transfers</span>
-                    </div>
+                    <h1 className="main-title">Compare the Best Rates</h1>
+                    
+                    <h3 className="subtitle">from Top Korean Remittance Providers</h3>
                 </div>
-
                 <div className="form-section">
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
@@ -653,6 +646,7 @@ export default function MainPage() {
                     color: #4facfe;
                     background: rgba(79, 172, 254, 0.1);
                     padding: 5px 12px;
+                    margin-left: 8px;
                     border-radius: 6px;
                 }
 

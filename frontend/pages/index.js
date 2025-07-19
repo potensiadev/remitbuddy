@@ -90,7 +90,7 @@ const ProviderCard = ({ providerData, isBest, currency, t }) => {
                 </p> 
             </div> 
             <div className="mt-3 lg:mt-4 text-xs lg:text-sm text-slate-500 flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-0"> 
-                <span>100 {currency} = {(100 / exchange_rate).toFixed(2)} KRW</span> 
+                <span>1 {currency.toLowerCase()} = {(1 / exchange_rate).toFixed(4)} KRW</span> 
                 <span className="hidden lg:inline mx-2">|</span> 
                 <span>{t('fee')}: {formattedFeeInTarget} {currency} ({formattedFeeInKRW} KRW)</span> 
             </div> 
@@ -447,7 +447,7 @@ export default function MainPage() {
                         <div className="logo-text">RemitBuddy</div>
                     </div>
                     <h1 className="main-title">Compare the Best Rates</h1>
-                    
+                    <h1 className="main-title">in 3 Seconds</h1>
                     <h3 className="subtitle">from Top Korean Remittance Providers</h3>
                 </div>
                 <div className="form-section">

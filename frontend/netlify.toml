@@ -1,12 +1,15 @@
 [build]
   base = "frontend"
   command = "npm ci && npm run build"
-  publish = "out"  # .next → out으로 변경
+  publish = ".next"
 
 [build.environment]
   NEXT_PUBLIC_API_URL = "https://sendhome.onrender.com"
 
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
 [[redirects]]
   from = "/*"
-  to = "/404.html"
-  status = 404
+  to = "/index.html"
+  status = 200

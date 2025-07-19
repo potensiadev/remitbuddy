@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { 
   logClickedCTA, 
   logCompareAgain, 
@@ -413,170 +414,534 @@ export default function MainPage() {
     // 2. After first call: country change OR button click (not amount change)
 
     return (
-        <div className="bg-[#F5F7FA] min-h-screen font-sans flex flex-col items-center pt-8 px-4 lg:px-8">
-            <div className="w-full max-w-sm lg:max-w-6xl xl:max-w-7xl mx-auto">
-                <header className="w-full flex items-center mb-10 lg:mb-16 pl-2">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="lg:w-8 lg:h-8">
-                        <path d="M5 20L19 12L5 4V20Z" fill="url(#paint0_linear_header_page)"/>
-                        <defs>
-                            <linearGradient id="paint0_linear_header_page" x1="5" y1="4" x2="25" y2="24" gradientUnits="userSpaceOnUse">
-                                <stop stopColor="#4F46E5"/>
-                                <stop offset="1" stopColor="#06B6D4"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <span className="text-2xl lg:text-4xl font-extrabold text-[#1E293B] ml-2 lg:ml-4">SendHome</span>
-                </header>
+        <>
+            <Head>
+                <title>RemitBuddy - Best Remittance Rates</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            </Head>
+            <style jsx global>{`
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
 
-                <main className="w-full">
-                    {/* Form Section */}
-                    <div className="w-full mb-8 lg:mb-12">
-                        <div className="w-full max-w-6xl xl:max-w-7xl mx-auto">
-                            <div className="bg-white rounded-[28px] lg:rounded-[32px] shadow-2xl shadow-slate-200/60 p-6 sm:p-8 lg:p-12">
-                                <h1 className="text-center text-slate-800 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold mb-8 lg:mb-12 leading-tight" dangerouslySetInnerHTML={{ __html: t('title') }} />
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                }
+
+                @media (max-width: 768px) {
+                    body {
+                        padding: 10px;
+                    }
+                }
+            `}</style>
             
-                                <form onSubmit={handleSubmit} className="w-full">
-                                    <div className="text-slate-500 text-center text-base lg:text-lg mb-6 lg:mb-8">
-                                        {t('subtitle')}
-                                    </div>
+            <div className="container">
+                <div className="header">
+                    <div className="logo">
+                        <div className="logo-icon"></div>
+                        <div className="logo-text">RemitBuddy</div>
+                    </div>
+                    <h1 className="main-title">
+                        {hasComparedOnce ? 'Compare More Rates' : 'Send Money Home'}<br />
+                        with Confidence
+                    </h1>
+                    <p className="subtitle">Compare Rates from top Korean remittance providers</p>
+                    <div className="trust-indicator">
+                        <span>🛡️</span>
+                        <span>Licensed & Secure Transfers</span>
+                    </div>
+                </div>
 
-                                    {/* Mobile layout: improved UX design */}
-                                    <div className="lg:hidden">
-                                        {/* Single row with amount and country selection */}
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                                            {/* Amount to send */}
-                                            <div>
-                                                <label className="w-full text-left text-sm font-semibold text-slate-800 mb-2 block">송금액 (한국에서 보내는 금액)</label>
-                                                
-                                                <div className="relative w-full" ref={formRef}>
-                                                    <input
-                                                        type="text"
-                                                        value={parseInt(amount || "0").toLocaleString()}
-                                                        onChange={handleAmountChange}
-                                                        className="w-full h-16 rounded-xl bg-[#F8FAFC] border-2 border-[#E2E8F0] px-4 text-2xl font-bold focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none pr-16"
-                                                    />
-                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                                                        <span className="font-semibold text-slate-600 text-lg">KRW</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Receiving country selection */}
-                                            <div className="relative">
-                                                <label className="w-full text-left text-sm font-semibold text-slate-800 mb-2 block">수취 국가 선택</label>
-                                                
-                                                <button
-                                                    type="button"
-                                                    className="w-full h-16 bg-white border-2 border-[#E2E8F0] rounded-xl px-4 flex items-center justify-between hover:bg-slate-50 transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                                    onClick={() => setShowDropdown(prev => !prev)}
-                                                >
-                                                    <div className="flex items-center gap-2">
-                                                        <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={28} height={28} className="rounded-full" />
-                                                        <div className="text-left">
-                                                            <div className="font-semibold text-slate-800 text-sm">{selectedCountry.name}</div>
-                                                            <div className="text-xs text-slate-500">{selectedCountry.currency}</div>
-                                                        </div>
-                                                    </div>
-                                                    <ChevronDownIcon className="h-4 w-4 text-slate-600" />
-                                                </button>
-                                                {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRef} />}
-                                            </div>
-                                        </div>
-
-                                        {/* Mobile conversion flow indicator */}
-                                        <div className="text-center mb-4">
-                                            <div className="inline-block bg-[#FEF3C7] rounded-full py-2 px-4">
-                                                <span className="flex items-center text-slate-600 font-semibold text-sm">
-                                                    <span>한국 KRW</span>
-                                                    <ArrowRightIcon className="h-4 w-4 mx-2 text-slate-500" />
-                                                    <span>{selectedCountry.name} {selectedCountry.currency}</span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        
-                                        <button
-                                            type="submit"
-                                            className="w-full h-14 rounded-xl bg-gradient-to-r from-cyan-400 to-indigo-600 text-white font-bold text-lg shadow-lg shadow-indigo-500/30 transition-all duration-200 hover:scale-105 hover:shadow-xl"
-                                        >
-                                            {hasComparedOnce ? t('compare_again_button_new') : t('compare_button')}
-                                        </button>
-                                    </div>
-
-                                    {/* Desktop layout: improved UX design */}
-                                    <div className="hidden lg:block">
-                                        {/* Single row with amount and country selection */}
-                                        <div className="grid grid-cols-2 gap-6 mb-8">
-                                            {/* Amount to send */}
-                                            <div>
-                                                <label className="w-full text-left text-base font-semibold text-slate-800 mb-3 block">송금액 (한국에서 보내는 금액)</label>
-                                                <div className="relative w-full" ref={formRefDesktop}>
-                                                    <input
-                                                        type="text"
-                                                        value={parseInt(amount || "0").toLocaleString()}
-                                                        onChange={handleAmountChange}
-                                                        className="w-full h-20 rounded-2xl bg-[#F8FAFC] border-2 border-[#E2E8F0] px-6 text-3xl font-bold focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none pr-24"
-                                                    />
-                                                    <div className="absolute right-6 top-1/2 -translate-y-1/2">
-                                                        <span className="font-semibold text-slate-600 text-2xl">KRW</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Receiving country selection */}
-                                            <div className="relative">
-                                                <label className="w-full text-left text-base font-semibold text-slate-800 mb-3 block">수취 국가 선택</label>
-                                                
-                                                <button
-                                                    type="button"
-                                                    className="w-full h-20 bg-white border-2 border-[#E2E8F0] rounded-2xl px-6 flex items-center justify-between hover:bg-slate-50 transition-colors focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                                                    onClick={() => setShowDropdown(prev => !prev)}
-                                                >
-                                                    <div className="flex items-center gap-4">
-                                                        <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={40} height={40} className="rounded-full" />
-                                                        <div className="text-left">
-                                                            <div className="font-semibold text-slate-800 text-lg">{selectedCountry.name}</div>
-                                                            <div className="text-slate-500">{selectedCountry.currency}</div>
-                                                        </div>
-                                                    </div>
-                                                    <ChevronDownIcon className="h-6 w-6 text-slate-600" />
-                                                </button>
-                                                {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRefDesktop} />}
-                                            </div>
-                                        </div>
-
-                                        {/* Conversion flow indicator */}
-                                        <div className="text-center mb-8">
-                                            <div className="inline-block bg-[#FEF3C7] rounded-full py-3 px-8">
-                                                <span className="flex items-center text-slate-600 font-semibold text-base">
-                                                    <span>한국 KRW</span>
-                                                    <ArrowRightIcon className="h-5 w-5 mx-3 text-slate-500" />
-                                                    <span>{selectedCountry.name} {selectedCountry.currency}</span>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Submit button */}
-                                        <div>
-                                            <button
-                                                type="submit"
-                                                className="w-full h-20 rounded-2xl bg-gradient-to-r from-cyan-400 to-indigo-600 text-white font-bold text-xl shadow-lg shadow-indigo-500/30 transition-all duration-200 hover:scale-105 hover:shadow-xl"
-                                            >
-                                                {hasComparedOnce ? t('compare_again_button_new') : t('compare_button')}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+                <div className="form-section">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label">How much do you want to Send?</label>
+                            <p className="form-help">Enter the Amount you want to Send From Korea</p>
+                            <div className="amount-input-wrapper" ref={formRef}>
+                                <input 
+                                    type="text" 
+                                    className="amount-input" 
+                                    value={parseInt(amount || "0").toLocaleString()}
+                                    onChange={handleAmountChange}
+                                    placeholder="Enter amount"
+                                />
+                                <span className="currency-code">KRW</span>
                             </div>
                         </div>
+
+                        <div className="form-group">
+                            <label className="form-label">Where are you Sending Money?</label>
+                            <p className="form-help">Select your Destination country</p>
+                            <div className="country-select-wrapper relative" ref={formRefDesktop} onClick={() => setShowDropdown(prev => !prev)}>
+                                <div className="country-display">
+                                    <div className="country-left-content">
+                                        <div className="flag">
+                                            <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={32} height={32} className="rounded-full" />
+                                        </div>
+                                        <div className="country-info">
+                                            <div className="country-name">{selectedCountry.name}</div>
+                                        </div>
+                                    </div>
+                                    <div className="dropdown-arrow"></div>
+                                </div>
+                                {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRef} />}
+                            </div>
+                        </div>
+
+                        <button className="cta-button" type="submit">
+                            🚀 {hasComparedOnce ? 'Compare Again' : 'Find Best Rates Now'}
+                        </button>
+
+                        {!showResults && (
+                            <div className="features">
+                                <div className="feature">
+                                    <div className="feature-icon">💰</div>
+                                    <div className="feature-title">Best Rates</div>
+                                    <div className="feature-desc">Compare Rates from 9+ Licensed Korean Remittance Companies</div>
+                                </div>
+                                <div className="feature">
+                                    <div className="feature-icon">⚡</div>
+                                    <div className="feature-title">Fast & Easy</div>
+                                    <div className="feature-desc">Get Instant Quotes in 3 Seconds</div>
+                                </div>
+                                <div className="feature">
+                                    <div className="feature-icon">🛡️</div>
+                                    <div className="feature-title">100% Secure</div>
+                                    <div className="feature-desc">All providers are Licensed by Korean Authorities</div>
+                                </div>
+                            </div>
+                        )}
+                    </form>
+                </div>
+
+                {/* Results Section */}
+                {showResults && (
+                    <div ref={resultsRef} className="results-section">
+                        <ComparisonResults queryParams={queryParams} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
                     </div>
-                    
-                    {/* Results Section */}
-                    <div ref={resultsRef} className="w-full transition-opacity duration-500" style={{ opacity: showResults ? 1 : 0, maxHeight: showResults ? '2000px' : '0' }}>
-                        {showResults && <ComparisonResults queryParams={queryParams} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />}
-                    </div>
-                </main>
+                )}
             </div>
-        </div>
+
+            <style jsx>{`
+                .container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                    overflow: hidden;
+                }
+
+                .header {
+                    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                    padding: 40px 30px;
+                    text-align: center;
+                    color: white;
+                }
+
+                .logo {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    margin-bottom: 30px;
+                }
+
+                .logo-icon {
+                    width: 0;
+                    height: 0;
+                    border-left: 15px solid transparent;
+                    border-right: 15px solid transparent;
+                    border-bottom: 25px solid white;
+                    transform: rotate(90deg);
+                }
+
+                .logo-text {
+                    font-size: 32px;
+                    font-weight: bold;
+                }
+
+                .main-title {
+                    font-size: 42px;
+                    font-weight: 700;
+                    margin-bottom: 15px;
+                    line-height: 1.2;
+                }
+
+                .subtitle {
+                    font-size: 18px;
+                    opacity: 0.9;
+                    margin-bottom: 10px;
+                }
+
+                .trust-indicator {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    background: rgba(255, 255, 255, 0.2);
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-size: 14px;
+                    margin-top: 15px;
+                }
+
+                .form-section {
+                    padding: 50px 30px;
+                }
+
+                .form-group {
+                    margin-bottom: 30px;
+                }
+
+                .form-label {
+                    display: block;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 10px;
+                }
+
+                .form-help {
+                    font-size: 14px;
+                    color: #666;
+                    margin-bottom: 15px;
+                }
+
+                .amount-input-wrapper {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    background: #f8f9fa;
+                    border: 2px solid #e9ecef;
+                    border-radius: 12px;
+                    padding: 15px 20px;
+                    transition: all 0.3s ease;
+                }
+
+                .amount-input-wrapper:focus-within {
+                    border-color: #4facfe;
+                    background: white;
+                    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+                }
+
+                .currency-symbol {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #666;
+                    margin-right: 10px;
+                }
+
+                .amount-input {
+                    flex: 1;
+                    border: none;
+                    background: transparent;
+                    font-size: 24px;
+                    font-weight: 600;
+                    color: #333;
+                    outline: none;
+                    text-align: right;
+                }
+
+                .currency-code {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #4facfe;
+                    background: rgba(79, 172, 254, 0.1);
+                    padding: 5px 12px;
+                    border-radius: 6px;
+                }
+
+                .country-select-wrapper {
+                    position: relative;
+                    background: #f8f9fa;
+                    border: 2px solid #e9ecef;
+                    border-radius: 12px;
+                    padding: 15px 20px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .country-select-wrapper:hover {
+                    border-color: #4facfe;
+                    background: white;
+                }
+
+                .country-display {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 15px;
+                }
+
+                .country-left-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                    flex: 1;
+                    justify-content: flex-end;
+                }
+
+                .flag {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                }
+
+                .country-info {
+                    text-align: right;
+                }
+
+                .country-name {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 2px;
+                }
+
+                .currency-name {
+                    font-size: 14px;
+                    color: #666;
+                }
+
+                .dropdown-arrow {
+                    width: 0;
+                    height: 0;
+                    border-left: 6px solid transparent;
+                    border-right: 6px solid transparent;
+                    border-top: 8px solid #666;
+                    transition: transform 0.3s ease;
+                }
+
+                .exchange-preview {
+                    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin: 30px 0;
+                    text-align: center;
+                }
+
+                .exchange-text {
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #8b4513;
+                }
+
+                .exchange-arrow {
+                    margin: 0 15px;
+                    font-size: 20px;
+                }
+
+                .cta-button {
+                    width: 100%;
+                    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                    border: none;
+                    border-radius: 15px;
+                    padding: 20px;
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: white;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                }
+
+                .cta-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+                }
+
+                .cta-button:active {
+                    transform: translateY(0);
+                }
+
+                .features {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 20px;
+                    margin-top: 40px;
+                    padding-top: 30px;
+                    border-top: 1px solid #e9ecef;
+                }
+
+                .feature {
+                    text-align: center;
+                    padding: 20px;
+                }
+
+                .feature-icon {
+                    width: 60px;
+                    height: 60px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 15px;
+                    color: white;
+                    font-size: 24px;
+                }
+
+                .feature-title {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 8px;
+                }
+
+                .feature-desc {
+                    font-size: 14px;
+                    color: #666;
+                    line-height: 1.4;
+                }
+
+                .results-section {
+                    margin-top: 30px;
+                    padding: 30px;
+                    background: #f8f9fa;
+                    border-radius: 0 0 20px 20px;
+                }
+
+                @media (max-width: 768px) {
+                    .container {
+                        margin: 0;
+                        border-radius: 15px;
+                        max-width: 100%;
+                    }
+
+                    .header {
+                        padding: 30px 20px;
+                    }
+
+                    .main-title {
+                        font-size: 28px;
+                        line-height: 1.3;
+                    }
+
+                    .logo-text {
+                        font-size: 24px;
+                    }
+
+                    .subtitle {
+                        font-size: 16px;
+                    }
+
+                    .form-section {
+                        padding: 30px 20px;
+                    }
+
+                    .form-group {
+                        margin-bottom: 25px;
+                    }
+
+                    .amount-input-wrapper, .country-select-wrapper {
+                        padding: 12px 16px;
+                    }
+
+                    .amount-input {
+                        font-size: 20px;
+                    }
+
+                    .currency-symbol {
+                        font-size: 16px;
+                    }
+
+                    .currency-code {
+                        font-size: 14px;
+                        padding: 4px 8px;
+                    }
+
+                    .flag {
+                        width: 28px;
+                        height: 28px;
+                    }
+
+                    .country-name {
+                        font-size: 16px;
+                    }
+
+                    .currency-name {
+                        font-size: 12px;
+                    }
+
+                    .cta-button {
+                        padding: 16px;
+                        font-size: 16px;
+                        letter-spacing: 0.5px;
+                    }
+
+                    .features {
+                        grid-template-columns: 1fr;
+                        gap: 15px;
+                        margin-top: 30px;
+                        padding-top: 20px;
+                    }
+
+                    .feature {
+                        padding: 15px 10px;
+                    }
+
+                    .feature-icon {
+                        width: 50px;
+                        height: 50px;
+                        font-size: 20px;
+                        margin-bottom: 10px;
+                    }
+
+                    .feature-title {
+                        font-size: 14px;
+                        margin-bottom: 6px;
+                    }
+
+                    .feature-desc {
+                        font-size: 12px;
+                        line-height: 1.3;
+                    }
+
+                    .results-section {
+                        padding: 20px;
+                        margin-top: 20px;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .features {
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 10px;
+                    }
+
+                    .feature {
+                        padding: 10px 5px;
+                    }
+
+                    .feature-icon {
+                        width: 40px;
+                        height: 40px;
+                        font-size: 16px;
+                        margin-bottom: 8px;
+                    }
+
+                    .feature-title {
+                        font-size: 12px;
+                        margin-bottom: 4px;
+                    }
+
+                    .feature-desc {
+                        font-size: 10px;
+                        line-height: 1.2;
+                    }
+                }
+            `}</style>
+        </>
     );
 }
 

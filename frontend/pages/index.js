@@ -291,7 +291,9 @@ export default function MainPage() {
     // Debug logging
     useEffect(() => {
         console.log('🌍 Language:', router.locale);
-        console.log('🔗 Current URL:', window.location.href);
+        if (typeof window !== 'undefined') {
+            console.log('🔗 Current URL:', window.location.href);
+        }
     }, [router.locale]);
 
     useEffect(() => { 
@@ -446,20 +448,23 @@ export default function MainPage() {
                         <div className="logo-icon"></div>
                         <div className="logo-text">RemitBuddy</div>
                     </div>
-                    <h1 className="main-title">Compare the Best Rates</h1>
-                    <h1 className="main-title">in 3 Seconds</h1>
-                    <h3 className="subtitle">from Top Korean Remittance Providers</h3>
+                    <h1 className="main-title">Send Money Home for Less</h1>
+                    <p className="subtitle">Compare Best Rates in seconds</p>
                 </div>
                 <div className="form-section">
+                    <center><div className="social-proof">
+                        <div className="social-proof-text">Trusted by Foreigners Living in Korea</div>
+                        <div className="rating">⭐⭐⭐⭐⭐ 4.9/5 </div>
+                    </div></center>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
-                            <label className="form-label">How much do you want to Send?</label>
-                            <p className="form-help">Enter the Amount you want to Send From Korea</p>
+                            <label className="form-label">How much are you sending?</label>
+                            <p className="form-helper">Enter amount in Korean Won (min. ₩10,000)</p>
                             <div className="amount-input-wrapper" ref={formRef}>
                                 <input 
                                     type="text" 
                                     className="amount-input" 
-                                    value={parseInt(amount || "0").toLocaleString()}
+                                    value={amount ? parseInt(amount).toLocaleString() : ""}
                                     onChange={handleAmountChange}
                                     placeholder="Enter amount"
                                 />
@@ -468,8 +473,8 @@ export default function MainPage() {
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Where are you Sending Money?</label>
-                            <p className="form-help">Select your Destination country</p>
+                            <label className="form-label">Where to?</label>
+                            <p className="form-helper">Select your Home Country 🏠</p>
                             <div className="country-select-wrapper relative" ref={formRefDesktop} onClick={() => setShowDropdown(prev => !prev)}>
                                 <div className="country-display">
                                     <div className="country-left-content">
@@ -487,8 +492,12 @@ export default function MainPage() {
                         </div>
 
                         <button className="cta-button" type="submit">
-                            🚀 {hasComparedOnce ? 'Compare Again' : 'Find Best Rates Now'}
+                            🚀 {hasComparedOnce ? 'Compare Again' : 'Compare Rates Now'}
                         </button>
+
+                        <center><div className="cta-helper">
+                            <strong>Takes 3 seconds • Always free to compare • No signup required</strong>
+                        </div></center>
 
                         {!showResults && (
                             <div className="features">
@@ -555,21 +564,25 @@ export default function MainPage() {
                 }
 
                 .logo-text {
-                    font-size: 32px;
-                    font-weight: bold;
+                    font-size: 36px;
+                    font-weight: 800;
+                    letter-spacing: -0.5px;
                 }
 
                 .main-title {
-                    font-size: 42px;
-                    font-weight: 700;
-                    margin-bottom: 15px;
-                    line-height: 1.2;
+                    font-size: 46px;
+                    font-weight: 800;
+                    margin-bottom: 18px;
+                    line-height: 1.15;
+                    letter-spacing: -0.5px;
                 }
 
                 .subtitle {
-                    font-size: 18px;
-                    opacity: 0.9;
-                    margin-bottom: 10px;
+                    font-size: 20px;
+                    font-weight: 500;
+                    opacity: 0.95;
+                    margin-bottom: 15px;
+                    letter-spacing: 0.2px;
                 }
 
                 .trust-indicator {
@@ -593,16 +606,19 @@ export default function MainPage() {
 
                 .form-label {
                     display: block;
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: #333;
-                    margin-bottom: 10px;
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #2d3748;
+                    margin-bottom: 12px;
+                    letter-spacing: 0.2px;
                 }
 
-                .form-help {
-                    font-size: 14px;
-                    color: #666;
-                    margin-bottom: 15px;
+                .form-helper {
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: #64748b;
+                    margin-bottom: 25px;
+                    line-height: 1.4;
                 }
 
                 .amount-input-wrapper {
@@ -633,21 +649,27 @@ export default function MainPage() {
                     flex: 1;
                     border: none;
                     background: transparent;
-                    font-size: 24px;
-                    font-weight: 600;
-                    color: #333;
+                    font-size: 28px;
+                    font-weight: 700;
+                    color: #1a202c;
                     outline: none;
                     text-align: right;
+                    letter-spacing: 0.5px;
+                    min-width: 0;
+                    overflow: hidden;
                 }
 
                 .currency-code {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: #4facfe;
-                    background: rgba(79, 172, 254, 0.1);
-                    padding: 5px 12px;
-                    margin-left: 8px;
-                    border-radius: 6px;
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #3182ce;
+                    background: rgba(79, 172, 254, 0.15);
+                    padding: 6px 14px;
+                    margin-left: 10px;
+                    border-radius: 8px;
+                    letter-spacing: 0.5px;
+                    flex-shrink: 0;
+                    white-space: nowrap;
                 }
 
                 .country-select-wrapper {
@@ -695,10 +717,11 @@ export default function MainPage() {
                 }
 
                 .country-name {
-                    font-size: 18px;
-                    font-weight: 600;
-                    color: #333;
-                    margin-bottom: 2px;
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: #2d3748;
+                    margin-bottom: 3px;
+                    letter-spacing: 0.2px;
                 }
 
                 .currency-name {
@@ -738,15 +761,16 @@ export default function MainPage() {
                     width: 100%;
                     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
                     border: none;
-                    border-radius: 15px;
-                    padding: 20px;
-                    font-size: 20px;
-                    font-weight: 700;
+                    border-radius: 16px;
+                    padding: 22px;
+                    font-size: 22px;
+                    font-weight: 800;
                     color: white;
                     cursor: pointer;
                     transition: all 0.3s ease;
                     text-transform: uppercase;
-                    letter-spacing: 1px;
+                    letter-spacing: 1.2px;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
                 }
 
                 .cta-button:hover {
@@ -756,6 +780,42 @@ export default function MainPage() {
 
                 .cta-button:active {
                     transform: translateY(0);
+                }
+
+                .social-proof {
+                    background: #f8f9fa;
+                    border: 1px solid #e9ecef;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin-bottom: 30px;
+                    text-align: center;
+                }
+
+                .social-proof-text {
+                    font-size: 17px;
+                    font-weight: 700;
+                    color: #2d3748;
+                    margin-bottom: 10px;
+                    letter-spacing: 0.2px;
+                }
+
+                .rating {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #4a5568;
+                    letter-spacing: 0.5px;
+                }
+
+                .cta-helper {
+                    background: #f8f9fa;
+                    border: 1px solid #e9ecef;
+                    border-radius: 12px;
+                    padding: 18px;
+                    margin-top: 25px;
+                    font-size: 15px;
+                    color: #4a5568;
+                    text-align: center;
+                    letter-spacing: 0.3px;
                 }
 
                 .features {
@@ -786,16 +846,19 @@ export default function MainPage() {
                 }
 
                 .feature-title {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: #333;
-                    margin-bottom: 8px;
+                    font-size: 17px;
+                    font-weight: 700;
+                    color: #2d3748;
+                    margin-bottom: 10px;
+                    letter-spacing: 0.2px;
                 }
 
                 .feature-desc {
-                    font-size: 14px;
-                    color: #666;
-                    line-height: 1.4;
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: #64748b;
+                    line-height: 1.5;
+                    letter-spacing: 0.1px;
                 }
 
                 .results-section {
@@ -817,16 +880,22 @@ export default function MainPage() {
                     }
 
                     .main-title {
-                        font-size: 28px;
-                        line-height: 1.3;
+                        font-size: 32px;
+                        font-weight: 800;
+                        line-height: 1.2;
+                        letter-spacing: -0.3px;
                     }
 
                     .logo-text {
-                        font-size: 24px;
+                        font-size: 28px;
+                        font-weight: 800;
+                        letter-spacing: -0.3px;
                     }
 
                     .subtitle {
-                        font-size: 16px;
+                        font-size: 18px;
+                        font-weight: 500;
+                        letter-spacing: 0.1px;
                     }
 
                     .form-section {
@@ -838,11 +907,15 @@ export default function MainPage() {
                     }
 
                     .amount-input-wrapper, .country-select-wrapper {
-                        padding: 12px 16px;
+                        padding: 10px 12px;
                     }
 
                     .amount-input {
                         font-size: 20px;
+                        font-weight: 700;
+                        letter-spacing: 0.2px;
+                        min-width: 0;
+                        max-width: 70%;
                     }
 
                     .currency-symbol {
@@ -851,7 +924,11 @@ export default function MainPage() {
 
                     .currency-code {
                         font-size: 14px;
+                        font-weight: 700;
                         padding: 4px 8px;
+                        letter-spacing: 0.2px;
+                        margin-left: 6px;
+                        flex-shrink: 0;
                     }
 
                     .flag {
@@ -860,7 +937,9 @@ export default function MainPage() {
                     }
 
                     .country-name {
-                        font-size: 16px;
+                        font-size: 18px;
+                        font-weight: 700;
+                        letter-spacing: 0.1px;
                     }
 
                     .currency-name {
@@ -868,9 +947,10 @@ export default function MainPage() {
                     }
 
                     .cta-button {
-                        padding: 16px;
-                        font-size: 16px;
-                        letter-spacing: 0.5px;
+                        padding: 18px;
+                        font-size: 18px;
+                        font-weight: 800;
+                        letter-spacing: 1px;
                     }
 
                     .features {
@@ -892,13 +972,17 @@ export default function MainPage() {
                     }
 
                     .feature-title {
-                        font-size: 14px;
-                        margin-bottom: 6px;
+                        font-size: 15px;
+                        font-weight: 700;
+                        margin-bottom: 8px;
+                        letter-spacing: 0.1px;
                     }
 
                     .feature-desc {
-                        font-size: 12px;
-                        line-height: 1.3;
+                        font-size: 13px;
+                        font-weight: 500;
+                        line-height: 1.4;
+                        letter-spacing: 0.05px;
                     }
 
                     .results-section {

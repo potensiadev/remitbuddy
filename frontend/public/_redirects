@@ -1,1 +1,16 @@
-    /* /index.html    200
+# i18n language redirects
+/vi/* /vi/:splat 200
+/mn/* /mn/:splat 200
+/ko/* /ko/:splat 200
+/tl/* /tl/:splat 200
+/km/* /km/:splat 200
+/my/* /my/:splat 200
+/th/* /th/:splat 200
+/uz/* /uz/:splat 200
+/id/* /id/:splat 200
+/si/* /si/:splat 200
+/bn/* /bn/:splat 200
+/ne/* /ne/:splat 200
+
+# SPA fallback
+/* /index.html 200

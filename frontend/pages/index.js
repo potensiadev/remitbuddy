@@ -80,7 +80,7 @@ const ProviderCard = ({ providerData, isBest, currency, t }) => {
         > 
             <div className="flex justify-between items-start"> 
                 <h3 className="text-xl lg:text-2xl font-bold text-slate-800">{provider}</h3> 
-                {isBest && <span className="text-xs lg:text-sm font-semibold text-white bg-emerald-500 px-3 py-1 lg:px-4 lg:py-2 rounded-full">Most Amount Receive</span>} 
+                {isBest && <span className="text-xs lg:text-sm font-semibold text-white bg-emerald-500 px-3 py-1 lg:px-4 lg:py-2 rounded-full">{t('most_amount_receive')}</span>} 
             </div> 
             <div className="mt-3 lg:mt-4"> 
                 <p className="text-sm lg:text-base text-slate-500">{t('amount_to_receive')}</p> 
@@ -418,7 +418,7 @@ export default function MainPage() {
     return (
         <>
             <Head>
-                <title>RemitBuddy - Best Remittance Rates</title>
+                <title>{t('page_title')}</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </Head>
             <style jsx global>{`
@@ -448,33 +448,33 @@ export default function MainPage() {
                         <div className="logo-icon"></div>
                         <div className="logo-text">RemitBuddy</div>
                     </div>
-                    <h1 className="main-title">Send Money Home for Less</h1>
-                    <p className="subtitle">Compare Best Rates in seconds</p>
+                    <h1 className="main-title">{t('main_title')}</h1>
+                    <p className="subtitle">{t('main_subtitle')}</p>
                 </div>
                 <div className="form-section">
                     <center><div className="social-proof">
-                        <div className="social-proof-text">Trusted by Foreigners Living in Korea</div>
-                        <div className="rating">⭐⭐⭐⭐⭐ 4.9/5 </div>
+                        <div className="social-proof-text">{t('social_proof')}</div>
+                        <div className="rating">{t('rating')} </div>
                     </div></center>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
-                            <label className="form-label">How much are you sending?</label>
-                            <p className="form-helper">Enter amount in Korean Won (min. ₩10,000)</p>
+                            <label className="form-label">{t('amount_label')}</label>
+                            <p className="form-helper">{t('amount_helper')}</p>
                             <div className="amount-input-wrapper" ref={formRef}>
                                 <input 
                                     type="text" 
                                     className="amount-input" 
                                     value={amount ? parseInt(amount).toLocaleString() : ""}
                                     onChange={handleAmountChange}
-                                    placeholder="Enter amount"
+                                    placeholder={t('amount_placeholder')}
                                 />
                                 <span className="currency-code">KRW</span>
                             </div>
                         </div>
 
                         <div className="form-group">
-                            <label className="form-label">Where to?</label>
-                            <p className="form-helper">Select your Home Country 🏠</p>
+                            <label className="form-label">{t('country_label')}</label>
+                            <p className="form-helper">{t('country_helper')}</p>
                             <div className="country-select-wrapper relative" ref={formRefDesktop} onClick={() => setShowDropdown(prev => !prev)}>
                                 <div className="country-display">
                                     <div className="country-left-content">
@@ -492,29 +492,29 @@ export default function MainPage() {
                         </div>
 
                         <button className="cta-button" type="submit">
-                            🚀 {hasComparedOnce ? 'Compare Again' : 'Compare Rates Now'}
+                            {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
                         </button>
 
                         <center><div className="cta-helper">
-                            <strong>Takes 3 seconds • Always Free • No Signup Required</strong>
+                            <strong>{t('cta_helper')}</strong>
                         </div></center>
 
                         {!showResults && (
                             <div className="features">
                                 <div className="feature">
                                     <div className="feature-icon">💰</div>
-                                    <div className="feature-title">Best Rates</div>
-                                    <div className="feature-desc">Compare Rates from 9+ Licensed Korean Remittance Companies</div>
+                                    <div className="feature-title">{t('feature_rates_title')}</div>
+                                    <div className="feature-desc">{t('feature_rates_desc')}</div>
                                 </div>
                                 <div className="feature">
                                     <div className="feature-icon">⚡</div>
-                                    <div className="feature-title">Fast & Easy</div>
-                                    <div className="feature-desc">Get Instant Quotes in 3 Seconds</div>
+                                    <div className="feature-title">{t('feature_fast_title')}</div>
+                                    <div className="feature-desc">{t('feature_fast_desc')}</div>
                                 </div>
                                 <div className="feature">
                                     <div className="feature-icon">🛡️</div>
-                                    <div className="feature-title">100% Secure</div>
-                                    <div className="feature-desc">All providers are Licensed by Korean Authorities</div>
+                                    <div className="feature-title">{t('feature_secure_title')}</div>
+                                    <div className="feature-desc">{t('feature_secure_desc')}</div>
                                 </div>
                             </div>
                         )}

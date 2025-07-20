@@ -1,6 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/": "pages/index.js"
-}
+{"/_app":"pages/_app.js","/_error":"pages/_error.js","/_document":"pages/_document.js","/api/log-event":"pages/api/log-event.js","/":"pages/index.js","/en/404":"pages/en/404.html","/ko/404":"pages/ko/404.html","/vi/404":"pages/vi/404.html","/tl/404":"pages/tl/404.html","/km/404":"pages/km/404.html","/my/404":"pages/my/404.html","/th/404":"pages/th/404.html","/uz/404":"pages/uz/404.html","/id/404":"pages/id/404.html","/si/404":"pages/si/404.html","/bn/404":"pages/bn/404.html","/ne/404":"pages/ne/404.html","/mn/404":"pages/mn/404.html","/en/500":"pages/en/500.html","/ko/500":"pages/ko/500.html","/vi/500":"pages/vi/500.html","/tl/500":"pages/tl/500.html","/km/500":"pages/km/500.html","/my/500":"pages/my/500.html","/th/500":"pages/th/500.html","/uz/500":"pages/uz/500.html","/id/500":"pages/id/500.html","/si/500":"pages/si/500.html","/bn/500":"pages/bn/500.html","/ne/500":"pages/ne/500.html","/mn/500":"pages/mn/500.html"}

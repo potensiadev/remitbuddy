@@ -496,7 +496,7 @@ export default function MainPage() {
                         </button>
 
                         <center><div className="cta-helper">
-                            <strong>Takes 3 seconds • Always free to compare • No signup required</strong>
+                            <strong>Takes 3 seconds • Always Free • No Signup Required</strong>
                         </div></center>
 
                         {!showResults && (
@@ -570,11 +570,12 @@ export default function MainPage() {
                 }
 
                 .main-title {
-                    font-size: 46px;
+                    font-size: 42px;
                     font-weight: 800;
                     margin-bottom: 18px;
                     line-height: 1.15;
                     letter-spacing: -0.5px;
+                    white-space: nowrap;
                 }
 
                 .subtitle {
@@ -792,11 +793,12 @@ export default function MainPage() {
                 }
 
                 .social-proof-text {
-                    font-size: 17px;
+                    font-size: 16px;
                     font-weight: 700;
                     color: #2d3748;
                     margin-bottom: 10px;
-                    letter-spacing: 0.2px;
+                    letter-spacing: 0.1px;
+                    white-space: nowrap;
                 }
 
                 .rating {
@@ -812,10 +814,11 @@ export default function MainPage() {
                     border-radius: 12px;
                     padding: 18px;
                     margin-top: 25px;
-                    font-size: 15px;
+                    font-size: 14px;
                     color: #4a5568;
                     text-align: center;
-                    letter-spacing: 0.3px;
+                    letter-spacing: 0.2px;
+                    white-space: nowrap;
                 }
 
                 .features {
@@ -869,6 +872,18 @@ export default function MainPage() {
                 }
 
                 @media (max-width: 768px) {
+                    .social-proof-text {
+                        font-size: 14px;
+                        letter-spacing: 0.05px;
+                    }
+
+                    .cta-helper {
+                        font-size: 11px;
+                        padding: 12px 8px;
+                        letter-spacing: 0.05px;
+                        white-space: normal;
+                        line-height: 1.3;
+                    }
                     .container {
                         margin: 0;
                         border-radius: 15px;
@@ -880,10 +895,11 @@ export default function MainPage() {
                     }
 
                     .main-title {
-                        font-size: 32px;
+                        font-size: 22px;
                         font-weight: 800;
                         line-height: 1.2;
-                        letter-spacing: -0.3px;
+                        letter-spacing: -0.5px;
+                        white-space: normal;
                     }
 
                     .logo-text {

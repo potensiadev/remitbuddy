@@ -14,8 +14,9 @@ module.exports = {
       'si',  // Sinhala (Sri Lanka)
       'bn',  // Bengali (Bangladesh)
       'ne',  // Nepali (Nepal)
+      'mn',  // Mongolian (Mongolia)
     ],
-    localeDetection: false,
+    localeDetection: true,
   },
   react: {
     useSuspense: false,

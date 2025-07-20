@@ -32,5 +32,7 @@
   "total_needed": "আপনি পাঠান (আনুমানিক)",
   "you_send": "আপনি পাঠান (KRW)",
   "refresh": "রিফ্রেশ",
-  "debug_info": "ডিবাগ তথ্য"
+  "debug_info": "ডিবাগ তথ্য",
+  "amount_min_error": "সর্বনিম্ন পরিমাণ ১০,০০০ KRW",
+  "amount_max_error": "সর্বোচ্চ পরিমাণ ৫০,০০,০০০ KRW"
 }

@@ -32,5 +32,7 @@
   "total_needed": "Ipapadala Ninyo (tantiya)",
   "you_send": "Ipapadala Ninyo (KRW)",
   "refresh": "I-refresh",
-  "debug_info": "Debug Info"
+  "debug_info": "Debug Info",
+  "amount_min_error": "Pinakamabababang halaga ay 10,000 KRW",
+  "amount_max_error": "Pinakamataas na halaga ay 5,000,000 KRW"
 }

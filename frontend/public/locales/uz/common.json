@@ -32,5 +32,7 @@
   "total_needed": "Siz jo'natasiz (taxminan)",
   "you_send": "Siz jo'natasiz (KRW)",
   "refresh": "Yangilash",
-  "debug_info": "Debug ma'lumotlari"
+  "debug_info": "Debug ma'lumotlari",
+  "amount_min_error": "Minimal miqdor 10,000 KRW",
+  "amount_max_error": "Maksimal miqdor 5,000,000 KRW"
 }

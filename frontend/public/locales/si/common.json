@@ -32,5 +32,7 @@
   "total_needed": "ඔබ යවන්නේ (ආසන්න)",
   "you_send": "ඔබ යවන්නේ (KRW)",
   "refresh": "නැවුම් කරන්න",
-  "debug_info": "දෝෂ සෙවීමේ තොරතුරු"
+  "debug_info": "දෝෂ සෙවීමේ තොරතුරු",
+  "amount_min_error": "අවම මුදල 10,000 KRW",
+  "amount_max_error": "අධික මුදල 5,000,000 KRW"
 }

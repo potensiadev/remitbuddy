@@ -32,5 +32,7 @@
   "total_needed": "คุณส่ง (ประมาณ)",
   "you_send": "คุณส่ง (KRW)",
   "refresh": "รีเฟรช",
-  "debug_info": "ข้อมูลดีบัก"
+  "debug_info": "ข้อมูลดีบัก",
+  "amount_min_error": "จำนวนขั้นต่ำ 10,000 KRW",
+  "amount_max_error": "จำนวนสูงสุด 5,000,000 KRW"
 }

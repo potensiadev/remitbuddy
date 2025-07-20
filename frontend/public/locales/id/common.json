@@ -32,5 +32,7 @@
   "total_needed": "Anda Kirim (perkiraan)",
   "you_send": "Anda Kirim (KRW)",
   "refresh": "Segarkan",
-  "debug_info": "Info Debug"
+  "debug_info": "Info Debug",
+  "amount_min_error": "Jumlah minimum adalah 10.000 KRW",
+  "amount_max_error": "Jumlah maksimum adalah 5.000.000 KRW"
 }

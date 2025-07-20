@@ -32,5 +32,7 @@
   "total_needed": "तपाईं पठाउनुहुन्छ (अनुमानित)",
   "you_send": "तपाईं पठाउनुहुन्छ (KRW)",
   "refresh": "रिफ्रेश",
-  "debug_info": "डिबग जानकारी"
+  "debug_info": "डिबग जानकारी",
+  "amount_min_error": "न्यूनतम रकम 10,000 KRW",
+  "amount_max_error": "अधिकतम रकम 5,000,000 KRW"
 }

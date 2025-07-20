@@ -32,5 +32,7 @@
   "total_needed": "Bạn gửi (ước tính)",
   "you_send": "Bạn gửi (KRW)",
   "refresh": "Làm mới",
-  "debug_info": "Thông tin debug"
+  "debug_info": "Thông tin debug",
+  "amount_min_error": "Số tiền tối thiểu là 10.000 KRW",
+  "amount_max_error": "Số tiền tối đa là 5.000.000 KRW"
 }

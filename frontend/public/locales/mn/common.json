@@ -32,5 +32,7 @@
   "total_needed": "Та илгээх (тооцоо)",
   "you_send": "Та илгээх (KRW)",
   "refresh": "Шинэчлэх",
-  "debug_info": "Алдаа засах мэдээлэл"
+  "debug_info": "Алдаа засах мэдээлэл",
+  "amount_min_error": "Хамгийн багадаа 10,000 KRW",
+  "amount_max_error": "Хамгийн их 5,000,000 KRW"
 }

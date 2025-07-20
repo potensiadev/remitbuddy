@@ -126,11 +126,17 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
 );
 
 // Comparison Results Component
-function ComparisonResults({ queryParams, t, onCompareAgain, forceRefresh }) {
+function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefresh }) {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentApiCall, setCurrentApiCall] = useState(null);
+    const amountRef = useRef(amount);
+    
+    // Update ref when amount changes
+    useEffect(() => {
+        amountRef.current = amount;
+    }, [amount]);
 
     useEffect(() => {
         if (!queryParams.receive_country) return;
@@ -150,7 +156,7 @@ function ComparisonResults({ queryParams, t, onCompareAgain, forceRefresh }) {
 
             console.log('🔥 API Call - Query Params:', queryParams);
             
-            const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${queryParams.send_amount}`;
+            const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}`;
             console.log('🎯 API URL:', url);
 
             try {
@@ -199,7 +205,7 @@ function ComparisonResults({ queryParams, t, onCompareAgain, forceRefresh }) {
                 abortController.abort();
             }
         };
-    }, [queryParams.receive_country, queryParams.receive_currency, queryParams.send_amount, forceRefresh]);
+    }, [queryParams.receive_country, queryParams.receive_currency, forceRefresh]);
 
     const bestRateProvider = useMemo(() => (!results || results.length === 0) ? null : results[0], [results]);
     
@@ -219,7 +225,7 @@ function ComparisonResults({ queryParams, t, onCompareAgain, forceRefresh }) {
             <div className="bg-white/80 backdrop-blur-lg p-4 lg:p-6 rounded-2xl lg:rounded-3xl shadow-lg mb-6 lg:mb-8 sticky top-4 z-10"> 
                 <h2 className="text-sm lg:text-base font-semibold text-slate-500">{t('real_time_summary')}</h2> 
                 <p className="text-xl lg:text-2xl font-bold text-slate-800 flex items-center"> 
-                    {parseInt(queryParams.send_amount).toLocaleString()} KRW → {queryParams.receive_country} 
+                    {parseInt(amount).toLocaleString()} KRW → {queryParams.receive_country} 
                 </p> 
                 {isLoading && <p className="text-xs lg:text-sm text-indigo-500 mt-1 animate-pulse">{t('loading_text')}</p>} 
             </div> 
@@ -281,6 +287,7 @@ export default function MainPage() {
     const [amount, setAmount] = useState("1000000");
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+    const [amountError, setAmountError] = useState("");
     const formRef = useRef(null);
     const formRefDesktop = useRef(null);
     const countryDropdownRef = useRef(null);
@@ -320,8 +327,40 @@ export default function MainPage() {
     const handleAmountChange = (e) => { 
         const value = e.target.value.replace(/,/g, ''); 
         if (!isNaN(value) && value.length <= 10) { 
-            setAmount(value); 
+            setAmount(value);
+            
+            // Check validation immediately while typing
+            const numValue = parseInt(value) || 0;
+            if (numValue > 0 && numValue < 10000) {
+                setAmountError(t('amount_min_error'));
+            } else if (numValue > 5000000) {
+                setAmountError(t('amount_max_error'));
+            } else {
+                // Only clear error if there actually is an error to avoid unnecessary re-renders
+                if (amountError) {
+                    setAmountError("");
+                }
+            }
         } 
+    };
+
+    const isAmountValid = () => {
+        const numValue = parseInt(amount) || 0;
+        return numValue >= 10000 && numValue <= 5000000;
+    };
+
+    const handleAmountBlur = () => {
+        const numValue = parseInt(amount) || 0;
+        
+        if (numValue > 0 && numValue < 10000) {
+            setAmountError(t('amount_min_error'));
+            // Don't auto-correct, just show error
+        } else if (numValue > 5000000) {
+            setAmountError(t('amount_max_error'));
+            // Don't auto-correct, just show error
+        } else {
+            setAmountError("");
+        }
     };
 
     const handleSubmit = (e) => { 
@@ -335,12 +374,11 @@ export default function MainPage() {
             // Log CTA click
             logClickedCTA();
             
-            if (selectedCountry && amount) { 
+            if (selectedCountry && amount && isAmountValid()) { 
                 console.log('🚀 Form submitted - triggering first API call');
                 setQueryParams({ 
                     receive_country: selectedCountry.name, 
-                    receive_currency: selectedCountry.currency, 
-                    send_amount: amount 
+                    receive_currency: selectedCountry.currency
                 }); 
                 setShowResults(true);
                 setHasComparedOnce(true); // Mark that we've compared at least once
@@ -355,11 +393,10 @@ export default function MainPage() {
         logCompareAgain();
         
         // Force API call with current parameters - DO NOT scroll to top
-        if (selectedCountry && amount) {
+        if (selectedCountry && amount && isAmountValid()) {
             const newQueryParams = { 
                 receive_country: selectedCountry.name, 
-                receive_currency: selectedCountry.currency, 
-                send_amount: amount 
+                receive_currency: selectedCountry.currency
             };
             
             console.log('🚀 Compare Again - triggering API with params:', newQueryParams);
@@ -388,12 +425,12 @@ export default function MainPage() {
         setSelectedCountry(newCountry);
         
         // Only auto-trigger API if we have compared at least once
-        if (hasComparedOnce && amount) {
+        if (hasComparedOnce && amount && isAmountValid()) {
             console.log('✅ Auto-triggering API because hasComparedOnce=true');
+            
             const newQueryParams = { 
                 receive_country: newCountry.name, 
-                receive_currency: newCountry.currency, 
-                send_amount: amount 
+                receive_currency: newCountry.currency
             };
             
             setQueryParams(newQueryParams);
@@ -466,10 +503,16 @@ export default function MainPage() {
                                     className="amount-input" 
                                     value={amount ? parseInt(amount).toLocaleString() : ""}
                                     onChange={handleAmountChange}
+                                    onBlur={handleAmountBlur}
                                     placeholder={t('amount_placeholder')}
                                 />
                                 <span className="currency-code">KRW</span>
                             </div>
+                            {amountError && (
+                                <div className="error-message">
+                                    {amountError}
+                                </div>
+                            )}
                         </div>
 
                         <div className="form-group">
@@ -491,7 +534,7 @@ export default function MainPage() {
                             </div>
                         </div>
 
-                        <button className="cta-button" type="submit">
+                        <button className={`cta-button ${!isAmountValid() ? 'disabled' : ''}`} type="submit" disabled={!isAmountValid()}>
                             {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
                         </button>
 
@@ -524,7 +567,7 @@ export default function MainPage() {
                 {/* Results Section */}
                 {showResults && (
                     <div ref={resultsRef} className="results-section">
-                        <ComparisonResults queryParams={queryParams} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
+                        <ComparisonResults queryParams={queryParams} amount={amount} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
                     </div>
                 )}
             </div>
@@ -784,6 +827,21 @@ export default function MainPage() {
                     transform: translateY(0);
                 }
 
+                .cta-button.disabled,
+                .cta-button:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    background: #9ca3af;
+                    transform: none;
+                    box-shadow: none;
+                }
+
+                .cta-button.disabled:hover,
+                .cta-button:disabled:hover {
+                    transform: none;
+                    box-shadow: none;
+                }
+
                 .social-proof {
                     background: #f8f9fa;
                     border: 1px solid #e9ecef;
@@ -863,6 +921,15 @@ export default function MainPage() {
                     color: #64748b;
                     line-height: 1.5;
                     letter-spacing: 0.1px;
+                }
+
+                .error-message {
+                    color: #dc2626;
+                    font-size: 12px;
+                    font-weight: 500;
+                    margin-top: 8px;
+                    text-align: right;
+                    margin-right: 4px;
                 }
 
                 .results-section {

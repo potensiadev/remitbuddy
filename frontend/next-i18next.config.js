@@ -16,7 +16,7 @@ module.exports = {
       'ne',  // Nepali (Nepal)
       'mn',  // Mongolian (Mongolia)
     ],
-    localeDetection: true,
+    localeDetection: false,
   },
   react: {
     useSuspense: false,

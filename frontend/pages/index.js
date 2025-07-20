@@ -626,6 +626,7 @@ export default function MainPage() {
                     position: relative;
                     display: flex;
                     align-items: center;
+                    justify-content: flex-end;
                     background: #f8f9fa;
                     border: 2px solid #e9ecef;
                     border-radius: 12px;
@@ -647,7 +648,6 @@ export default function MainPage() {
                 }
 
                 .amount-input {
-                    flex: 1;
                     border: none;
                     background: transparent;
                     font-size: 28px;
@@ -656,8 +656,9 @@ export default function MainPage() {
                     outline: none;
                     text-align: right;
                     letter-spacing: 0.5px;
-                    min-width: 0;
-                    overflow: hidden;
+                    min-width: 120px;
+                    max-width: 200px;
+                    width: auto;
                 }
 
                 .currency-code {

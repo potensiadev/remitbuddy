@@ -54,6 +54,20 @@ const PROVIDER_ANALYTICS_MAP = {
     'Moin': 'moin'
 };
 
+// Provider logo mapping
+const PROVIDER_LOGO_MAP = {
+    'Hanpass': '/logos/hanpass.png',
+    'GmoneyTrans': '/logos/gmoneytrans.png',
+    'E9Pay': '/logos/e9pay.png',
+    'Finshot': '/logos/finshot.png',
+    'Cross': '/logos/cross.png',
+    'GME Remit': '/logos/gme.png',
+    'JRF': '/logos/jrf.png',
+    'Wirebarley': '/logos/wirebarley.png',
+    'Moin': '/logos/moin.png',
+    'Sentbe': '/logos/sentbe.png'
+};
+
 // Provider Card Component
 const ProviderCard = ({ providerData, isBest, currency, t }) => { 
     const { provider, recipient_gets, exchange_rate, fee } = providerData; 
@@ -79,7 +93,18 @@ const ProviderCard = ({ providerData, isBest, currency, t }) => {
             className={`block w-full p-4 lg:p-6 mb-3 lg:mb-4 bg-white border rounded-xl lg:rounded-2xl shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isBest ? 'border-emerald-500 border-2' : 'border-slate-200'}`}
         > 
             <div className="flex justify-between items-start"> 
-                <h3 className="text-xl lg:text-2xl font-bold text-slate-800">{provider}</h3> 
+                <div className="flex items-center gap-3">
+                    {PROVIDER_LOGO_MAP[provider] && (
+                        <img 
+                            src={PROVIDER_LOGO_MAP[provider]} 
+                            alt={`${provider} logo`} 
+                            width="32" 
+                            height="32" 
+                            className="rounded"
+                        />
+                    )}
+                    <h3 className="text-xl lg:text-2xl font-bold text-slate-800">{provider}</h3>
+                </div>
                 {isBest && <span className="text-xs lg:text-sm font-semibold text-white bg-emerald-500 px-3 py-1 lg:px-4 lg:py-2 rounded-full">{t('most_amount_receive')}</span>} 
             </div> 
             <div className="mt-3 lg:mt-4"> 

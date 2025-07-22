@@ -60,17 +60,24 @@ const PROVIDER_LOGO_MAP = {
     'GmoneyTrans': '/logos/gmoneytrans.png',
     'E9Pay': '/logos/e9pay.png',
     'Finshot': '/logos/finshot.png',
+    'Coinshot': '/logos/coinshot.png',
     'Cross': '/logos/cross.png',
     'GME Remit': '/logos/gme.png',
     'JRF': '/logos/jrf.png',
+    'JP Remit': '/logos/jrf.png',
     'Wirebarley': '/logos/wirebarley.png',
     'Moin': '/logos/moin.png',
+    'The Moin': '/logos/moin.png',
     'Sentbe': '/logos/sentbe.png'
 };
 
 // Provider Card Component
 const ProviderCard = ({ providerData, isBest, currency, t }) => { 
-    const { provider, recipient_gets, exchange_rate, fee } = providerData; 
+    const { provider, recipient_gets, exchange_rate, fee } = providerData;
+    
+    // Normalize provider names for display
+    const displayName = provider === 'JP Remit' ? 'JRF' : 
+                       provider === 'The Moin' ? 'Moin' : provider; 
     
     const handleProviderClick = () => {
         const analyticsName = PROVIDER_ANALYTICS_MAP[provider] || provider.toLowerCase();
@@ -103,7 +110,7 @@ const ProviderCard = ({ providerData, isBest, currency, t }) => {
                             className="rounded"
                         />
                     )}
-                    <h3 className="text-xl lg:text-2xl font-bold text-slate-800">{provider}</h3>
+                    <h3 className="text-xl lg:text-2xl font-bold text-slate-800">{displayName}</h3>
                 </div>
                 {isBest && <span className="text-xs lg:text-sm font-semibold text-white bg-emerald-500 px-3 py-1 lg:px-4 lg:py-2 rounded-full">{t('most_amount_receive')}</span>} 
             </div> 
@@ -185,7 +192,11 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
             console.log('🎯 API URL:', url);
 
             try {
-                const response = await fetch(url, {
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error('Request timeout')), 3000);
+                });
+                
+                const fetchPromise = fetch(url, {
                     method: 'GET',
                     mode: 'cors',
                     cache: 'no-cache',
@@ -195,6 +206,8 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                         'Accept': 'application/json',
                     },
                 });
+                
+                const response = await Promise.race([fetchPromise, timeoutPromise]);
                 
                 if (!response.ok) {
                     throw new Error(`API Error: ${response.status} - ${response.statusText}`);

@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { 
+  logPageView,
   logClickedCTA, 
   logCompareAgain, 
   logClickedProvider, 
@@ -54,6 +55,23 @@ const PROVIDER_ANALYTICS_MAP = {
     'Moin': 'moin'
 };
 
+// RemitBuddy referral links mapping
+const REMIT_BUDDY_REFERRAL_LINKS = {
+    'Hanpass': 'https://remitbuddy.com/go/hanpass',
+    'GmoneyTrans': 'https://remitbuddy.com/go/gmoneytrans',
+    'E9Pay': 'https://remitbuddy.com/go/e9pay',
+    'Finshot': 'https://remitbuddy.com/go/finshot',
+    'Coinshot': 'https://remitbuddy.com/go/coinshot',
+    'Cross': 'https://remitbuddy.com/go/cross',
+    'GME Remit': 'https://remitbuddy.com/go/gmeremit',
+    'JRF': 'https://remitbuddy.com/go/jrf',
+    'JP Remit': 'https://remitbuddy.com/go/jrf',
+    'Wirebarley': 'https://remitbuddy.com/go/wirebarley',
+    'Moin': 'https://remitbuddy.com/go/moin',
+    'The Moin': 'https://remitbuddy.com/go/moin',
+    'Sentbe': 'https://remitbuddy.com/go/sentbe'
+};
+
 // Provider logo mapping
 const PROVIDER_LOGO_MAP = {
     'Hanpass': '/logos/hanpass.png',
@@ -72,7 +90,7 @@ const PROVIDER_LOGO_MAP = {
 };
 
 // Provider Card Component
-const ProviderCard = ({ providerData, isBest, currency, t }) => { 
+const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountry }) => { 
     const { provider, recipient_gets, exchange_rate, fee } = providerData;
     
     // Normalize provider names for display
@@ -81,7 +99,15 @@ const ProviderCard = ({ providerData, isBest, currency, t }) => {
     
     const handleProviderClick = () => {
         const analyticsName = PROVIDER_ANALYTICS_MAP[provider] || provider.toLowerCase();
-        logClickedProvider(analyticsName);
+        logClickedProvider(analyticsName, amount, receiveCountry, currency);
+        
+        // Redirect to RemitBuddy referral link
+        const referralLink = REMIT_BUDDY_REFERRAL_LINKS[provider];
+        if (referralLink) {
+            window.open(referralLink, '_blank');
+        } else {
+            console.warn(`No referral link found for provider: ${provider}`);
+        }
     };
 
     // Calculate fee in target currency
@@ -304,6 +330,8 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                             providerData={provider} 
                             isBest={bestRateProvider && provider.provider === bestRateProvider.provider} 
                             currency={queryParams.receive_currency} 
+                            amount={amount}
+                            receiveCountry={queryParams.receive_country}
                             t={t} 
                         />
                     ) 
@@ -333,12 +361,15 @@ export default function MainPage() {
     const [hasComparedOnce, setHasComparedOnce] = useState(false);
     const [forceRefresh, setForceRefresh] = useState(0);
 
-    // Debug logging
+    // Page view tracking and debug logging
     useEffect(() => {
         console.log('🌍 Language:', router.locale);
         if (typeof window !== 'undefined') {
             console.log('🔗 Current URL:', window.location.href);
         }
+        
+        // Log page view on component mount
+        logPageView();
     }, [router.locale]);
 
     useEffect(() => { 
@@ -409,8 +440,8 @@ export default function MainPage() {
             handleCompareAgain();
         } else {
             // First time comparison
-            // Log CTA click
-            logClickedCTA();
+            // Log CTA click with parameters
+            logClickedCTA(amount, selectedCountry.code, selectedCountry.currency);
             
             if (selectedCountry && amount && isAmountValid()) { 
                 console.log('🚀 Form submitted - triggering first API call');
@@ -427,8 +458,8 @@ export default function MainPage() {
     const handleCompareAgain = () => { 
         console.log('🔄 Compare Again button clicked - triggering API call');
         
-        // Log compare again click
-        logCompareAgain();
+        // Log compare again click with parameters
+        logCompareAgain(amount, selectedCountry.code, selectedCountry.currency);
         
         // Force API call with current parameters - DO NOT scroll to top
         if (selectedCountry && amount && isAmountValid()) {

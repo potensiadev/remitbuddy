@@ -1,16 +1,18 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 WORKDIR /app
 
-# Copy requirements and install dependencies
+# Copy requirements and install one by one for better debugging
 COPY backend/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip
+RUN pip install fastapi
+RUN pip install "uvicorn[standard]"
+RUN pip install aiohttp
+RUN pip install cachetools
+RUN pip install python-dotenv
 
 # Copy backend code
 COPY backend/ ./
 
-# Expose port
-EXPOSE $PORT
-
 # Run the application
-CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD python -m uvicorn main:app --host 0.0.0.0 --port $PORT

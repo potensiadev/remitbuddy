@@ -214,7 +214,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
 
             console.log('🔥 API Call - Query Params:', queryParams);
             
-            const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}`;
+            const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}&_t=${Date.now()}`;
             console.log('🎯 API URL:', url);
 
             try {
@@ -225,11 +225,14 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 const fetchPromise = fetch(url, {
                     method: 'GET',
                     mode: 'cors',
-                    cache: 'no-cache',
+                    cache: 'no-store',
                     signal: abortController.signal,
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
                     },
                 });
                 

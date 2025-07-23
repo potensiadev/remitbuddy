@@ -574,30 +574,47 @@ async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int,
         if not exchange_rate or exchange_rate <= 0:
             return None
             
-        # Get fee for send amount - prioritize paymentFees over transferFees for web consistency
+        # Get fee for send amount - use intelligent fee selection based on which matches web behavior
         fee = 0
         payment_fees = matching_rate.get('paymentFees', [])
         
-        # First try to get fee from paymentFees (what website shows)
+        # Try both paymentFees and transferFees, select the non-zero one that matches web behavior
+        payment_fee = 0
+        transfer_fee = 0
+        
+        # Get fee from paymentFees
         for fee_info in payment_fees:
             if (fee_info.get('min', 0) <= send_amount <= fee_info.get('max', float('inf'))):
                 threshold1 = fee_info.get('threshold1')
                 if threshold1 and send_amount >= threshold1:
-                    fee = fee_info.get('fee2', 0) or 0
+                    payment_fee = fee_info.get('fee2', 0) or 0
                 else:
-                    fee = fee_info.get('fee1', 0) or 0
+                    payment_fee = fee_info.get('fee1', 0) or 0
                 break
         
-        # If no paymentFees found, fallback to transferFees
-        if fee == 0 and not payment_fees:
-            for fee_info in transfer_fees:
-                if (fee_info.get('min', 0) <= send_amount <= fee_info.get('max', float('inf'))):
-                    threshold1 = fee_info.get('threshold1')
-                    if threshold1 and send_amount >= threshold1:
-                        fee = fee_info.get('fee2', 0) or 0
-                    else:
-                        fee = fee_info.get('fee1', 0) or 0
-                    break
+        # Get fee from transferFees
+        for fee_info in transfer_fees:
+            if (fee_info.get('min', 0) <= send_amount <= fee_info.get('max', float('inf'))):
+                threshold1 = fee_info.get('threshold1')
+                if threshold1 and send_amount >= threshold1:
+                    transfer_fee = fee_info.get('fee2', 0) or 0
+                else:
+                    transfer_fee = fee_info.get('fee1', 0) or 0
+                break
+        
+        # Intelligent fee selection:
+        # If both have fees, prefer the non-zero one
+        # If one is zero and other is non-zero, use the non-zero one
+        # If both are zero, use zero
+        # If both are non-zero, prefer transferFees as it's more specific to actual transfer methods
+        if payment_fee > 0 and transfer_fee > 0:
+            fee = transfer_fee  # transferFees is more specific to actual transfer costs
+        elif payment_fee > 0:
+            fee = payment_fee
+        elif transfer_fee > 0:
+            fee = transfer_fee
+        else:
+            fee = 0
         
         recipient_gets = (send_amount - fee) * exchange_rate
         

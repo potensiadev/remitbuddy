@@ -12,7 +12,7 @@ import {
 } from '../utils/analytics';
 
 // API Configuration
-const FORCE_API_BASE_URL = 'https://sendhome.onrender.com';
+const FORCE_API_BASE_URL = 'https://sendhome-production.up.railway.app';
 
 // Icon Components
 const ChevronDownIcon = ({ className }) => ( 

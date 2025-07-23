@@ -157,7 +157,7 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(status_code=exc.status_code, content={"error": exc.detail})
 
 # --- Scraper Functions ---
-async def get_hanpass_quote(send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     try:
         url = 'https://www.hanpass.com/getCost'
         country_code = COUNTRY_CODES.get(receive_country)
@@ -173,35 +173,27 @@ async def get_hanpass_quote(send_amount: int, receive_currency: str, receive_cou
         
         headers = {'Content-Type': 'application/json'}
         
-        async with ProxySession(proxy_manager, "Hanpass") as (session, proxy):
-            proxy_url = proxy.url if proxy else None
+        async with session.post(url, json=json_data, headers=headers) as response:
+            if response.status != 200:
+                return None
+                
+            data = await response.json()
+            exchange_rate = data.get('exchangeRate')
             
-            async with session.post(
-                url, 
-                json=json_data, 
-                headers=headers,
-                proxy=proxy_url
-            ) as response:
-                if response.status != 200:
-                    return None
-                    
-                data = await response.json()
-                exchange_rate = data.get('exchangeRate')
+            if not exchange_rate:
+                return None
                 
-                if not exchange_rate:
-                    return None
-                    
-                fee = float(data.get('transferFee', 0))
-                exchange_rate = float(exchange_rate)
-                recipient_gets = (send_amount - fee) * exchange_rate
-                
-                return {
-                    "provider": "Hanpass", 
-                    "exchange_rate": exchange_rate, 
-                    "fee": fee, 
-                    "recipient_gets": recipient_gets, 
-                    "link": "https://www.hanpass.com/"
-                }
+            fee = float(data.get('transferFee', 0))
+            exchange_rate = float(exchange_rate)
+            recipient_gets = (send_amount - fee) * exchange_rate
+            
+            return {
+                "provider": "Hanpass", 
+                "exchange_rate": exchange_rate, 
+                "fee": fee, 
+                "recipient_gets": recipient_gets, 
+                "link": "https://www.hanpass.com/"
+            }
     except (asyncio.TimeoutError, aiohttp.ClientError):
         return None
     except Exception as e:
@@ -494,7 +486,7 @@ async def get_themoin_quote(session: aiohttp.ClientSession, send_amount: int, re
         print(f"The Moin Error: {type(e).__name__} - {e}")
         return None
 
-async def get_wirebarley_quote(send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     try:
         # Get country code for Wirebarley
         country_code = WIREBARLEY_COUNTRIES.get(receive_country)
@@ -513,99 +505,96 @@ async def get_wirebarley_quote(send_amount: int, receive_currency: str, receive_
             'lang': 'ko'
         }
         
-        async with ProxySession(proxy_manager, "Wirebarley") as (session, proxy):
-            proxy_url = proxy.url if proxy else None
-            
-            async with session.get(url, headers=headers, proxy=proxy_url) as response:
-                if response.status != 200:
-                    return None
-                    
-                result = await response.json()
-            
-            if result.get('status') != 0:
+        async with session.get(url, headers=headers) as response:
+            if response.status != 200:
                 return None
                 
-            data = result.get('data', {})
-            ex_rates = data.get('exRates', [])
+            result = await response.json()
+        
+        if result.get('status') != 0:
+            return None
             
-            # Find matching country and currency
-            matching_rate = None
-            for rate in ex_rates:
-                if (rate.get('country') == country_code and 
-                    rate.get('currency') == receive_currency):
-                    matching_rate = rate
-                    break
+        data = result.get('data', {})
+        ex_rates = data.get('exRates', [])
+        
+        # Find matching country and currency
+        matching_rate = None
+        for rate in ex_rates:
+            if (rate.get('country') == country_code and 
+                rate.get('currency') == receive_currency):
+                matching_rate = rate
+                break
+        
+        if not matching_rate:
+            return None
             
-            if not matching_rate:
-                return None
-                
-            wb_rate_data = matching_rate.get('wbRateData', {})
-            transfer_fees = matching_rate.get('transferFees', [])
+        wb_rate_data = matching_rate.get('wbRateData', {})
+        transfer_fees = matching_rate.get('transferFees', [])
+        
+        # Get appropriate exchange rate based on send amount
+        exchange_rate = wb_rate_data.get('wbRate', 0)
+        
+        # Apply amount-based rate tiers
+        threshold1 = wb_rate_data.get('threshold1')
+        if threshold1 and send_amount >= threshold1:
+            exchange_rate = wb_rate_data.get('wbRate1', exchange_rate)
+        
+        threshold2 = wb_rate_data.get('threshold2')  
+        if threshold2 and send_amount >= threshold2:
+            exchange_rate = wb_rate_data.get('wbRate2', exchange_rate)
             
-            # Get appropriate exchange rate based on send amount
-            exchange_rate = wb_rate_data.get('wbRate', 0)
+        threshold3 = wb_rate_data.get('threshold3')
+        if threshold3 and send_amount >= threshold3:
+            exchange_rate = wb_rate_data.get('wbRate3', exchange_rate)
             
-            # Apply amount-based rate tiers
-            threshold1 = wb_rate_data.get('threshold1')
-            if threshold1 and send_amount >= threshold1:
-                exchange_rate = wb_rate_data.get('wbRate1', exchange_rate)
+        threshold4 = wb_rate_data.get('threshold4')
+        if threshold4 and send_amount >= threshold4:
+            exchange_rate = wb_rate_data.get('wbRate4', exchange_rate)
             
-            threshold2 = wb_rate_data.get('threshold2')  
-            if threshold2 and send_amount >= threshold2:
-                exchange_rate = wb_rate_data.get('wbRate2', exchange_rate)
-                
-            threshold3 = wb_rate_data.get('threshold3')
-            if threshold3 and send_amount >= threshold3:
-                exchange_rate = wb_rate_data.get('wbRate3', exchange_rate)
-                
-            threshold4 = wb_rate_data.get('threshold4')
-            if threshold4 and send_amount >= threshold4:
-                exchange_rate = wb_rate_data.get('wbRate4', exchange_rate)
-                
-            threshold5 = wb_rate_data.get('threshold5')
-            if threshold5 and send_amount >= threshold5:
-                exchange_rate = wb_rate_data.get('wbRate5', exchange_rate)
-                
-            threshold6 = wb_rate_data.get('threshold6')
-            if threshold6 and send_amount >= threshold6:
-                exchange_rate = wb_rate_data.get('wbRate6', exchange_rate)
-                
-            threshold7 = wb_rate_data.get('threshold7')
-            if threshold7 and send_amount >= threshold7:
-                exchange_rate = wb_rate_data.get('wbRate7', exchange_rate)
-                
-            threshold8 = wb_rate_data.get('threshold8')
-            if threshold8 and send_amount >= threshold8:
-                exchange_rate = wb_rate_data.get('wbRate8', exchange_rate)
-                
-            # wbRate9 is usually the highest tier rate
-            if wb_rate_data.get('wbRate9'):
-                exchange_rate = wb_rate_data.get('wbRate9', exchange_rate)
+        threshold5 = wb_rate_data.get('threshold5')
+        if threshold5 and send_amount >= threshold5:
+            exchange_rate = wb_rate_data.get('wbRate5', exchange_rate)
             
-            if not exchange_rate or exchange_rate <= 0:
-                return None
-                
-            # Get fee for send amount
-            fee = 0
-            for fee_info in transfer_fees:
-                if (fee_info.get('min', 0) <= send_amount <= fee_info.get('max', float('inf'))):
-                    threshold1 = fee_info.get('threshold1')
-                    if threshold1 and send_amount >= threshold1:
-                        fee = fee_info.get('fee2', 0) or 0
-                    else:
-                        fee = fee_info.get('fee1', 0) or 0
-                    break
+        threshold6 = wb_rate_data.get('threshold6')
+        if threshold6 and send_amount >= threshold6:
+            exchange_rate = wb_rate_data.get('wbRate6', exchange_rate)
             
-            recipient_gets = (send_amount - fee) * exchange_rate
+        threshold7 = wb_rate_data.get('threshold7')
+        if threshold7 and send_amount >= threshold7:
+            exchange_rate = wb_rate_data.get('wbRate7', exchange_rate)
             
-            return {
-                "provider": "Wirebarley",
-                "exchange_rate": exchange_rate,
-                "fee": fee,
-                "recipient_gets": recipient_gets,
-                "link": "https://www.wirebarley.com/"
-            }
+        threshold8 = wb_rate_data.get('threshold8')
+        if threshold8 and send_amount >= threshold8:
+            exchange_rate = wb_rate_data.get('wbRate8', exchange_rate)
             
+        # wbRate9 is usually the highest tier rate
+        if wb_rate_data.get('wbRate9'):
+            exchange_rate = wb_rate_data.get('wbRate9', exchange_rate)
+        
+        if not exchange_rate or exchange_rate <= 0:
+            return None
+            
+        # Get fee for send amount
+        fee = 0
+        for fee_info in transfer_fees:
+            if (fee_info.get('min', 0) <= send_amount <= fee_info.get('max', float('inf'))):
+                threshold1 = fee_info.get('threshold1')
+                if threshold1 and send_amount >= threshold1:
+                    fee = fee_info.get('fee2', 0) or 0
+                else:
+                    fee = fee_info.get('fee1', 0) or 0
+                break
+        
+        recipient_gets = (send_amount - fee) * exchange_rate
+        
+        return {
+            "provider": "Wirebarley",
+            "exchange_rate": exchange_rate,
+            "fee": fee,
+            "recipient_gets": recipient_gets,
+            "link": "https://www.wirebarley.com/"
+        }
+        
     except Exception as e:
         print(f"Wirebarley Error: {type(e).__name__} - {e}")
         return None
@@ -858,13 +847,13 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
     
     # Create tasks with individual timeouts
     tasks = [
-        # Proxy-based providers (no session needed)
+        # Session-based providers (updated Hanpass and Wirebarley)
         asyncio.wait_for(
-            get_hanpass_quote(send_amount, receive_currency, receive_country),
+            create_session_wrapper(get_hanpass_quote, send_amount, receive_currency, receive_country),
             timeout=2.0
         ),
         asyncio.wait_for(
-            get_wirebarley_quote(send_amount, receive_currency, receive_country),
+            create_session_wrapper(get_wirebarley_quote, send_amount, receive_currency, receive_country),
             timeout=2.0
         ),
         # Session-based providers

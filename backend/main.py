@@ -574,9 +574,12 @@ async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int,
         if not exchange_rate or exchange_rate <= 0:
             return None
             
-        # Get fee for send amount
+        # Get fee for send amount - prioritize paymentFees over transferFees for web consistency
         fee = 0
-        for fee_info in transfer_fees:
+        payment_fees = matching_rate.get('paymentFees', [])
+        
+        # First try to get fee from paymentFees (what website shows)
+        for fee_info in payment_fees:
             if (fee_info.get('min', 0) <= send_amount <= fee_info.get('max', float('inf'))):
                 threshold1 = fee_info.get('threshold1')
                 if threshold1 and send_amount >= threshold1:
@@ -584,6 +587,17 @@ async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int,
                 else:
                     fee = fee_info.get('fee1', 0) or 0
                 break
+        
+        # If no paymentFees found, fallback to transferFees
+        if fee == 0 and not payment_fees:
+            for fee_info in transfer_fees:
+                if (fee_info.get('min', 0) <= send_amount <= fee_info.get('max', float('inf'))):
+                    threshold1 = fee_info.get('threshold1')
+                    if threshold1 and send_amount >= threshold1:
+                        fee = fee_info.get('fee2', 0) or 0
+                    else:
+                        fee = fee_info.get('fee1', 0) or 0
+                    break
         
         recipient_gets = (send_amount - fee) * exchange_rate
         

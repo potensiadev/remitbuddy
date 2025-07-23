@@ -3,7 +3,7 @@ nixPkgs = ["python3", "python3Packages.pip"]
 
 [phases.install]
 cmds = [
-  "pip install -r backend/requirements.txt"
+  "pip install --break-system-packages -r backend/requirements.txt"
 ]
 
 [start]

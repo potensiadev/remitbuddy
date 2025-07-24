@@ -528,7 +528,7 @@ export default function MainPage() {
         <>
             <Head>
                 <title>{t('page_title')}</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
             </Head>
             <style jsx global>{`
                 * {
@@ -542,6 +542,21 @@ export default function MainPage() {
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                     min-height: 100vh;
                     padding: 20px;
+                    -webkit-text-size-adjust: 100%;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                }
+
+                /* 웹뷰 호환성 개선 */
+                html {
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    -webkit-tap-highlight-color: rgba(0,0,0,0);
+                }
+                
+                body, input, button, select, textarea {
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
                 }
 
                 @media (max-width: 768px) {
@@ -690,7 +705,9 @@ export default function MainPage() {
                     margin-bottom: 18px;
                     line-height: 1.15;
                     letter-spacing: -0.5px;
-                    white-space: nowrap;
+                    white-space: normal;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
                 }
 
                 .subtitle {
@@ -786,7 +803,7 @@ export default function MainPage() {
                     border-radius: 8px;
                     letter-spacing: 0.5px;
                     flex-shrink: 0;
-                    white-space: nowrap;
+                    white-space: normal;
                 }
 
                 .country-select-wrapper {
@@ -929,7 +946,7 @@ export default function MainPage() {
                     color: #2d3748;
                     margin-bottom: 10px;
                     letter-spacing: 0.1px;
-                    white-space: nowrap;
+                    white-space: normal;
                 }
 
                 .rating {
@@ -949,7 +966,7 @@ export default function MainPage() {
                     color: #4a5568;
                     text-align: center;
                     letter-spacing: 0.2px;
-                    white-space: nowrap;
+                    white-space: normal;
                 }
 
                 .features {

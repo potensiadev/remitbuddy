@@ -214,6 +214,12 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
             setResults([]);
 
             console.log('🔥 API Call - Query Params:', queryParams, 'Retry:', retryCount);
+            console.log('🔍 Debug Info:', {
+                receive_country: queryParams.receive_country,
+                receive_currency: queryParams.receive_currency,
+                send_amount: amountRef.current,
+                base_url: FORCE_API_BASE_URL
+            });
             
             const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}&_t=${Date.now()}`;
             console.log('🎯 API URL:', url);
@@ -239,12 +245,16 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                     },
                 });
                 
+                console.log('📡 Making fetch request...');
                 const response = await Promise.race([fetchPromise, timeoutPromise]);
+                console.log('📦 Response received:', response.status, response.statusText);
                 
                 if (!response.ok) {
+                    console.error('❌ Response not OK:', response.status, response.statusText);
                     throw new Error(`API Error: ${response.status} - ${response.statusText}`);
                 }
                 
+                console.log('🔄 Parsing JSON response...');
                 const data = await response.json();
                 console.log('✅ API Response:', data);
                 
@@ -260,11 +270,16 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                     return;
                 }
                 
-                console.error('🚨 API Error:', err);
+                console.error('🚨 API Error Details:', {
+                    message: err.message,
+                    name: err.name,
+                    stack: err.stack,
+                    retryCount: retryCount
+                });
                 
                 // 콜드 스타트 오류인 경우 재시도 (최대 1회)
-                if (retryCount === 0 && (err.message.includes('timeout') || err.message.includes('fetch'))) {
-                    console.log('🔄 Cold start detected, retrying...');
+                if (retryCount === 0 && (err.message.includes('timeout') || err.message.includes('fetch') || err.message.includes('Failed to fetch'))) {
+                    console.log('🔄 Cold start or network error detected, retrying...');
                     setIsRetrying(true);
                     setTimeout(() => fetchRealQuotes(1), 2000); // 2초 후 재시도
                     return;

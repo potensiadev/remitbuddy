@@ -189,6 +189,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentApiCall, setCurrentApiCall] = useState(null);
+    const [isRetrying, setIsRetrying] = useState(false);
     const amountRef = useRef(amount);
     
     // Update ref when amount changes
@@ -207,19 +208,21 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
         const abortController = new AbortController();
         setCurrentApiCall(abortController);
 
-        const fetchRealQuotes = async () => {
+        const fetchRealQuotes = async (retryCount = 0) => {
             setIsLoading(true);
             setError(null);
             setResults([]);
 
-            console.log('🔥 API Call - Query Params:', queryParams);
+            console.log('🔥 API Call - Query Params:', queryParams, 'Retry:', retryCount);
             
             const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}&_t=${Date.now()}`;
             console.log('🎯 API URL:', url);
 
             try {
+                // 첫 번째 시도는 15초, 재시도는 30초 타임아웃
+                const timeoutDuration = retryCount === 0 ? 15000 : 30000;
                 const timeoutPromise = new Promise((_, reject) => {
-                    setTimeout(() => reject(new Error('Request timeout')), 3000);
+                    setTimeout(() => reject(new Error('Request timeout')), timeoutDuration);
                 });
                 
                 const fetchPromise = fetch(url, {
@@ -256,11 +259,26 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                     console.log('🛑 API call was aborted');
                     return;
                 }
+                
                 console.error('🚨 API Error:', err);
+                
+                // 콜드 스타트 오류인 경우 재시도 (최대 1회)
+                if (retryCount === 0 && (err.message.includes('timeout') || err.message.includes('fetch'))) {
+                    console.log('🔄 Cold start detected, retrying...');
+                    setIsRetrying(true);
+                    setTimeout(() => fetchRealQuotes(1), 2000); // 2초 후 재시도
+                    return;
+                }
+                
                 setError(`API Error: ${err.message}`);
-            } finally {
                 setIsLoading(false);
                 setCurrentApiCall(null);
+            } finally {
+                if (retryCount > 0) {
+                    setIsLoading(false);
+                    setCurrentApiCall(null);
+                    setIsRetrying(false);
+                }
             }
         };
 
@@ -294,7 +312,11 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 <p className="text-xl lg:text-2xl font-bold text-slate-800 flex items-center"> 
                     {parseInt(amount).toLocaleString()} KRW → {queryParams.receive_country} 
                 </p> 
-                {isLoading && <p className="text-xs lg:text-sm text-indigo-500 mt-1 animate-pulse">{t('loading_text')}</p>} 
+                {isLoading && (
+                    <p className="text-xs lg:text-sm text-indigo-500 mt-1 animate-pulse">
+                        {isRetrying ? t('retrying_text') || '서버 준비 중... 잠시만 기다려주세요' : t('loading_text')}
+                    </p>
+                )} 
             </div> 
             
             {error && (

@@ -272,7 +272,8 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                     console.log('🎯 Setting results:', data.results);
                     console.log('🎯 Results length:', data.results.length);
                     setResults(data.results);
-                    console.log('🎯 Results state should be updated');
+                    setIsLoading(false); // CRITICAL: Set loading to false on success
+                    console.log('🎯 Results state should be updated, loading set to false');
                     
                     // Force a delayed check to see if state actually updated
                     setTimeout(() => {
@@ -281,6 +282,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 } else {
                     console.log('❌ No results in response data:', data);
                     setError('No exchange rate providers available');
+                    setIsLoading(false); // Also set loading to false on no results
                 }
                 
             } catch (err) {
@@ -308,10 +310,17 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 setIsLoading(false);
                 setCurrentApiCall(null);
             } finally {
+                console.log('🔚 Finally block - retryCount:', retryCount);
+                // Always set loading to false unless we're retrying (retryCount === 0 and retry is happening)
                 if (retryCount > 0) {
+                    console.log('🔚 Retry finished, setting loading false');
                     setIsLoading(false);
                     setCurrentApiCall(null);
                     setIsRetrying(false);
+                } else {
+                    console.log('🔚 First attempt finished, checking if we should set loading false');
+                    // Only keep loading true if we're about to retry
+                    // The retry logic will handle setting loading false
                 }
             }
         };

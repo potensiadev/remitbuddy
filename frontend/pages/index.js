@@ -198,17 +198,9 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
     }, [amount]);
 
     useEffect(() => {
-        console.log('🎬 ComparisonResults useEffect triggered');
-        console.log('🔍 queryParams:', queryParams);
-        console.log('🔍 receive_country:', queryParams.receive_country);
-        console.log('🔍 receive_currency:', queryParams.receive_currency);
-        
         if (!queryParams.receive_country) {
-            console.log('❌ No receive_country, returning early');
             return;
         }
-        
-        console.log('✅ Valid queryParams, proceeding with API call');
 
         // Cancel previous API call if it's still running
         if (currentApiCall) {
@@ -223,16 +215,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
             setError(null);
             setResults([]);
 
-            console.log('🔥 API Call - Query Params:', queryParams, 'Retry:', retryCount);
-            console.log('🔍 Debug Info:', {
-                receive_country: queryParams.receive_country,
-                receive_currency: queryParams.receive_currency,
-                send_amount: amountRef.current,
-                base_url: FORCE_API_BASE_URL
-            });
-            
             const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}&_t=${Date.now()}`;
-            console.log('🎯 API URL:', url);
 
             try {
                 // 첫 번째 시도는 15초, 재시도는 30초 타임아웃
@@ -255,54 +238,31 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                     },
                 });
                 
-                console.log('📡 Making fetch request...');
                 const response = await Promise.race([fetchPromise, timeoutPromise]);
-                console.log('📦 Response received:', response.status, response.statusText);
                 
                 if (!response.ok) {
-                    console.error('❌ Response not OK:', response.status, response.statusText);
                     throw new Error(`API Error: ${response.status} - ${response.statusText}`);
                 }
                 
-                console.log('🔄 Parsing JSON response...');
                 const data = await response.json();
-                console.log('✅ API Response:', data);
                 
                 if (data.results && data.results.length > 0) {
-                    console.log('🎯 Setting results:', data.results);
-                    console.log('🎯 Results length:', data.results.length);
                     setResults(data.results);
-                    setIsLoading(false); // CRITICAL: Set loading to false on success
-                    console.log('🎯 Results state should be updated, loading set to false');
-                    
-                    // Force a delayed check to see if state actually updated
-                    setTimeout(() => {
-                        console.log('🕐 Delayed check - results state should now contain:', data.results.length, 'items');
-                    }, 100);
+                    setIsLoading(false);
                 } else {
-                    console.log('❌ No results in response data:', data);
                     setError('No exchange rate providers available');
-                    setIsLoading(false); // Also set loading to false on no results
+                    setIsLoading(false);
                 }
                 
             } catch (err) {
                 if (err.name === 'AbortError') {
-                    console.log('🛑 API call was aborted');
                     return;
                 }
                 
-                console.error('🚨 API Error Details:', {
-                    message: err.message,
-                    name: err.name,
-                    stack: err.stack,
-                    retryCount: retryCount
-                });
-                
                 // 콜드 스타트 오류인 경우 재시도 (최대 1회)
                 if (retryCount === 0 && (err.message.includes('timeout') || err.message.includes('fetch') || err.message.includes('Failed to fetch'))) {
-                    console.log('🔄 Cold start or network error detected, retrying...');
                     setIsRetrying(true);
-                    setTimeout(() => fetchRealQuotes(1), 2000); // 2초 후 재시도
+                    setTimeout(() => fetchRealQuotes(1), 2000);
                     return;
                 }
                 
@@ -310,17 +270,10 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 setIsLoading(false);
                 setCurrentApiCall(null);
             } finally {
-                console.log('🔚 Finally block - retryCount:', retryCount);
-                // Always set loading to false unless we're retrying (retryCount === 0 and retry is happening)
                 if (retryCount > 0) {
-                    console.log('🔚 Retry finished, setting loading false');
                     setIsLoading(false);
                     setCurrentApiCall(null);
                     setIsRetrying(false);
-                } else {
-                    console.log('🔚 First attempt finished, checking if we should set loading false');
-                    // Only keep loading true if we're about to retry
-                    // The retry logic will handle setting loading false
                 }
             }
         };
@@ -393,12 +346,6 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                     Array(5).fill(0).map((_, index) => <SkeletonCard key={index} />) 
                 ) : ( 
                     <>
-                        {(() => {
-                            console.log('🎨 Rendering results:', results, 'Length:', results.length);
-                            console.log('🎨 isLoading:', isLoading);
-                            console.log('🎨 error:', error);
-                            return null;
-                        })()}
                         {results && results.length > 0 ? (
                             results.map(provider => 
                                 <ProviderCard 
@@ -413,10 +360,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                             )
                         ) : (
                             <div className="text-center p-8">
-                                <p>No results to display. Results length: {results.length}</p>
-                                <button onClick={() => console.log('Current results state:', results)}>
-                                    Debug Results State
-                                </button>
+                                <p>No results available</p>
                             </div>
                         )}
                     </>
@@ -448,12 +392,6 @@ export default function MainPage() {
 
     // Page view tracking and debug logging
     useEffect(() => {
-        console.log('🌍 Language:', router.locale);
-        if (typeof window !== 'undefined') {
-            console.log('🔗 Current URL:', window.location.href);
-        }
-        
-        // Log page view on component mount
         logPageView();
     }, [router.locale]);
 
@@ -529,89 +467,49 @@ export default function MainPage() {
             logClickedCTA(amount, selectedCountry.code, selectedCountry.currency);
             
             if (selectedCountry && amount && isAmountValid()) { 
-                console.log('🚀 Form submitted - triggering first API call');
-                console.log('🔍 Selected country:', selectedCountry);
-                console.log('🔍 Amount:', amount);
-                console.log('🔍 Amount valid:', isAmountValid());
-                
                 const newParams = { 
                     receive_country: selectedCountry.name, 
                     receive_currency: selectedCountry.currency
                 };
-                console.log('🎯 Setting query params:', newParams);
                 
                 setQueryParams(newParams); 
                 setShowResults(true);
-                setHasComparedOnce(true); // Mark that we've compared at least once
-                
-                console.log('✅ State updates triggered - showResults=true, queryParams set');
-            } else {
-                console.log('❌ Form validation failed:');
-                console.log('  - selectedCountry:', selectedCountry);
-                console.log('  - amount:', amount);
-                console.log('  - isAmountValid():', isAmountValid());
+                setHasComparedOnce(true);
             }
         }
     };
 
     const handleCompareAgain = () => { 
-        console.log('🔄 Compare Again button clicked - triggering API call');
-        
-        // Log compare again click with parameters
         logCompareAgain(amount, selectedCountry.code, selectedCountry.currency);
         
-        // Force API call with current parameters - DO NOT scroll to top
         if (selectedCountry && amount && isAmountValid()) {
             const newQueryParams = { 
                 receive_country: selectedCountry.name, 
                 receive_currency: selectedCountry.currency
             };
             
-            console.log('🚀 Compare Again - triggering API with params:', newQueryParams);
-            
-            // Update query params to trigger new API call
             setQueryParams(newQueryParams);
-            
-            // Force refresh to ensure API call even with same params
             setForceRefresh(prev => prev + 1);
-            
-            // Keep focus on results section - no scrolling to top
-            console.log('✅ Compare Again - API call triggered, staying in results section');
-        } else {
-            console.log('❌ Compare Again - missing selectedCountry or amount');
         }
     };
 
     // Handle country change - auto-trigger API only after first comparison
     const handleCountryChange = (newCountry) => {
-        console.log('🔄 Country changed to:', newCountry.name, 'showResults:', showResults);
-        
-        // Log country switch
         logSendingCountrySwitch(newCountry.currency);
-        
-        // IMPORTANT: Only update selected country, do NOT trigger API on first visit
         setSelectedCountry(newCountry);
         
-        // Only auto-trigger API if we have compared at least once
         if (hasComparedOnce && amount && isAmountValid()) {
-            console.log('✅ Auto-triggering API because hasComparedOnce=true');
-            
             const newQueryParams = { 
                 receive_country: newCountry.name, 
                 receive_currency: newCountry.currency
             };
             
             setQueryParams(newQueryParams);
-            
-            // Ensure results are visible
             setShowResults(true);
             
-            // Scroll to results section
             if (resultsRef.current) {
                 resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-        } else {
-            console.log('🚫 NOT triggering API - hasComparedOnce:', hasComparedOnce);
         }
     };
 

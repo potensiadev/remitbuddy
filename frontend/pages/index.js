@@ -259,7 +259,9 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 console.log('✅ API Response:', data);
                 
                 if (data.results && data.results.length > 0) {
+                    console.log('🎯 Setting results:', data.results);
                     setResults(data.results);
+                    console.log('🎯 Results state should be updated');
                 } else {
                     setError('No exchange rate providers available');
                 }
@@ -364,17 +366,20 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 {isLoading ? ( 
                     Array(5).fill(0).map((_, index) => <SkeletonCard key={index} />) 
                 ) : ( 
-                    results.map(provider => 
-                        <ProviderCard 
-                            key={provider.provider} 
-                            providerData={provider} 
-                            isBest={bestRateProvider && provider.provider === bestRateProvider.provider} 
-                            currency={queryParams.receive_currency} 
-                            amount={amount}
-                            receiveCountry={queryParams.receive_country}
-                            t={t} 
-                        />
-                    ) 
+                    <>
+                        {console.log('🎨 Rendering results:', results, 'Length:', results.length)}
+                        {results.map(provider => 
+                            <ProviderCard 
+                                key={provider.provider} 
+                                providerData={provider} 
+                                isBest={bestRateProvider && provider.provider === bestRateProvider.provider} 
+                                currency={queryParams.receive_currency} 
+                                amount={amount}
+                                receiveCountry={queryParams.receive_country}
+                                t={t} 
+                            />
+                        )}
+                    </>
                 )} 
             </div> 
             

@@ -270,9 +270,16 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 
                 if (data.results && data.results.length > 0) {
                     console.log('🎯 Setting results:', data.results);
+                    console.log('🎯 Results length:', data.results.length);
                     setResults(data.results);
                     console.log('🎯 Results state should be updated');
+                    
+                    // Force a delayed check to see if state actually updated
+                    setTimeout(() => {
+                        console.log('🕐 Delayed check - results state should now contain:', data.results.length, 'items');
+                    }, 100);
                 } else {
+                    console.log('❌ No results in response data:', data);
                     setError('No exchange rate providers available');
                 }
                 
@@ -377,17 +384,31 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                     Array(5).fill(0).map((_, index) => <SkeletonCard key={index} />) 
                 ) : ( 
                     <>
-                        {console.log('🎨 Rendering results:', results, 'Length:', results.length)}
-                        {results.map(provider => 
-                            <ProviderCard 
-                                key={provider.provider} 
-                                providerData={provider} 
-                                isBest={bestRateProvider && provider.provider === bestRateProvider.provider} 
-                                currency={queryParams.receive_currency} 
-                                amount={amount}
-                                receiveCountry={queryParams.receive_country}
-                                t={t} 
-                            />
+                        {(() => {
+                            console.log('🎨 Rendering results:', results, 'Length:', results.length);
+                            console.log('🎨 isLoading:', isLoading);
+                            console.log('🎨 error:', error);
+                            return null;
+                        })()}
+                        {results && results.length > 0 ? (
+                            results.map(provider => 
+                                <ProviderCard 
+                                    key={provider.provider} 
+                                    providerData={provider} 
+                                    isBest={bestRateProvider && provider.provider === bestRateProvider.provider} 
+                                    currency={queryParams.receive_currency} 
+                                    amount={amount}
+                                    receiveCountry={queryParams.receive_country}
+                                    t={t} 
+                                />
+                            )
+                        ) : (
+                            <div className="text-center p-8">
+                                <p>No results to display. Results length: {results.length}</p>
+                                <button onClick={() => console.log('Current results state:', results)}>
+                                    Debug Results State
+                                </button>
+                            </div>
                         )}
                     </>
                 )} 

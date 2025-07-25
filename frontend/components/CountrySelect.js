@@ -1,7 +1,16 @@
+import { useState } from 'react';
+
 const countries = [
   { code: "VN", currency: "VND", name: "Vietnam", emoji: "🇻🇳" },
+  { code: "NP", currency: "NPR", name: "Nepal", emoji: "🇳🇵" },
   { code: "PH", currency: "PHP", name: "Philippines", emoji: "🇵🇭" },
-  // ...나머지 국가
+  { code: "KH", currency: "KHR", name: "Cambodia", emoji: "🇰🇭" },
+  { code: "MM", currency: "MMK", name: "Myanmar", emoji: "🇲🇲" },
+  { code: "TH", currency: "THB", name: "Thailand", emoji: "🇹🇭" },
+  { code: "UZ", currency: "UZS", name: "Uzbekistan", emoji: "🇺🇿" },
+  { code: "ID", currency: "IDR", name: "Indonesia", emoji: "🇮🇩" },
+  { code: "LK", currency: "LKR", name: "SriLanka", emoji: "🇱🇰" },
+  { code: "BD", currency: "BDT", name: "Bangladesh", emoji: "🇧🇩" },
 ];
 
 export default function CountrySelect({ country, onChange }) {
@@ -20,7 +29,7 @@ export default function CountrySelect({ country, onChange }) {
         </svg>
       </button>
       {open && (
-        <div className="absolute z-20 left-0 top-[110%] w-44 bg-white shadow-xl rounded-xl py-2 border border-gray-100">
+        <div className="absolute z-20 left-0 top-[110%] w-44 max-h-48 overflow-y-auto bg-white shadow-xl rounded-xl py-2 border border-gray-100">
           {countries.map(c => (
             <div
               key={c.code}

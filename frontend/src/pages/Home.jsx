@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 const countries = [
   { name: 'Vietnam', code: 'VND', flag: '🇻🇳' },
+  { name: 'Nepal', code: 'NPR', flag: '🇳🇵' },
   { name: 'Philippines', code: 'PHP', flag: '🇵🇭' },
   { name: 'Cambodia', code: 'KHR', flag: '🇰🇭' },
-  { name: 'Nepal', code: 'NPR', flag: '🇳🇵' },
   { name: 'Myanmar', code: 'MMK', flag: '🇲🇲' },
   { name: 'Thailand', code: 'THB', flag: '🇹🇭' },
   { name: 'Uzbekistan', code: 'UZS', flag: '🇺🇿' },
@@ -52,7 +52,7 @@ export default function Home() {
             <span>{selectedCountry.code}</span>
           </button>
           {showDropdown && (
-            <div className="absolute z-10 mt-2 w-full bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+            <div className="absolute z-10 mt-2 w-full bg-white border rounded-lg shadow-lg max-h-48 overflow-y-auto">
               {countries.map((country) => (
                 <button
                   key={country.code}

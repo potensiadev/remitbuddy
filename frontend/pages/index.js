@@ -31,6 +31,7 @@ const ArrowRightIcon = ({ className }) => (
 // Country data with supported currencies
 const COUNTRIES = [
     { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" },
+    { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' },
     { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" },
     { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" },
     { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" },
@@ -39,7 +40,6 @@ const COUNTRIES = [
     { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" },
     { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" },
     { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" },
-    { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' },
 ];
 
 // Provider name mapping for analytics
@@ -158,7 +158,7 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
 
 // Country Dropdown Component
 const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange, dropdownRef }) => ( 
-    <div ref={dropdownRef} className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] h-auto max-h-[60vh] bg-white rounded-xl lg:rounded-2xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden z-40"> 
+    <div ref={dropdownRef} className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] h-auto max-h-[40vh] bg-white rounded-xl lg:rounded-2xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden z-40"> 
         <div className="flex-1 overflow-y-auto"> 
             {COUNTRIES.map(c => ( 
                 <div 

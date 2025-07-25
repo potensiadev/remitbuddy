@@ -198,7 +198,17 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
     }, [amount]);
 
     useEffect(() => {
-        if (!queryParams.receive_country) return;
+        console.log('🎬 ComparisonResults useEffect triggered');
+        console.log('🔍 queryParams:', queryParams);
+        console.log('🔍 receive_country:', queryParams.receive_country);
+        console.log('🔍 receive_currency:', queryParams.receive_currency);
+        
+        if (!queryParams.receive_country) {
+            console.log('❌ No receive_country, returning early');
+            return;
+        }
+        
+        console.log('✅ Valid queryParams, proceeding with API call');
 
         // Cancel previous API call if it's still running
         if (currentApiCall) {
@@ -490,12 +500,26 @@ export default function MainPage() {
             
             if (selectedCountry && amount && isAmountValid()) { 
                 console.log('🚀 Form submitted - triggering first API call');
-                setQueryParams({ 
+                console.log('🔍 Selected country:', selectedCountry);
+                console.log('🔍 Amount:', amount);
+                console.log('🔍 Amount valid:', isAmountValid());
+                
+                const newParams = { 
                     receive_country: selectedCountry.name, 
                     receive_currency: selectedCountry.currency
-                }); 
+                };
+                console.log('🎯 Setting query params:', newParams);
+                
+                setQueryParams(newParams); 
                 setShowResults(true);
                 setHasComparedOnce(true); // Mark that we've compared at least once
+                
+                console.log('✅ State updates triggered - showResults=true, queryParams set');
+            } else {
+                console.log('❌ Form validation failed:');
+                console.log('  - selectedCountry:', selectedCountry);
+                console.log('  - amount:', amount);
+                console.log('  - isAmountValid():', isAmountValid());
             }
         }
     };

@@ -172,6 +172,7 @@ export const logClickedCTA = (amount, country, currency) => {
     amount,
     country,
     currency,
+    transfer_currency: currency,
     session_duration: getSessionDuration()
   });
 };
@@ -180,7 +181,7 @@ export const logCompareAgain = (amount, country, currency) => {
   logEvent('click_compare_again', {
     amount,
     country,
-    currency,
+    transfer_currency: currency,
     session_duration: getSessionDuration()
   });
 };
@@ -190,14 +191,14 @@ export const logClickedProvider = (providerName, amount, country, currency) => {
     provider: providerName,
     amount,
     country,
-    currency,
+    transfer_currency: currency,
     session_duration: getSessionDuration()
   });
 };
 
 export const logSendingCountrySwitch = (currency) => {
   logEvent('sending_country_switched', { 
-    currency,
+    transfer_currency: currency,
     session_duration: getSessionDuration()
   });
 };

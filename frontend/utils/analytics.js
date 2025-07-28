@@ -1,95 +1,5 @@
-// utils/analytics.js - 기존 gtag.js와 완전 연동된 최종 버전
+// utils/analytics.js - 매개변수 이름 수정된 버전
 import { v4 as uuidv4 } from 'uuid';
-
-// Get or create device UUID
-export const getDeviceUUID = () => {
-  if (typeof window === 'undefined') return null;
-  
-  let uuid = localStorage.getItem('device_uuid');
-  if (!uuid) {
-    uuid = uuidv4();
-    localStorage.setItem('device_uuid', uuid);
-  }
-  return uuid;
-};
-
-// Detect device category (Mobile/PC)
-export const getDeviceCategory = () => {
-  if (typeof window === 'undefined') return 'Unknown';
-  
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  
-  // Check for mobile devices
-  if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent)) {
-    return 'Mobile';
-  }
-  
-  return 'PC';
-};
-
-// Detect specific device type
-export const getDeviceType = () => {
-  if (typeof window === 'undefined') return 'Unknown';
-  
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  
-  // Mobile devices
-  if (/iPad/.test(userAgent) && !window.MSStream) {
-    return 'iPad';
-  }
-  if (/iPhone/.test(userAgent) && !window.MSStream) {
-    return 'iPhone';
-  }
-  if (/iPod/.test(userAgent) && !window.MSStream) {
-    return 'iPod';
-  }
-  if (/android/i.test(userAgent)) {
-    // Try to detect specific Android devices
-    if (/samsung/i.test(userAgent)) return 'Samsung Android';
-    if (/lg/i.test(userAgent)) return 'LG Android';
-    if (/huawei/i.test(userAgent)) return 'Huawei Android';
-    if (/xiaomi/i.test(userAgent)) return 'Xiaomi Android';
-    return 'Android';
-  }
-  
-  // Desktop devices
-  if (/Windows/.test(userAgent)) {
-    return 'Windows PC';
-  }
-  if (/Macintosh|MacIntel|MacPPC|Mac68K/.test(userAgent)) {
-    return 'Mac';
-  }
-  if (/Linux/.test(userAgent)) {
-    return 'Linux PC';
-  }
-  
-  return 'Unknown';
-};
-
-// Get country from language
-export const getCountryFromLang = (lang) => {
-  const langToCountry = {
-    'vi': 'VN',
-    'ko': 'KR',
-    'en': 'US'
-  };
-  return langToCountry[lang] || 'US';
-};
-
-// Get browser information
-export const getBrowserInfo = () => {
-  if (typeof window === 'undefined') return 'Unknown';
-  
-  const userAgent = navigator.userAgent;
-  
-  if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) return 'Chrome';
-  if (userAgent.includes('Firefox')) return 'Firefox';
-  if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
-  if (userAgent.includes('Edg')) return 'Edge';
-  if (userAgent.includes('Opera') || userAgent.includes('OPR')) return 'Opera';
-  
-  return 'Unknown';
-};
 
 // Get amount range for better segmentation
 const getAmountRange = (amount) => {
@@ -100,18 +10,12 @@ const getAmountRange = (amount) => {
   return '1M+';
 };
 
-// Session tracking
-let sessionStartTime = null;
-
-export const getSessionDuration = () => {
-  if (!sessionStartTime) return 0;
-  return Math.round((Date.now() - sessionStartTime) / 1000); // in seconds
-};
-
-export const startSession = () => {
-  if (!sessionStartTime) {
-    sessionStartTime = Date.now();
-  }
+// Get session duration range for categorical analysis
+const getSessionDurationRange = (duration) => {
+  if (duration <= 30) return '0-30s';
+  if (duration <= 60) return '30-60s';
+  if (duration <= 120) return '60-120s';
+  return '120s+';
 };
 
 // Core event logging function
@@ -124,22 +28,26 @@ export const logEvent = async (eventType, additionalData = {}) => {
   const browser = getBrowserInfo();
   const lang = document.documentElement.lang || 'en';
   const country = getCountryFromLang(lang);
+  const sessionDuration = getSessionDuration();
   
   // Prepare event data for Google Analytics 4
   const gaEventData = {
-    // Core tracking data
-    uuid,
-    lang,
-    country,
+    // Core tracking data (측정기준용)
+    user_uuid: uuid,
+    lang: lang,
+    country: country,
     device_category: deviceCategory,
     device_type: deviceType,
-    browser,
-    user_session_duration: getSessionDuration(),
+    browser: browser,
+    session_duration_range: getSessionDurationRange(sessionDuration),
+    
+    // 측정항목용 수치 데이터
+    session_duration_seconds: sessionDuration,
     
     // Business-specific data (conditionally added)
     ...(additionalData.amount && {
-      amount: parseInt(additionalData.amount),
-      amount_range: getAmountRange(additionalData.amount)
+      transfer_amount_value: parseInt(additionalData.amount), // 측정항목
+      amount_range: getAmountRange(additionalData.amount)     // 측정기준
     }),
     
     ...(additionalData.transfer_currency && {
@@ -179,7 +87,6 @@ export const logEvent = async (eventType, additionalData = {}) => {
     
     // Send to Google Analytics 4 using existing gtag setup
     if (typeof window !== 'undefined' && window.gtag) {
-      // Direct gtag call (compatible with existing gtag.js setup)
       window.gtag('event', eventType, gaEventData);
     }
     
@@ -197,7 +104,7 @@ export const logEvent = async (eventType, additionalData = {}) => {
   }
 };
 
-// Specific event logging functions matching your frontend code
+// 나머지 함수들은 동일...
 export const logPageView = () => {
   startSession();
   logEvent('view_main', {
@@ -236,42 +143,5 @@ export const logClickedProvider = (providerName, amount, country, currency, addi
 export const logSendingCountrySwitch = (currency) => {
   logEvent('sending_country_switched', { 
     transfer_currency: currency
-  });
-};
-
-// 금액 입력 시작
-export const logAmountInputStart = () => {
-  logEvent('amount_input_start', {});
-};
-
-// 국가 드롭다운 열기
-export const logCountryDropdownOpen = () => {
-  logEvent('country_dropdown_open', {});
-};
-
-// 결과 로딩 시작
-export const logResultsLoadStart = (amount, country, currency) => {
-  logEvent('results_load_start', {
-    amount: amount,
-    country: country,
-    transfer_currency: currency
-  });
-};
-
-// 결과 로딩 완료
-export const logResultsLoadComplete = (amount, country, currency, loadTime, providerCount) => {
-  logEvent('results_load_complete', {
-    amount: amount,
-    country: country,
-    transfer_currency: currency,
-    load_time_ms: loadTime,
-    provider_count: providerCount
-  });
-};
-
-// 스크롤 깊이 추적
-export const logScrollDepth = (percentage) => {
-  logEvent('scroll_depth', {
-    scroll_percentage: percentage
   });
 };

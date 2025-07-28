@@ -238,3 +238,40 @@ export const logSendingCountrySwitch = (currency) => {
     transfer_currency: currency
   });
 };
+
+// 금액 입력 시작
+export const logAmountInputStart = () => {
+  logEvent('amount_input_start', {});
+};
+
+// 국가 드롭다운 열기
+export const logCountryDropdownOpen = () => {
+  logEvent('country_dropdown_open', {});
+};
+
+// 결과 로딩 시작
+export const logResultsLoadStart = (amount, country, currency) => {
+  logEvent('results_load_start', {
+    amount: amount,
+    country: country,
+    transfer_currency: currency
+  });
+};
+
+// 결과 로딩 완료
+export const logResultsLoadComplete = (amount, country, currency, loadTime, providerCount) => {
+  logEvent('results_load_complete', {
+    amount: amount,
+    country: country,
+    transfer_currency: currency,
+    load_time_ms: loadTime,
+    provider_count: providerCount
+  });
+};
+
+// 스크롤 깊이 추적
+export const logScrollDepth = (percentage) => {
+  logEvent('scroll_depth', {
+    scroll_percentage: percentage
+  });
+};

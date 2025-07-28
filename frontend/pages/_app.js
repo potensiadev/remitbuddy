@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }) {
       {/* Google Analytics */}
       <Script
         strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=G-Z0SHT6SKJ3`}
       />
       <Script
         id="google-analytics"
@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }) {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${GA_TRACKING_ID}', {
+            gtag('config', 'G-Z0SHT6SKJ3', {
               page_path: window.location.pathname,
             });
           `,

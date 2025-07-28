@@ -1,5 +1,5 @@
+// utils/analytics.js - 기존 gtag.js와 완전 연동된 최종 버전
 import { v4 as uuidv4 } from 'uuid';
-import { event } from '../lib/gtag';
 
 // Get or create device UUID
 export const getDeviceUUID = () => {
@@ -91,59 +91,13 @@ export const getBrowserInfo = () => {
   return 'Unknown';
 };
 
-// Log event to backend
-export const logEvent = async (eventType, additionalData = {}) => {
-  if (typeof window === 'undefined') return;
-  
-  const uuid = getDeviceUUID();
-  const deviceCategory = getDeviceCategory();
-  const deviceType = getDeviceType();
-  const browser = getBrowserInfo();
-  const lang = document.documentElement.lang || 'en';
-  const country = getCountryFromLang(lang);
-  
-  const eventData = {
-    uuid,
-    lang,
-    country,
-    device_category: deviceCategory,
-    device_type: deviceType,
-    browser,
-    user_session_duration: getSessionDuration(),
-    event: eventType,
-    timestamp: new Date().toISOString(),
-    url: window.location.href,
-    ...additionalData
-  };
-  
-  try {
-    // For development, log to console
-    console.log('📊 Event logged:', eventData);
-    
-    // Send to Google Analytics 4
-    if (typeof window !== 'undefined' && window.gtag) {
-      const { event: eventName, ...properties } = eventData;
-      window.gtag('event', eventName, {
-        ...properties,
-        custom_map: {
-          custom_parameter_1: 'device_category',
-          custom_parameter_2: 'device_type',
-          custom_parameter_3: 'browser'
-        }
-      });
-    }
-    
-    // Also send to backend API for backup
-    await fetch('/api/log-event', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(eventData)
-    });
-  } catch (error) {
-    console.error('Failed to log event:', error);
-  }
+// Get amount range for better segmentation
+const getAmountRange = (amount) => {
+  if (!amount || amount <= 0) return 'unknown';
+  if (amount < 100000) return '0-100k';
+  if (amount < 500000) return '100k-500k';
+  if (amount < 1000000) return '500k-1M';
+  return '1M+';
 };
 
 // Session tracking
@@ -160,46 +114,127 @@ export const startSession = () => {
   }
 };
 
-// Specific event logging functions
+// Core event logging function
+export const logEvent = async (eventType, additionalData = {}) => {
+  if (typeof window === 'undefined') return;
+  
+  const uuid = getDeviceUUID();
+  const deviceCategory = getDeviceCategory();
+  const deviceType = getDeviceType();
+  const browser = getBrowserInfo();
+  const lang = document.documentElement.lang || 'en';
+  const country = getCountryFromLang(lang);
+  
+  // Prepare event data for Google Analytics 4
+  const gaEventData = {
+    // Core tracking data
+    uuid,
+    lang,
+    country,
+    device_category: deviceCategory,
+    device_type: deviceType,
+    browser,
+    user_session_duration: getSessionDuration(),
+    
+    // Business-specific data (conditionally added)
+    ...(additionalData.amount && {
+      amount: parseInt(additionalData.amount),
+      amount_range: getAmountRange(additionalData.amount)
+    }),
+    
+    ...(additionalData.transfer_currency && {
+      transfer_currency: additionalData.transfer_currency
+    }),
+    
+    ...(additionalData.country && {
+      receiving_country: additionalData.country,
+      corridor: `KR-${additionalData.country}`
+    }),
+    
+    ...(additionalData.provider && {
+      provider: additionalData.provider
+    }),
+    
+    // Include any other additional data (excluding processed fields)
+    ...Object.fromEntries(
+      Object.entries(additionalData).filter(([key]) => 
+        !['amount', 'transfer_currency', 'country', 'provider'].includes(key)
+      )
+    )
+  };
+
+  // Full event data for backend (includes more fields)
+  const backendEventData = {
+    ...gaEventData,
+    event: eventType,
+    timestamp: new Date().toISOString(),
+    url: window.location.href
+  };
+  
+  try {
+    // Log for development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📊 Event logged:', eventType, gaEventData);
+    }
+    
+    // Send to Google Analytics 4 using existing gtag setup
+    if (typeof window !== 'undefined' && window.gtag) {
+      // Direct gtag call (compatible with existing gtag.js setup)
+      window.gtag('event', eventType, gaEventData);
+    }
+    
+    // Send to backend API for backup
+    await fetch('/api/log-event', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(backendEventData)
+    });
+    
+  } catch (error) {
+    console.error('Failed to log event:', error);
+  }
+};
+
+// Specific event logging functions matching your frontend code
 export const logPageView = () => {
   startSession();
   logEvent('view_main', {
-    user_session_duration: getSessionDuration()
+    page_title: "RemitBuddy - Compare Exchange Rate",
+    page_location: window.location.href
   });
 };
 
 export const logClickedCTA = (amount, country, currency) => {
   logEvent('click_compare_rates_now', { 
-    amount,
-    country,
-    currency,
-    transfer_currency: currency,
-    user_session_duration: getSessionDuration()
+    amount: amount,
+    country: country, 
+    transfer_currency: currency
   });
 };
 
 export const logCompareAgain = (amount, country, currency) => {
   logEvent('click_compare_again', {
-    amount,
-    country,
+    amount: amount,
+    country: country,
     transfer_currency: currency,
-    user_session_duration: getSessionDuration()
+    is_repeat_search: true
   });
 };
 
-export const logClickedProvider = (providerName, amount, country, currency) => {
+export const logClickedProvider = (providerName, amount, country, currency, additionalContext = {}) => {
   logEvent('click_provider', { 
     provider: providerName,
-    amount,
-    country,
+    amount: amount,
+    country: country,
     transfer_currency: currency,
-    user_session_duration: getSessionDuration()
+    ...additionalContext
   });
 };
 
 export const logSendingCountrySwitch = (currency) => {
   logEvent('sending_country_switched', { 
-    transfer_currency: currency,
-    user_session_duration: getSessionDuration()
+    transfer_currency: currency
   });
 };

@@ -138,7 +138,13 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
                     )}
                     <h3 className="text-xl lg:text-2xl font-bold text-slate-800">{displayName}</h3>
                 </div>
-                {isBest && <span className="text-xs lg:text-sm font-semibold text-white bg-emerald-500 px-3 py-1 lg:px-4 lg:py-2 rounded-full">{t('most_amount_receive')}</span>} 
+                {isBest && (
+                    <span className="text-[11px] sm:text-xs lg:text-sm font-semibold text-white bg-emerald-500 
+                                     px-2 py-1 sm:px-3 lg:px-4 lg:py-2 rounded-full 
+                                     max-w-[100px] lg:max-w-none text-center leading-tight">
+                        {t('most_amount_receive')}
+                    </span>
+            )}
             </div> 
             <div className="mt-3 lg:mt-4"> 
                 <p className="text-sm lg:text-base text-slate-500">{t('amount_to_receive')}</p> 

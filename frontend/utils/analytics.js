@@ -109,6 +109,7 @@ export const logEvent = async (eventType, additionalData = {}) => {
     device_category: deviceCategory,
     device_type: deviceType,
     browser,
+    user_session_duration: getSessionDuration(),
     event: eventType,
     timestamp: new Date().toISOString(),
     url: window.location.href,
@@ -163,7 +164,7 @@ export const startSession = () => {
 export const logPageView = () => {
   startSession();
   logEvent('view_main', {
-    session_duration: getSessionDuration()
+    user_session_duration: getSessionDuration()
   });
 };
 
@@ -173,7 +174,7 @@ export const logClickedCTA = (amount, country, currency) => {
     country,
     currency,
     transfer_currency: currency,
-    session_duration: getSessionDuration()
+    user_session_duration: getSessionDuration()
   });
 };
 
@@ -182,7 +183,7 @@ export const logCompareAgain = (amount, country, currency) => {
     amount,
     country,
     transfer_currency: currency,
-    session_duration: getSessionDuration()
+    user_session_duration: getSessionDuration()
   });
 };
 
@@ -192,13 +193,13 @@ export const logClickedProvider = (providerName, amount, country, currency) => {
     amount,
     country,
     transfer_currency: currency,
-    session_duration: getSessionDuration()
+    user_session_duration: getSessionDuration()
   });
 };
 
 export const logSendingCountrySwitch = (currency) => {
   logEvent('sending_country_switched', { 
     transfer_currency: currency,
-    session_duration: getSessionDuration()
+    user_session_duration: getSessionDuration()
   });
 };

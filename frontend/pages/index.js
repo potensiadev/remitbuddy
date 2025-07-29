@@ -130,6 +130,90 @@ const PROVIDER_LOGO_MAP = {
     'Sentbe': '/logos/sentbe.png'
 };
 
+// Results Component
+const ResultsComponent = ({ queryParams, amount, selectedCountry, forceRefresh, t }) => {
+    const [providersData, setProvidersData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchProviders = async () => {
+            setLoading(true);
+            setError(null);
+            
+            try {
+                const url = `${FORCE_API_BASE_URL}/api/compare?send_amount=${amount}&receive_country=${encodeURIComponent(queryParams.receive_country)}&receive_currency=${queryParams.receive_currency}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.results && Array.isArray(data.results)) {
+                    setProvidersData(data.results);
+                } else {
+                    setError(t('no_providers_found'));
+                }
+            } catch (error) {
+                console.error('API Error:', error);
+                setError(t('api_error'));
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (queryParams.receive_country && queryParams.receive_currency) {
+            fetchProviders();
+        }
+    }, [queryParams, amount, forceRefresh, t]);
+
+    if (loading) {
+        return (
+            <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+                <p className="mt-4 text-lg text-slate-600">{t('loading')}</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="text-center py-12">
+                <p className="text-red-600 text-lg">{error}</p>
+            </div>
+        );
+    }
+
+    if (!providersData || providersData.length === 0) {
+        return (
+            <div className="text-center py-12">
+                <p className="text-slate-600 text-lg">{t('no_providers_found')}</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-4">
+            <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-6">
+                {t('comparison_results')}
+            </h2>
+            {providersData.map((provider, index) => (
+                <ProviderCard
+                    key={`${provider.provider}-${index}`}
+                    providerData={provider}
+                    isBest={index === 0}
+                    currency={selectedCountry.currency}
+                    t={t}
+                    amount={amount}
+                    receiveCountry={selectedCountry.code}
+                />
+            ))}
+        </div>
+    );
+};
+
 // Provider Card Component
 const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountry }) => { 
     const { provider, recipient_gets, exchange_rate, fee } = providerData;
@@ -229,7 +313,23 @@ export default function MainPage() {
         safeLogPageView();
     }, [router.locale]);
 
-    // 나머지 컴포넌트 로직은 동일하되, analytics 함수 호출을 모두 safe 버전으로 교체
+    // Input validation function
+    const isAmountValid = () => {
+        const numAmount = Number(amount);
+        return numAmount >= 10000 && numAmount <= 10000000;
+    };
+
+    // Handle amount change with validation
+    const handleAmountChange = (e) => {
+        const value = e.target.value;
+        setAmount(value);
+        
+        if (value && !isAmountValid()) {
+            setAmountError(t('amount_error'));
+        } else {
+            setAmountError("");
+        }
+    };
 
     const handleSubmit = (e) => { 
         e.preventDefault();
@@ -285,15 +385,229 @@ export default function MainPage() {
         }
     };
 
-    // 나머지 UI 렌더링 코드는 원본과 동일...
-    
     return (
         <>
             <Head>
                 <title>{t('page_title')}</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
             </Head>
-            {/* 나머지 JSX 코드는 원본과 동일 */}
+            
+            <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
+                {/* Header */}
+                <div className="text-center py-8 lg:py-12 px-4">
+                    <h1 className="text-3xl lg:text-5xl font-bold text-slate-800 mb-3 lg:mb-4">
+                        {t('main_title')}
+                    </h1>
+                    <p className="text-lg lg:text-xl text-slate-600 max-w-2xl mx-auto">
+                        {t('subtitle')}
+                    </p>
+                </div>
+
+                {/* Main Form Container */}
+                <div className="max-w-4xl mx-auto px-4 pb-8 lg:pb-16">
+                    <div className="bg-white rounded-2xl lg:rounded-3xl shadow-xl p-6 lg:p-10 mb-8 lg:mb-12">
+                        {/* Desktop Form */}
+                        <form 
+                            ref={formRefDesktop}
+                            onSubmit={handleSubmit} 
+                            className="hidden lg:block"
+                        >
+                            <div className="flex items-end gap-6">
+                                {/* Amount Input */}
+                                <div className="flex-1">
+                                    <label className="block text-base font-medium text-slate-700 mb-3">
+                                        {t('send_amount')}
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            value={amount.toLocaleString('en-US')}
+                                            onChange={handleAmountChange}
+                                            className={`w-full p-4 text-xl font-semibold border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all ${
+                                                amountError ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-indigo-500'
+                                            }`}
+                                            placeholder="1,000,000"
+                                        />
+                                        <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-slate-600">
+                                            KRW
+                                        </span>
+                                    </div>
+                                    {amountError && (
+                                        <p className="text-red-500 text-sm mt-2">{amountError}</p>
+                                    )}
+                                </div>
+
+                                {/* Arrow */}
+                                <div className="flex items-center justify-center pb-4">
+                                    <ArrowRightIcon className="w-8 h-8 text-slate-400" />
+                                </div>
+
+                                {/* Country Selector */}
+                                <div className="flex-1 relative" ref={countryDropdownRefDesktop}>
+                                    <label className="block text-base font-medium text-slate-700 mb-3">
+                                        {t('receive_country')}
+                                    </label>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowDropdown(!showDropdown)}
+                                        className="w-full p-4 text-left border-2 border-slate-300 rounded-xl hover:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all flex items-center justify-between"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <img
+                                                src={selectedCountry.flag}
+                                                alt={selectedCountry.name}
+                                                className="w-6 h-6 rounded"
+                                            />
+                                            <span className="text-xl font-semibold text-slate-800">
+                                                {selectedCountry.name}
+                                            </span>
+                                        </div>
+                                        <ChevronDownIcon className={`w-5 h-5 text-slate-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                                    </button>
+
+                                    {/* Dropdown */}
+                                    {showDropdown && (
+                                        <div className="absolute z-50 w-full mt-2 bg-white border-2 border-slate-200 rounded-xl shadow-2xl max-h-64 overflow-y-auto">
+                                            {COUNTRIES.map((country) => (
+                                                <button
+                                                    key={country.code}
+                                                    type="button"
+                                                    onClick={() => handleCountryChange(country)}
+                                                    className={`w-full p-4 text-left hover:bg-indigo-50 flex items-center gap-3 transition-colors ${
+                                                        selectedCountry.code === country.code ? 'bg-indigo-100' : ''
+                                                    }`}
+                                                >
+                                                    <img
+                                                        src={country.flag}
+                                                        alt={country.name}
+                                                        className="w-6 h-6 rounded"
+                                                    />
+                                                    <span className="text-lg font-medium text-slate-800">
+                                                        {country.name}
+                                                    </span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Submit Button */}
+                                <div className="pb-4">
+                                    <button
+                                        type="submit"
+                                        disabled={!isAmountValid() || amountError}
+                                        className="px-8 py-4 bg-indigo-600 text-white text-lg font-bold rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                                    >
+                                        {hasComparedOnce ? t('compare_again') : t('find_best_rate')}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        {/* Mobile Form */}
+                        <form 
+                            ref={formRef}
+                            onSubmit={handleSubmit} 
+                            className="lg:hidden space-y-6"
+                        >
+                            {/* Amount Input */}
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                                    {t('send_amount')}
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        value={amount.toLocaleString('en-US')}
+                                        onChange={handleAmountChange}
+                                        className={`w-full p-4 text-lg font-semibold border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all ${
+                                            amountError ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-indigo-500'
+                                        }`}
+                                        placeholder="1,000,000"
+                                    />
+                                    <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg font-bold text-slate-600">
+                                        KRW
+                                    </span>
+                                </div>
+                                {amountError && (
+                                    <p className="text-red-500 text-sm mt-2">{amountError}</p>
+                                )}
+                            </div>
+
+                            {/* Country Selector */}
+                            <div className="relative" ref={countryDropdownRef}>
+                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                                    {t('receive_country')}
+                                </label>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowDropdown(!showDropdown)}
+                                    className="w-full p-4 text-left border-2 border-slate-300 rounded-xl hover:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all flex items-center justify-between"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <img
+                                            src={selectedCountry.flag}
+                                            alt={selectedCountry.name}
+                                            className="w-6 h-6 rounded"
+                                        />
+                                        <span className="text-lg font-semibold text-slate-800">
+                                            {selectedCountry.name}
+                                        </span>
+                                    </div>
+                                    <ChevronDownIcon className={`w-5 h-5 text-slate-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                {/* Mobile Dropdown */}
+                                {showDropdown && (
+                                    <div className="absolute z-50 w-full mt-2 bg-white border-2 border-slate-200 rounded-xl shadow-2xl max-h-64 overflow-y-auto">
+                                        {COUNTRIES.map((country) => (
+                                            <button
+                                                key={country.code}
+                                                type="button"
+                                                onClick={() => handleCountryChange(country)}
+                                                className={`w-full p-4 text-left hover:bg-indigo-50 flex items-center gap-3 transition-colors ${
+                                                    selectedCountry.code === country.code ? 'bg-indigo-100' : ''
+                                                }`}
+                                            >
+                                                <img
+                                                    src={country.flag}
+                                                    alt={country.name}
+                                                    className="w-6 h-6 rounded"
+                                                />
+                                                <span className="text-lg font-medium text-slate-800">
+                                                    {country.name}
+                                                </span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Submit Button */}
+                            <button
+                                type="submit"
+                                disabled={!isAmountValid() || amountError}
+                                className="w-full py-4 bg-indigo-600 text-white text-lg font-bold rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {hasComparedOnce ? t('compare_again') : t('find_best_rate')}
+                            </button>
+                        </form>
+                    </div>
+
+                    {/* Results Section */}
+                    {showResults && (
+                        <div ref={resultsRef}>
+                            <ResultsComponent 
+                                queryParams={queryParams}
+                                amount={amount}
+                                selectedCountry={selectedCountry}
+                                forceRefresh={forceRefresh}
+                                t={t}
+                            />
+                        </div>
+                    )}
+                </div>
+            </div>
         </>
     );
 }

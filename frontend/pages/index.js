@@ -142,7 +142,7 @@ const ResultsComponent = ({ queryParams, amount, selectedCountry, forceRefresh, 
             setError(null);
             
             try {
-                const url = `${FORCE_API_BASE_URL}/api/compare?send_amount=${amount}&receive_country=${encodeURIComponent(queryParams.receive_country)}&receive_currency=${queryParams.receive_currency}`;
+                const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?send_amount=${amount}&receive_country=${encodeURIComponent(queryParams.receive_country)}&receive_currency=${queryParams.receive_currency}`;
                 const response = await fetch(url);
                 
                 if (!response.ok) {

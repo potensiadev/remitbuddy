@@ -1,5 +1,86 @@
-// utils/analytics.js - 매개변수 이름 수정된 버전
+// utils/analytics.js - 완전한 버전
 import { v4 as uuidv4 } from 'uuid';
+
+// Session tracking
+let sessionStartTime = null;
+
+// Get or create device UUID
+export const getDeviceUUID = () => {
+  if (typeof window === 'undefined') return '';
+  
+  let uuid = localStorage.getItem('remitbuddy_uuid');
+  if (!uuid) {
+    uuid = uuidv4();
+    localStorage.setItem('remitbuddy_uuid', uuid);
+  }
+  return uuid;
+};
+
+// Get device category (mobile/desktop)
+export const getDeviceCategory = () => {
+  if (typeof window === 'undefined') return 'Unknown';
+  
+  const userAgent = navigator.userAgent;
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+  
+  return isMobile ? 'Mobile' : 'Desktop';
+};
+
+// Get device type (more specific)
+export const getDeviceType = () => {
+  if (typeof window === 'undefined') return 'Unknown';
+  
+  const userAgent = navigator.userAgent;
+  
+  if (/iPad/i.test(userAgent)) return 'iPad';
+  if (/iPhone/i.test(userAgent)) return 'iPhone';
+  if (/Android/i.test(userAgent)) return 'Android';
+  if (/Windows/i.test(userAgent)) return 'Windows';
+  if (/Macintosh/i.test(userAgent)) return 'Mac';
+  
+  return 'Other';
+};
+
+// Get country from language
+export const getCountryFromLang = (lang) => {
+  const langToCountry = {
+    'vi': 'VN',
+    'ko': 'KR',
+    'en': 'US',
+    'th': 'TH',
+    'my': 'MM',
+    'ne': 'NP',
+    'id': 'ID'
+  };
+  return langToCountry[lang] || 'US';
+};
+
+// Get browser information
+export const getBrowserInfo = () => {
+  if (typeof window === 'undefined') return 'Unknown';
+  
+  const userAgent = navigator.userAgent;
+  
+  if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) return 'Chrome';
+  if (userAgent.includes('Firefox')) return 'Firefox';
+  if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
+  if (userAgent.includes('Edg')) return 'Edge';
+  if (userAgent.includes('Opera') || userAgent.includes('OPR')) return 'Opera';
+  
+  return 'Unknown';
+};
+
+// Session duration functions
+export const getSessionDuration = () => {
+  if (!sessionStartTime) return 0;
+  return Math.round((Date.now() - sessionStartTime) / 1000); // in seconds
+};
+
+export const startSession = () => {
+  if (!sessionStartTime) {
+    sessionStartTime = Date.now();
+  }
+};
 
 // Get amount range for better segmentation
 const getAmountRange = (amount) => {
@@ -22,64 +103,64 @@ const getSessionDurationRange = (duration) => {
 export const logEvent = async (eventType, additionalData = {}) => {
   if (typeof window === 'undefined') return;
   
-  const uuid = getDeviceUUID();
-  const deviceCategory = getDeviceCategory();
-  const deviceType = getDeviceType();
-  const browser = getBrowserInfo();
-  const lang = document.documentElement.lang || 'en';
-  const country = getCountryFromLang(lang);
-  const sessionDuration = getSessionDuration();
-  
-  // Prepare event data for Google Analytics 4
-  const gaEventData = {
-    // Core tracking data (측정기준용)
-    user_uuid: uuid,
-    lang: lang,
-    country: country,
-    device_category: deviceCategory,
-    device_type: deviceType,
-    browser: browser,
-    session_duration_range: getSessionDurationRange(sessionDuration),
-    
-    // 측정항목용 수치 데이터
-    session_duration_seconds: sessionDuration,
-    
-    // Business-specific data (conditionally added)
-    ...(additionalData.amount && {
-      transfer_amount_value: parseInt(additionalData.amount), // 측정항목
-      amount_range: getAmountRange(additionalData.amount)     // 측정기준
-    }),
-    
-    ...(additionalData.transfer_currency && {
-      transfer_currency: additionalData.transfer_currency
-    }),
-    
-    ...(additionalData.country && {
-      receiving_country: additionalData.country,
-      corridor: `KR-${additionalData.country}`
-    }),
-    
-    ...(additionalData.provider && {
-      provider: additionalData.provider
-    }),
-    
-    // Include any other additional data (excluding processed fields)
-    ...Object.fromEntries(
-      Object.entries(additionalData).filter(([key]) => 
-        !['amount', 'transfer_currency', 'country', 'provider'].includes(key)
-      )
-    )
-  };
-
-  // Full event data for backend (includes more fields)
-  const backendEventData = {
-    ...gaEventData,
-    event: eventType,
-    timestamp: new Date().toISOString(),
-    url: window.location.href
-  };
-  
   try {
+    const uuid = getDeviceUUID();
+    const deviceCategory = getDeviceCategory();
+    const deviceType = getDeviceType();
+    const browser = getBrowserInfo();
+    const lang = document.documentElement.lang || 'en';
+    const country = getCountryFromLang(lang);
+    const sessionDuration = getSessionDuration();
+    
+    // Prepare event data for Google Analytics 4
+    const gaEventData = {
+      // Core tracking data (측정기준용)
+      user_uuid: uuid,
+      lang: lang,
+      country: country,
+      device_category: deviceCategory,
+      device_type: deviceType,
+      browser: browser,
+      session_duration_range: getSessionDurationRange(sessionDuration),
+      
+      // 측정항목용 수치 데이터
+      session_duration_seconds: sessionDuration,
+      
+      // Business-specific data (conditionally added)
+      ...(additionalData.amount && {
+        transfer_amount_value: parseInt(additionalData.amount), // 측정항목
+        amount_range: getAmountRange(additionalData.amount)     // 측정기준
+      }),
+      
+      ...(additionalData.transfer_currency && {
+        transfer_currency: additionalData.transfer_currency
+      }),
+      
+      ...(additionalData.country && {
+        receiving_country: additionalData.country,
+        corridor: `KR-${additionalData.country}`
+      }),
+      
+      ...(additionalData.provider && {
+        provider: additionalData.provider
+      }),
+      
+      // Include any other additional data (excluding processed fields)
+      ...Object.fromEntries(
+        Object.entries(additionalData).filter(([key]) => 
+          !['amount', 'transfer_currency', 'country', 'provider'].includes(key)
+        )
+      )
+    };
+
+    // Full event data for backend (includes more fields)
+    const backendEventData = {
+      ...gaEventData,
+      event: eventType,
+      timestamp: new Date().toISOString(),
+      url: window.location.href
+    };
+    
     // Log for development
     if (process.env.NODE_ENV === 'development') {
       console.log('📊 Event logged:', eventType, gaEventData);
@@ -104,12 +185,12 @@ export const logEvent = async (eventType, additionalData = {}) => {
   }
 };
 
-// 나머지 함수들은 동일...
+// Specific event logging functions
 export const logPageView = () => {
   startSession();
   logEvent('view_main', {
     page_title: "RemitBuddy - Compare Exchange Rate",
-    page_location: window.location.href
+    page_location: typeof window !== 'undefined' ? window.location.href : ''
   });
 };
 

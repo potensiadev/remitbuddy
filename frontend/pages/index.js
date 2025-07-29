@@ -3,57 +3,16 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
-
-// Dynamic import for analytics to prevent SSR issues
-const analytics = dynamic(() => import('../utils/analytics'), {
-  ssr: false,
-  loading: () => null
-});
+import { 
+  logPageView,
+  logClickedCTA, 
+  logCompareAgain, 
+  logClickedProvider, 
+  logSendingCountrySwitch 
+} from '../utils/analytics';
 
 // API Configuration
 const FORCE_API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://sendhome-production.up.railway.app';
-
-// Safe analytics functions with fallbacks
-const safeLogPageView = () => {
-  if (typeof window !== 'undefined') {
-    import('../utils/analytics').then(({ logPageView }) => {
-      logPageView();
-    }).catch(err => console.warn('Analytics error:', err));
-  }
-};
-
-const safeLogClickedCTA = (amount, country, currency) => {
-  if (typeof window !== 'undefined') {
-    import('../utils/analytics').then(({ logClickedCTA }) => {
-      logClickedCTA(amount, country, currency);
-    }).catch(err => console.warn('Analytics error:', err));
-  }
-};
-
-const safeLogCompareAgain = (amount, country, currency) => {
-  if (typeof window !== 'undefined') {
-    import('../utils/analytics').then(({ logCompareAgain }) => {
-      logCompareAgain(amount, country, currency);
-    }).catch(err => console.warn('Analytics error:', err));
-  }
-};
-
-const safeLogClickedProvider = (providerName, amount, country, currency) => {
-  if (typeof window !== 'undefined') {
-    import('../utils/analytics').then(({ logClickedProvider }) => {
-      logClickedProvider(providerName, amount, country, currency);
-    }).catch(err => console.warn('Analytics error:', err));
-  }
-};
-
-const safeLogSendingCountrySwitch = (currency) => {
-  if (typeof window !== 'undefined') {
-    import('../utils/analytics').then(({ logSendingCountrySwitch }) => {
-      logSendingCountrySwitch(currency);
-    }).catch(err => console.warn('Analytics error:', err));
-  }
-};
 
 // Icon Components
 const ChevronDownIcon = ({ className }) => ( 
@@ -130,90 +89,6 @@ const PROVIDER_LOGO_MAP = {
     'Sentbe': '/logos/sentbe.png'
 };
 
-// Results Component
-const ResultsComponent = ({ queryParams, amount, selectedCountry, forceRefresh, t }) => {
-    const [providersData, setProvidersData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const fetchProviders = async () => {
-            setLoading(true);
-            setError(null);
-            
-            try {
-                const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?send_amount=${amount}&receive_country=${encodeURIComponent(queryParams.receive_country)}&receive_currency=${queryParams.receive_currency}`;
-                const response = await fetch(url);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.results && Array.isArray(data.results)) {
-                    setProvidersData(data.results);
-                } else {
-                    setError(t('no_providers_found'));
-                }
-            } catch (error) {
-                console.error('API Error:', error);
-                setError(t('api_error'));
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (queryParams.receive_country && queryParams.receive_currency) {
-            fetchProviders();
-        }
-    }, [queryParams, amount, forceRefresh, t]);
-
-    if (loading) {
-        return (
-            <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-                <p className="mt-4 text-lg text-slate-600">{t('loading')}</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="text-center py-12">
-                <p className="text-red-600 text-lg">{error}</p>
-            </div>
-        );
-    }
-
-    if (!providersData || providersData.length === 0) {
-        return (
-            <div className="text-center py-12">
-                <p className="text-slate-600 text-lg">{t('no_providers_found')}</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="space-y-4">
-            <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-6">
-                {t('comparison_results')}
-            </h2>
-            {providersData.map((provider, index) => (
-                <ProviderCard
-                    key={`${provider.provider}-${index}`}
-                    providerData={provider}
-                    isBest={index === 0}
-                    currency={selectedCountry.currency}
-                    t={t}
-                    amount={amount}
-                    receiveCountry={selectedCountry.code}
-                />
-            ))}
-        </div>
-    );
-};
-
 // Provider Card Component
 const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountry }) => { 
     const { provider, recipient_gets, exchange_rate, fee } = providerData;
@@ -224,7 +99,7 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
     
     const handleProviderClick = () => {
         const analyticsName = PROVIDER_ANALYTICS_MAP[provider] || provider.toLowerCase();
-        safeLogClickedProvider(analyticsName, amount, receiveCountry, currency);
+        logClickedProvider(analyticsName, amount, receiveCountry, currency);
         
         // Redirect to RemitBuddy referral link
         const referralLink = REMIT_BUDDY_REFERRAL_LINKS[provider];
@@ -263,13 +138,7 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
                     )}
                     <h3 className="text-xl lg:text-2xl font-bold text-slate-800">{displayName}</h3>
                 </div>
-                {isBest && (
-                    <span className="text-[11px] sm:text-xs lg:text-sm font-semibold text-white bg-emerald-500 
-                                     px-2 py-1 sm:px-3 lg:px-4 lg:py-2 rounded-full 
-                                     max-w-[100px] lg:max-w-none text-center leading-tight">
-                        {t('most_amount_receive')}
-                    </span>
-            )}
+                {isBest && <span className="text-xs lg:text-sm font-semibold text-white bg-emerald-500 px-3 py-1 lg:px-4 lg:py-2 rounded-full">{t('most_amount_receive')}</span>} 
             </div> 
             <div className="mt-3 lg:mt-4"> 
                 <p className="text-sm lg:text-base text-slate-500">{t('amount_to_receive')}</p> 
@@ -287,8 +156,221 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
     );
 };
 
-// Rest of the component code remains the same...
-// [컴포넌트 코드는 원본과 동일하지만 analytics 함수 호출을 safe 버전으로 교체]
+// Country Dropdown Component
+const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange, dropdownRef }) => ( 
+    <div ref={dropdownRef} className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] h-auto max-h-[40vh] bg-white rounded-xl lg:rounded-2xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden z-40"> 
+        <div className="flex-1 overflow-y-auto"> 
+            {COUNTRIES.map(c => ( 
+                <div 
+                    key={c.code} 
+                    className="flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 cursor-pointer hover:bg-gray-50 text-lg" 
+                    onClick={(e) => { 
+                        e.stopPropagation();
+                        console.log('🌍 Country clicked:', c.name);
+                        setSelectedCountry(c); 
+                        setShowDropdown(false); 
+                        onCountryChange(c); 
+                    }}
+                > 
+                    <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" /> 
+                    <div> 
+                        <div className="font-bold text-sm lg:text-base text-slate-800">{c.name}</div> 
+                        <div className="text-gray-500 text-xs lg:text-sm">{c.currency}</div> 
+                    </div> 
+                </div> 
+            ))} 
+        </div> 
+    </div> 
+);
+
+// Comparison Results Component
+function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefresh }) {
+    const [results, setResults] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentApiCall, setCurrentApiCall] = useState(null);
+    const [isRetrying, setIsRetrying] = useState(false);
+    const amountRef = useRef(amount);
+    
+    // Update ref when amount changes
+    useEffect(() => {
+        amountRef.current = amount;
+    }, [amount]);
+
+    useEffect(() => {
+        if (!queryParams.receive_country) {
+            return;
+        }
+
+        // Cancel previous API call if it's still running
+        if (currentApiCall) {
+            currentApiCall.abort();
+        }
+
+        const abortController = new AbortController();
+        setCurrentApiCall(abortController);
+
+        const fetchRealQuotes = async (retryCount = 0) => {
+            setIsLoading(true);
+            setError(null);
+            setResults([]);
+
+            const url = `${FORCE_API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}&_t=${Date.now()}`;
+
+            try {
+                // 첫 번째 시도는 15초, 재시도는 30초 타임아웃
+                const timeoutDuration = retryCount === 0 ? 15000 : 30000;
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error('Request timeout')), timeoutDuration);
+                });
+                
+                const fetchPromise = fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-store',
+                    signal: abortController.signal,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    },
+                });
+                
+                const response = await Promise.race([fetchPromise, timeoutPromise]);
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.results && data.results.length > 0) {
+                    setResults(data.results);
+                    setIsLoading(false);
+                } else {
+                    setError('No exchange rate providers available');
+                    setIsLoading(false);
+                }
+                
+            } catch (err) {
+                if (err.name === 'AbortError') {
+                    return;
+                }
+                
+                // 콜드 스타트 오류인 경우 재시도 (최대 1회)
+                if (retryCount === 0 && (err.message.includes('timeout') || err.message.includes('fetch') || err.message.includes('Failed to fetch'))) {
+                    setIsRetrying(true);
+                    setTimeout(() => fetchRealQuotes(1), 2000);
+                    return;
+                }
+                
+                setError(`API Error: ${err.message}`);
+                setIsLoading(false);
+                setCurrentApiCall(null);
+            } finally {
+                if (retryCount > 0) {
+                    setIsLoading(false);
+                    setCurrentApiCall(null);
+                    setIsRetrying(false);
+                }
+            }
+        };
+
+        fetchRealQuotes();
+
+        // Cleanup function to abort API call if component unmounts
+        return () => {
+            if (abortController) {
+                abortController.abort();
+            }
+        };
+    }, [queryParams.receive_country, queryParams.receive_currency, forceRefresh]);
+
+    const bestRateProvider = useMemo(() => (!results || results.length === 0) ? null : results[0], [results]);
+    
+    const SkeletonCard = () => ( 
+        <div className="w-full p-4 lg:p-6 mb-3 lg:mb-4 bg-white border border-slate-200 rounded-xl lg:rounded-2xl shadow-sm animate-pulse"> 
+            <div className="flex justify-between items-center">
+                <div className="h-6 lg:h-8 bg-slate-300 rounded-md w-1/3"></div>
+                <div className="h-4 lg:h-6 bg-slate-300 rounded-md w-1/4"></div>
+            </div> 
+            <div className="mt-4 lg:mt-6 h-8 lg:h-10 bg-slate-300 rounded-md w-1/2"></div>
+            <div className="mt-2 lg:mt-3 h-4 lg:h-5 bg-slate-300 rounded-md w-3/4"></div> 
+        </div> 
+    );
+
+    return ( 
+        <div className="w-full"> 
+            <div className="bg-white/80 backdrop-blur-lg p-4 lg:p-6 rounded-2xl lg:rounded-3xl shadow-lg mb-6 lg:mb-8 sticky top-4 z-10"> 
+                <h2 className="text-sm lg:text-base font-semibold text-slate-500">{t('real_time_summary')}</h2> 
+                <p className="text-xl lg:text-2xl font-bold text-slate-800 flex items-center"> 
+                    {parseInt(amount).toLocaleString()} KRW → {queryParams.receive_country} 
+                </p> 
+                {isLoading && (
+                    <p className="text-xs lg:text-sm text-indigo-500 mt-1 animate-pulse">
+                        {isRetrying ? t('retrying_text') || '서버 준비 중... 잠시만 기다려주세요' : t('loading_text')}
+                    </p>
+                )} 
+            </div> 
+            
+            {error && (
+                <div className="text-center p-8 lg:p-12 bg-red-50 border border-red-200 rounded-lg lg:rounded-2xl">
+                    <h3 className="text-xl lg:text-2xl font-bold text-red-700">{t('error_title')}</h3>
+                    <p className="text-red-600 mt-2 text-sm lg:text-base">{error}</p>
+                    <div className="mt-4 lg:mt-6 space-x-2 lg:space-x-4">
+                        <button 
+                            onClick={() => window.location.reload()} 
+                            className="px-4 lg:px-6 py-2 lg:py-3 bg-red-600 text-white rounded-lg lg:rounded-xl hover:bg-red-700 transition text-sm lg:text-base"
+                        >
+                            {t('refresh')}
+                        </button>
+                        <button 
+                            onClick={() => {
+                                console.log('🔧 Debug Info:');
+                                console.log('API Base URL:', FORCE_API_BASE_URL);
+                                console.log('Current URL:', window.location.href);
+                                console.log('User Agent:', navigator.userAgent);
+                            }}
+                            className="px-4 lg:px-6 py-2 lg:py-3 bg-blue-600 text-white rounded-lg lg:rounded-xl hover:bg-blue-700 transition text-sm lg:text-base"
+                        >
+                            {t('debug_info')}
+                        </button>
+                    </div>
+                </div>
+            )} 
+            
+            <div className="space-y-3 lg:space-y-4"> 
+                {isLoading ? ( 
+                    Array(5).fill(0).map((_, index) => <SkeletonCard key={index} />) 
+                ) : ( 
+                    <>
+                        {results && results.length > 0 ? (
+                            results.map(provider => 
+                                <ProviderCard 
+                                    key={provider.provider} 
+                                    providerData={provider} 
+                                    isBest={bestRateProvider && provider.provider === bestRateProvider.provider} 
+                                    currency={queryParams.receive_currency} 
+                                    amount={amount}
+                                    receiveCountry={queryParams.receive_country}
+                                    t={t} 
+                                />
+                            )
+                        ) : (
+                            <div className="text-center p-8">
+                                <p>No results available</p>
+                            </div>
+                        )}
+                    </>
+                )} 
+            </div> 
+            
+ 
+        </div> 
+    );
+}
 
 // Main Page Component
 export default function MainPage() {
@@ -310,22 +392,64 @@ export default function MainPage() {
 
     // Page view tracking and debug logging
     useEffect(() => {
-        safeLogPageView();
+        logPageView();
     }, [router.locale]);
 
-    // Input validation function
-    const isAmountValid = () => {
-        const numAmount = Number(amount);
-        return numAmount >= 10000 && numAmount <= 10000000;
+    useEffect(() => { 
+        function handleClickOutside(event) { 
+            const mobileFormContains = formRef.current && formRef.current.contains(event.target);
+            const desktopFormContains = formRefDesktop.current && formRefDesktop.current.contains(event.target);
+            const mobileDropdownContains = countryDropdownRef.current && countryDropdownRef.current.contains(event.target);
+            const desktopDropdownContains = countryDropdownRefDesktop.current && countryDropdownRefDesktop.current.contains(event.target);
+            
+            if (!mobileFormContains && !desktopFormContains && !mobileDropdownContains && !desktopDropdownContains) { 
+                setShowDropdown(false); 
+            } 
+        } 
+        document.addEventListener("mousedown", handleClickOutside); 
+        return () => document.removeEventListener("mousedown", handleClickOutside); 
+    }, []);
+
+    useEffect(() => { 
+        if(showResults && resultsRef.current) { 
+            resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+        } 
+    }, [showResults]);
+
+    const handleAmountChange = (e) => { 
+        const value = e.target.value.replace(/,/g, ''); 
+        if (!isNaN(value) && value.length <= 10) { 
+            setAmount(value);
+            
+            // Check validation immediately while typing
+            const numValue = parseInt(value) || 0;
+            if (numValue > 0 && numValue < 10000) {
+                setAmountError(t('amount_min_error'));
+            } else if (numValue > 5000000) {
+                setAmountError(t('amount_max_error'));
+            } else {
+                // Only clear error if there actually is an error to avoid unnecessary re-renders
+                if (amountError) {
+                    setAmountError("");
+                }
+            }
+        } 
     };
 
-    // Handle amount change with validation
-    const handleAmountChange = (e) => {
-        const value = e.target.value;
-        setAmount(value);
+    const isAmountValid = () => {
+        const numValue = parseInt(amount) || 0;
+        return numValue >= 10000 && numValue <= 5000000;
+    };
+
+    const handleAmountBlur = () => {
+        const numValue = parseInt(amount) || 0;
         
-        if (value && !isAmountValid()) {
-            setAmountError(t('amount_error'));
+        if (numValue > 0 && numValue < 10000) {
+            setAmountError(t('amount_min_error'));
+            // Don't auto-correct, just show error
+        } else if (numValue > 5000000) {
+            setAmountError(t('amount_max_error'));
+            // Don't auto-correct, just show error
         } else {
             setAmountError("");
         }
@@ -335,9 +459,12 @@ export default function MainPage() {
         e.preventDefault();
         
         if (hasComparedOnce) {
+            // If we've already compared once, use compare again logic
             handleCompareAgain();
         } else {
-            safeLogClickedCTA(amount, selectedCountry.code, selectedCountry.currency);
+            // First time comparison
+            // Log CTA click with parameters
+            logClickedCTA(amount, selectedCountry.code, selectedCountry.currency);
             
             if (selectedCountry && amount && isAmountValid()) { 
                 const newParams = { 
@@ -353,7 +480,7 @@ export default function MainPage() {
     };
 
     const handleCompareAgain = () => { 
-        safeLogCompareAgain(amount, selectedCountry.code, selectedCountry.currency);
+        logCompareAgain(amount, selectedCountry.code, selectedCountry.currency);
         
         if (selectedCountry && amount && isAmountValid()) {
             const newQueryParams = { 
@@ -366,8 +493,9 @@ export default function MainPage() {
         }
     };
 
+    // Handle country change - auto-trigger API only after first comparison
     const handleCountryChange = (newCountry) => {
-        safeLogSendingCountrySwitch(newCountry.currency);
+        logSendingCountrySwitch(newCountry.currency);
         setSelectedCountry(newCountry);
         
         if (hasComparedOnce && amount && isAmountValid()) {
@@ -385,229 +513,443 @@ export default function MainPage() {
         }
     };
 
+    // Removed auto-trigger API call when amount changes
+    // API will only be called when:
+    // 1. First time: button click
+    // 2. After first call: country change OR button click (not amount change)
+
     return (
         <>
             <Head>
                 <title>{t('page_title')}</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
             </Head>
+            <style jsx global>{`
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    min-height: 100vh;
+                    padding: 20px;
+                    -webkit-text-size-adjust: 100%;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                }
+
+                /* 웹뷰 호환성 개선 */
+                html {
+                    -webkit-touch-callout: none;
+                    -webkit-user-select: none;
+                    -webkit-tap-highlight-color: rgba(0,0,0,0);
+                }
+                
+                body, input, button, select, textarea {
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                }
+
+                @media (max-width: 768px) {
+                    body {
+                        padding: 10px;
+                    }
+                }
+            `}</style>
             
-            <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
-                {/* Header */}
-                <div className="text-center py-8 lg:py-12 px-4">
-                    <h1 className="text-3xl lg:text-5xl font-bold text-slate-800 mb-3 lg:mb-4">
-                        {t('main_title')}
-                    </h1>
-                    <p className="text-lg lg:text-xl text-slate-600 max-w-2xl mx-auto">
-                        {t('subtitle')}
-                    </p>
-                </div>
-
-                {/* Main Form Container */}
-                <div className="max-w-4xl mx-auto px-4 pb-8 lg:pb-16">
-                    <div className="bg-white rounded-2xl lg:rounded-3xl shadow-xl p-6 lg:p-10 mb-8 lg:mb-12">
-                        {/* Desktop Form */}
-                        <form 
-                            ref={formRefDesktop}
-                            onSubmit={handleSubmit} 
-                            className="hidden lg:block"
-                        >
-                            <div className="flex items-end gap-6">
-                                {/* Amount Input */}
-                                <div className="flex-1">
-                                    <label className="block text-base font-medium text-slate-700 mb-3">
-                                        {t('send_amount')}
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            value={amount.toLocaleString('en-US')}
-                                            onChange={handleAmountChange}
-                                            className={`w-full p-4 text-xl font-semibold border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all ${
-                                                amountError ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-indigo-500'
-                                            }`}
-                                            placeholder="1,000,000"
-                                        />
-                                        <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-xl font-bold text-slate-600">
-                                            KRW
-                                        </span>
-                                    </div>
-                                    {amountError && (
-                                        <p className="text-red-500 text-sm mt-2">{amountError}</p>
-                                    )}
-                                </div>
-
-                                {/* Arrow */}
-                                <div className="flex items-center justify-center pb-4">
-                                    <ArrowRightIcon className="w-8 h-8 text-slate-400" />
-                                </div>
-
-                                {/* Country Selector */}
-                                <div className="flex-1 relative" ref={countryDropdownRefDesktop}>
-                                    <label className="block text-base font-medium text-slate-700 mb-3">
-                                        {t('receive_country')}
-                                    </label>
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowDropdown(!showDropdown)}
-                                        className="w-full p-4 text-left border-2 border-slate-300 rounded-xl hover:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all flex items-center justify-between"
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <img
-                                                src={selectedCountry.flag}
-                                                alt={selectedCountry.name}
-                                                className="w-6 h-6 rounded"
-                                            />
-                                            <span className="text-xl font-semibold text-slate-800">
-                                                {selectedCountry.name}
-                                            </span>
-                                        </div>
-                                        <ChevronDownIcon className={`w-5 h-5 text-slate-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-                                    </button>
-
-                                    {/* Dropdown */}
-                                    {showDropdown && (
-                                        <div className="absolute z-50 w-full mt-2 bg-white border-2 border-slate-200 rounded-xl shadow-2xl max-h-64 overflow-y-auto">
-                                            {COUNTRIES.map((country) => (
-                                                <button
-                                                    key={country.code}
-                                                    type="button"
-                                                    onClick={() => handleCountryChange(country)}
-                                                    className={`w-full p-4 text-left hover:bg-indigo-50 flex items-center gap-3 transition-colors ${
-                                                        selectedCountry.code === country.code ? 'bg-indigo-100' : ''
-                                                    }`}
-                                                >
-                                                    <img
-                                                        src={country.flag}
-                                                        alt={country.name}
-                                                        className="w-6 h-6 rounded"
-                                                    />
-                                                    <span className="text-lg font-medium text-slate-800">
-                                                        {country.name}
-                                                    </span>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Submit Button */}
-                                <div className="pb-4">
-                                    <button
-                                        type="submit"
-                                        disabled={!isAmountValid() || amountError}
-                                        className="px-8 py-4 bg-indigo-600 text-white text-lg font-bold rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
-                                    >
-                                        {hasComparedOnce ? t('compare_again') : t('find_best_rate')}
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-
-                        {/* Mobile Form */}
-                        <form 
-                            ref={formRef}
-                            onSubmit={handleSubmit} 
-                            className="lg:hidden space-y-6"
-                        >
-                            {/* Amount Input */}
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">
-                                    {t('send_amount')}
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        value={amount.toLocaleString('en-US')}
-                                        onChange={handleAmountChange}
-                                        className={`w-full p-4 text-lg font-semibold border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all ${
-                                            amountError ? 'border-red-500 focus:border-red-500' : 'border-slate-300 focus:border-indigo-500'
-                                        }`}
-                                        placeholder="1,000,000"
-                                    />
-                                    <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-lg font-bold text-slate-600">
-                                        KRW
-                                    </span>
-                                </div>
-                                {amountError && (
-                                    <p className="text-red-500 text-sm mt-2">{amountError}</p>
-                                )}
-                            </div>
-
-                            {/* Country Selector */}
-                            <div className="relative" ref={countryDropdownRef}>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">
-                                    {t('receive_country')}
-                                </label>
-                                <button
-                                    type="button"
-                                    onClick={() => setShowDropdown(!showDropdown)}
-                                    className="w-full p-4 text-left border-2 border-slate-300 rounded-xl hover:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all flex items-center justify-between"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <img
-                                            src={selectedCountry.flag}
-                                            alt={selectedCountry.name}
-                                            className="w-6 h-6 rounded"
-                                        />
-                                        <span className="text-lg font-semibold text-slate-800">
-                                            {selectedCountry.name}
-                                        </span>
-                                    </div>
-                                    <ChevronDownIcon className={`w-5 h-5 text-slate-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-                                </button>
-
-                                {/* Mobile Dropdown */}
-                                {showDropdown && (
-                                    <div className="absolute z-50 w-full mt-2 bg-white border-2 border-slate-200 rounded-xl shadow-2xl max-h-64 overflow-y-auto">
-                                        {COUNTRIES.map((country) => (
-                                            <button
-                                                key={country.code}
-                                                type="button"
-                                                onClick={() => handleCountryChange(country)}
-                                                className={`w-full p-4 text-left hover:bg-indigo-50 flex items-center gap-3 transition-colors ${
-                                                    selectedCountry.code === country.code ? 'bg-indigo-100' : ''
-                                                }`}
-                                            >
-                                                <img
-                                                    src={country.flag}
-                                                    alt={country.name}
-                                                    className="w-6 h-6 rounded"
-                                                />
-                                                <span className="text-lg font-medium text-slate-800">
-                                                    {country.name}
-                                                </span>
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Submit Button */}
-                            <button
-                                type="submit"
-                                disabled={!isAmountValid() || amountError}
-                                className="w-full py-4 bg-indigo-600 text-white text-lg font-bold rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {hasComparedOnce ? t('compare_again') : t('find_best_rate')}
-                            </button>
-                        </form>
+            <div className="container">
+                <div className="header">
+                    <div className="logo">
+                        <div className="logo-icon"></div>
+                        <div className="logo-text">RemitBuddy</div>
                     </div>
-
-                    {/* Results Section */}
-                    {showResults && (
-                        <div ref={resultsRef}>
-                            <ResultsComponent 
-                                queryParams={queryParams}
-                                amount={amount}
-                                selectedCountry={selectedCountry}
-                                forceRefresh={forceRefresh}
-                                t={t}
-                            />
-                        </div>
-                    )}
+                    <h1 className="main-title">{t('main_title')}</h1>
+                    <p className="subtitle">{t('main_subtitle')}</p>
                 </div>
+                <div className="form-section">
+                    <center><div className="social-proof">
+                        <div className="social-proof-text">{t('social_proof')}</div>
+                        <div className="rating">{t('rating')} </div>
+                    </div></center>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label className="form-label">{t('amount_label')}</label>
+                            <p className="form-helper">{t('amount_helper')}</p>
+                            <div className="amount-input-wrapper" ref={formRef}>
+                                <input 
+                                    type="text" 
+                                    className="amount-input" 
+                                    value={amount ? parseInt(amount).toLocaleString() : ""}
+                                    onChange={handleAmountChange}
+                                    onBlur={handleAmountBlur}
+                                    placeholder={t('amount_placeholder')}
+                                />
+                                <span className="currency-code">KRW</span>
+                            </div>
+                            {amountError && (
+                                <div className="error-message">
+                                    {amountError}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label">{t('country_label')}</label>
+                            <p className="form-helper">{t('country_helper')}</p>
+                            <div className="country-select-wrapper relative" ref={formRefDesktop} onClick={() => setShowDropdown(prev => !prev)}>
+                                <div className="country-display">
+                                    <div className="country-left-content">
+                                        <div className="flag">
+                                            <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={32} height={32} className="rounded-full" />
+                                        </div>
+                                        <div className="country-info">
+                                            <div className="country-name">{selectedCountry.name}</div>
+                                        </div>
+                                    </div>
+                                    <div className="dropdown-arrow"></div>
+                                </div>
+                                {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRef} />}
+                            </div>
+                        </div>
+
+                        <button className={`cta-button ${!isAmountValid() ? 'disabled' : ''}`} type="submit" disabled={!isAmountValid()}>
+                            {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
+                        </button>
+
+                        <center><div className="cta-helper">
+                            <strong>{t('cta_helper')}</strong>
+                        </div></center>
+
+                        {!showResults && (
+                            <div className="features">
+                                <div className="feature">
+                                    <div className="feature-icon">💰</div>
+                                    <div className="feature-title">{t('feature_rates_title')}</div>
+                                    <div className="feature-desc">{t('feature_rates_desc')}</div>
+                                </div>
+                                <div className="feature">
+                                    <div className="feature-icon">⚡</div>
+                                    <div className="feature-title">{t('feature_fast_title')}</div>
+                                    <div className="feature-desc">{t('feature_fast_desc')}</div>
+                                </div>
+                                <div className="feature">
+                                    <div className="feature-icon">🛡️</div>
+                                    <div className="feature-title">{t('feature_secure_title')}</div>
+                                    <div className="feature-desc">{t('feature_secure_desc')}</div>
+                                </div>
+                            </div>
+                        )}
+                    </form>
+                </div>
+
+                {/* Results Section */}
+                {showResults && (
+                    <div ref={resultsRef} className="results-section">
+                        <ComparisonResults queryParams={queryParams} amount={amount} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
+                    </div>
+                )}
             </div>
+
+            <style jsx>{`
+                .container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    background: white;
+                    border-radius: 20px;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                    overflow: hidden;
+                }
+
+                .header {
+                    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                    padding: 40px 20px;
+                    text-align: center;
+                    color: white;
+                }
+
+                .logo {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 24px;
+                }
+
+                .logo-icon {
+                    width: 32px;
+                    height: 32px;
+                    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' /%3E%3C/svg%3E") center/contain no-repeat;
+                    margin-right: 8px;
+                }
+
+                .logo-text {
+                    font-size: 24px;
+                    font-weight: bold;
+                    color: white;
+                }
+
+                .main-title {
+                    font-size: 2.5rem;
+                    font-weight: 800;
+                    margin-bottom: 12px;
+                    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    line-height: 1.2;
+                }
+
+                .subtitle {
+                    font-size: 1.2rem;
+                    opacity: 0.9;
+                    font-weight: 500;
+                }
+
+                .form-section {
+                    padding: 40px 20px;
+                }
+
+                .social-proof {
+                    margin-bottom: 30px;
+                    text-align: center;
+                }
+
+                .social-proof-text {
+                    font-size: 16px;
+                    color: #4A5568;
+                    margin-bottom: 8px;
+                    font-weight: 600;
+                }
+
+                .rating {
+                    font-size: 14px;
+                    color: #718096;
+                    font-weight: 500;
+                }
+
+                .form-group {
+                    margin-bottom: 24px;
+                }
+
+                .form-label {
+                    display: block;
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #2D3748;
+                    margin-bottom: 8px;
+                }
+
+                .form-helper {
+                    font-size: 14px;
+                    color: #718096;
+                    margin-bottom: 12px;
+                    font-weight: 500;
+                }
+
+                .amount-input-wrapper {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .amount-input {
+                    width: 100%;
+                    padding: 16px 80px 16px 20px;
+                    font-size: 20px;
+                    font-weight: 600;
+                    border: 2px solid #E2E8F0;
+                    border-radius: 12px;
+                    background: #F7FAFC;
+                    color: #2D3748;
+                    transition: all 0.3s ease;
+                }
+
+                .amount-input:focus {
+                    outline: none;
+                    border-color: #4299E1;
+                    background: white;
+                    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+                }
+
+                .currency-code {
+                    position: absolute;
+                    right: 20px;
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #4A5568;
+                    pointer-events: none;
+                }
+
+                .error-message {
+                    margin-top: 8px;
+                    font-size: 14px;
+                    color: #E53E3E;
+                    font-weight: 600;
+                }
+
+                .country-select-wrapper {
+                    position: relative;
+                    cursor: pointer;
+                }
+
+                .country-display {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 16px 20px;
+                    border: 2px solid #E2E8F0;
+                    border-radius: 12px;
+                    background: #F7FAFC;
+                    transition: all 0.3s ease;
+                }
+
+                .country-display:hover {
+                    border-color: #CBD5E0;
+                    background: white;
+                }
+
+                .country-left-content {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .flag {
+                    width: 32px;
+                    height: 32px;
+                    margin-right: 12px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                }
+
+                .country-info {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .country-name {
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #2D3748;
+                }
+
+                .dropdown-arrow {
+                    width: 20px;
+                    height: 20px;
+                    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234A5568' stroke-width='3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7' /%3E%3C/svg%3E") center/contain no-repeat;
+                    transition: transform 0.3s ease;
+                }
+
+                .cta-button {
+                    width: 100%;
+                    padding: 18px 24px;
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: white;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    border: none;
+                    border-radius: 12px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    margin-bottom: 16px;
+                    text-transform: none;
+                }
+
+                .cta-button:hover:not(.disabled) {
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+                }
+
+                .cta-button.disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    transform: none;
+                    box-shadow: none;
+                }
+
+                .cta-helper {
+                    text-align: center;
+                    font-size: 14px;
+                    color: #718096;
+                    margin-bottom: 32px;
+                }
+
+                .features {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                    margin-top: 32px;
+                }
+
+                .feature {
+                    text-align: center;
+                    padding: 24px 16px;
+                    background: #F7FAFC;
+                    border-radius: 12px;
+                    border: 1px solid #E2E8F0;
+                }
+
+                .feature-icon {
+                    font-size: 2.5rem;
+                    margin-bottom: 12px;
+                }
+
+                .feature-title {
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #2D3748;
+                    margin-bottom: 8px;
+                }
+
+                .feature-desc {
+                    font-size: 14px;
+                    color: #4A5568;
+                    line-height: 1.5;
+                }
+
+                .results-section {
+                    padding: 40px 20px;
+                    background: #F7FAFC;
+                }
+
+                @media (min-width: 640px) {
+                    .features {
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+                    
+                    .main-title {
+                        font-size: 3rem;
+                    }
+                    
+                    .form-section {
+                        padding: 50px 40px;
+                    }
+                    
+                    .results-section {
+                        padding: 50px 40px;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .main-title {
+                        font-size: 2rem;
+                    }
+                    
+                    .subtitle {
+                        font-size: 1rem;
+                    }
+                    
+                    .header {
+                        padding: 30px 15px;
+                    }
+                    
+                    .form-section {
+                        padding: 30px 15px;
+                    }
+                    
+                    .results-section {
+                        padding: 30px 15px;
+                    }
+                }
+            `}</style>
         </>
     );
 }

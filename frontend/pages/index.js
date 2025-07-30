@@ -123,34 +123,37 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
             target="_blank" 
             rel="noopener noreferrer" 
             onClick={handleProviderClick}
-            className={`block w-full p-4 lg:p-6 mb-3 lg:mb-4 bg-white border rounded-xl lg:rounded-2xl shadow-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isBest ? 'border-emerald-500 border-2' : 'border-slate-200'}`}
+            className={`provider-card ${isBest ? 'best' : ''}`}
         > 
-            <div className="flex justify-between items-start"> 
-                <div className="flex items-center gap-3">
+            <div className="provider-header">
+                <div className="provider-logo-container">
                     {PROVIDER_LOGO_MAP[provider] && (
                         <img 
                             src={PROVIDER_LOGO_MAP[provider]} 
                             alt={`${provider} logo`} 
-                            width="32" 
-                            height="32" 
-                            className="rounded"
+                            className="provider-logo"
                         />
                     )}
-                    <h3 className="text-xl lg:text-2xl font-bold text-slate-800">{displayName}</h3>
                 </div>
-                {isBest && <span className="text-xs lg:text-sm font-semibold text-white bg-emerald-500 px-3 py-1 lg:px-4 lg:py-2 rounded-full">{t('most_amount_receive')}</span>} 
+                <div className="provider-name">{displayName}</div>
+                {isBest && <div className="best-badge">{t('most_amount_receive')}</div>} 
             </div> 
-            <div className="mt-3 lg:mt-4"> 
-                <p className="text-sm lg:text-base text-slate-500">{t('amount_to_receive')}</p> 
-                <p className="text-2xl lg:text-3xl font-extrabold text-indigo-600"> 
-                    {Math.round(recipient_gets).toLocaleString('en-US')} 
-                    <span className="ml-2 text-xl lg:text-2xl font-bold text-slate-700">{currency}</span> 
-                </p> 
+            <div className="amount-section"> 
+                <div className="amount-label">{t('amount_to_receive')}</div> 
+                <div>
+                    <span className="amount-value">{Math.round(recipient_gets).toLocaleString('en-US')}</span>
+                    <span className="amount-currency">{currency}</span> 
+                </div>
             </div> 
-            <div className="mt-3 lg:mt-4 text-xs lg:text-sm text-slate-500 flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-0"> 
-                <span>1 {currency.toUpperCase()} = {(1 / exchange_rate).toFixed(4)} KRW</span> 
-                <span className="hidden lg:inline mx-2">|</span> 
-                <span>{t('fee')}: {formattedFeeInTarget} {currency} ({formattedFeeInKRW} KRW)</span> 
+            <div className="provider-details"> 
+                <div className="detail-item">
+                    <span className="detail-value">1 {currency.toUpperCase()} = {(1 / exchange_rate).toFixed(4)} KRW</span>
+                </div>
+            </div> 
+            <div className="provider-details"> 
+                <div className="detail-item">
+                    {t('fee')}: <span className="detail-value">{formattedFeeInTarget} {currency} ({formattedFeeInKRW} KRW)</span>
+                </div>
             </div> 
         </a> 
     );
@@ -534,11 +537,22 @@ export default function MainPage() {
                     <h1 className="main-title">{t('main_title')}</h1>
                     <p className="subtitle">{t('main_subtitle')}</p>
                 </div>
+                
                 <div className="form-section">
-                    <center><div className="social-proof">
+                    <div className="social-proof">
                         <div className="social-proof-text">{t('social_proof')}</div>
-                        <div className="rating">{t('rating')} </div>
-                    </div></center>
+                        <div className="rating">
+                            <div className="stars">
+                                <span className="star">★</span>
+                                <span className="star">★</span>
+                                <span className="star">★</span>
+                                <span className="star">★</span>
+                                <span className="star">★</span>
+                            </div>
+                            <span>{t('rating')}</span>
+                        </div>
+                    </div>
+                    
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label className="form-label">{t('amount_label')}</label>
@@ -552,7 +566,7 @@ export default function MainPage() {
                                     onBlur={handleAmountBlur}
                                     placeholder={t('amount_placeholder')}
                                 />
-                                <span className="currency-code">KRW</span>
+                                <span className="currency-label">KRW</span>
                             </div>
                             {amountError && (
                                 <div className="error-message">
@@ -560,50 +574,49 @@ export default function MainPage() {
                                 </div>
                             )}
                         </div>
-
-                        <div className="form-group">
+                        
+                        <div className="destination-section">
                             <label className="form-label">{t('country_label')}</label>
                             <p className="form-helper">{t('country_helper')}</p>
-                            <div className="country-select-wrapper relative" ref={formRefDesktop} onClick={() => setShowDropdown(prev => !prev)}>
-                                <div className="country-display">
-                                    <div className="country-left-content">
+                            <div className="destination-wrapper" ref={formRefDesktop}>
+                                <button type="button" className="destination-select" onClick={() => setShowDropdown(prev => !prev)}>
+                                    <div className="destination-content">
                                         <div className="flag">
-                                            <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={32} height={32} className="rounded-full" />
+                                            <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="24" height="18" className="flag-img" />
                                         </div>
-                                        <div className="country-info">
-                                            <div className="country-name">{selectedCountry.name}</div>
-                                        </div>
+                                        <span>{selectedCountry.name}</span>
                                     </div>
-                                    <div className="dropdown-arrow"></div>
-                                </div>
+                                    <ChevronDownIcon className="chevron" />
+                                </button>
                                 {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRef} />}
                             </div>
                         </div>
-
-                        <button className={`cta-button ${!isAmountValid() ? 'disabled' : ''}`} type="submit" disabled={!isAmountValid()}>
+                        
+                        <button type="submit" className={`compare-button ${!isAmountValid() ? 'disabled' : ''}`} disabled={!isAmountValid()}>
+                            <ArrowRightIcon className="button-icon" />
                             {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
                         </button>
-
-                        <center><div className="cta-helper">
-                            <strong>{t('cta_helper')}</strong>
-                        </div></center>
-
+                        
+                        <div className="disclaimer">
+                            {t('cta_helper')}
+                        </div>
+                        
                         {!showResults && (
                             <div className="features">
                                 <div className="feature">
-                                    <div className="feature-icon">💰</div>
+                                    <div className="feature-icon">🏆</div>
                                     <div className="feature-title">{t('feature_rates_title')}</div>
-                                    <div className="feature-desc">{t('feature_rates_desc')}</div>
+                                    <div className="feature-description">{t('feature_rates_desc')}</div>
                                 </div>
                                 <div className="feature">
                                     <div className="feature-icon">⚡</div>
                                     <div className="feature-title">{t('feature_fast_title')}</div>
-                                    <div className="feature-desc">{t('feature_fast_desc')}</div>
+                                    <div className="feature-description">{t('feature_fast_desc')}</div>
                                 </div>
                                 <div className="feature">
-                                    <div className="feature-icon">🛡️</div>
+                                    <div className="feature-icon">🔒</div>
                                     <div className="feature-title">{t('feature_secure_title')}</div>
-                                    <div className="feature-desc">{t('feature_secure_desc')}</div>
+                                    <div className="feature-description">{t('feature_secure_desc')}</div>
                                 </div>
                             </div>
                         )}

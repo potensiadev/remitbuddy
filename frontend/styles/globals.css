@@ -425,12 +425,31 @@ body, input, button, select, textarea {
     border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    transition: all 0.2s ease;
 }
 
-.provider-card:hover .best-badge {
+/* Best provider card hover effects - make all text white */
+.provider-card.best:hover .provider-name {
     color: white;
-    background: #059669;
+}
+
+.provider-card.best:hover .amount-label {
+    color: white;
+}
+
+.provider-card.best:hover .amount-value {
+    color: white;
+}
+
+.provider-card.best:hover .amount-currency {
+    color: white;
+}
+
+.provider-card.best:hover .detail-item {
+    color: white;
+}
+
+.provider-card.best:hover .detail-value {
+    color: white;
 }
 
 .amount-section {

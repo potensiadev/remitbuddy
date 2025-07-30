@@ -411,6 +411,10 @@ export default function MainPage() {
 
     useEffect(() => { 
         if(showResults && resultsRef.current) { 
+            // Add show class for animation after a brief delay
+            setTimeout(() => {
+                resultsRef.current.classList.add('show');
+            }, 50);
             resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
         } 
     }, [showResults]);
@@ -534,7 +538,8 @@ export default function MainPage() {
                     <p className="subtitle">{t('main_subtitle')}</p>
                 </div>
                 
-                <div className="form-section">
+                <div className="content-area">
+                    <div className="form-section">
                     <div className="social-proof">
                         <div className="social-proof-text">{t('social_proof')}</div>
                         <div className="rating">
@@ -617,14 +622,15 @@ export default function MainPage() {
                             </div>
                         )}
                     </form>
-                </div>
-
-                {/* Results Section */}
-                {showResults && (
-                    <div ref={resultsRef} className="results-section">
-                        <ComparisonResults queryParams={queryParams} amount={amount} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
                     </div>
-                )}
+
+                    {/* Results Section */}
+                    {showResults && (
+                        <div ref={resultsRef} className="results-section">
+                            <ComparisonResults queryParams={queryParams} amount={amount} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
+                        </div>
+                    )}
+                </div>
             </div>
 
         </>

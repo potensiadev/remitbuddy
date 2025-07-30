@@ -290,38 +290,38 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
     const bestRateProvider = useMemo(() => (!results || results.length === 0) ? null : results[0], [results]);
     
     const SkeletonCard = () => ( 
-        <div className="w-full p-4 lg:p-6 mb-3 lg:mb-4 bg-white border border-slate-200 rounded-xl lg:rounded-2xl shadow-sm animate-pulse"> 
-            <div className="flex justify-between items-center">
-                <div className="h-6 lg:h-8 bg-slate-300 rounded-md w-1/3"></div>
-                <div className="h-4 lg:h-6 bg-slate-300 rounded-md w-1/4"></div>
+        <div className="skeleton-card"> 
+            <div className="skeleton-header">
+                <div className="skeleton-name"></div>
+                <div className="skeleton-badge"></div>
             </div> 
-            <div className="mt-4 lg:mt-6 h-8 lg:h-10 bg-slate-300 rounded-md w-1/2"></div>
-            <div className="mt-2 lg:mt-3 h-4 lg:h-5 bg-slate-300 rounded-md w-3/4"></div> 
+            <div className="skeleton-amount"></div>
+            <div className="skeleton-details"></div> 
         </div> 
     );
 
     return ( 
-        <div className="w-full"> 
-            <div className="bg-white/80 backdrop-blur-lg p-4 lg:p-6 rounded-2xl lg:rounded-3xl shadow-lg mb-6 lg:mb-8 sticky top-4 z-10"> 
-                <h2 className="text-sm lg:text-base font-semibold text-slate-500">{t('real_time_summary')}</h2> 
-                <p className="text-xl lg:text-2xl font-bold text-slate-800 flex items-center"> 
+        <div className="results-container"> 
+            <div className="summary-header"> 
+                <div className="summary-title">{t('real_time_summary')}</div> 
+                <div className="summary-amount"> 
                     {parseInt(amount).toLocaleString()} KRW → {queryParams.receive_country} 
-                </p> 
+                </div> 
                 {isLoading && (
-                    <p className="text-xs lg:text-sm text-indigo-500 mt-1 animate-pulse">
+                    <div className="loading-text">
                         {isRetrying ? t('retrying_text') || '서버 준비 중... 잠시만 기다려주세요' : t('loading_text')}
-                    </p>
+                    </div>
                 )} 
             </div> 
             
             {error && (
-                <div className="text-center p-8 lg:p-12 bg-red-50 border border-red-200 rounded-lg lg:rounded-2xl">
-                    <h3 className="text-xl lg:text-2xl font-bold text-red-700">{t('error_title')}</h3>
-                    <p className="text-red-600 mt-2 text-sm lg:text-base">{error}</p>
-                    <div className="mt-4 lg:mt-6 space-x-2 lg:space-x-4">
+                <div className="error-section">
+                    <h3 className="error-title">{t('error_title')}</h3>
+                    <p className="error-message">{error}</p>
+                    <div className="error-buttons">
                         <button 
                             onClick={() => window.location.reload()} 
-                            className="px-4 lg:px-6 py-2 lg:py-3 bg-red-600 text-white rounded-lg lg:rounded-xl hover:bg-red-700 transition text-sm lg:text-base"
+                            className="error-button refresh-button"
                         >
                             {t('refresh')}
                         </button>
@@ -332,7 +332,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                                 console.log('Current URL:', window.location.href);
                                 console.log('User Agent:', navigator.userAgent);
                             }}
-                            className="px-4 lg:px-6 py-2 lg:py-3 bg-blue-600 text-white rounded-lg lg:rounded-xl hover:bg-blue-700 transition text-sm lg:text-base"
+                            className="error-button debug-button"
                         >
                             {t('debug_info')}
                         </button>
@@ -340,7 +340,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 </div>
             )} 
             
-            <div className="space-y-3 lg:space-y-4"> 
+            <div className="provider-list"> 
                 {isLoading ? ( 
                     Array(5).fill(0).map((_, index) => <SkeletonCard key={index} />) 
                 ) : ( 
@@ -358,7 +358,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                                 />
                             )
                         ) : (
-                            <div className="text-center p-8">
+                            <div className="no-results">
                                 <p>No results available</p>
                             </div>
                         )}

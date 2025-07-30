@@ -342,8 +342,163 @@ body, input, button, select, textarea {
 }
 
 .results-section {
+    padding: 30px;
+    background: transparent;
+}
+
+/* Results Layout Styles */
+.results-container {
+    width: 100%;
+}
+
+.summary-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.summary-title {
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.summary-amount {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.loading-text {
+    font-size: 14px;
+    color: #6366f1;
+    margin-top: 8px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Error Section */
+.error-section {
+    text-align: center;
     padding: 40px 20px;
-    background: #F7FAFC;
+    background: #fef2f2;
+    border: 2px solid #fecaca;
+    border-radius: 16px;
+    margin-bottom: 30px;
+}
+
+.error-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #dc2626;
+    margin-bottom: 12px;
+}
+
+.error-message {
+    color: #dc2626;
+    margin-bottom: 24px;
+    font-size: 16px;
+}
+
+.error-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.error-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.refresh-button {
+    background: #dc2626;
+    color: white;
+}
+
+.refresh-button:hover {
+    background: #b91c1c;
+}
+
+.debug-button {
+    background: #2563eb;
+    color: white;
+}
+
+.debug-button:hover {
+    background: #1d4ed8;
+}
+
+/* Provider List */
+.provider-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748b;
+}
+
+/* Skeleton Card */
+.skeleton-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 12px;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.skeleton-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.skeleton-name {
+    height: 24px;
+    background: #d1d5db;
+    border-radius: 6px;
+    width: 33%;
+}
+
+.skeleton-badge {
+    height: 18px;
+    background: #d1d5db;
+    border-radius: 6px;
+    width: 25%;
+}
+
+.skeleton-amount {
+    height: 32px;
+    background: #d1d5db;
+    border-radius: 6px;
+    width: 50%;
+    margin-bottom: 12px;
+}
+
+.skeleton-details {
+    height: 16px;
+    background: #d1d5db;
+    border-radius: 6px;
+    width: 75%;
 }
 
 /* Provider Card Styles */
@@ -565,6 +720,27 @@ a:hover {
     .best-badge {
         font-size: 10px;
         padding: 3px 8px;
+    }
+    
+    /* Mobile Results Layout */
+    .results-section {
+        padding: 20px;
+    }
+    
+    .summary-amount {
+        font-size: 20px;
+    }
+    
+    .error-section {
+        padding: 30px 15px;
+    }
+    
+    .error-buttons {
+        flex-direction: column;
+    }
+    
+    .skeleton-card {
+        padding: 16px;
     }
 }
 

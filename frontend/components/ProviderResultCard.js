@@ -2,19 +2,19 @@ export default function ProviderResultCard({ provider, best, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={`p-4 rounded-2xl border ${
+      className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border ${
         best ? "border-green-500 bg-[#F8FFF6] shadow-lg" : "border-gray-200 bg-white"
-      } flex flex-col gap-1 cursor-pointer hover:ring-2 hover:ring-blue-400`}
+      } flex flex-col gap-1 cursor-pointer hover:ring-2 hover:ring-blue-400 min-h-[120px] sm:min-h-auto`}
     >
       <div className="flex items-center gap-2">
-        {best && <span className="text-xl">⭐</span>}
-        <img src={provider.logo} alt={provider.provider} className="h-5" />
-        <span className="font-semibold">{provider.provider}</span>
+        {best && <span className="text-lg sm:text-xl">⭐</span>}
+        <img src={provider.logo} alt={provider.provider} className="h-4 sm:h-5" />
+        <span className="font-semibold text-sm sm:text-base">{provider.provider}</span>
         <span className="ml-auto text-gray-500 text-xs">{provider.country}</span>
       </div>
-      <div className="flex gap-2 text-base mt-1">
+      <div className="flex gap-2 text-sm sm:text-base mt-1">
         <span>
-          <b className={`text-lg ${best ? "text-red-600" : "text-black"}`}>
+          <b className={`text-base sm:text-lg ${best ? "text-red-600" : "text-black"}`}>
             {provider.receiveAmount} {provider.currency}
           </b>
         </span>

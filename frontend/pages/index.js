@@ -606,18 +606,24 @@ export default function MainPage() {
                             <div className="features">
                                 <div className="feature">
                                     <div className="feature-icon">🏆</div>
-                                    <div className="feature-title">{t('feature_rates_title')}</div>
-                                    <div className="feature-description">{t('feature_rates_desc')}</div>
+                                    <div className="feature-content">
+                                        <div className="feature-title">{t('feature_rates_title')}</div>
+                                        <div className="feature-description">{t('feature_rates_desc')}</div>
+                                    </div>
                                 </div>
                                 <div className="feature">
                                     <div className="feature-icon">⚡</div>
-                                    <div className="feature-title">{t('feature_fast_title')}</div>
-                                    <div className="feature-description">{t('feature_fast_desc')}</div>
+                                    <div className="feature-content">
+                                        <div className="feature-title">{t('feature_fast_title')}</div>
+                                        <div className="feature-description">{t('feature_fast_desc')}</div>
+                                    </div>
                                 </div>
                                 <div className="feature">
                                     <div className="feature-icon">🔒</div>
-                                    <div className="feature-title">{t('feature_secure_title')}</div>
-                                    <div className="feature-description">{t('feature_secure_desc')}</div>
+                                    <div className="feature-content">
+                                        <div className="feature-title">{t('feature_secure_title')}</div>
+                                        <div className="feature-description">{t('feature_secure_desc')}</div>
+                                    </div>
                                 </div>
                             </div>
                         )}

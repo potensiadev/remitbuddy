@@ -707,8 +707,9 @@ a:hover {
     }
     
     .container {
-        max-width: 600px;
+        max-width: 580px;
         border-radius: 20px;
+        margin: 0 auto;
     }
     
     .header {
@@ -834,6 +835,36 @@ a:hover {
     
     .detail-item {
         font-size: 13px;
+    }
+}
+
+/* 대형 데스크톱 최적화 (1200px 이상) */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 650px;
+    }
+    
+    .content-area {
+        padding: 40px 32px;
+    }
+    
+    .main-title {
+        font-size: 36px;
+    }
+    
+    .subtitle {
+        font-size: 20px;
+    }
+}
+
+/* 초대형 화면 최적화 (1600px 이상) */
+@media (min-width: 1600px) {
+    .container {
+        max-width: 700px;
+    }
+    
+    .content-area {
+        padding: 48px 40px;
     }
 }
 

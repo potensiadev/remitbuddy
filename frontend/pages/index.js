@@ -97,17 +97,13 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
     const displayName = provider === 'JP Remit' ? 'JRF' : 
                        provider === 'The Moin' ? 'Moin' : provider; 
     
-    const handleProviderClick = () => {
+    const handleProviderClick = (e) => {
         const analyticsName = PROVIDER_ANALYTICS_MAP[provider] || provider.toLowerCase();
         logClickedProvider(analyticsName, amount, receiveCountry, currency);
         
-        // Redirect to RemitBuddy referral link
-        const referralLink = REMIT_BUDDY_REFERRAL_LINKS[provider];
-        if (referralLink) {
-            window.open(referralLink, '_blank');
-        } else {
-            console.warn(`No referral link found for provider: ${provider}`);
-        }
+        // Use the original provider link from API data instead of referral link
+        // The href attribute already handles the navigation to providerData.link
+        // So we don't need to manually redirect here
     };
 
     // Calculate fee in target currency

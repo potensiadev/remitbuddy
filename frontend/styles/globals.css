@@ -425,6 +425,12 @@ body, input, button, select, textarea {
     border-radius: 20px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.provider-card:hover .best-badge {
+    color: white;
+    background: #059669;
 }
 
 .amount-section {

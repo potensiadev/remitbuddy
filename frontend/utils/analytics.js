@@ -1,5 +1,4 @@
 // utils/analytics.js - 완전한 버전
-import { v4 as uuidv4 } from 'uuid';
 
 // Session tracking
 let sessionStartTime = null;
@@ -10,7 +9,17 @@ export const getDeviceUUID = () => {
   
   let uuid = localStorage.getItem('remitbuddy_uuid');
   if (!uuid) {
-    uuid = uuidv4();
+    // Use crypto.randomUUID if available, fallback to timestamp-based UUID
+    if (crypto && crypto.randomUUID) {
+      uuid = crypto.randomUUID();
+    } else {
+      // Fallback UUID generation
+      uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
     localStorage.setItem('remitbuddy_uuid', uuid);
   }
   return uuid;
@@ -188,41 +197,48 @@ export const logEvent = async (eventType, additionalData = {}) => {
 // Specific event logging functions
 export const logPageView = () => {
   startSession();
-  logEvent('view_main', {
+  logEvent('page_view', {
     page_title: "RemitBuddy - Compare Exchange Rate",
     page_location: typeof window !== 'undefined' ? window.location.href : ''
   });
 };
 
 export const logClickedCTA = (amount, country, currency) => {
-  logEvent('click_compare_rates_now', { 
+  logEvent('begin_checkout', { 
     amount: amount,
     country: country, 
-    transfer_currency: currency
+    transfer_currency: currency,
+    value: parseInt(amount) || 0
   });
 };
 
 export const logCompareAgain = (amount, country, currency) => {
-  logEvent('click_compare_again', {
+  logEvent('search', {
     amount: amount,
     country: country,
     transfer_currency: currency,
+    search_term: `${amount}_KRW_to_${currency}`,
     is_repeat_search: true
   });
 };
 
 export const logClickedProvider = (providerName, amount, country, currency, additionalContext = {}) => {
-  logEvent('click_provider', { 
+  logEvent('select_content', { 
+    content_type: 'provider',
+    content_id: providerName,
     provider: providerName,
     amount: amount,
     country: country,
     transfer_currency: currency,
+    value: parseInt(amount) || 0,
     ...additionalContext
   });
 };
 
 export const logSendingCountrySwitch = (currency) => {
-  logEvent('sending_country_switched', { 
+  logEvent('select_item', { 
+    item_category: 'destination_country',
+    item_name: currency,
     transfer_currency: currency
   });
 };

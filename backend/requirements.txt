@@ -10,3 +10,6 @@ cachetools
 
 # (선택사항이지만 강력히 추천) .env 파일 관리용
 python-dotenv
+
+# 시스템 모니터링용
+psutil

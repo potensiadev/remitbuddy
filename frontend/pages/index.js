@@ -525,7 +525,48 @@ export default function MainPage() {
         <>
             <Head>
                 <title>{t('page_title')}</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
+                <meta name="description" content={t('meta_description') || "Compare real-time exchange rates from 9+ Korean remittance providers. Find the best rates for sending money to Vietnam, Philippines, Nepal, and more Asian countries."} />
+                <meta name="keywords" content="remittance, money transfer, exchange rate, Korea, Vietnam, Philippines, Nepal, comparison, 송금, 환율" />
+                
+                {/* Open Graph */}
+                <meta property="og:title" content={t('page_title')} />
+                <meta property="og:description" content={t('meta_description') || "Compare real-time exchange rates from 9+ Korean remittance providers."} />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content="https://remitbuddy.com" />
+                <meta property="og:image" content="https://remitbuddy.com/og-image.png" />
+                <meta property="og:site_name" content="RemitBuddy" />
+                <meta property="og:locale" content={router.locale} />
+                
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={t('page_title')} />
+                <meta name="twitter:description" content={t('meta_description') || "Compare real-time exchange rates from 9+ Korean remittance providers."} />
+                <meta name="twitter:image" content="https://remitbuddy.com/og-image.png" />
+                
+                {/* Structured Data */}
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "WebApplication",
+                            "name": "RemitBuddy",
+                            "description": "Compare real-time exchange rates from Korean remittance providers",
+                            "url": "https://remitbuddy.com",
+                            "applicationCategory": "FinanceApplication",
+                            "operatingSystem": "Web",
+                            "offers": {
+                                "@type": "Offer",
+                                "description": "Free remittance rate comparison service"
+                            },
+                            "provider": {
+                                "@type": "Organization",
+                                "name": "RemitBuddy",
+                                "url": "https://remitbuddy.com"
+                            }
+                        })
+                    }}
+                />
             </Head>
             
             <div className="container">

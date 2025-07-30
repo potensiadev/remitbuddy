@@ -14,7 +14,11 @@ from cachetools import TTLCache
 from proxy_manager import proxy_manager, ProxySession
 from proxy_config import proxy_config_manager
 
-app = FastAPI()
+app = FastAPI(
+    title="RemitBuddy API",
+    description="Real-time remittance rate comparison service",
+    version="1.0.0"
+)
 
 # --- Logging Configuration ---
 logging.basicConfig(
@@ -1025,6 +1029,136 @@ async def test_single_proxy(proxy_ip: str):
         "is_working": is_working,
         "stats": proxy_manager.proxy_stats.get(proxy_ip, {})
     }
+
+# --- Health Check Endpoints ---
+@app.get("/health")
+async def health_check():
+    """기본 헬스체크 엔드포인트"""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat(),
+        "service": "remitbuddy-api",
+        "version": "1.0.0"
+    }
+
+@app.get("/health/detailed")
+async def detailed_health_check():
+    """상세 헬스체크 - 시스템 상태 포함"""
+    import psutil
+    import os
+    
+    # 시스템 메트릭
+    cpu_percent = psutil.cpu_percent(interval=1)
+    memory = psutil.virtual_memory()
+    disk = psutil.disk_usage('/')
+    
+    # 프록시 상태
+    proxy_stats = proxy_manager.get_proxy_stats()
+    active_proxies = len([p for p in proxy_manager.proxies if p.is_active])
+    
+    return {
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat(),
+        "service": "remitbuddy-api",
+        "version": "1.0.0",
+        "system": {
+            "cpu_percent": cpu_percent,
+            "memory": {
+                "total": memory.total,
+                "available": memory.available,
+                "percent": memory.percent
+            },
+            "disk": {
+                "total": disk.total,
+                "free": disk.free,
+                "percent": (disk.used / disk.total) * 100
+            }
+        },
+        "proxies": {
+            "total": len(proxy_manager.proxies),
+            "active": active_proxies,
+            "stats": proxy_stats
+        },
+        "cache": {
+            "size": len(rate_cache),
+            "max_size": rate_cache.maxsize
+        }
+    }
+
+@app.get("/health/ready")
+async def readiness_check():
+    """준비 상태 체크 - 서비스가 트래픽을 받을 준비가 되었는지"""
+    try:
+        # 프록시 매니저 체크
+        if not proxy_manager.proxies:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "status": "not_ready",
+                    "reason": "No proxies configured",
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            )
+        
+        # 최소 하나의 활성 프록시 체크
+        active_proxies = [p for p in proxy_manager.proxies if p.is_active]
+        if not active_proxies:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "status": "not_ready",
+                    "reason": "No active proxies available",
+                    "timestamp": datetime.utcnow().isoformat()
+                }
+            )
+        
+        return {
+            "status": "ready",
+            "timestamp": datetime.utcnow().isoformat(),
+            "active_proxies": len(active_proxies)
+        }
+        
+    except Exception as e:
+        logger.error(f"Readiness check failed: {e}")
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "not_ready",
+                "reason": str(e),
+                "timestamp": datetime.utcnow().isoformat()
+            }
+        )
+
+@app.get("/health/live")
+async def liveness_check():
+    """라이브니스 체크 - 서비스가 살아있는지"""
+    try:
+        # 간단한 응답성 테스트
+        start_time = time.time()
+        
+        # 캐시 접근 테스트
+        test_key = "health_check_test"
+        rate_cache[test_key] = {"test": True}
+        _ = rate_cache.get(test_key)
+        
+        response_time = (time.time() - start_time) * 1000  # ms
+        
+        return {
+            "status": "alive",
+            "timestamp": datetime.utcnow().isoformat(),
+            "response_time_ms": response_time
+        }
+        
+    except Exception as e:
+        logger.error(f"Liveness check failed: {e}")
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "unhealthy",
+                "reason": str(e),
+                "timestamp": datetime.utcnow().isoformat()
+            }
+        )
 
 if __name__ == "__main__":
     import uvicorn

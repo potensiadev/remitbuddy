@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import Script from 'next/script';
 import '../styles/globals.css';
 import { GA_TRACKING_ID, pageview } from '../lib/gtag';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -20,8 +21,22 @@ function MyApp({ Component, pageProps }) {
     };
   }, [router.events]);
 
+  // Register Service Worker
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered successfully:', registration);
+        })
+        .catch((error) => {
+          console.log('Service Worker registration failed:', error);
+        });
+    }
+  }, []);
+
   return (
-    <>
+    <ErrorBoundary>
       {/* Google Analytics */}
       <Script
         strategy="afterInteractive"
@@ -42,7 +57,7 @@ function MyApp({ Component, pageProps }) {
         }}
       />
       <Component {...pageProps} />
-    </>
+    </ErrorBoundary>
   );
 }
 

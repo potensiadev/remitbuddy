@@ -16,6 +16,9 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#4facfe" />
           <meta name="msapplication-TileColor" content="#4facfe" />
           
+          {/* Google Search Console 인증 */}
+          <meta name="google-site-verification" content="5hrs9JLWBmFrpyyg2B2quAHNcUJCH6dv" />
+          
           {/* Preconnect to external domains */}
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

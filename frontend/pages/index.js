@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { 
   logPageView,
+  logViewMain,
   logClickedCTA, 
   logCompareAgain, 
   logClickedProvider, 
@@ -408,6 +409,7 @@ export default function MainPage() {
     // Page view tracking and debug logging
     useEffect(() => {
         logPageView();
+        logViewMain();
     }, [router.locale]);
 
     useEffect(() => { 

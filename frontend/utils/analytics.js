@@ -137,6 +137,7 @@ export const logEvent = async (eventType, additionalData = {}) => {
       
       // Business-specific data (conditionally added)
       ...(additionalData.amount && {
+        amount: additionalData.amount,                          // GA 측정기준용
         transfer_amount_value: parseInt(additionalData.amount), // 측정항목
         amount_range: getAmountRange(additionalData.amount)     // 측정기준
       }),
@@ -207,14 +208,20 @@ export const logPageView = () => {
   });
 };
 
+export const logViewMain = () => {
+  logEvent('view_main', {
+    page_title: "RemitBuddy - Main View",
+    page_location: typeof window !== 'undefined' ? window.location.href : ''
+  });
+};
+
 export const logClickedCTA = (amount, country, currency) => {
   console.log('🚀 CTA 클릭 이벤트 호출됨:', { amount, country, currency });
   
-  logEvent('begin_checkout', { 
+  logEvent('clicked_cta', { 
     amount: amount,
     country: country, 
-    transfer_currency: currency,
-    value: parseInt(amount) || 0
+    transfer_currency: currency
   });
 };
 
@@ -229,14 +236,13 @@ export const logCompareAgain = (amount, country, currency) => {
 };
 
 export const logClickedProvider = (providerName, amount, country, currency, additionalContext = {}) => {
-  logEvent('select_content', { 
+  logEvent('clicked_provider', { 
     content_type: 'provider',
     content_id: providerName,
     provider: providerName,
     amount: amount,
     country: country,
     transfer_currency: currency,
-    value: parseInt(amount) || 0,
     ...additionalContext
   });
 };

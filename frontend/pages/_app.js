@@ -4,22 +4,13 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Script from 'next/script';
 import '../styles/globals.css';
-import { GA_TRACKING_ID, pageview } from '../lib/gtag';
+// GA_TRACKING_ID는 더 이상 사용하지 않음 - utils/analytics.js에서 직접 처리
 import ErrorBoundary from '../components/ErrorBoundary';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
-  useEffect(() => {
-    const handleRouteChange = (url) => {
-      pageview(url);
-    };
-    
-    router.events.on('routeChangeComplete', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
+  // 라우트 변경 추적은 utils/analytics.js의 logPageView에서 처리됨
 
   // Register Service Worker
   useEffect(() => {
@@ -41,6 +32,9 @@ function MyApp({ Component, pageProps }) {
       <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=G-Z0SHT6SKJ3`}
+        onLoad={() => {
+          console.log('🔧 GA 스크립트 로드 완료');
+        }}
       />
       <Script
         id="google-analytics"
@@ -53,6 +47,10 @@ function MyApp({ Component, pageProps }) {
             gtag('config', 'G-Z0SHT6SKJ3', {
               page_path: window.location.pathname,
             });
+            
+            // GA 로딩 완료 확인
+            console.log('🔧 Google Analytics 초기화 완료');
+            console.log('🔧 window.gtag 사용 가능:', typeof window.gtag !== 'undefined');
           `,
         }}
       />

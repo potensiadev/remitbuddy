@@ -77,21 +77,26 @@ const PROVIDER_LOGO_MAP = {
     'Hanpass': '/logos/hanpass.png',
     'GmoneyTrans': '/logos/gmoneytrans.png',
     'E9Pay': '/logos/e9pay.png',
-    'Finshot': '/logos/finshot.png',
+    'Finshot': null, // 파일 없음
     'Coinshot': '/logos/coinshot.png',
     'Cross': '/logos/cross.png',
     'GME Remit': '/logos/gme.png',
-    'JRF': '/logos/jrf.png',
-    'JP Remit': '/logos/jrf.png',
+    'JRF': '/logos/JRF.png',
+    'JP Remit': '/logos/JRF.png',
     'Wirebarley': '/logos/wirebarley.png',
-    'Moin': '/logos/moin.png',
-    'The Moin': '/logos/moin.png',
+    'Moin': '/logos/themoin.png',
+    'The Moin': '/logos/themoin.png',
     'Sentbe': '/logos/sentbe.png'
 };
 
 // Provider Card Component
 const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountry }) => { 
     const { provider, recipient_gets, exchange_rate, fee } = providerData;
+    
+    // 디버깅: 로고 매핑 상태 확인
+    if (process.env.NODE_ENV === 'development') {
+        console.log(`🖼️ Provider: ${provider}, Logo Path: ${PROVIDER_LOGO_MAP[provider] || 'No logo'}`);
+    }
     
     // Normalize provider names for display
     const displayName = provider === 'JP Remit' ? 'JRF' : 
@@ -123,12 +128,23 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
         > 
             <div className="provider-header">
                 <div className="provider-logo-container">
-                    {PROVIDER_LOGO_MAP[provider] && (
+                    {PROVIDER_LOGO_MAP[provider] ? (
                         <img 
                             src={PROVIDER_LOGO_MAP[provider]} 
                             alt={`${provider} logo`} 
                             className="provider-logo"
+                            onError={(e) => {
+                                console.log(`❌ 로고 로딩 실패: ${provider} - ${PROVIDER_LOGO_MAP[provider]}`);
+                                e.target.style.display = 'none';
+                            }}
+                            onLoad={() => {
+                                console.log(`✅ 로고 로딩 성공: ${provider}`);
+                            }}
                         />
+                    ) : (
+                        <div className="provider-logo-placeholder">
+                            {displayName.charAt(0)}
+                        </div>
                     )}
                 </div>
                 <div className="provider-name">{displayName}</div>
@@ -461,15 +477,28 @@ export default function MainPage() {
     const handleSubmit = (e) => { 
         e.preventDefault();
         
+        console.log('🖱️ Submit 버튼 클릭됨', { 
+            hasComparedOnce, 
+            amount, 
+            selectedCountry: selectedCountry?.code, 
+            currency: selectedCountry?.currency,
+            isAmountValid: isAmountValid()
+        });
+        
         if (hasComparedOnce) {
             // If we've already compared once, use compare again logic
+            console.log('🔄 Compare Again 경로');
             handleCompareAgain();
         } else {
             // First time comparison
-            // Log CTA click with parameters
-            logClickedCTA(amount, selectedCountry.code, selectedCountry.currency);
+            console.log('🆕 첫 번째 비교 경로');
             
             if (selectedCountry && amount && isAmountValid()) { 
+                console.log('✅ 조건 만족 - 이벤트 로깅 및 API 호출 진행');
+                
+                // Log CTA click with parameters (조건 만족 시에만 로깅)
+                logClickedCTA(amount, selectedCountry.code, selectedCountry.currency);
+                
                 const newParams = { 
                     receive_country: selectedCountry.name, 
                     receive_currency: selectedCountry.currency
@@ -478,14 +507,23 @@ export default function MainPage() {
                 setQueryParams(newParams); 
                 setShowResults(true);
                 setHasComparedOnce(true);
+            } else {
+                console.log('❌ 조건 불만족 - 이벤트 로깅 안함:', {
+                    selectedCountry: !!selectedCountry,
+                    amount: !!amount,
+                    isAmountValid: isAmountValid()
+                });
             }
         }
     };
 
     const handleCompareAgain = () => { 
-        logCompareAgain(amount, selectedCountry.code, selectedCountry.currency);
+        console.log('🔄 Compare Again 함수 호출됨');
         
         if (selectedCountry && amount && isAmountValid()) {
+            console.log('✅ Compare Again 조건 만족 - 이벤트 로깅');
+            logCompareAgain(amount, selectedCountry.code, selectedCountry.currency);
+            
             const newQueryParams = { 
                 receive_country: selectedCountry.name, 
                 receive_currency: selectedCountry.currency
@@ -493,6 +531,12 @@ export default function MainPage() {
             
             setQueryParams(newQueryParams);
             setForceRefresh(prev => prev + 1);
+        } else {
+            console.log('❌ Compare Again 조건 불만족:', {
+                selectedCountry: !!selectedCountry,
+                amount: !!amount,
+                isAmountValid: isAmountValid()
+            });
         }
     };
 

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#gradient)"/>
+  
+  <!-- Money Transfer Icon -->
+  <g transform="translate(256,256)">
+    <!-- Arrow pointing right -->
+    <path d="M-60,-20 L40,-20 L40,-40 L80,0 L40,40 L40,20 L-60,20 Z" 
+          fill="white" 
+          stroke="white" 
+          stroke-width="2"/>
+    
+    <!-- Dollar signs -->
+    <text x="-100" y="10" 
+          font-family="Arial, sans-serif" 
+          font-size="48" 
+          font-weight="bold" 
+          fill="white" 
+          text-anchor="middle">$</text>
+    
+    <text x="100" y="10" 
+          font-family="Arial, sans-serif" 
+          font-size="48" 
+          font-weight="bold" 
+          fill="white" 
+          text-anchor="middle">₩</text>
+  </g>
+  
+  <!-- RemitBuddy text -->
+  <text x="256" y="420" 
+        font-family="Arial, sans-serif" 
+        font-size="36" 
+        font-weight="bold" 
+        fill="white" 
+        text-anchor="middle">RemitBuddy</text>
+</svg>

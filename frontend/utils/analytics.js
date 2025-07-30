@@ -177,7 +177,11 @@ export const logEvent = async (eventType, additionalData = {}) => {
     
     // Send to Google Analytics 4 using existing gtag setup
     if (typeof window !== 'undefined' && window.gtag) {
+      console.log('📈 GA 이벤트 전송 중:', eventType, gaEventData);
       window.gtag('event', eventType, gaEventData);
+      console.log('✅ GA 이벤트 전송 완료');
+    } else {
+      console.error('❌ GA가 로드되지 않음 - window.gtag가 없음');
     }
     
     // Send to backend API for backup
@@ -204,6 +208,8 @@ export const logPageView = () => {
 };
 
 export const logClickedCTA = (amount, country, currency) => {
+  console.log('🚀 CTA 클릭 이벤트 호출됨:', { amount, country, currency });
+  
   logEvent('begin_checkout', { 
     amount: amount,
     country: country, 

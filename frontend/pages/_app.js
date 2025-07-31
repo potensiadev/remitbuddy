@@ -4,13 +4,10 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Script from 'next/script';
 import '../styles/globals.css';
-// GA_TRACKING_ID는 더 이상 사용하지 않음 - utils/analytics.js에서 직접 처리
 import ErrorBoundary from '../components/ErrorBoundary';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
-
-  // 라우트 변경 추적은 utils/analytics.js의 logPageView에서 처리됨
 
   // Register Service Worker
   useEffect(() => {
@@ -45,11 +42,12 @@ function MyApp({ Component, pageProps }) {
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-Z0SHT6SKJ3', {
+              send_page_view: false,  // 🔥 page_view 자동 수집 비활성화
               page_path: window.location.pathname,
             });
             
             // GA 로딩 완료 확인
-            console.log('🔧 Google Analytics 초기화 완료');
+            console.log('🔧 Google Analytics 초기화 완료 (page_view 자동 수집 비활성화)');
             console.log('🔧 window.gtag 사용 가능:', typeof window.gtag !== 'undefined');
           `,
         }}

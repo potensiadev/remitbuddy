@@ -4,7 +4,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { 
-  logPageView,
   logViewMain,
   logClickedCTA, 
   logCompareAgain, 
@@ -408,7 +407,6 @@ export default function MainPage() {
 
     // Page view tracking and debug logging
     useEffect(() => {
-        logPageView();
         logViewMain();
     }, [router.locale]);
 

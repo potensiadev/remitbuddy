@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { 
+  logSessionStart,
   logViewMain,
   logClickedCTA, 
   logCompareAgain, 
@@ -481,6 +482,8 @@ export default function MainPage() {
 
     // Page view tracking and debug logging
     useEffect(() => {
+        // 퍼널 분석을 위해 명확한 세션 시작점이 필요한 경우 주석 해제
+        // logSessionStart();
         logViewMain();
     }, [router.locale]);
 

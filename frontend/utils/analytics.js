@@ -175,6 +175,17 @@ export const logEvent = async (eventType, additionalData = {}) => {
 
 // 🔥 명확히 분리된 이벤트들
 
+// 세션 시작 이벤트 (퍼널 분석 필요시 수동 호출)
+export const logSessionStart = () => {
+  console.log('🎯 세션 시작 이벤트');
+  logEvent('session_start', {
+    session_start_time: new Date().toISOString(),
+    is_new_session: true,
+    page_title: "RemitBuddy - Session Start",
+    page_location: typeof window !== 'undefined' ? window.location.href : ''
+  });
+};
+
 // 1단계: 메인 화면 보기
 export const logViewMain = () => {
   startSession();
@@ -222,17 +233,6 @@ export const logClickedProvider = (providerName, amount, country, currency, addi
   });
 };
 
-// 5단계: 최종 클릭 (외부 링크 이동)
-export const logFinalClick = (providerName, amount, country, currency) => {
-  console.log('🎯 최종 클릭 이벤트:', providerName);
-  logEvent('click', {
-    provider: providerName,
-    amount: amount,
-    country: country,
-    transfer_currency: currency,
-    click_type: 'external_link'
-  });
-};
 
 // 기타 이벤트들
 export const logSendingCountrySwitch = (currency) => {

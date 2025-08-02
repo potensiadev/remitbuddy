@@ -1,22 +1,67 @@
 User-agent: *
 Allow: /
 
-# Important pages
-Allow: /
-Allow: /*.css
-Allow: /*.js
-Allow: /images/
-Allow: /icons/
-Allow: /logos/
+# 11개 언어 페이지 허용
+Allow: /ko
+Allow: /en  
+Allow: /vi
+Allow: /ne
+Allow: /th
+Allow: /my
+Allow: /id
+Allow: /km
+Allow: /tl
+Allow: /uz
+Allow: /si
 
-# Block private/sensitive areas
+# 국가별 가이드 페이지 허용
+Allow: /ko/guide/
+Allow: /vi/guide/
+Allow: /ne/guide/
+Allow: /th/guide/
+Allow: /my/guide/
+Allow: /id/guide/
+Allow: /km/guide/
+Allow: /tl/guide/
+Allow: /uz/guide/
+Allow: /si/guide/
+
+# 블로그 페이지 허용
+Allow: /blog/
+Allow: /ko/blog/
+Allow: /vi/blog/
+Allow: /ne/blog/
+Allow: /th/blog/
+Allow: /my/blog/
+Allow: /id/blog/
+Allow: /km/blog/
+Allow: /tl/blog/
+Allow: /uz/blog/
+Allow: /si/blog/
+
+# 불필요한 크롤링 방지
 Disallow: /api/
 Disallow: /_next/
 Disallow: /admin/
-Disallow: /*.json$
+Disallow: *.json$
+Disallow: /test/
+Disallow: /dev/
 
-# Sitemap location
-Sitemap: https://remitbuddy.com/sitemap.xml
+# 사이트맵 위치
+Sitemap: https://www.remitbuddy.com/sitemap.xml
 
-# Crawl delay (be gentle)
+# 크롤링 지연 (서버 부하 방지)
 Crawl-delay: 1
+
+# 주요 검색엔진별 최적화
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot  
+Allow: /
+Crawl-delay: 1
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2

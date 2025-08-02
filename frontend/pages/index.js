@@ -387,6 +387,80 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
     );
 }
 
+// Multilingual meta data function
+const getLocalizedMeta = (locale) => {
+  const metaData = {
+    ko: {
+      title: "해외송금 비교 | 한국 최저 수수료 실시간 환율 비교 - RemitBuddy",
+      description: "한국 최대 해외송금 비교 플랫폼. 11개국 지원, 9개 공인 송금업체 실시간 환율·수수료 3초 비교. 베트남, 네팔, 필리핀, 태국, 미얀마, 인도네시아, 캄보디아, 우즈베키스탄, 스리랑카. 무료 이용, 최대 5% 절약.",
+      keywords: "해외송금, 송금 비교, 환율 비교, 송금 수수료, 한국 송금, 베트남 송금, 네팔 송금, 필리핀 송금, 태국 송금, 미얀마 송금, 인도네시아 송금, 캄보디아 송금, 우즈베키스탄 송금, 스리랑카 송금, 외국인 노동자, 송금업체, 실시간 환율, RemitBuddy",
+      ogLocale: "ko_KR"
+    },
+    en: {
+      title: "Money Transfer Comparison | Best Exchange Rates from Korea - RemitBuddy",
+      description: "Korea's largest international money transfer comparison platform. Support 11 countries, compare real-time rates from 9 licensed companies in 3 seconds. Vietnam, Nepal, Philippines, Thailand, Myanmar, Indonesia, Cambodia, Uzbekistan, Sri Lanka. Free service, save up to 5%.",
+      keywords: "international money transfer, remittance comparison, exchange rate, transfer fee, send money from Korea, Korea to Vietnam, Korea to Nepal, Korea to Philippines, Korea to Thailand, Korea to Myanmar, Korea to Indonesia, Korea to Cambodia, Korea to Uzbekistan, Korea to Sri Lanka, foreign workers, RemitBuddy",
+      ogLocale: "en_US"
+    },
+    vi: {
+      title: "So sánh chuyển tiền quốc tế | Tỷ giá tốt nhất từ Hàn Quốc - RemitBuddy",
+      description: "Nền tảng so sánh chuyển tiền quốc tế lớn nhất Hàn Quốc. Hỗ trợ 11 quốc gia, so sánh tỷ giá thực tế từ 9 công ty uy tín trong 3 giây. Việt Nam, Nepal, Philippines, Thái Lan, Myanmar, Indonesia, Campuchia, Uzbekistan, Sri Lanka. Miễn phí, tiết kiệm tối đa 5%.",
+      keywords: "chuyển tiền quốc tế, so sánh chuyển tiền, tỷ giá hối đoái, phí chuyển tiền, chuyển tiền từ Hàn Quốc, gửi tiền về Việt Nam, lao động Việt Nam, RemitBuddy, tỷ giá VND",
+      ogLocale: "vi_VN"
+    },
+    ne: {
+      title: "अन्तर्राष्ट्रिय रेमिट्यान्स तुलना | कोरियाबाट सबैभन्दा राम्रो दर - RemitBuddy",
+      description: "कोरियाको सबैभन्दा ठूलो अन्तर्राष्ट्रिय रेमिट्यान्स तुलना प्लेटफर्म। ११ देशहरूको समर्थन, ९ वटा इजाजतपत्र प्राप्त कम्पनीहरूको वास्तविक समयको दर ३ सेकेन्डमा तुलना। नेपाल, भियतनाम, फिलिपिन्स, थाइल्यान्ड, म्यानमार, इन्डोनेसिया, कम्बोडिया, उजबेकिस्तान, श्रीलंका। निःशुल्क, ५% सम्म बचत।",
+      keywords: "अन्तर्राष्ट्रिय रेमिट्यान्स, रेमिट्यान्स तुलना, विनिमय दर, रेमिट्यान्स शुल्क, कोरियाबाट पैसा पठाउने, नेपाल रेमिट्यान्स, नेपाली कामदार, RemitBuddy, एनआरएस दर",
+      ogLocale: "ne_NP"
+    },
+    th: {
+      title: "เปรียบเทียบการโอนเงินระหว่างประเทศ | อัตราแลกเปลี่ยนที่ดีที่สุดจากเกาหลี - RemitBuddy",
+      description: "แพลตฟอร์มเปรียบเทียบการโอนเงินระหว่างประเทศที่ใหญ่ที่สุดในเกาหลี รองรับ 11 ประเทศ เปรียบเทียบอัตราเรียลไทม์จาก 9 บริษัทที่ได้รับใบอนุญาตใน 3 วินาที ไทย เวียดนาม เนปาล ฟิลิปปินส์ เมียนมาร์ อินโดนีเซีย กัมพูชา อุซเบกิสถาน ศรีลังกา ฟรี ประหยัดได้สูงสุด 5%",
+      keywords: "โอนเงินระหว่างประเทศ, เปรียบเทียบการโอนเงิน, อัตราแลกเปลี่ยน, ค่าธรรมเนียมโอนเงิน, ส่งเงินจากเกาหลี, โอนเงินไปไทย, แรงงานไทยในเกาหลี, RemitBuddy",
+      ogLocale: "th_TH"
+    },
+    my: {
+      title: "နိုင်ငံတကာ လွှဲငွေ နှိုင်းယှဉ် | ကိုရီးယားမှ အကောင်းဆုံး နှုန်း - RemitBuddy",
+      description: "ကိုရီးယားရှိ အကြီးဆုံး နိုင်ငံတကာ လွှဲငွေ နှိုင်းယှဉ် ပလပ်ဖောင်း။ ၁၁ နိုင်ငံ ပံ့ပိုး၊ လိုင်စင်ရ ကုမ္ပဏီ ၉ ခုမှ အချိန်နှင့်တပြေးညီ နှုန်းများကို ၃ စက္ကန့်တွင် နှိုင်းယှဉ်။ မြန်မာ၊ ဗီယက်နမ်၊ နီပေါ၊ ဖိလစ်ပိုင်၊ ထိုင်း၊ အင်ဒိုနီးရှား၊ ကမ္ဘောဒီးယား၊ ဥဇဘက်ကစ္စတန်၊ သီရိလင်္ကာ။ အခမဲ့၊ ၅% အထိ သက်သာ။",
+      keywords: "နိုင်ငံတကာ လွှဲငွေ, လွှဲငွေ နှိုင်းယှဉ်, ငွေလဲနှုန်း, လွှဲငွေ ကုန်ကျစရိတ်, ကိုရီးယားမှ လွှဲငွေ, မြန်မာနိုင်ငံသို့ လွှဲငွေ, မြန်မာ အလုပ်သမား ကိုရီးယား, RemitBuddy",
+      ogLocale: "my_MM"
+    },
+    id: {
+      title: "Perbandingan Transfer Uang Internasional | Nilai Tukar Terbaik dari Korea - RemitBuddy",
+      description: "Platform perbandingan transfer uang internasional terbesar di Korea. Mendukung 11 negara, bandingkan nilai tukar real-time dari 9 perusahaan berlisensi dalam 3 detik. Indonesia, Vietnam, Nepal, Filipina, Thailand, Myanmar, Kamboja, Uzbekistan, Sri Lanka. Gratis, hemat hingga 5%.",
+      keywords: "transfer uang internasional, perbandingan remitansi, nilai tukar, biaya transfer, kirim uang dari Korea, transfer ke Indonesia, pekerja Indonesia di Korea, RemitBuddy, kurs rupiah",
+      ogLocale: "id_ID"
+    },
+    km: {
+      title: "ប្រៀបធៀបការផ្ញើប្រាក់អន្តរជាតិ | អត្រាប្តូរប្រាក់ល្អបំផុតពីកូរ៉េ - RemitBuddy",
+      description: "វេទិកាប្រៀបធៀបការផ្ញើប្រាក់អន្តរជាតិធំបំផុតនៅកូរ៉េ។ គាំទ្រ ១១ ប្រទេស ប្រៀបធៀបអត្រាពេលវេលាជាក់ស្តែងពី ៩ ក្រុមហ៊ុនមានអាជ្ញាប្័ណ្ណក្នុងរយៈពេល ៣ វិនាទី។ កម្ពុជា វៀតណាម នេប៉ាល់ ហ្វីលីពីន ថៃ មីយ៉ាន់ម៉ា ឥណ្ឌូនេស៊ី អ៊ូសបេគីស្តាន់ ស្រីលង្កា។ ឥតគិតថ្លៃ សន្សំបាន ៥%។",
+      keywords: "ការផ្ញើប្រាក់អន្តរជាតិ, ការប្រៀបធៀបការផ្ញើប្រាក់, អត្រាប្តូរប្រាក់, ថ្លៃសេវាផ្ញើប្រាក់, ផ្ញើប្រាក់ពីកូរ៉េ, ផ្ញើប្រាក់ទៅកម្ពុជា, កម្មករកម្ពុជានៅកូរ៉េ, RemitBuddy",
+      ogLocale: "km_KH"
+    },
+    tl: {
+      title: "Paghahambing ng International Money Transfer | Pinakamahusay na Exchange Rate mula sa Korea - RemitBuddy",
+      description: "Pinakamalaking platform ng paghahambing ng international money transfer sa Korea. Sumusuporta sa 11 bansa, ihambing ang real-time rates mula sa 9 lisensyadong kumpanya sa loob ng 3 segundo. Pilipinas, Vietnam, Nepal, Thailand, Myanmar, Indonesia, Cambodia, Uzbekistan, Sri Lanka. Libre, makatipid ng hanggang 5%.",
+      keywords: "international money transfer, paghahambing ng remittance, exchange rate, bayad sa transfer, magpadala ng pera mula sa Korea, padala sa Pilipinas, OFW sa Korea, RemitBuddy, palitan ng piso",
+      ogLocale: "tl_PH"
+    },
+    uz: {
+      title: "Xalqaro pul o'tkazish taqqoslash | Koreyadan eng yaxshi kurs - RemitBuddy",
+      description: "Koreyadagi eng katta xalqaro pul o'tkazish taqqoslash platformasi. 11 davlatni qo'llab-quvvatlaydi, litsenziyalangan 9 kompaniyadan real vaqt kurslarini 3 soniyada solishtiring. O'zbekiston, Vyetnam, Nepal, Filippin, Tailand, Myanma, Indoneziya, Kambodja, Shri-Lanka. Bepul, 5% gacha tejash.",
+      keywords: "xalqaro pul o'tkazish, remittans taqqoslash, valyuta kursi, pul o'tkazish to'lovi, Koreyadan pul yuborish, O'zbekistonga pul o'tkazish, O'zbek ishchilari Koreyada, RemitBuddy",
+      ogLocale: "uz_UZ"
+    },
+    si: {
+      title: "ජාත්‍යන්තර මුදල් හුවමාරු සංසන්දනය | කොරියාවේ සිට හොඳම විනිමය අනුපාතය - RemitBuddy",
+      description: "කොරියාවේ විශාලතම ජාත්‍යන්තර මුදල් හුවමාරු සංසන්දන වේදිකාව. රටවල් 11ක් සහාය දක්වයි, බලපත්‍රිත සමාගම් 9කින් තත්‍ය කාල අනුපාත තත්පර 3කින් සංසන්දනය කරන්න. ශ්‍රී ලංකාව, වියට්නාමය, නේපාලය, පිලිපීනය, තායිලන්තය, මියන්මාරය, ඉන්දුනීසියාව, කාම්බෝජය, උස්බෙකිස්ථානය. නොමිලේ, 5% දක්වා ඉතිරි කරන්න.",
+      keywords: "ජාත්‍යන්තර මුදල් හුවමාරුව, රේමිටන්ස් සංසන්දනය, විනිමය අනුපාතය, මුදල් හුවමාරු ගාස්තු, කොරියාවේ සිට මුදල් යැවීම, ශ්‍රී ලංකාවට මුදල් යැවීම, ශ්‍රී ලාංකික කම්කරුවන් කොරියාවේ, RemitBuddy",
+      ogLocale: "si_LK"
+    }
+  };
+  
+  return metaData[locale] || metaData.en;
+};
+
 // Main Page Component
 export default function MainPage() {
     const { t } = useTranslation('common');
@@ -568,24 +642,65 @@ export default function MainPage() {
     return (
         <>
             <Head>
-                <title>{t('page_title')}</title>
-                <meta name="description" content={t('meta_description') || "Compare real-time exchange rates from 9+ Korean remittance providers. Find the best rates for sending money to Vietnam, Philippines, Nepal, and more Asian countries."} />
-                <meta name="keywords" content="remittance, money transfer, exchange rate, Korea, Vietnam, Philippines, Nepal, comparison, 송금, 환율" />
-                
-                {/* Open Graph */}
-                <meta property="og:title" content={t('page_title')} />
-                <meta property="og:description" content={t('meta_description') || "Compare real-time exchange rates from 9+ Korean remittance providers."} />
+                {/* 🎯 언어별 최적화된 메타 태그 */}
+                <title>{getLocalizedMeta(router.locale).title}</title>
+                <meta name="description" content={getLocalizedMeta(router.locale).description} />
+                <meta name="keywords" content={getLocalizedMeta(router.locale).keywords} />
+
+                {/* 🌍 완전한 다국어 hreflang */}
+                <link rel="alternate" hrefLang="ko" href="https://www.remitbuddy.com/ko" />
+                <link rel="alternate" hrefLang="en" href="https://www.remitbuddy.com/en" />
+                <link rel="alternate" hrefLang="vi" href="https://www.remitbuddy.com/vi" />
+                <link rel="alternate" hrefLang="ne" href="https://www.remitbuddy.com/ne" />
+                <link rel="alternate" hrefLang="th" href="https://www.remitbuddy.com/th" />
+                <link rel="alternate" hrefLang="my" href="https://www.remitbuddy.com/my" />
+                <link rel="alternate" hrefLang="id" href="https://www.remitbuddy.com/id" />
+                <link rel="alternate" hrefLang="km" href="https://www.remitbuddy.com/km" />
+                <link rel="alternate" hrefLang="tl" href="https://www.remitbuddy.com/tl" />
+                <link rel="alternate" hrefLang="uz" href="https://www.remitbuddy.com/uz" />
+                <link rel="alternate" hrefLang="si" href="https://www.remitbuddy.com/si" />
+                <link rel="alternate" hrefLang="x-default" href="https://www.remitbuddy.com" />
+
+                {/* 📱 모바일 최적화 */}
+                <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
+                <meta name="format-detection" content="telephone=no" />
+
+                {/* 🤖 검색엔진 크롤링 최적화 */}
+                <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+                <meta name="googlebot" content="index, follow" />
+                <link rel="canonical" href={`https://www.remitbuddy.com${router.asPath}`} />
+
+                {/* 📊 Open Graph 최적화 */}
+                <meta property="og:title" content={getLocalizedMeta(router.locale).title} />
+                <meta property="og:description" content={getLocalizedMeta(router.locale).description} />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://remitbuddy.com" />
-                <meta property="og:image" content="https://remitbuddy.com/og-image.png" />
+                <meta property="og:url" content={`https://www.remitbuddy.com${router.asPath}`} />
+                <meta property="og:image" content={`https://www.remitbuddy.com/og-image-${router.locale}.png`} />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta property="og:image:alt" content="RemitBuddy - 해외송금 비교 플랫폼" />
                 <meta property="og:site_name" content="RemitBuddy" />
-                <meta property="og:locale" content={router.locale} />
-                
-                {/* Twitter Card */}
+                <meta property="og:locale" content={getLocalizedMeta(router.locale).ogLocale} />
+
+                {/* 🐦 Twitter Card */}
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:title" content={t('page_title')} />
-                <meta name="twitter:description" content={t('meta_description') || "Compare real-time exchange rates from 9+ Korean remittance providers."} />
-                <meta name="twitter:image" content="https://remitbuddy.com/og-image.png" />
+                <meta name="twitter:site" content="@RemitBuddy" />
+                <meta name="twitter:creator" content="@RemitBuddy" />
+                <meta name="twitter:title" content={getLocalizedMeta(router.locale).title} />
+                <meta name="twitter:description" content={getLocalizedMeta(router.locale).description} />
+                <meta name="twitter:image" content={`https://www.remitbuddy.com/twitter-card-${router.locale}.png`} />
+
+                {/* 🏢 비즈니스 정보 */}
+                <meta name="author" content="RemitBuddy" />
+                <meta name="publisher" content="RemitBuddy" />
+                <meta name="application-name" content="RemitBuddy" />
+                <meta name="theme-color" content="#4facfe" />
+
+                {/* 📍 지역 타겟팅 */}
+                <meta name="geo.region" content="KR" />
+                <meta name="geo.placename" content="Seoul, South Korea" />
+                <meta name="geo.position" content="37.5665;126.9780" />
+                <meta name="ICBM" content="37.5665, 126.9780" />
                 
                 {/* Structured Data */}
                 <script
@@ -595,8 +710,8 @@ export default function MainPage() {
                             "@context": "https://schema.org",
                             "@type": "WebApplication",
                             "name": "RemitBuddy",
-                            "description": "Compare real-time exchange rates from Korean remittance providers",
-                            "url": "https://remitbuddy.com",
+                            "description": getLocalizedMeta(router.locale).description,
+                            "url": "https://www.remitbuddy.com",
                             "applicationCategory": "FinanceApplication",
                             "operatingSystem": "Web",
                             "offers": {
@@ -606,7 +721,7 @@ export default function MainPage() {
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RemitBuddy",
-                                "url": "https://remitbuddy.com"
+                                "url": "https://www.remitbuddy.com"
                             }
                         })
                     }}

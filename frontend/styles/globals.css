@@ -42,8 +42,11 @@ body, input, button, select, textarea {
     background: white;
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
+    overflow: visible;
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: min-content;
 }
 
 /* 헤더 스타일 - 모바일 최적화 */
@@ -865,6 +868,18 @@ a:hover {
     
     .content-area {
         padding: 48px 40px;
+    }
+}
+
+/* 컨테이너 스크롤 문제 해결 */
+@media (min-width: 768px) {
+    .container {
+        min-height: auto;
+        max-height: none;
+    }
+    
+    body {
+        align-items: flex-start;
     }
 }
 

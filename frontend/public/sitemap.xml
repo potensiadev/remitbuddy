@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-  <!-- 메인 페이지 (완전한 11개 언어 hreflang) -->
+  <!-- 메인 페이지 (기본 언어: 한국어) -->
   <url>
     <loc>https://www.remitbuddy.com/</loc>
     <lastmod>2024-12-21</lastmod>
@@ -22,7 +22,7 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.remitbuddy.com/"/>
   </url>
 
-  <!-- 11개 언어별 개별 페이지들 -->
+  <!-- 언어별 개별 페이지들 -->
   <url>
     <loc>https://www.remitbuddy.com/ko</loc>
     <lastmod>2024-12-21</lastmod>
@@ -100,104 +100,21 @@
     <priority>0.9</priority>
   </url>
 
-  <!-- 향후 콘텐츠 페이지들 (언어별) -->
+  <!-- 향후 추가될 페이지들 (현재는 주석 처리) -->
+  <!--
+  <url>
+    <loc>https://www.remitbuddy.com/about</loc>
+    <lastmod>2024-12-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <url>
     <loc>https://www.remitbuddy.com/blog</loc>
     <lastmod>2024-12-21</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/blog</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/vi/blog</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ne/blog</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- 국가별 가이드 페이지들 -->
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/vietnam</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/nepal</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/philippines</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/thailand</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/myanmar</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/indonesia</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/cambodia</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/uzbekistan</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/sri-lanka</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://www.remitbuddy.com/ko/guide/bangladesh</loc>
-    <lastmod>2024-12-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  -->
 
 </urlset>

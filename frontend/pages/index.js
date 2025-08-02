@@ -387,7 +387,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
     );
 }
 
-// Multilingual meta data function
+// pages/index.js - 완전한 11개 언어 최적화 Head 섹션
 const getLocalizedMeta = (locale) => {
   const metaData = {
     ko: {
@@ -434,7 +434,7 @@ const getLocalizedMeta = (locale) => {
     },
     km: {
       title: "ប្រៀបធៀបការផ្ញើប្រាក់អន្តរជាតិ | អត្រាប្តូរប្រាក់ល្អបំផុតពីកូរ៉េ - RemitBuddy",
-      description: "វេទិកាប្រៀបធៀបការផ្ញើប្រាក់អន្តរជាតិធំបំផុតនៅកូរ៉េ។ គាំទ្រ ១១ ប្រទេស ប្រៀបធៀបអត្រាពេលវេលាជាក់ស្តែងពី ៩ ក្រុមហ៊ុនមានអាជ្ញាប្័ណ្ណក្នុងរយៈពេល ៣ វិនាទី។ កម្ពុជា វៀតណាម នេប៉ាល់ ហ្វីលីពីន ថៃ មីយ៉ាន់ម៉ា ឥណ្ឌូនេស៊ី អ៊ូសបេគីស្តាន់ ស្រីលង្កា។ ឥតគិតថ្លៃ សន្សំបាន ៥%។",
+      description: "វេទិកាប្រៀបធៀបការផ្ញើប្រាក់អន្តរជាតិធំបំផុតនៅកូរ៉េ។ គាំទ្រ ១១ ប្រទេស ប្រៀបធៀបអត្រាពេលវេលាជាក់ស្ដែងពីក្រុមហ៊ុនមានអាជ្ញាប័ណ្ណ ៩ ក្នុងរយៈពេល ៣ វិនាទី។ កម្ពុជា វៀតណាម នេប៉ាល់ ហ្វីលីពីន ថៃ មីយ៉ាន់ម៉ា ឥណ្ឌូនេស៊ី អ៊ូសបេគីស្ថាន ស្រីលង្កា។ ឥតគិតថ្លៃ សន្សំបាន ៥%។",
       keywords: "ការផ្ញើប្រាក់អន្តរជាតិ, ការប្រៀបធៀបការផ្ញើប្រាក់, អត្រាប្តូរប្រាក់, ថ្លៃសេវាផ្ញើប្រាក់, ផ្ញើប្រាក់ពីកូរ៉េ, ផ្ញើប្រាក់ទៅកម្ពុជា, កម្មករកម្ពុជានៅកូរ៉េ, RemitBuddy",
       ogLocale: "km_KH"
     },
@@ -702,7 +702,7 @@ export default function MainPage() {
                 <meta name="geo.position" content="37.5665;126.9780" />
                 <meta name="ICBM" content="37.5665, 126.9780" />
                 
-                {/* Structured Data */}
+                {/* 🔗 구조화된 데이터 (JSON-LD) */}
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
@@ -713,16 +713,47 @@ export default function MainPage() {
                             "description": getLocalizedMeta(router.locale).description,
                             "url": "https://www.remitbuddy.com",
                             "applicationCategory": "FinanceApplication",
-                            "operatingSystem": "Web",
+                            "operatingSystem": "Web Browser",
+                            "browserRequirements": "JavaScript enabled",
                             "offers": {
                                 "@type": "Offer",
-                                "description": "Free remittance rate comparison service"
+                                "description": "Free remittance rate comparison service",
+                                "price": "0",
+                                "priceCurrency": "KRW"
                             },
                             "provider": {
                                 "@type": "Organization",
                                 "name": "RemitBuddy",
-                                "url": "https://www.remitbuddy.com"
-                            }
+                                "url": "https://www.remitbuddy.com",
+                                "sameAs": [
+                                    "https://twitter.com/RemitBuddy",
+                                    "https://facebook.com/RemitBuddy"
+                                ]
+                            },
+                            "audience": {
+                                "@type": "Audience",
+                                "name": "Foreign workers in Korea",
+                                "geographicArea": {
+                                    "@type": "Country",
+                                    "name": "South Korea"
+                                }
+                            },
+                            "serviceType": "Money Transfer Comparison",
+                            "areaServed": [
+                                {"@type": "Country", "name": "Vietnam"},
+                                {"@type": "Country", "name": "Nepal"}, 
+                                {"@type": "Country", "name": "Philippines"},
+                                {"@type": "Country", "name": "Thailand"},
+                                {"@type": "Country", "name": "Myanmar"},
+                                {"@type": "Country", "name": "Indonesia"},
+                                {"@type": "Country", "name": "Cambodia"},
+                                {"@type": "Country", "name": "Uzbekistan"},
+                                {"@type": "Country", "name": "Sri Lanka"},
+                                {"@type": "Country", "name": "Bangladesh"}
+                            ],
+                            "availableLanguage": [
+                                "ko", "en", "vi", "ne", "th", "my", "id", "km", "tl", "uz", "si"
+                            ]
                         })
                     }}
                 />

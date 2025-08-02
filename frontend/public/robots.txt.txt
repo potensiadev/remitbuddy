@@ -1,7 +1,10 @@
+# RemitBuddy robots.txt
+# 위치: public/robots.txt
+
 User-agent: *
 Allow: /
 
-# 11개 언어 페이지 허용
+# 11개 언어 페이지 명시적 허용
 Allow: /ko
 Allow: /en  
 Allow: /vi
@@ -39,21 +42,22 @@ Allow: /tl/blog/
 Allow: /uz/blog/
 Allow: /si/blog/
 
-# 불필요한 크롤링 방지
+# 크롤링 금지 영역
 Disallow: /api/
 Disallow: /_next/
 Disallow: /admin/
 Disallow: *.json$
 Disallow: /test/
 Disallow: /dev/
+Disallow: /private/
 
-# 사이트맵 위치
+# 사이트맵 위치 (매우 중요!)
 Sitemap: https://www.remitbuddy.com/sitemap.xml
 
-# 크롤링 지연 (서버 부하 방지)
+# 크롤링 지연 설정 (서버 부하 방지)
 Crawl-delay: 1
 
-# 주요 검색엔진별 최적화
+# 주요 검색엔진별 특별 설정
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 0

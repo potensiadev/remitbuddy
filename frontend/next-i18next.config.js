@@ -16,7 +16,7 @@ module.exports = {
       'ne',  // Nepali (Nepal)
       'mn',  // Mongolian (Mongolia)
     ],
-    localeDetection: true,  // ✅ 브라우저 언어 감지 활성화
+    localeDetection: false,  // Disable automatic locale detection for better performance
   },
   react: {
     useSuspense: false,

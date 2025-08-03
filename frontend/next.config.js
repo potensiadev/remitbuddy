@@ -37,6 +37,11 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin'
           },
+          // Content Security Policy
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://sendhome-production.up.railway.app https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';"
+          },
           // 캐싱 최적화
           {
             key: 'Cache-Control',
@@ -95,8 +100,8 @@ const nextConfig = {
   experimental: {
     // 더 빠른 빌드
     esmExternals: true,
-    // 메타데이터 최적화
-    optimizeCss: true,
+    // 메타데이터 최적화 - 빌드 오류로 인해 임시 비활성화
+    // optimizeCss: true,
   },
   
   // Webpack 최적화

@@ -10,8 +10,7 @@ class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
           
-          {/* Content Security Policy */}
-          <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://sendhome-production.up.railway.app https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';" />
+          {/* Content Security Policy - moved to next.config.js for better build compatibility */}
           
           {/* Basic SEO */}
           <meta name="robots" content="index, follow" />

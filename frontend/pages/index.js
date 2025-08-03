@@ -94,10 +94,6 @@ const PROVIDER_LOGO_MAP = {
 const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountry }) => { 
     const { provider, recipient_gets, exchange_rate, fee } = providerData;
     
-    // 디버깅: 로고 매핑 상태 확인
-    if (process.env.NODE_ENV === 'development') {
-        console.log(`🖼️ Provider: ${provider}, Logo Path: ${PROVIDER_LOGO_MAP[provider] || 'No logo'}`);
-    }
     
     // Normalize provider names for display
     const displayName = provider === 'JP Remit' ? 'JRF' : 
@@ -135,11 +131,7 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
                             alt={`${provider} logo`} 
                             className="provider-logo"
                             onError={(e) => {
-                                console.log(`❌ 로고 로딩 실패: ${provider} - ${PROVIDER_LOGO_MAP[provider]}`);
                                 e.target.style.display = 'none';
-                            }}
-                            onLoad={() => {
-                                console.log(`✅ 로고 로딩 성공: ${provider}`);
                             }}
                         />
                     ) : (
@@ -182,7 +174,6 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
                     className="flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 cursor-pointer hover:bg-gray-50 text-lg" 
                     onClick={(e) => { 
                         e.stopPropagation();
-                        console.log('🌍 Country clicked:', c.name);
                         setSelectedCountry(c); 
                         setShowDropdown(false); 
                         onCountryChange(c); 
@@ -342,17 +333,6 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                         >
                             {t('refresh')}
                         </button>
-                        <button 
-                            onClick={() => {
-                                console.log('🔧 Debug Info:');
-                                console.log('API Base URL:', FORCE_API_BASE_URL);
-                                console.log('Current URL:', window.location.href);
-                                console.log('User Agent:', navigator.userAgent);
-                            }}
-                            className="error-button debug-button"
-                        >
-                            {t('debug_info')}
-                        </button>
                     </div>
                 </div>
             )} 
@@ -479,12 +459,17 @@ export default function MainPage() {
     const countryDropdownRefDesktop = useRef(null);
     const [hasComparedOnce, setHasComparedOnce] = useState(false);
     const [forceRefresh, setForceRefresh] = useState(0);
+    const [csrfToken, setCsrfToken] = useState('');
 
-    // Page view tracking and debug logging
+    // Page view tracking and CSRF token generation
     useEffect(() => {
         // 퍼널 분석을 위해 명확한 세션 시작점이 필요한 경우 주석 해제
         // logSessionStart();
         logViewMain();
+        
+        // Generate CSRF token for this session
+        const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        setCsrfToken(token);
     }, [router.locale]);
 
     useEffect(() => { 
@@ -554,24 +539,14 @@ export default function MainPage() {
     const handleSubmit = (e) => { 
         e.preventDefault();
         
-        console.log('🖱️ Submit 버튼 클릭됨', { 
-            hasComparedOnce, 
-            amount, 
-            selectedCountry: selectedCountry?.code, 
-            currency: selectedCountry?.currency,
-            isAmountValid: isAmountValid()
-        });
         
         if (hasComparedOnce) {
             // If we've already compared once, use compare again logic
-            console.log('🔄 Compare Again 경로');
             handleCompareAgain();
         } else {
             // First time comparison
-            console.log('🆕 첫 번째 비교 경로');
             
-            if (selectedCountry && amount && isAmountValid()) { 
-                console.log('✅ 조건 만족 - 이벤트 로깅 및 API 호출 진행');
+            if (selectedCountry && amount && isAmountValid()) {
                 
                 // Log CTA click with parameters (조건 만족 시에만 로깅)
                 logClickedCTA(amount, selectedCountry.code, selectedCountry.currency);
@@ -584,21 +559,13 @@ export default function MainPage() {
                 setQueryParams(newParams); 
                 setShowResults(true);
                 setHasComparedOnce(true);
-            } else {
-                console.log('❌ 조건 불만족 - 이벤트 로깅 안함:', {
-                    selectedCountry: !!selectedCountry,
-                    amount: !!amount,
-                    isAmountValid: isAmountValid()
-                });
             }
         }
     };
 
     const handleCompareAgain = () => { 
-        console.log('🔄 Compare Again 함수 호출됨');
         
         if (selectedCountry && amount && isAmountValid()) {
-            console.log('✅ Compare Again 조건 만족 - 이벤트 로깅');
             logCompareAgain(amount, selectedCountry.code, selectedCountry.currency);
             
             const newQueryParams = { 
@@ -608,12 +575,6 @@ export default function MainPage() {
             
             setQueryParams(newQueryParams);
             setForceRefresh(prev => prev + 1);
-        } else {
-            console.log('❌ Compare Again 조건 불만족:', {
-                selectedCountry: !!selectedCountry,
-                amount: !!amount,
-                isAmountValid: isAmountValid()
-            });
         }
     };
 
@@ -789,17 +750,23 @@ export default function MainPage() {
                     </div>
                     
                     <form onSubmit={handleSubmit}>
+                        {/* CSRF Protection */}
+                        <input type="hidden" name="_csrf" value={csrfToken} />
+                        
                         <div className="form-group">
                             <label className="form-label">{t('amount_label')}</label>
                             <p className="form-helper">{t('amount_helper')}</p>
                             <div className="amount-input-wrapper" ref={formRef}>
                                 <input 
-                                    type="text" 
+                                    type="number" 
                                     className="amount-input" 
-                                    value={amount ? parseInt(amount).toLocaleString() : ""}
+                                    value={amount || ""}
                                     onChange={handleAmountChange}
                                     onBlur={handleAmountBlur}
                                     placeholder={t('amount_placeholder')}
+                                    min="10000"
+                                    max="5000000"
+                                    step="1000"
                                 />
                                 <span className="currency-label">KRW</span>
                             </div>

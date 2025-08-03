@@ -393,67 +393,67 @@ const getLocalizedMeta = (locale) => {
   const metaData = {
     ko: {
       title: "해외송금 비교 | 한국 최저 수수료 실시간 환율 비교 - RemitBuddy",
-      description: "한국 최대 해외송금 비교 플랫폼. 11개국 지원, 9개 공인 송금업체 실시간 환율·수수료 3초 비교. 베트남, 네팔, 필리핀, 태국, 미얀마, 인도네시아, 캄보디아, 우즈베키스탄, 스리랑카. 무료 이용, 최대 5% 절약.",
+      description: "한국 최대 해외송금 비교 플랫폼. 10개국 지원, 9개 공인 송금업체 실시간 환율·수수료 3초 비교. 베트남, 네팔, 필리핀, 태국, 미얀마, 인도네시아, 캄보디아, 우즈베키스탄, 스리랑카. 무료 이용, 최대 5% 절약.",
       keywords: "해외송금, 송금 비교, 환율 비교, 송금 수수료, 한국 송금, 베트남 송금, 네팔 송금, 필리핀 송금, 태국 송금, 미얀마 송금, 인도네시아 송금, 캄보디아 송금, 우즈베키스탄 송금, 스리랑카 송금, 외국인 노동자, 송금업체, 실시간 환율, RemitBuddy",
       ogLocale: "ko_KR"
     },
     en: {
       title: "Money Transfer Comparison | Best Exchange Rates from Korea - RemitBuddy",
-      description: "Korea's largest international money transfer comparison platform. Support 11 countries, compare real-time rates from 9 licensed companies in 3 seconds. Vietnam, Nepal, Philippines, Thailand, Myanmar, Indonesia, Cambodia, Uzbekistan, Sri Lanka. Free service, save up to 5%.",
+      description: "Korea's largest international money transfer comparison platform. Support 10 countries, compare real-time rates from 9 licensed companies in 3 seconds. Vietnam, Nepal, Philippines, Thailand, Myanmar, Indonesia, Cambodia, Uzbekistan, Sri Lanka. Free service, save up to 5%.",
       keywords: "international money transfer, remittance comparison, exchange rate, transfer fee, send money from Korea, Korea to Vietnam, Korea to Nepal, Korea to Philippines, Korea to Thailand, Korea to Myanmar, Korea to Indonesia, Korea to Cambodia, Korea to Uzbekistan, Korea to Sri Lanka, foreign workers, RemitBuddy",
       ogLocale: "en_US"
     },
     vi: {
       title: "So sánh chuyển tiền quốc tế | Tỷ giá tốt nhất từ Hàn Quốc - RemitBuddy",
-      description: "Nền tảng so sánh chuyển tiền quốc tế lớn nhất Hàn Quốc. Hỗ trợ 11 quốc gia, so sánh tỷ giá thực tế từ 9 công ty uy tín trong 3 giây. Việt Nam, Nepal, Philippines, Thái Lan, Myanmar, Indonesia, Campuchia, Uzbekistan, Sri Lanka. Miễn phí, tiết kiệm tối đa 5%.",
+      description: "Nền tảng so sánh chuyển tiền quốc tế lớn nhất Hàn Quốc. Hỗ trợ 10 quốc gia, so sánh tỷ giá thực tế từ 9 công ty uy tín trong 3 giây. Việt Nam, Nepal, Philippines, Thái Lan, Myanmar, Indonesia, Campuchia, Uzbekistan, Sri Lanka. Miễn phí, tiết kiệm tối đa 5%.",
       keywords: "chuyển tiền quốc tế, so sánh chuyển tiền, tỷ giá hối đoái, phí chuyển tiền, chuyển tiền từ Hàn Quốc, gửi tiền về Việt Nam, lao động Việt Nam, RemitBuddy, tỷ giá VND",
       ogLocale: "vi_VN"
     },
     ne: {
       title: "अन्तर्राष्ट्रिय रेमिट्यान्स तुलना | कोरियाबाट सबैभन्दा राम्रो दर - RemitBuddy",
-      description: "कोरियाको सबैभन्दा ठूलो अन्तर्राष्ट्रिय रेमिट्यान्स तुलना प्लेटफर्म। ११ देशहरूको समर्थन, ९ वटा इजाजतपत्र प्राप्त कम्पनीहरूको वास्तविक समयको दर ३ सेकेन्डमा तुलना। नेपाल, भियतनाम, फिलिपिन्स, थाइल्यान्ड, म्यानमार, इन्डोनेसिया, कम्बोडिया, उजबेकिस्तान, श्रीलंका। निःशुल्क, ५% सम्म बचत।",
+      description: "कोरियाको सबैभन्दा ठूलो अन्तर्राष्ट्रिय रेमिट्यान्स तुलना प्लेटफर्म। १० देशहरूको समर्थन, ९ वटा इजाजतपत्र प्राप्त कम्पनीहरूको वास्तविक समयको दर ३ सेकेन्डमा तुलना। नेपाल, भियतनाम, फिलिपिन्स, थाइल्यान्ड, म्यानमार, इन्डोनेसिया, कम्बोडिया, उजबेकिस्तान, श्रीलंका। निःशुल्क, ५% सम्म बचत।",
       keywords: "अन्तर्राष्ट्रिय रेमिट्यान्स, रेमिट्यान्स तुलना, विनिमय दर, रेमिट्यान्स शुल्क, कोरियाबाट पैसा पठाउने, नेपाल रेमिट्यान्स, नेपाली कामदार, RemitBuddy, एनआरएस दर",
       ogLocale: "ne_NP"
     },
     th: {
       title: "เปรียบเทียบการโอนเงินระหว่างประเทศ | อัตราแลกเปลี่ยนที่ดีที่สุดจากเกาหลี - RemitBuddy",
-      description: "แพลตฟอร์มเปรียบเทียบการโอนเงินระหว่างประเทศที่ใหญ่ที่สุดในเกาหลี รองรับ 11 ประเทศ เปรียบเทียบอัตราเรียลไทม์จาก 9 บริษัทที่ได้รับใบอนุญาตใน 3 วินาที ไทย เวียดนาม เนปาล ฟิลิปปินส์ เมียนมาร์ อินโดนีเซีย กัมพูชา อุซเบกิสถาน ศรีลังกา ฟรี ประหยัดได้สูงสุด 5%",
+      description: "แพลตฟอร์มเปรียบเทียบการโอนเงินระหว่างประเทศที่ใหญ่ที่สุดในเกาหลี รองรับ 10 ประเทศ เปรียบเทียบอัตราเรียลไทม์จาก 9 บริษัทที่ได้รับใบอนุญาตใน 3 วินาที ไทย เวียดนาม เนปาล ฟิลิปปินส์ เมียนมาร์ อินโดนีเซีย กัมพูชา อุซเบกิสถาน ศรีลังกา ฟรี ประหยัดได้สูงสุด 5%",
       keywords: "โอนเงินระหว่างประเทศ, เปรียบเทียบการโอนเงิน, อัตราแลกเปลี่ยน, ค่าธรรมเนียมโอนเงิน, ส่งเงินจากเกาหลี, โอนเงินไปไทย, แรงงานไทยในเกาหลี, RemitBuddy",
       ogLocale: "th_TH"
     },
     my: {
       title: "နိုင်ငံတကာ လွှဲငွေ နှိုင်းယှဉ် | ကိုရီးယားမှ အကောင်းဆုံး နှုန်း - RemitBuddy",
-      description: "ကိုရီးယားရှိ အကြီးဆုံး နိုင်ငံတကာ လွှဲငွေ နှိုင်းယှဉ် ပလပ်ဖောင်း။ ၁၁ နိုင်ငံ ပံ့ပိုး၊ လိုင်စင်ရ ကုမ္ပဏီ ၉ ခုမှ အချိန်နှင့်တပြေးညီ နှုန်းများကို ၃ စက္ကန့်တွင် နှိုင်းယှဉ်။ မြန်မာ၊ ဗီယက်နမ်၊ နီပေါ၊ ဖိလစ်ပိုင်၊ ထိုင်း၊ အင်ဒိုနီးရှား၊ ကမ္ဘောဒီးယား၊ ဥဇဘက်ကစ္စတန်၊ သီရိလင်္ကာ။ အခမဲ့၊ ၅% အထိ သက်သာ။",
+      description: "ကိုရီးယားရှိ အကြီးဆုံး နိုင်ငံတကာ လွှဲငွေ နှိုင်းယှဉ် ပလပ်ဖောင်း။ ၁၀ နိုင်ငံ ပံ့ပိုး၊ လိုင်စင်ရ ကုမ္ပဏီ ၉ ခုမှ အချိန်နှင့်တပြေးညီ နှုန်းများကို ၃ စက္ကန့်တွင် နှိုင်းယှဉ်။ မြန်မာ၊ ဗီယက်နမ်၊ နီပေါ၊ ဖိလစ်ပိုင်၊ ထိုင်း၊ အင်ဒိုနီးရှား၊ ကမ္ဘောဒီးယား၊ ဥဇဘက်ကစ္စတန်၊ သီရိလင်္ကာ။ အခမဲ့၊ ၅% အထိ သက်သာ။",
       keywords: "နိုင်ငံတကာ လွှဲငွေ, လွှဲငွေ နှိုင်းယှဉ်, ငွေလဲနှုန်း, လွှဲငွေ ကုန်ကျစရိတ်, ကိုရီးယားမှ လွှဲငွေ, မြန်မာနိုင်ငံသို့ လွှဲငွေ, မြန်မာ အလုပ်သမား ကိုရီးယား, RemitBuddy",
       ogLocale: "my_MM"
     },
     id: {
       title: "Perbandingan Transfer Uang Internasional | Nilai Tukar Terbaik dari Korea - RemitBuddy",
-      description: "Platform perbandingan transfer uang internasional terbesar di Korea. Mendukung 11 negara, bandingkan nilai tukar real-time dari 9 perusahaan berlisensi dalam 3 detik. Indonesia, Vietnam, Nepal, Filipina, Thailand, Myanmar, Kamboja, Uzbekistan, Sri Lanka. Gratis, hemat hingga 5%.",
+      description: "Platform perbandingan transfer uang internasional terbesar di Korea. Mendukung 10 negara, bandingkan nilai tukar real-time dari 9 perusahaan berlisensi dalam 3 detik. Indonesia, Vietnam, Nepal, Filipina, Thailand, Myanmar, Kamboja, Uzbekistan, Sri Lanka. Gratis, hemat hingga 5%.",
       keywords: "transfer uang internasional, perbandingan remitansi, nilai tukar, biaya transfer, kirim uang dari Korea, transfer ke Indonesia, pekerja Indonesia di Korea, RemitBuddy, kurs rupiah",
       ogLocale: "id_ID"
     },
     km: {
       title: "ប្រៀបធៀបការផ្ញើប្រាក់អន្តរជាតិ | អត្រាប្តូរប្រាក់ល្អបំផុតពីកូរ៉េ - RemitBuddy",
-      description: "វេទិកាប្រៀបធៀបការផ្ញើប្រាក់អន្តរជាតិធំបំផុតនៅកូរ៉េ។ គាំទ្រ ១១ ប្រទេស ប្រៀបធៀបអត្រាពេលវេលាជាក់ស្ដែងពីក្រុមហ៊ុនមានអាជ្ញាប័ណ្ណ ៩ ក្នុងរយៈពេល ៣ វិនាទី។ កម្ពុជា វៀតណាម នេប៉ាល់ ហ្វីលីពីន ថៃ មីយ៉ាន់ម៉ា ឥណ្ឌូនេស៊ី អ៊ូសបេគីស្ថាន ស្រីលង្កា។ ឥតគិតថ្លៃ សន្សំបាន ៥%។",
+      description: "វេទិកាប្រៀបធៀបការផ្ញើប្រាក់អន្តរជាតិធំបំផុតនៅកូរ៉េ។ គាំទ្រ ១០ ប្រទេស ប្រៀបធៀបអត្រាពេលវេលាជាក់ស្ដែងពីក្រុមហ៊ុនមានអាជ្ញាប័ណ្ណ ៩ ក្នុងរយៈពេល ៣ វិនាទី។ កម្ពុជា វៀតណាម នេប៉ាល់ ហ្វីលីពីន ថៃ មីយ៉ាន់ម៉ា ឥណ្ឌូនេស៊ី អ៊ូសបេគីស្ថាន ស្រីលង្កា។ ឥតគិតថ្លៃ សន្សំបាន ៥%។",
       keywords: "ការផ្ញើប្រាក់អន្តរជាតិ, ការប្រៀបធៀបការផ្ញើប្រាក់, អត្រាប្តូរប្រាក់, ថ្លៃសេវាផ្ញើប្រាក់, ផ្ញើប្រាក់ពីកូរ៉េ, ផ្ញើប្រាក់ទៅកម្ពុជា, កម្មករកម្ពុជានៅកូរ៉េ, RemitBuddy",
       ogLocale: "km_KH"
     },
     tl: {
       title: "Paghahambing ng International Money Transfer | Pinakamahusay na Exchange Rate mula sa Korea - RemitBuddy",
-      description: "Pinakamalaking platform ng paghahambing ng international money transfer sa Korea. Sumusuporta sa 11 bansa, ihambing ang real-time rates mula sa 9 lisensyadong kumpanya sa loob ng 3 segundo. Pilipinas, Vietnam, Nepal, Thailand, Myanmar, Indonesia, Cambodia, Uzbekistan, Sri Lanka. Libre, makatipid ng hanggang 5%.",
+      description: "Pinakamalaking platform ng paghahambing ng international money transfer sa Korea. Sumusuporta sa 10 bansa, ihambing ang real-time rates mula sa 9 lisensyadong kumpanya sa loob ng 3 segundo. Pilipinas, Vietnam, Nepal, Thailand, Myanmar, Indonesia, Cambodia, Uzbekistan, Sri Lanka. Libre, makatipid ng hanggang 5%.",
       keywords: "international money transfer, paghahambing ng remittance, exchange rate, bayad sa transfer, magpadala ng pera mula sa Korea, padala sa Pilipinas, OFW sa Korea, RemitBuddy, palitan ng piso",
       ogLocale: "tl_PH"
     },
     uz: {
       title: "Xalqaro pul o'tkazish taqqoslash | Koreyadan eng yaxshi kurs - RemitBuddy",
-      description: "Koreyadagi eng katta xalqaro pul o'tkazish taqqoslash platformasi. 11 davlatni qo'llab-quvvatlaydi, litsenziyalangan 9 kompaniyadan real vaqt kurslarini 3 soniyada solishtiring. O'zbekiston, Vyetnam, Nepal, Filippin, Tailand, Myanma, Indoneziya, Kambodja, Shri-Lanka. Bepul, 5% gacha tejash.",
+      description: "Koreyadagi eng katta xalqaro pul o'tkazish taqqoslash platformasi. 10 davlatni qo'llab-quvvatlaydi, litsenziyalangan 9 kompaniyadan real vaqt kurslarini 3 soniyada solishtiring. O'zbekiston, Vyetnam, Nepal, Filippin, Tailand, Myanma, Indoneziya, Kambodja, Shri-Lanka. Bepul, 5% gacha tejash.",
       keywords: "xalqaro pul o'tkazish, remittans taqqoslash, valyuta kursi, pul o'tkazish to'lovi, Koreyadan pul yuborish, O'zbekistonga pul o'tkazish, O'zbek ishchilari Koreyada, RemitBuddy",
       ogLocale: "uz_UZ"
     },
     si: {
       title: "ජාත්‍යන්තර මුදල් හුවමාරු සංසන්දනය | කොරියාවේ සිට හොඳම විනිමය අනුපාතය - RemitBuddy",
-      description: "කොරියාවේ විශාලතම ජාත්‍යන්තර මුදල් හුවමාරු සංසන්දන වේදිකාව. රටවල් 11ක් සහාය දක්වයි, බලපත්‍රිත සමාගම් 9කින් තත්‍ය කාල අනුපාත තත්පර 3කින් සංසන්දනය කරන්න. ශ්‍රී ලංකාව, වියට්නාමය, නේපාලය, පිලිපීනය, තායිලන්තය, මියන්මාරය, ඉන්දුනීසියාව, කාම්බෝජය, උස්බෙකිස්ථානය. නොමිලේ, 5% දක්වා ඉතිරි කරන්න.",
+      description: "කොරියාවේ විශාලතම ජාත්‍යන්තර මුදල් හුවමාරු සංසන්දන වේදිකාව. රටවල් 10ක් සහාය දක්වයි, බලපත්‍රිත සමාගම් 9කින් තත්‍ය කාල අනුපාත තත්පර 3කින් සංසන්දනය කරන්න. ශ්‍රී ලංකාව, වියට්නාමය, නේපාලය, පිලිපීනය, තායිලන්තය, මියන්මාරය, ඉන්දුනීසියාව, කාම්බෝජය, උස්බෙකිස්ථානය. නොමිලේ, 5% දක්වා ඉතිරි කරන්න.",
       keywords: "ජාත්‍යන්තර මුදල් හුවමාරුව, රේමිටන්ස් සංසන්දනය, විනිමය අනුපාතය, මුදල් හුවමාරු ගාස්තු, කොරියාවේ සිට මුදල් යැවීම, ශ්‍රී ලංකාවට මුදල් යැවීම, ශ්‍රී ලාංකික කම්කරුවන් කොරියාවේ, RemitBuddy",
       ogLocale: "si_LK"
     }
@@ -806,7 +806,7 @@ export default function MainPage() {
                                     placeholder={t('amount_placeholder')}
                                     min="10000"
                                     max="5000000"
-                                    step="1000"
+                                    step="1"
                                 />
                                 <span className="currency-label">KRW</span>
                             </div>

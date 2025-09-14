@@ -25,7 +25,7 @@ import {
 } from '../utils/analytics';
 
 // API Configuration
-const FORCE_API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://sendhome-production.up.railway.app';
+const FORCE_API_BASE_URL = 'https://remitbuddy-production.up.railway.app';
 
 // Icon Components
 const ChevronDownIcon = ({ className }) => ( 
@@ -652,7 +652,7 @@ export default function MainPage() {
                 <link rel="alternate" hrefLang="x-default" href="https://www.remitbuddy.com" />
 
                 {/* 🔒 Security Headers */}
-                <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://sendhome-production.up.railway.app https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';" />
+                <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://remitbuddy-production.up.railway.app https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';" />
                 <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
                 <meta httpEquiv="X-Frame-Options" content="DENY" />
                 <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />

@@ -11,13 +11,9 @@
 /* 모바일 우선 설계 */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: #ffffff;
     min-height: 100vh;
-    padding: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 12px;
+    padding: 0;
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -52,10 +48,10 @@ body, input, button, select, textarea {
 
 /* 헤더 스타일 - 모바일 최적화 */
 .header {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: #ffffff;
     padding: 24px 16px;
     text-align: center;
-    color: white;
+    color: #0A0A0A;
 }
 
 .logo {
@@ -176,7 +172,7 @@ body, input, button, select, textarea {
 }
 
 .amount-input-wrapper:focus-within {
-    border-color: #4facfe;
+    border-color: #34C759;
     background: white;
     box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
 }
@@ -236,7 +232,7 @@ body, input, button, select, textarea {
 }
 
 .destination-select:focus {
-    border-color: #4facfe;
+    border-color: #34C759;
     background: white;
     box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
     outline: none;
@@ -271,7 +267,7 @@ body, input, button, select, textarea {
 /* CTA 버튼 - 모바일 최적화 */
 .compare-button {
     width: 100%;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: #34C759;
     color: white;
     border: none;
     border-radius: 12px;
@@ -338,7 +334,7 @@ body, input, button, select, textarea {
 .feature-icon {
     width: 44px;
     height: 44px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: #34C759;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -551,7 +547,7 @@ body, input, button, select, textarea {
 .provider-card:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    border-color: #4facfe;
+    border-color: #34C759;
     text-decoration: none;
 }
 
@@ -599,7 +595,7 @@ body, input, button, select, textarea {
 .provider-logo-placeholder {
     width: 26px;
     height: 26px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: #34C759;
     border-radius: 4px;
     display: flex;
     align-items: center;

@@ -1,6 +1,5 @@
 import React from 'react';
 import Head from 'next/head';
-import Header from '../components/Header';
 import Hero from '../components/Hero';
 import CompareForm from '../components/CompareForm';
 
@@ -21,9 +20,8 @@ export default function NewHome() {
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </Head>
 
-      <main className="min-h-screen bg-[#F5F5F5]">
-        <div className="w-full max-w-[430px] mx-auto bg-white min-h-screen">
-          <Header />
+      <main className="min-h-screen bg-white">
+        <div className="w-full max-w-[390px] lg:max-w-[1040px] mx-auto px-4 py-8">
           <Hero />
           <CompareForm onSubmit={handleCompareSubmit} />
         </div>

@@ -2,14 +2,17 @@ import React from 'react';
 
 const Hero: React.FC = () => {
   return (
-    <div className="bg-brand text-center text-white px-6 pt-8 pb-32">
-      <h2 className="font-poppins font-bold text-[32px] leading-tight mb-4">
-        Find the Best
-        <br />
-        Exchange Rates in 3 Seconds
-      </h2>
-      <p className="font-poppins font-normal text-[18px] opacity-90">
+    <div className="text-center px-4 pt-8 pb-8">
+      <img
+        src="/logo.svg"
+        alt="RemitBuddy logo"
+        className="mx-auto mb-8 h-10"
+      />
+      <h1 className="font-poppins font-extrabold text-[28px] lg:text-[56px] leading-[1.3] lg:leading-[1.2] text-[#0A0A0A]">
         One Click to Compare Fees and Amount
+      </h1>
+      <p className="font-poppins font-medium text-[16px] lg:text-[20px] text-[#666666] mt-3 lg:mt-4">
+        Find the Best Exchange Rates in 3 Seconds
       </p>
     </div>
   );

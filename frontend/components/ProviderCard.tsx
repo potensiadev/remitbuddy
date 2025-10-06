@@ -1,66 +1,56 @@
 import React from 'react';
 
+// Arrow Right Icon
+const ArrowRight = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+  </svg>
+);
+
 interface ProviderCardProps {
-  name: string;
-  exchangeRate: number;
-  fee: number;
-  receivedAmount: number;
-  isRecommended?: boolean;
+  provider: {
+    name: string;
+    recipientGet: string;
+    youPay: string;
+    fee: string;
+    exchangeRate: string;
+    isBest?: boolean;
+    link: string;
+  };
 }
 
-const ProviderCard: React.FC<ProviderCardProps> = ({
-  name,
-  exchangeRate,
-  fee,
-  receivedAmount,
-  isRecommended = false,
-}) => {
+const ProviderCard: React.FC<ProviderCardProps> = ({ provider }) => {
   return (
-    <div
-      className={`bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 p-6 relative ${
-        isRecommended ? 'ring-2 ring-brand' : ''
-      }`}
-    >
-      {isRecommended && (
-        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-          <span className="bg-brand text-white font-poppins font-semibold text-xs px-4 py-1 rounded-full">
-            Recommended
-          </span>
-        </div>
-      )}
-
-      <div className="mb-4">
-        <h3 className="font-poppins font-bold text-xl text-[#0A0A0A]">{name}</h3>
-      </div>
-
-      <div className="space-y-3 mb-6">
-        <div className="flex justify-between items-center">
-          <span className="font-poppins text-sm text-gray-600">Exchange Rate:</span>
-          <span className="font-poppins font-semibold text-[#0A0A0A]">
-            {exchangeRate.toFixed(2)}
-          </span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="font-poppins text-sm text-gray-600">Transfer Fee:</span>
-          <span className="font-poppins font-semibold text-[#0A0A0A]">
-            ₩{fee.toLocaleString()}
-          </span>
-        </div>
-        <div className="border-t border-gray-200 pt-3 mt-3">
-          <div className="flex justify-between items-center">
-            <span className="font-poppins text-sm font-medium text-gray-700">
-              You Receive:
+    <div className="bg-white border border-gray-border rounded-2xl p-5 lg:p-6 hover:shadow-lg transition-shadow">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex-1">
+          <h3 className="text-xl font-semibold text-gray-primary mb-3 lg:mb-4">
+            {provider.name}
+          </h3>
+          <div className="grid grid-cols-2 gap-x-6 lg:gap-x-8 gap-y-2">
+            <span className="text-sm font-medium text-gray-secondary">Recipient Get</span>
+            <span className="text-right text-base font-semibold text-gray-primary">
+              {provider.recipientGet}
             </span>
-            <span className="font-poppins font-bold text-lg text-brand">
-              {receivedAmount.toLocaleString()}
+            <span className="text-sm font-medium text-gray-secondary">You Pay</span>
+            <span className="text-right text-base font-semibold text-gray-primary">
+              {provider.youPay}
+            </span>
+            <span className="text-sm font-medium text-gray-secondary">Fee</span>
+            <span className="text-right text-base font-semibold text-gray-primary">
+              {provider.fee}
+            </span>
+            <span className="text-sm font-medium text-gray-secondary">Exchange Rate</span>
+            <span className="text-right text-sm text-gray-secondary">
+              {provider.exchangeRate}
             </span>
           </div>
         </div>
+        <button className="mt-4 lg:mt-0 lg:ml-6 px-5 lg:px-6 py-3 bg-gray-button text-white font-bold rounded-lg hover:bg-[#4B5563] transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
+          Go to {provider.name}
+          <ArrowRight className="w-5 h-5" />
+        </button>
       </div>
-
-      <button className="w-full bg-brand hover:bg-green-500 text-white font-poppins font-semibold py-3 rounded-xl transition-colors duration-200">
-        Choose {name}
-      </button>
     </div>
   );
 };

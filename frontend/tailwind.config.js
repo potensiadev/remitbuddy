@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: { 
     extend: {
+      // Fonts
+      fontFamily: {
+        'poppins': ['Poppins', 'sans-serif'],
+      },
       // Container utilities
       container: {
         center: true,
@@ -21,6 +25,7 @@ module.exports = {
       },
       // Color palette for remittance app
       colors: {
+        brand: '#34C759',
         primary: {
           50: '#eff6ff',
           100: '#dbeafe',
@@ -165,7 +170,7 @@ module.exports = {
           '&:focus': {
             outline: '2px solid transparent',
             outlineOffset: '2px',
-            boxShadow: `0 0 0 2px ${theme('colors.primary.500')}, 0 0 0 4px ${theme('colors.primary.100')}`,
+            boxShadow: `0 0 0 2px ${theme('colors.brand')}, 0 0 0 4px rgba(52, 199, 89, 0.1)`,
           },
         },
         '.focus-ring-error': {

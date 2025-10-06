@@ -56,26 +56,28 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
   };
 
   return (
-    <div className="mt-8 md:mt-12 bg-white border border-[#E5E7EB] shadow-md md:shadow-lg rounded-2xl md:rounded-[20px] p-5 md:p-8">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 md:flex-row md:gap-6 md:items-end">
+    <div className="-mt-24 mx-4 bg-white border-4 border-brand shadow-xl rounded-[32px] p-8">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
 
         {/* Country Selector */}
-        <div className="flex-1 relative" ref={dropdownRef}>
-          <label className="block font-poppins font-medium text-sm text-[#0A0A0A] mb-2">
+        <div className="relative" ref={dropdownRef}>
+          <label className="block font-poppins font-semibold text-[18px] text-brand mb-3 text-center">
             Where are you sending to?
           </label>
           <button
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
-            className="w-full h-12 md:h-14 px-3 md:px-4 border border-[#E5E7EB] rounded-lg md:rounded-xl font-poppins text-sm text-[#0A0A0A] bg-white hover:border-brand focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all outline-none flex items-center justify-between"
+            className="w-full h-14 px-6 border-2 border-brand rounded-full font-poppins text-[16px] text-gray-700 bg-white hover:bg-gray-50 focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all outline-none flex items-center justify-between"
           >
-            <div className="flex items-center gap-2">
-              <img
-                src={selectedCountry.flag}
-                alt={`${selectedCountry.name} flag`}
-                className="w-6 h-4 object-cover rounded"
-              />
-              <span>{selectedCountry.name}</span>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center overflow-hidden">
+                <img
+                  src={selectedCountry.flag}
+                  alt={`${selectedCountry.name} flag`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="font-medium">{selectedCountry.name} ({selectedCountry.currency})</span>
             </div>
             <svg
               className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}
@@ -113,19 +115,19 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         </div>
 
         {/* Amount Input */}
-        <div className="flex-1">
-          <label className="block font-poppins font-medium text-sm text-[#0A0A0A] mb-2">
+        <div>
+          <label className="block font-poppins font-semibold text-[18px] text-brand mb-3 text-center">
             How much do you want to send?
           </label>
           <div className="relative">
             <input
               type="text"
-              value={amount}
+              value={Number(amount).toLocaleString()}
               onChange={handleAmountChange}
-              className="w-full h-12 md:h-14 px-3 md:px-4 border border-[#E5E7EB] rounded-lg md:rounded-xl font-poppins text-sm text-[#0A0A0A] bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all outline-none"
-              placeholder="Enter amount (KRW)"
+              className="w-full h-14 px-6 pr-20 border-2 border-brand rounded-full font-poppins text-[16px] text-gray-700 bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all outline-none text-center font-semibold"
+              placeholder="1,000,000"
             />
-            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 font-poppins text-sm text-gray-500">
+            <span className="absolute right-6 top-1/2 transform -translate-y-1/2 font-poppins text-[16px] text-gray-500 font-medium">
               KRW
             </span>
           </div>
@@ -135,7 +137,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full h-12 md:w-[220px] md:h-14 bg-brand hover:bg-green-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-poppins font-semibold text-base md:text-lg rounded-xl transition-all duration-200 focus:ring-2 focus:ring-brand/40 outline-none"
+          className="w-full h-14 bg-brand hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-poppins font-bold text-[18px] rounded-full transition-all duration-200 focus:ring-2 focus:ring-brand/40 outline-none shadow-lg mt-2"
         >
           {isLoading ? (
             <div className="flex items-center justify-center gap-2">

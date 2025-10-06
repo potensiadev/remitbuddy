@@ -1,9 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
-import Logo from '../components/Logo';
 import Hero from '../components/Hero';
 import CompareForm from '../components/CompareForm';
-import Footer from '../components/Footer';
 
 export default function NewHome() {
   const handleCompareSubmit = (amount: string, country: any) => {
@@ -24,22 +22,24 @@ export default function NewHome() {
 
       <div className="min-h-screen flex flex-col bg-white">
         <main className="flex-1 bg-white">
-          {/* Hero Section with green background and integrated logo */}
-          <Hero
-            title="One Click to Compare Fees and Amount"
-            subtitle="Find the Best Exchange Rates in 3 Seconds"
-          />
+          {/* Hero Section with green background */}
+          <Hero />
 
           {/* CompareForm overlapping Hero */}
-          <div className="w-full px-4 md:px-8 -mt-[50px] relative z-10">
+          <div className="w-full px-4 -mt-[60px] relative z-10">
             <CompareForm onSubmit={handleCompareSubmit} />
           </div>
 
-          {/* Spacer for footer */}
+          {/* AD Placeholder */}
+          <div className="w-full px-4 mt-10">
+            <div className="max-w-md mx-auto bg-gray-100 text-gray-500 text-center py-10 rounded-md">
+              AD
+            </div>
+          </div>
+
+          {/* Spacer */}
           <div className="pb-20"></div>
         </main>
-
-        <Footer />
       </div>
     </>
   );

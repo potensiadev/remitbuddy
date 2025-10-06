@@ -1,24 +1,19 @@
 import React from 'react';
 
-interface HeroProps {
-  title: string;
-  subtitle: string;
-}
-
-const Hero: React.FC<HeroProps> = ({ title, subtitle }) => {
+const Hero: React.FC = () => {
   return (
-    <section className="w-full bg-[#34C759] text-white min-h-[60vh] md:min-h-[70vh] py-24 md:py-36 px-6 rounded-b-[60px] flex flex-col items-center justify-center text-center">
+    <section className="w-full bg-[#34C759] text-white min-h-[40vh] md:min-h-[50vh] py-12 md:py-20 px-6 rounded-b-[60px] flex flex-col items-center justify-center text-center">
       {/* RemitBuddy Logo */}
-      <h1 className="text-3xl font-extrabold text-white mb-8">RemitBuddy</h1>
+      <h1 className="text-white font-extrabold text-2xl mb-4">RemitBuddy</h1>
 
-      {/* Hero Title */}
-      <h2 className="font-poppins font-extrabold text-3xl sm:text-5xl lg:text-6xl leading-[1.25] mt-4">
-        {title}
+      {/* Main Heading */}
+      <h2 className="text-white font-semibold text-lg mb-4">
+        Find the Best Exchange Rates in 3 Seconds
       </h2>
 
-      {/* Hero Subtitle */}
-      <p className="font-poppins font-medium text-base md:text-xl text-white/90 mt-6">
-        {subtitle}
+      {/* Subheading */}
+      <p className="text-white/90 font-medium text-base">
+        One Click to Compare Fees and Amount
       </p>
     </section>
   );

@@ -56,18 +56,18 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
   };
 
   return (
-    <div className="w-full bg-white rounded-2xl shadow-lg p-6 md:p-8 max-w-3xl mx-auto">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 md:gap-6 lg:flex-row lg:items-end">
+    <div className="w-full max-w-md mx-auto bg-white border border-[#34C759] rounded-2xl shadow-md p-6 md:p-8">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
         {/* Country Selector */}
-        <div className="flex-1 relative" ref={dropdownRef}>
-          <label className="block font-poppins font-medium text-[14px] text-[#0A0A0A] mb-2">
+        <div className="relative" ref={dropdownRef}>
+          <label className="block font-semibold text-sm text-gray-800 mb-2">
             Where are you sending to?
           </label>
           <button
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
-            className="w-full h-14 px-4 bg-white border border-gray-300 rounded-xl font-poppins text-[14px] text-[#0A0A0A] hover:bg-gray-50 focus:ring-2 focus:ring-brand/20 transition-all outline-none flex items-center justify-between"
+            className="w-full h-[50px] px-3 bg-white border border-gray-300 rounded-lg font-poppins text-sm text-gray-900 hover:bg-gray-50 focus:ring-2 focus:ring-brand/20 transition-all outline-none flex items-center justify-between"
           >
             <div className="flex items-center gap-2">
               <img
@@ -113,8 +113,8 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         </div>
 
         {/* Amount Input */}
-        <div className="flex-1">
-          <label className="block font-poppins font-medium text-[14px] text-[#0A0A0A] mb-2">
+        <div>
+          <label className="block font-semibold text-sm text-gray-800 mb-2">
             How much do you want to send?
           </label>
           <div className="relative">
@@ -122,7 +122,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               type="text"
               value={amount}
               onChange={handleAmountChange}
-              className="w-full h-14 px-4 pr-16 bg-white border border-gray-300 rounded-xl font-poppins text-[14px] text-[#0A0A0A] focus:ring-2 focus:ring-brand/20 transition-all outline-none"
+              className="w-full h-[50px] px-3 pr-16 bg-white border border-gray-300 rounded-lg font-poppins text-sm text-gray-900 focus:ring-2 focus:ring-brand/20 transition-all outline-none"
               placeholder="Enter amount (KRW)"
             />
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 font-poppins text-[14px] text-gray-500">
@@ -135,7 +135,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full lg:w-[220px] h-14 bg-[#34C759] hover:bg-green-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-poppins font-semibold text-[16px] lg:text-[18px] rounded-xl transition-all duration-200 focus:ring-2 focus:ring-brand/40 outline-none"
+          className="w-full lg:w-[220px] h-12 bg-[#34C759] hover:bg-[#2EB84F] disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-poppins font-semibold text-base rounded-xl transition-all duration-200 focus:ring-2 focus:ring-brand/40 outline-none"
         >
           {isLoading ? (
             <div className="flex items-center justify-center gap-2">
@@ -149,25 +149,10 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
       </form>
 
       {/* Trust Indicators */}
-      <div className="mt-8 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 text-center">
-        <div className="flex items-center gap-2">
-          <svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          <span className="font-poppins text-sm text-gray-600">Free to use</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-          <span className="font-poppins text-sm text-gray-600">Secure comparison</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span className="font-poppins text-sm text-gray-600">No hidden fees</span>
-        </div>
+      <div className="flex justify-center gap-4 text-gray-500 text-xs mt-3">
+        <span>✅ Free to use</span>
+        <span>🔒 Secure comparison</span>
+        <span>🟢 No hidden fees</span>
       </div>
     </div>
   );

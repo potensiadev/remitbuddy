@@ -1,12 +1,14 @@
 import React from 'react';
 import Head from 'next/head';
+import Logo from '../components/Logo';
 import Hero from '../components/Hero';
 import CompareForm from '../components/CompareForm';
+import Footer from '../components/Footer';
 
 export default function NewHome() {
   const handleCompareSubmit = (amount: string, country: any) => {
     console.log('Comparing rates for:', { amount, country });
-    // TODO: Implement rate comparison logic
+    // TODO: Navigate to results page
   };
 
   return (
@@ -20,12 +22,26 @@ export default function NewHome() {
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
       </Head>
 
-      <main className="min-h-screen bg-white">
-        <div className="w-full max-w-[390px] lg:max-w-[1040px] mx-auto px-4 py-8">
-          <Hero />
-          <CompareForm onSubmit={handleCompareSubmit} />
-        </div>
-      </main>
+      <div className="min-h-screen flex flex-col bg-white">
+        <main className="flex-1">
+          <div className="max-w-[1040px] mx-auto px-4 pt-8 md:pt-16 lg:pt-[120px] pb-12 md:pb-20">
+            <div className="mb-8 md:mb-12">
+              <Logo />
+            </div>
+
+            <div className="mb-10 md:mb-16">
+              <Hero
+                title="One Click to Compare Fees and Amount"
+                subtitle="Find the Best Exchange Rates in 3 Seconds"
+              />
+            </div>
+
+            <CompareForm onSubmit={handleCompareSubmit} />
+          </div>
+        </main>
+
+        <Footer />
+      </div>
     </>
   );
 }

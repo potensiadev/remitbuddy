@@ -8,10 +8,10 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ title, subtitle }) => {
   return (
     <div className="text-center">
-      <h1 className="font-poppins font-extrabold text-[28px] lg:text-[56px] leading-[1.3] lg:leading-[1.2] text-[#0A0A0A]">
+      <h1 className="font-poppins font-extrabold text-[28px] lg:text-[56px] leading-[1.3] lg:leading-[1.2] text-brand">
         {title}
       </h1>
-      <p className="font-poppins font-medium text-[16px] lg:text-[20px] text-[#666666] mt-3 lg:mt-4">
+      <p className="font-poppins font-medium text-[16px] lg:text-[20px] text-brand mt-3 lg:mt-4">
         {subtitle}
       </p>
     </div>

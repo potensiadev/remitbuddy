@@ -23,20 +23,22 @@ export default function NewHome() {
       </Head>
 
       <div className="min-h-screen flex flex-col bg-white">
-        <main className="flex-1">
-          <div className="max-w-[1040px] mx-auto px-4 pt-8 md:pt-16 lg:pt-[120px] pb-12 md:pb-20">
-            <div className="mb-8 md:mb-12">
+        <main className="flex-1 bg-white">
+          <div className="w-full px-4 md:px-8 py-20">
+            <div className="mb-12 md:mb-16">
               <Logo />
             </div>
 
-            <div className="mb-10 md:mb-16">
+            <div className="mb-16 md:mb-20">
               <Hero
                 title="One Click to Compare Fees and Amount"
                 subtitle="Find the Best Exchange Rates in 3 Seconds"
               />
             </div>
 
-            <CompareForm onSubmit={handleCompareSubmit} />
+            <div className="max-w-[1040px] mx-auto">
+              <CompareForm onSubmit={handleCompareSubmit} />
+            </div>
           </div>
         </main>
 

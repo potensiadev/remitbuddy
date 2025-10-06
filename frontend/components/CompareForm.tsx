@@ -56,7 +56,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
   };
 
   return (
-    <div className="mt-8 bg-white shadow-md rounded-2xl p-5 lg:shadow-lg lg:p-8">
+    <div className="w-full bg-white">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 lg:flex-row lg:gap-6 lg:items-end">
 
         {/* Country Selector */}
@@ -147,6 +147,28 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
           )}
         </button>
       </form>
+
+      {/* Trust Indicators */}
+      <div className="mt-8 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 text-center">
+        <div className="flex items-center gap-2">
+          <svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          <span className="font-poppins text-sm text-gray-600">Free to use</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <span className="font-poppins text-sm text-gray-600">Secure comparison</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="font-poppins text-sm text-gray-600">No hidden fees</span>
+        </div>
+      </div>
     </div>
   );
 }

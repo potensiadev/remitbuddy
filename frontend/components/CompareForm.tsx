@@ -56,8 +56,8 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
   };
 
   return (
-    <div className="mt-8 bg-white border border-[#E5E7EB] shadow-md rounded-2xl p-5 lg:mt-12 lg:shadow-lg lg:rounded-[20px] lg:p-8">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 lg:flex-row lg:gap-6 lg:items-end">
+    <div className="mt-8 md:mt-12 bg-white border border-[#E5E7EB] shadow-md md:shadow-lg rounded-2xl md:rounded-[20px] p-5 md:p-8">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 md:flex-row md:gap-6 md:items-end">
 
         {/* Country Selector */}
         <div className="flex-1 relative" ref={dropdownRef}>
@@ -67,7 +67,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
           <button
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
-            className="w-full px-3 py-3 border border-[#E5E7EB] rounded-lg font-poppins text-sm text-[#0A0A0A] bg-white hover:border-brand focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all outline-none flex items-center justify-between lg:h-14 lg:px-4 lg:rounded-xl"
+            className="w-full h-12 md:h-14 px-3 md:px-4 border border-[#E5E7EB] rounded-lg md:rounded-xl font-poppins text-sm text-[#0A0A0A] bg-white hover:border-brand focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all outline-none flex items-center justify-between"
           >
             <div className="flex items-center gap-2">
               <img
@@ -122,7 +122,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               type="text"
               value={amount}
               onChange={handleAmountChange}
-              className="w-full px-3 py-3 border border-[#E5E7EB] rounded-lg font-poppins text-sm text-[#0A0A0A] bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all outline-none lg:h-14 lg:px-4 lg:rounded-xl"
+              className="w-full h-12 md:h-14 px-3 md:px-4 border border-[#E5E7EB] rounded-lg md:rounded-xl font-poppins text-sm text-[#0A0A0A] bg-white focus:border-brand focus:ring-2 focus:ring-brand/20 transition-all outline-none"
               placeholder="Enter amount (KRW)"
             />
             <span className="absolute right-3 top-1/2 transform -translate-y-1/2 font-poppins text-sm text-gray-500">
@@ -135,7 +135,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full h-12 bg-brand hover:bg-green-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-poppins font-semibold text-base rounded-xl transition-all duration-200 focus:ring-2 focus:ring-brand/40 outline-none lg:w-[220px] lg:h-14 lg:text-lg"
+          className="w-full h-12 md:w-[220px] md:h-14 bg-brand hover:bg-green-500 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-poppins font-semibold text-base md:text-lg rounded-xl transition-all duration-200 focus:ring-2 focus:ring-brand/40 outline-none"
         >
           {isLoading ? (
             <div className="flex items-center justify-center gap-2">

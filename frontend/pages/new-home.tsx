@@ -22,7 +22,7 @@ export default function NewHome() {
 
       <main className="min-h-screen bg-white">
         {/* Mobile & Desktop Layout */}
-        <div className="w-full max-w-[420px] mx-auto px-4 pt-16 pb-20 lg:max-w-[1040px] lg:py-32">
+        <div className="w-full max-w-[420px] mx-auto px-4 pt-16 pb-20 md:max-w-[1040px] md:py-32">
           <Hero />
           <CompareForm onSubmit={handleCompareSubmit} />
         </div>

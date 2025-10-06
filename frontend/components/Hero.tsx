@@ -1,14 +1,16 @@
 import React from 'react';
 
-export default function Hero() {
+const Hero: React.FC = () => {
   return (
-    <section className="text-center">
-      <h1 className="font-poppins font-extrabold text-[28px] leading-[1.3] text-[#0A0A0A] lg:text-[56px] lg:leading-[1.2]">
+    <div className="text-center">
+      <h1 className="font-poppins font-extrabold text-[28px] md:text-[56px] leading-[1.3] md:leading-[1.2] text-[#0A0A0A]">
         One Click to Compare Fees and Amount
       </h1>
-      <p className="mt-3 font-poppins font-medium text-base text-[#666666] lg:mt-4 lg:text-xl">
+      <p className="font-poppins font-medium text-[16px] md:text-[20px] text-[#666666] mt-3 md:mt-4">
         Find the Best Exchange Rates in 3 Seconds
       </p>
-    </section>
+    </div>
   );
-}
+};
+
+export default Hero;

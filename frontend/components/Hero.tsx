@@ -7,14 +7,14 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ title, subtitle }) => {
   return (
-    <div className="text-center">
-      <h1 className="font-poppins font-extrabold text-[28px] lg:text-[56px] leading-[1.3] lg:leading-[1.2] text-brand">
+    <section className="w-full bg-[#34C759] text-white text-center py-20 md:py-28 px-6 rounded-b-[40px] pb-16">
+      <h1 className="font-poppins font-extrabold text-3xl md:text-5xl lg:text-6xl leading-tight">
         {title}
       </h1>
-      <p className="font-poppins font-medium text-[16px] lg:text-[20px] text-brand mt-3 lg:mt-4">
+      <p className="font-poppins font-medium text-base md:text-xl text-white/90 mt-4">
         {subtitle}
       </p>
-    </div>
+    </section>
   );
 };
 

@@ -24,22 +24,15 @@ export default function NewHome() {
 
       <div className="min-h-screen flex flex-col bg-white">
         <main className="flex-1 bg-white">
-          {/* Logo positioned above Hero */}
-          <div className="w-full px-4 md:px-8 pt-8">
-            <Logo />
-          </div>
-
-          {/* Hero Section with green background */}
+          {/* Hero Section with green background and integrated logo */}
           <Hero
             title="One Click to Compare Fees and Amount"
             subtitle="Find the Best Exchange Rates in 3 Seconds"
           />
 
           {/* CompareForm overlapping Hero */}
-          <div className="w-full px-4 md:px-8 -mt-12 relative z-10">
-            <div className="max-w-[1040px] mx-auto">
-              <CompareForm onSubmit={handleCompareSubmit} />
-            </div>
+          <div className="w-full px-4 md:px-8 -mt-[50px] relative z-10">
+            <CompareForm onSubmit={handleCompareSubmit} />
           </div>
 
           {/* Spacer for footer */}

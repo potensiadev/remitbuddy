@@ -1,15 +1,10 @@
-import React from 'react';
-import Link from 'next/link';
-
-const Logo: React.FC = () => {
+const Logo = () => {
   return (
-    <Link href="/" className="inline-block">
-      <img
-        src="/logo.svg"
-        alt="RemitBuddy logo"
-        className="h-10 md:h-12"
-      />
-    </Link>
+    <div className="flex items-center justify-center">
+      <div className="text-brand font-extrabold text-2xl">
+        RemitBuddy
+      </div>
+    </div>
   );
 };
 

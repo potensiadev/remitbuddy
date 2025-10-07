@@ -11,7 +11,9 @@
       "Bash(npx tsc:*)",
       "Bash(git commit:*)",
       "Bash(git log:*)",
-      "Bash(gh repo view:*)"
+      "Bash(gh repo view:*)",
+      "WebFetch(domain:www.remitbuddy.com)",
+      "Bash(PORT=3002 npm run dev)"
     ],
     "deny": []
   }

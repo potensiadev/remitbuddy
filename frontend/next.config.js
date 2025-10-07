@@ -20,15 +20,26 @@ const nextConfig = {
   
   // SEO 헤더 최적화
   async headers() {
+    // 개발 모드에서는 CSP 완화
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
+    // 개발 모드용 CSP (unsafe-eval 포함)
+    const devCSP = "default-src 'self' 'unsafe-eval' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://remitbuddy-production.up.railway.app https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';";
+    
+    // 프로덕션용 CSP (엄격함)
+    const prodCSP = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://remitbuddy-production.up.railway.app https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';";
+    
     return [
       {
         source: '/(.*)',
         headers: [
-          // 보안 헤더
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY'
-          },
+          // 보안 헤더 - 개발 모드에서는 X-Frame-Options 제거
+          ...(isDevelopment ? [] : [
+            {
+              key: 'X-Frame-Options',
+              value: 'DENY'
+            }
+          ]),
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff'
@@ -37,15 +48,15 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin'
           },
-          // Content Security Policy
+          // Content Security Policy - 환경별로 다르게 적용
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://remitbuddy-production.up.railway.app https://www.google-analytics.com; object-src 'none'; base-uri 'self'; form-action 'self';"
+            value: isDevelopment ? devCSP : prodCSP
           },
-          // 캐싱 최적화
+          // 캐싱 최적화 - 개발 모드에서는 캐싱 비활성화
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable'
+            value: isDevelopment ? 'no-store, must-revalidate' : 'public, max-age=31536000, immutable'
           }
         ]
       },
@@ -55,7 +66,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable'
+            value: isDevelopment ? 'no-cache' : 'public, max-age=31536000, immutable'
           }
         ]
       },
@@ -65,7 +76,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control', 
-            value: 'public, max-age=31536000, immutable'
+            value: isDevelopment ? 'no-cache' : 'public, max-age=31536000, immutable'
           }
         ]
       }

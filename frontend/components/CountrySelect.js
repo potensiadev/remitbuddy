@@ -19,7 +19,7 @@ export default function CountrySelect({ country, onChange }) {
   return (
     <div className="relative w-20 sm:w-24">
       <button
-        className="w-full h-14 sm:h-12 bg-[#F3F6FA] rounded-lg sm:rounded-xl border border-[#E1E5EA] flex items-center justify-center gap-1 font-semibold text-[#232B3A] text-sm sm:text-base"
+        className="w-full h-14 sm:h-12 bg-[#34C759] rounded-lg sm:rounded-xl flex items-center justify-center gap-1 font-semibold text-[#232B3A] text-sm sm:text-base"
         onClick={() => setOpen(!open)}
       >
         <span className="text-sm sm:text-base">{countries.find(c => c.code === country.code)?.emoji}</span>

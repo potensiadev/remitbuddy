@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 // Country data with supported currencies
 const COUNTRIES = [
   { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" },
-  { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' },
+  { code: 'NP', currency: 'NPR', name: 'Nepal', flag: '/images/flags/np.png' },
   { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" },
   { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" },
   { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" },

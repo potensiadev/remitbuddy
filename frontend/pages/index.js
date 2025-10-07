@@ -180,29 +180,29 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
 };
 
 // Country Dropdown Component
-const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange, dropdownRef }) => ( 
-    <div ref={dropdownRef} className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] h-auto max-h-[60vh] bg-white rounded-xl lg:rounded-2xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden z-50"> 
-        <div className="flex-1 overflow-y-auto"> 
-            {COUNTRIES.map(c => ( 
-                <div 
-                    key={c.code} 
-                    className="flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 cursor-pointer hover:bg-gray-50 text-lg" 
-                    onClick={(e) => { 
+const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange, dropdownRef }) => (
+    <div ref={dropdownRef} className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] h-auto max-h-[60vh] bg-white rounded-xl lg:rounded-2xl shadow-2xl border-2 border-[#00D26A] flex flex-col overflow-hidden z-50">
+        <div className="flex-1 overflow-y-auto">
+            {COUNTRIES.map(c => (
+                <div
+                    key={c.code}
+                    className="flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 cursor-pointer hover:bg-[#E8F9F0] transition-colors text-lg"
+                    onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedCountry(c); 
-                        setShowDropdown(false); 
-                        onCountryChange(c); 
+                        setSelectedCountry(c);
+                        setShowDropdown(false);
+                        onCountryChange(c);
                     }}
-                > 
-                    <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" /> 
-                    <div> 
-                        <div className="font-bold text-sm lg:text-base text-slate-800">{c.name}</div> 
-                        <div className="text-gray-500 text-xs lg:text-sm">{c.currency}</div> 
-                    </div> 
-                </div> 
-            ))} 
-        </div> 
-    </div> 
+                >
+                    <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" />
+                    <div>
+                        <div className="font-bold text-sm lg:text-base text-slate-800">{c.name}</div>
+                        <div className="text-gray-500 text-xs lg:text-sm">{c.currency}</div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
 );
 
 // Comparison Results Component
@@ -758,126 +758,120 @@ export default function MainPage() {
                 />
             </Head>
             
-            <div className="container">
-                <div className="header">
-                    <div className="logo">
-                        <div className="logo-icon"></div>
-                        <div className="logo-text">RemitBuddy</div>
-                    </div>
-                    <h1 className="main-title">{t('main_title')}</h1>
-                    <p className="subtitle">{t('main_subtitle')}</p>
-                </div>
-                
-                <div className="content-area">
-                    <div className="form-section">
-                    <div className="social-proof">
-                        <div className="social-proof-text">{t('social_proof')}</div>
-                        <div className="rating">
-                            <div className="stars">
-                                <span className="star">★</span>
-                                <span className="star">★</span>
-                                <span className="star">★</span>
-                                <span className="star">★</span>
-                                <span className="star">★</span>
-                            </div>
-                            <span>{t('rating')}</span>
-                        </div>
-                    </div>
-                    
-                    <form onSubmit={handleSubmit}>
-                        {/* 🔒 CSRF Protection - Server must validate this token */}
-                        {/* ⚠️ SECURITY: Ensure server validates CSRF token against session */}
-                        <input type="hidden" name="_csrf" value={csrfToken} />
-                        
-                        <div className="form-group">
-                            <label className="form-label">{t('amount_label')}</label>
-                            <p className="form-helper">{t('amount_helper')}</p>
-                            <div className="amount-input-wrapper" ref={formRef}>
-                                {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate: */}
-                                {/* - Range: 10,000 <= amount <= 5,000,000 */}
-                                {/* - Sanitize input to prevent injection */}
-                                {/* - Validate data type (number) */}
-                                <input 
-                                    type="number" 
-                                    className="amount-input" 
-                                    value={amount || ""}
-                                    onChange={handleAmountChange}
-                                    onBlur={handleAmountBlur}
-                                    placeholder={t('amount_placeholder')}
-                                    min="10000"
-                                    max="5000000"
-                                    step="1"
-                                />
-                                <span className="currency-label">KRW</span>
-                            </div>
-                            {amountError && (
-                                <div className="error-message">
-                                    {amountError}
-                                </div>
-                            )}
-                        </div>
-                        
-                        <div className="destination-section">
-                            <label className="form-label">{t('country_label')}</label>
-                            <p className="form-helper">{t('country_helper')}</p>
-                            <div className="destination-wrapper" ref={formRefDesktop}>
-                                <button type="button" className="destination-select" onClick={() => setShowDropdown(prev => !prev)}>
-                                    <div className="destination-content">
-                                        <div className="flag">
-                                            <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="24" height="18" className="flag-img" />
-                                        </div>
-                                        <span>{selectedCountry.name}</span>
-                                    </div>
-                                    <ChevronDownIcon className="chevron" />
-                                </button>
-                                {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRef} />}
-                            </div>
-                        </div>
-                        
-                        <button type="submit" className={`compare-button ${!isAmountValid() ? 'disabled' : ''}`} disabled={!isAmountValid()}>
-                            <ArrowRightIcon className="button-icon" />
-                            {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
-                        </button>
-                        
-                        <div className="disclaimer">
-                            {t('cta_helper')}
-                        </div>
-                        
-                        {!showResults && (
-                            <div className="features">
-                                <div className="feature">
-                                    <div className="feature-icon">🏆</div>
-                                    <div className="feature-content">
-                                        <div className="feature-title">{t('feature_rates_title')}</div>
-                                        <div className="feature-description">{t('feature_rates_desc')}</div>
-                                    </div>
-                                </div>
-                                <div className="feature">
-                                    <div className="feature-icon">⚡</div>
-                                    <div className="feature-content">
-                                        <div className="feature-title">{t('feature_fast_title')}</div>
-                                        <div className="feature-description">{t('feature_fast_desc')}</div>
-                                    </div>
-                                </div>
-                                <div className="feature">
-                                    <div className="feature-icon">🔒</div>
-                                    <div className="feature-content">
-                                        <div className="feature-title">{t('feature_secure_title')}</div>
-                                        <div className="feature-description">{t('feature_secure_desc')}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </form>
-                    </div>
+            <div className="min-h-screen bg-white font-poppins">
+                {/* Header with Logo */}
+                <header className="px-4 md:px-8 py-4 md:py-6 bg-white">
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-[#00D26A]">
+                        RemitBuddy
+                    </h1>
+                </header>
 
-                    {/* Results Section */}
-                    {showResults && (
-                        <div ref={resultsRef} className="results-section">
-                            <ComparisonResults queryParams={queryParams} amount={amount} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
+                {/* Hero Section - Full Width Green Background */}
+                <section className="bg-[#00D26A] pt-12 md:pt-16 pb-24 md:pb-32 px-4 md:px-8">
+                    <div className="max-w-[1200px] mx-auto">
+                        {/* Hero Title - White Text */}
+                        <div className="text-center mb-10 md:mb-12">
+                            <h2 className="text-4xl md:text-[56px] leading-tight md:leading-[68px] font-extrabold text-white mb-3 md:mb-4">
+                                {t('main_title')}
+                            </h2>
+                            <p className="text-lg md:text-2xl leading-7 md:leading-8 font-normal text-white">
+                                {t('main_subtitle')}
+                            </p>
                         </div>
-                    )}
-                </div>
+
+                        {/* White Input Card - Floating on Green Background */}
+                        <div className="max-w-[620px] mx-auto bg-white rounded-3xl border-[3px] border-[#00D26A] p-8 md:p-10 shadow-2xl">
+                            <form onSubmit={handleSubmit}>
+                                {/* 🔒 CSRF Protection - Server must validate this token */}
+                                <input type="hidden" name="_csrf" value={csrfToken} />
+
+                                {/* Country Selector */}
+                                <div className="mb-6 md:mb-8">
+                                    <label className="block text-lg md:text-xl font-bold text-[#00D26A] mb-3 md:mb-4 text-left">
+                                        {t('country_label')}
+                                    </label>
+                                    <div className="relative" ref={formRefDesktop}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowDropdown(prev => !prev)}
+                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 border-2 border-[#E5E7EB] rounded-full hover:border-[#00D26A] transition-colors"
+                                        >
+                                            <div className="flex items-center gap-2 md:gap-3">
+                                                <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="32" height="32" className="w-8 h-8 rounded-full object-cover" />
+                                                <span className="text-base md:text-lg font-semibold text-[#6B7280]">
+                                                    {selectedCountry.name} ({selectedCountry.currency})
+                                                </span>
+                                            </div>
+                                            <ChevronDownIcon className={`w-5 h-5 text-[#6B7280] transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                                        </button>
+                                        {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRef} />}
+                                    </div>
+                                </div>
+
+                                {/* Amount Input */}
+                                <div className="mb-6 md:mb-8" ref={formRef}>
+                                    <label className="block text-lg md:text-xl font-bold text-[#00D26A] mb-3 md:mb-4 text-left">
+                                        {t('amount_label')}
+                                    </label>
+                                    <div className="relative">
+                                        {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
+                                        <input
+                                            type="number"
+                                            value={amount || ""}
+                                            onChange={handleAmountChange}
+                                            onBlur={handleAmountBlur}
+                                            placeholder={t('amount_placeholder')}
+                                            min="10000"
+                                            max="5000000"
+                                            step="1"
+                                            className="w-full px-5 md:px-6 py-3 border-2 border-[#E5E7EB] rounded-full text-base md:text-lg font-semibold text-[#6B7280] text-right pr-16 focus:border-[#00D26A] focus:outline-none"
+                                        />
+                                        <span className="absolute right-5 md:right-6 top-1/2 -translate-y-1/2 text-base md:text-lg font-semibold text-[#6B7280]">
+                                            KRW
+                                        </span>
+                                    </div>
+                                    {amountError && (
+                                        <div className="text-red-500 text-sm mt-2">
+                                            {amountError}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* CTA Button */}
+                                <button
+                                    type="submit"
+                                    disabled={!isAmountValid()}
+                                    className="w-full py-3.5 md:py-4 bg-[#00D26A] text-white text-lg md:text-xl font-bold rounded-full hover:bg-[#00BD5F] transition-colors border-0 outline-none focus:outline-none active:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                    style={{ border: 'none !important', outline: 'none !important', boxShadow: 'none' }}
+                                >
+                                    {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Results Section */}
+                {showResults && (
+                    <div ref={resultsRef} className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12">
+                        <ComparisonResults queryParams={queryParams} amount={amount} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
+                    </div>
+                )}
+
+                {/* Footer */}
+                <footer className="bg-[#4B5563] text-white py-6 md:py-8 px-4 md:px-8 mt-auto">
+                    <div className="max-w-[1200px] mx-auto">
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                            <p className="text-xs md:text-sm">© 2025 Potensia Inc. All Rights Reserved</p>
+                            <div className="flex gap-4 md:gap-6 text-xs md:text-sm">
+                                <a href="#" className="hover:text-[#00D26A] transition-colors">About</a>
+                                <a href="#" className="hover:text-[#00D26A] transition-colors">Contact</a>
+                                <a href="#" className="hover:text-[#00D26A] transition-colors">Privacy</a>
+                                <a href="#" className="hover:text-[#00D26A] transition-colors">Advertise</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
             </div>
 
         </>

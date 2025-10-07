@@ -792,7 +792,7 @@ export default function MainPage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 border-2 border-[#E5E7EB] rounded-full hover:border-[#00D26A] transition-colors"
+                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 rounded-full hover:border hover:border-[#00D26A] transition-colors"
                                         >
                                             <div className="flex items-center gap-2 md:gap-3">
                                                 <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="32" height="32" className="w-8 h-8 rounded-full object-cover" />
@@ -814,17 +814,14 @@ export default function MainPage() {
                                     <div className="relative">
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
                                         <input
-                                            type="number"
-                                            value={amount || ""}
+                                            type="text"
+                                            value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
                                             onChange={handleAmountChange}
                                             onBlur={handleAmountBlur}
-                                            placeholder={t('amount_placeholder')}
-                                            min="10000"
-                                            max="5000000"
-                                            step="1"
-                                            className="w-full px-5 md:px-6 py-3 border-2 border-[#E5E7EB] rounded-full text-base md:text-lg font-semibold text-[#6B7280] text-right pr-16 focus:border-[#00D26A] focus:outline-none"
+                                            placeholder="1,000,000"
+                                            className="w-full px-5 md:px-6 py-3 rounded-full text-base md:text-lg font-semibold text-[#6B7280] pr-20 hover:border hover:border-[#00D26A] focus:border focus:border-[#00D26A] focus:outline-none transition-colors"
                                         />
-                                        <span className="absolute right-5 md:right-6 top-1/2 -translate-y-1/2 text-base md:text-lg font-semibold text-[#6B7280]">
+                                        <span className="absolute right-5 md:right-6 top-1/2 -translate-y-1/2 text-base md:text-lg font-semibold text-[#6B7280] pointer-events-none">
                                             KRW
                                         </span>
                                     </div>

@@ -771,9 +771,7 @@ export default function MainPage() {
                     <div className="max-w-[1200px] mx-auto">
                         {/* Hero Title - White Text */}
                         <div className="text-center mb-10 md:mb-12">
-                            <h2 className="text-4xl md:text-[56px] leading-tight md:leading-[68px] font-extrabold text-white mb-3 md:mb-4">
-                                {t('main_title')}
-                            </h2>
+                            <h2 className="text-4xl md:text-[56px] leading-tight md:leading-[68px] font-extrabold text-white mb-3 md:mb-4" dangerouslySetInnerHTML={{ __html: t('main_title') }} />
                             <p className="text-lg md:text-2xl leading-7 md:leading-8 font-normal text-white">
                                 {t('main_subtitle')}
                             </p>

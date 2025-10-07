@@ -136,7 +136,8 @@ export default function NewHome() {
               {/* CTA Button */}
               <button
                 type="button"
-                className="w-full py-3.5 md:py-4 bg-[#00D26A] text-white text-lg md:text-xl font-bold rounded-full hover:bg-[#00BD5F] transition-colors border-0 outline-none"
+                className="w-full py-3.5 md:py-4 bg-[#00D26A] text-white text-lg md:text-xl font-bold rounded-full hover:bg-[#00BD5F] transition-colors"
+                style={{ border: 'none', outline: 'none' }}
               >
                 Compare the Best Rates
               </button>

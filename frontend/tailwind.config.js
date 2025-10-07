@@ -25,7 +25,7 @@ module.exports = {
       },
       // Color palette for remittance app
       colors: {
-        brand: '#00D26A',           // Primary green - EXACT HEX from Figma
+        brand: '#34C759',           // Primary green - EXACT HEX from Figma
         'brand-light': '#E8F9F0',   // Light green background
         'gray-primary': '#1F2937',  // Text primary (almost black)
         'gray-secondary': '#6B7280', // Text secondary

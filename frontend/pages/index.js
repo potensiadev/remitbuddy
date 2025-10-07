@@ -181,26 +181,28 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
 
 // Country Dropdown Component
 const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange, dropdownRef }) => (
-    <div ref={dropdownRef} className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] h-auto max-h-[60vh] bg-white rounded-xl lg:rounded-2xl shadow-2xl border-2 border-[#00D26A] flex flex-col overflow-hidden z-50">
+    <div ref={dropdownRef} 
+    className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] max-h-[60vh] bg-white rounded-2xl shadow-lg border-2 border-brand flex flex-col overflow-hidden z-50 animate-slide-down"
+    >
         <div className="flex-1 overflow-y-auto">
-            {COUNTRIES.map(c => (
-                <div
+            {COUNTRIES.map((c) => (
+                <button
                     key={c.code}
-                    className="flex items-center gap-3 px-4 lg:px-6 py-3 lg:py-4 cursor-pointer hover:bg-[#E8F9F0] transition-colors text-lg"
                     onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedCountry(c);
-                        setShowDropdown(false);
-                        onCountryChange(c);
-                    }}
-                >
-                    <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" />
-                    <div>
-                        <div className="font-bold text-sm lg:text-base text-slate-800">{c.name}</div>
-                        <div className="text-gray-500 text-xs lg:text-sm">{c.currency}</div>
-                    </div>
-                </div>
-            ))}
+                e.stopPropagation();
+                setSelectedCountry(c);
+                setShowDropdown(false);
+                onCountryChange(c);
+            }}
+            className="w-full flex items-center gap-3 px-5 lg:px-6 py-3 lg:py-4 text-left hover:bg-brand/10 transition-colors focus-ring"
+        >
+            <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" />
+            <div>
+                <div className="font-bold text-sm lg:text-base text-slate-800">{c.name}</div>
+                <div className="text-gray-500 text-xs lg:text-sm">{c.currency}</div>
+            </div>
+        </button>
+    ))}
         </div>
     </div>
 );

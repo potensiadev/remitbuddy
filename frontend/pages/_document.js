@@ -1,40 +1,48 @@
+// 📄 /frontend/pages/_document.js
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 class MyDocument extends Document {
   render() {
     const { locale } = this.props;
-    
+
     return (
-      <Html lang={locale}>
+      <Html lang={locale || 'en'}>
         <Head>
           <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
-          
-          {/* Content Security Policy - moved to next.config.js for better build compatibility */}
-          
-          {/* Basic SEO */}
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover"
+          />
+
+          {/* 🧭 기본 SEO / 검색엔진 접근 허용 */}
           <meta name="robots" content="index, follow" />
           <meta name="googlebot" content="index, follow" />
-          <meta name="theme-color" content="#4facfe" />
-          <meta name="msapplication-TileColor" content="#4facfe" />
-          
-          {/* Google Search Console 인증 */}
-          <meta name="google-site-verification" content="5hrs9JLWBmFrpyyg2B2quAHNcUJCH6dv" />
-          
-          {/* Preconnect to external domains */}
+
+          {/* 🎨 테마 색상 */}
+          <meta name="theme-color" content="#00D26A" />
+          <meta name="msapplication-TileColor" content="#00D26A" />
+
+          {/* 🔍 Google Search Console 인증 */}
+          <meta
+            name="google-site-verification"
+            content="5hrs9JLWBmFrpyyg2B2quAHNcUJCH6dv"
+          />
+
+          {/* ⚡️ 사전 연결 (성능 최적화) */}
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
           <link rel="preconnect" href="https://www.googletagmanager.com" />
-          
-          {/* External fonts with SRI would be added here if specific font files are loaded */}
-          
-          {/* Favicon */}
+
+          {/* 🖼️ 파비콘 및 매니페스트 */}
           <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
           <link rel="alternate icon" href="/vite.svg" type="image/svg+xml" />
-          
-          {/* PWA Manifest */}
           <link rel="manifest" href="/manifest.json" />
         </Head>
+
         <body>
           <Main />
           <NextScript />

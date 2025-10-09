@@ -1,24 +1,27 @@
+// next-i18next.config.js
 module.exports = {
   i18n: {
     defaultLocale: 'en',
     locales: [
-      'en',  // English (default)
-      'ko',  // Korean 
-      'vi',  // Vietnamese
-      'tl',  // Filipino/Tagalog (Philippines)
-      'km',  // Khmer (Cambodia)
-      'my',  // Burmese (Myanmar)
-      'th',  // Thai (Thailand)
-      'uz',  // Uzbek (Uzbekistan)
-      'id',  // Indonesian (Indonesia)
-      'si',  // Sinhala (Sri Lanka)
-      'bn',  // Bengali (Bangladesh)
-      'ne',  // Nepali (Nepal)
-      'mn',  // Mongolian (Mongolia)
+      'en',
+      'ko',
+      'vi',
+      'tl',
+      'km',
+      'my',
+      'th',
+      'uz',
+      'id',
+      'si',
+      'ne',
+      // 'bn', // 준비되면 주석 해제 + locales/bn + hreflang + sitemap 동시 반영
+      // 'mn', // 준비되면 주석 해제 + locales/mn + hreflang + sitemap 동시 반영
     ],
-    localeDetection: false,  // Disable automatic locale detection for better performance
+    localeDetection: false, // 성능 및 예측 가능성↑ (루트→/en 리다이렉트로 대체)
   },
   react: {
     useSuspense: false,
   },
-};
+  // 개발 중 즉시 번역 반영이 필요하면:
+  // reloadOnPrerender: process.env.NODE_ENV === 'development',
+}

@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    // "export" 스크립트는 삭제합니다. Netlify 플러그인이 처리합니다.
     "build:static": "next build"
   },
   "dependencies": {

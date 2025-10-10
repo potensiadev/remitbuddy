@@ -1,11 +1,8 @@
-// next.config.js - SEO / 보안 / 캐시 / 빌드 안정화 최적화 (Netlify 대응 완전판)
-const { i18n } = require('./next-i18next.config');
+// next.config.js - SEO / 보안 / 캐시 / 빌드 안정화 최적화 (Netlify 완전 정적 대응)
+const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 🌐 다국어 지원
-  i18n,
-
   // 🖼 이미지 최적화
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -18,13 +15,9 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
 
-  // 🚫 TypeScript 및 ESLint 검사 완전 비활성화 (Netlify 빌드 에러 방지)
-  typescript: {
-    ignoreBuildErrors: true, // ❗ TypeScript 감지 시에도 빌드 중단 안 함
-  },
-  eslint: {
-    ignoreDuringBuilds: true, // ❗ ESLint 감지 시에도 빌드 중단 안 함
-  },
+  // 🚫 TypeScript 및 ESLint 검사 완전 비활성화
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
 
   // 📦 보안 및 캐시 헤더 설정
   async headers() {
@@ -76,7 +69,6 @@ const nextConfig = {
           },
         ],
       },
-      // 정적 자산 캐싱
       {
         source: '/_next/static/(.*)',
         headers: [
@@ -86,72 +78,46 @@ const nextConfig = {
       {
         source: '/images/(.*)',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable',
-          },
+          { key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' },
         ],
       },
       {
         source: '/icons/(.*)',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable',
-          },
+          { key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' },
         ],
       },
       {
         source: '/logos/(.*)',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable',
-          },
+          { key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' },
         ],
       },
       {
         source: '/fonts/(.*)',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable',
-          },
+          { key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' },
         ],
       },
     ];
   },
 
-  // 🌍 리다이렉트 설정 (언어 및 도메인 정규화)
+  // 🌍 리다이렉트 설정
   async redirects() {
     return [
-      {
-        source: '/',
-        destination: '/en',
-        permanent: true,
-        locale: false,
-      },
+      { source: '/', destination: '/en', permanent: true, locale: false },
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'remitbuddy.com' }],
         destination: 'https://www.remitbuddy.com/:path*',
         permanent: true,
       },
-      {
-        source: '/compare',
-        destination: '/en',
-        permanent: true,
-        locale: false,
-      },
+      { source: '/compare', destination: '/en', permanent: true, locale: false },
     ];
   },
 
-  // ⚙️ 실험적 설정
-  experimental: {
-    esmExternals: true,
-  },
-
   // ⚙️ Webpack 최적화
+  experimental: { esmExternals: true },
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
       config.optimization.splitChunks = {
@@ -168,7 +134,7 @@ const nextConfig = {
     return config;
   },
 
-  // ✅ Next.js 14 이상 정적 Export 방식
+  // ✅ 정적 Export 활성화 (i18n 제거 후)
   output: 'export',
 };
 

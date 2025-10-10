@@ -65,14 +65,8 @@ const nextConfig = {
           ...(!isDev ? [{ key: 'X-Frame-Options', value: 'DENY' }] : []),
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          {
-            key: 'Permissions-Policy',
-            value: "camera=(), microphone=(), geolocation=(), payment=()",
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload',
-          },
+          { key: 'Permissions-Policy', value: "camera=(), microphone=(), geolocation=(), payment=()" },
+          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
           { key: 'Content-Security-Policy', value: isDev ? devCSP : prodCSP },
           {
             key: 'Cache-Control',
@@ -86,10 +80,7 @@ const nextConfig = {
       {
         source: '/_next/static/(.*)',
         headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
       {
@@ -97,9 +88,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: isDev
-              ? 'no-cache'
-              : 'public, max-age=31536000, immutable',
+            value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable',
           },
         ],
       },
@@ -108,9 +97,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: isDev
-              ? 'no-cache'
-              : 'public, max-age=31536000, immutable',
+            value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable',
           },
         ],
       },
@@ -119,9 +106,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: isDev
-              ? 'no-cache'
-              : 'public, max-age=31536000, immutable',
+            value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable',
           },
         ],
       },
@@ -130,9 +115,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: isDev
-              ? 'no-cache'
-              : 'public, max-age=31536000, immutable',
+            value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable',
           },
         ],
       },
@@ -142,21 +125,18 @@ const nextConfig = {
   // 🌍 리다이렉트 설정 (언어 및 도메인 정규화)
   async redirects() {
     return [
-      // 루트 → /en
       {
         source: '/',
         destination: '/en',
         permanent: true,
         locale: false,
       },
-      // naked → www
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'remitbuddy.com' }],
         destination: 'https://www.remitbuddy.com/:path*',
         permanent: true,
       },
-      // 구버전 URL
       {
         source: '/compare',
         destination: '/en',
@@ -166,7 +146,7 @@ const nextConfig = {
     ];
   },
 
-  // 실험적 설정
+  // ⚙️ 실험적 설정
   experimental: {
     esmExternals: true,
   },
@@ -187,6 +167,9 @@ const nextConfig = {
     }
     return config;
   },
+
+  // ✅ Next.js 14 이상 정적 Export 방식
+  output: 'export',
 };
 
 module.exports = nextConfig;

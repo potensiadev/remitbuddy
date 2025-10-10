@@ -1,7 +1,9 @@
+# ✅ Netlify 정적 배포 설정 (Next.js 14 대응 완전판)
+
 [build]
   base = "frontend"
-  command = "npm install && npm run build && npm run export"
-  publish = "out"   # next export 결과물 폴더
+  command = "npm install && npm run build"
+  publish = "out"
 
 [build.environment]
   NODE_ENV = "production"
@@ -9,18 +11,14 @@
   NEXT_DISABLE_TYPE_CHECK = "1"
   SKIP_TYPECHECK = "true"
   DISABLE_TS_CHECK = "true"
+  NPM_FLAGS = "--legacy-peer-deps"
 
-# ⚠️ Netlify Next.js Runtime 비활성화 (직접 export 배포로 대체)
+# ⚠️ Netlify Next.js 플러그인 비활성화 (빌드 충돌 방지)
 # [[plugins]]
 #   package = "@netlify/plugin-nextjs"
 
-# SPA 라우팅 대응[[redirects]]
+# ✅ SPA 라우팅 대응
+[[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 200
-
-# ⚠️ 404 페이지는 Next.js가 자체 처리하므로 불필요
-# [[redirects]]
-#   from = "/404"
-#   to = "/404.html"
-#   status = 404
+  status = "200"

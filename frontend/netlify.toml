@@ -1,7 +1,6 @@
 [build]
   base = "frontend"
-  # ✅ TypeScript 감지 완전 차단: 빌드 전에 tsconfig.json, next-env.d.ts 삭제
-  command = "rm -f tsconfig.json next-env.d.ts && npm install && npm run build && npm run export"
+  command = "npm install && npm run build && npm run export"
   publish = "out"
 
 [build.environment]

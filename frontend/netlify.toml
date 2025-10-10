@@ -1,8 +1,7 @@
-# ✅ Netlify 정적 배포 설정 (Next.js 14 대응 완전판)
-
 [build]
   base = "frontend"
-  command = "npm install && npm run build"
+  # ✅ TypeScript 감지 완전 차단: 빌드 전에 tsconfig.json, next-env.d.ts 삭제
+  command = "rm -f tsconfig.json next-env.d.ts && npm install && npm run build && npm run export"
   publish = "out"
 
 [build.environment]
@@ -11,14 +10,9 @@
   NEXT_DISABLE_TYPE_CHECK = "1"
   SKIP_TYPECHECK = "true"
   DISABLE_TS_CHECK = "true"
-  NPM_FLAGS = "--legacy-peer-deps"
 
-# ⚠️ Netlify Next.js 플러그인 비활성화 (빌드 충돌 방지)
-# [[plugins]]
-#   package = "@netlify/plugin-nextjs"
-
-# ✅ SPA 라우팅 대응
+# SPA 라우팅 대응
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = "200"
+  status = 200

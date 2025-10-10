@@ -1,9 +1,10 @@
-// next.config.js - SEO / 보안 / 캐시 / 빌드 안정화 최적화 (Netlify 완전 정적 대응)
-const path = require('path');
+// next.config.js - SEO/보안/캐시 최적화 (권장 수정안)
+const { i18n } = require('./next-i18next.config')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 🖼 이미지 최적화
+  i18n,
+
   images: {
     formats: ['image/avif', 'image/webp'],
     domains: ['www.remitbuddy.com'],
@@ -11,18 +12,13 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  // ⚙️ 빌드 안정화
   compress: true,
   poweredByHeader: false,
 
-  // 🚫 TypeScript 및 ESLint 검사 완전 비활성화
-  typescript: { ignoreBuildErrors: true },
-  eslint: { ignoreDuringBuilds: true },
-
-  // 📦 보안 및 캐시 헤더 설정
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
 
+    // 개발/프로덕션 CSP
     const devCSP = [
       "default-src 'self' 'unsafe-eval' 'unsafe-inline'",
       "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
@@ -34,7 +30,7 @@ const nextConfig = {
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
+      "upgrade-insecure-requests"
     ].join('; ');
 
     const prodCSP = [
@@ -48,94 +44,90 @@ const nextConfig = {
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
+      "upgrade-insecure-requests"
     ].join('; ');
 
     return [
+      // 1) 모든 경로: 보안 헤더 (캐시는 제외!)
       {
         source: '/(.*)',
         headers: [
+          // X-Frame-Options는 frame-ancestors와 중복 가능 → 하나만 써도 됨
           ...(!isDev ? [{ key: 'X-Frame-Options', value: 'DENY' }] : []),
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: "camera=(), microphone=(), geolocation=(), payment=()" },
           { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
           { key: 'Content-Security-Policy', value: isDev ? devCSP : prodCSP },
-          {
-            key: 'Cache-Control',
-            value: isDev
-              ? 'no-store, must-revalidate'
-              : 'public, max-age=0, must-revalidate',
-          },
+          // ❗ HTML에 장기 캐시 절대 금지 (Next 기본값 유지 또는 짧게)
+          { key: 'Cache-Control', value: isDev ? 'no-store, must-revalidate' : 'public, max-age=0, must-revalidate' },
         ],
       },
+      // 2) 정적 자산: 장기 캐시
       {
         source: '/_next/static/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
       {
         source: '/images/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' },
-        ],
+        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' }],
       },
       {
         source: '/icons/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' },
-        ],
+        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' }],
       },
       {
         source: '/logos/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' },
-        ],
+        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' }],
       },
       {
         source: '/fonts/(.*)',
-        headers: [
-          { key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' },
-        ],
+        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' }],
       },
-    ];
+    ]
   },
 
-  // 🌍 리다이렉트 설정
   async redirects() {
     return [
-      { source: '/', destination: '/en', permanent: true, locale: false },
+      // (A) 루트 → /en 고정 (sitemap/hreflang과 정합성 맞추기)
+      {
+        source: '/',
+        destination: '/en',
+        permanent: true,
+        locale: false, // ❗ 중복 로케일 처리 방지
+      },
+      // (B) naked → www 강제
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'remitbuddy.com' }],
         destination: 'https://www.remitbuddy.com/:path*',
         permanent: true,
       },
-      { source: '/compare', destination: '/en', permanent: true, locale: false },
-    ];
+      // (C) 구버전 URL
+      {
+        source: '/compare',
+        destination: '/en',
+        permanent: true,
+        locale: false,
+      },
+    ]
   },
 
-  // ⚙️ Webpack 최적화
-  experimental: { esmExternals: true },
+  experimental: {
+    esmExternals: true,
+  },
+
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
       config.optimization.splitChunks = {
         chunks: 'all',
         cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
+          vendor: { test: /[\\/]node_modules[\\/]/, name: 'vendors', chunks: 'all' },
         },
-      };
+      }
     }
-    return config;
+    return config
   },
+}
 
-  // ✅ 정적 Export 활성화 (i18n 제거 후)
-  output: 'export',
-};
-
-module.exports = nextConfig;
+module.exports = nextConfig

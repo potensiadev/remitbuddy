@@ -1,13 +1,22 @@
 [build]
   base = "frontend"
-  command = "npm install --production=false && npm run build"
-  publish = "out"
+  command = "npm ci && npm run build"
+  publish = ".next"
 
 [build.environment]
-  NODE_ENV = "production"
-  NEXT_TELEMETRY_DISABLED = "1"
+  NEXT_PUBLIC_API_URL = "https://remitbuddy-production.up.railway.app"
 
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# 리다이렉트 설정 (SPA 라우팅용)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+# 404 페이지 설정
+[[redirects]]
+  from = "/404"
+  to = "/404.html"
+  status = 404

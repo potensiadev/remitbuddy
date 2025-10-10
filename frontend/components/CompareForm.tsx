@@ -118,18 +118,13 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
           <label className="block text-lg lg:text-xl font-bold text-brand mb-3 lg:mb-4 text-left">
             How much do you want to send?
           </label>
-          <div className="relative">
-            <input
-              type="text"
-              value={amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              onChange={handleAmountChange}
-              className="w-full px-5 lg:px-6 py-3 pr-20 border-2 border-gray-border rounded-full text-base lg:text-lg font-semibold text-gray-secondary text-right focus:border-brand focus:outline-none"
-              placeholder="1,000,000"
-            />
-            <span className="absolute right-5 lg:right-6 top-1/2 -translate-y-1/2 text-base lg:text-lg font-semibold text-gray-secondary pointer-events-none">
-              KRW
-            </span>
-          </div>
+          <input
+            type="text"
+            value={amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            onChange={handleAmountChange}
+            className="w-full px-5 lg:px-6 py-3 border-2 border-gray-border rounded-full text-base lg:text-lg font-semibold text-gray-secondary text-right focus:border-brand focus:outline-none"
+            placeholder="1,000,000 KRW"
+          />
         </div>
 
         {/* CTA Button */}

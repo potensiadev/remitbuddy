@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 
-// Country data with supported currencies
 const COUNTRIES = [
   { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" },
-  { code: 'NP', currency: 'NPR', name: 'Nepal', flag: '/images/flags/np.png' },
+  { code: "NP", currency: "NPR", name: "Nepal", flag: "/images/flags/np.png" },
   { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" },
   { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" },
   { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" },
@@ -21,30 +20,66 @@ interface CompareFormProps {
 
 export default function CompareForm({ onSubmit, isLoading = false }: CompareFormProps) {
   const [amount, setAmount] = useState("1000000");
+  const [displayAmount, setDisplayAmount] = useState("1,000,000");
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
+  /* ✅ 외부 클릭/탭 시 드롭다운 닫기 */
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, []);
 
+  /* ✅ ESC 키로 드롭다운 닫기 */
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowDropdown(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  /* ✅ 드롭다운 열릴 때 body scroll 잠금 */
+  useEffect(() => {
+    document.body.style.overflow = showDropdown ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [showDropdown]);
+
+  /* ✅ 금액 입력 */
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/,/g, '');
-    if (!isNaN(Number(value)) && value.length <= 10) {
-      setAmount(value);
+    const rawValue = e.target.value.replace(/,/g, "");
+    if (/^\d*$/.test(rawValue) && rawValue.length <= 10) {
+      setAmount(rawValue);
+      setDisplayAmount(rawValue);
     }
+  };
+
+  const handleBlur = () => {
+    if (!amount) return;
+    const numericValue = Number(amount);
+    setDisplayAmount(numericValue.toLocaleString());
+  };
+
+  const handleFocus = () => {
+    setDisplayAmount(amount);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const numericValue = Number(amount);
+    if (numericValue < 10000 || numericValue > 5000000) return;
     if (!isLoading && onSubmit) {
       onSubmit(amount, selectedCountry);
     }
@@ -55,8 +90,11 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
     setShowDropdown(false);
   };
 
+  const isAmountValid =
+    Number(amount) >= 10000 && Number(amount) <= 5000000 && amount !== "";
+
   return (
-    <div className="w-full bg-white border-[3px] border-brand rounded-3xl shadow-lg p-8 lg:p-10">
+    <div className="w-full bg-white border-[3px] border-brand rounded-3xl shadow-lg p-8 lg:p-10 transition-colors">
       <form onSubmit={handleSubmit}>
 
         {/* Country Selector */}
@@ -67,7 +105,8 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
           <button
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
-            className="w-full flex items-center justify-between px-5 lg:px-6 py-3 border-2 border-gray-border rounded-full hover:border-brand transition-colors"
+            aria-expanded={showDropdown}
+            className="w-full flex items-center justify-between px-5 lg:px-6 py-3 border-2 border-gray-300 rounded-full hover:border-brand transition-colors focus:outline-none focus:ring-2 focus:ring-brand/50"
           >
             <div className="flex items-center gap-2 lg:gap-3">
               <img
@@ -75,12 +114,12 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
                 alt={`${selectedCountry.name} flag`}
                 className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover"
               />
-              <span className="text-base lg:text-lg font-semibold text-gray-secondary">
+              <span className="text-base lg:text-lg font-semibold text-gray-800">
                 {selectedCountry.name} ({selectedCountry.currency})
               </span>
             </div>
             <svg
-              className={`w-4 h-4 lg:w-5 lg:h-5 text-gray-secondary transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 lg:w-5 lg:h-5 text-gray-500 transition-transform duration-200 ${showDropdown ? "rotate-180" : ""}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -91,20 +130,21 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
 
           {/* Dropdown */}
           {showDropdown && (
-            <div className="absolute top-full left-0 w-full mt-2 bg-white border-2 border-brand rounded-2xl shadow-xl z-50 max-h-96 overflow-y-auto">
+            <div className="absolute top-full left-0 w-full mt-2 bg-white border-2 border-brand rounded-2xl shadow-xl z-50 max-h-[60vh] overflow-y-auto overscroll-contain">
               {COUNTRIES.map((country) => (
                 <button
                   key={country.code}
                   type="button"
                   onClick={() => handleCountrySelect(country)}
-                  className="w-full flex items-center gap-2 lg:gap-3 px-5 lg:px-6 py-3 lg:py-4 hover:bg-brand-light transition-colors text-left"
+                  autoFocus={country.code === selectedCountry.code}
+                  className="w-full flex items-center gap-3 px-5 lg:px-6 py-3 hover:bg-brand/10 transition-colors text-left focus:bg-brand/10 focus:outline-none"
                 >
                   <img
                     src={country.flag}
                     alt={`${country.name} flag`}
                     className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover"
                   />
-                  <span className="text-base lg:text-lg font-medium text-gray-secondary">
+                  <span className="text-base lg:text-lg font-medium text-gray-800">
                     {country.name} ({country.currency})
                   </span>
                 </button>
@@ -120,20 +160,31 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
           </label>
           <input
             type="text"
-            value={amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={displayAmount}
             onChange={handleAmountChange}
-            className="w-full px-5 lg:px-6 py-3 border-2 border-gray-border rounded-full text-base lg:text-lg font-semibold text-gray-secondary text-right focus:border-brand focus:outline-none"
+            onBlur={handleBlur}
+            onFocus={handleFocus}
+            className={`w-full px-5 lg:px-6 py-3 border-2 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right focus:outline-none focus:ring-2 focus:ring-brand/40 ${
+              isAmountValid ? "border-gray-300 focus:border-brand" : "border-red-400"
+            }`}
             placeholder="1,000,000 KRW"
           />
+          {!isAmountValid && (
+            <p className="text-red-500 text-sm mt-2 text-left">
+              Please enter between ₩10,000 and ₩5,000,000
+            </p>
+          )}
         </div>
 
         {/* CTA Button */}
         <button
           type="submit"
-          disabled={isLoading}
-          className="w-full py-3.5 lg:py-4 bg-brand text-white text-lg lg:text-xl font-bold rounded-full hover:bg-[#00BD5F] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isLoading || !isAmountValid}
+          className="w-full py-3.5 lg:py-4 bg-brand text-white text-lg lg:text-xl font-bold rounded-full transition-colors hover:enabled:bg-[#00BD5F] disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? 'Comparing...' : 'Compare the Best Rates'}
+          {isLoading ? "Comparing..." : "Compare the Best Rates"}
         </button>
       </form>
     </div>

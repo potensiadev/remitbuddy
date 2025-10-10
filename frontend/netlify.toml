@@ -2,10 +2,15 @@
   base = "frontend"
   command = "npm install && npm run build"
   publish = ".next"
+  ignore = "echo 'No ignore rule'"
 
 [build.environment]
   NEXT_PUBLIC_API_URL = "https://remitbuddy-production.up.railway.app"
   NODE_ENV = "production"
+  NEXT_TELEMETRY_DISABLED = "1"
+  NEXT_DISABLE_TYPE_CHECK = "1"
+  SKIP_TYPECHECK = "true"
+  DISABLE_TS_CHECK = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

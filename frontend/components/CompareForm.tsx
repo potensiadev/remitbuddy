@@ -167,7 +167,6 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
           </label>
 
           <div className="relative">
-            {/* ✅ 흔들림 없는 input */}
             <input
               type="text"
               inputMode="numeric"
@@ -177,7 +176,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               onBlur={handleBlur}
               onFocus={handleFocus}
               className={`
-                w-full px-5 lg:px-6 py-3 pr-16 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right
+                w-full pl-5 lg:pl-6 pr-20 py-3 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right
                 border-2 ${!isAmountValid ? "border-red-400" : "border-gray-300"}
                 hover:border-brand
                 focus:border-brand

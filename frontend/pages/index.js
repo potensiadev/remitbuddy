@@ -760,7 +760,7 @@ export default function MainPage() {
             <div className="min-h-screen bg-white font-poppins">
                 {/* Header with Logo */}
                 <header className="px-4 md:px-8 py-4 md:py-6 bg-white">
-                    <h1 className="text-3xl md:text-4xl font-extrabold text-[#00D26A]">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-[#00D26A]">
                         RemitBuddy
                     </h1>
                 </header>
@@ -770,7 +770,7 @@ export default function MainPage() {
                     <div className="max-w-[1200px] mx-auto">
                         {/* Hero Title - White Text */}
                         <div className="text-center mb-10 md:mb-12">
-                            <h2 className="text-4xl md:text-[56px] leading-tight md:leading-[68px] font-extrabold text-white mb-3 md:mb-4" dangerouslySetInnerHTML={{ __html: t('main_title') }} />
+                            <h2 className="text-3xl md:text-[39px] leading-tight md:leading-[48px] font-extrabold text-white mb-3 md:mb-4" dangerouslySetInnerHTML={{ __html: t('main_title') }} />
                             <p className="text-lg md:text-2xl leading-7 md:leading-8 font-normal text-white">
                                 {t('main_subtitle')}
                             </p>
@@ -784,7 +784,7 @@ export default function MainPage() {
 
                                 {/* Country Selector */}
                                 <div className="mb-8 md:mb-10">
-                                    <label className="block text-[22px] md:text-[24px] font-bold text-[#34C759] mb-5 md:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                    <label className="block text-[18px] md:text-[19px] font-bold text-[#34C759] mb-5 md:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('country_label')}
                                     </label>
                                     <div className="relative" ref={formRefDesktop}>
@@ -808,7 +808,7 @@ export default function MainPage() {
 
                                 {/* Amount Input */}
                                 <div className="mb-8 md:mb-10" ref={formRef}>
-                                    <label className="block text-[22px] md:text-[24px] font-bold text-[#34C759] mb-5 md:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                    <label className="block text-[18px] md:text-[19px] font-bold text-[#34C759] mb-5 md:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('amount_label')}
                                     </label>
                                     <div className={`w-full flex items-center gap-2 px-4 md:px-7 py-4 md:py-5 border-[5px] rounded-[50px] bg-white hover:border-[#2EBF5C] focus-within:border-[#2EBF5C] transition-colors duration-200 shadow-sm ${

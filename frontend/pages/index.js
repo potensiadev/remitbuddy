@@ -794,7 +794,7 @@ export default function MainPage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 rounded-full border-2 border-gray-300 hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors"
+                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#E5E7EB] hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors shadow-sm"
                                         >
                                             <ChevronDownIcon className={`w-5 h-5 text-[#6B7280] transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                                             <div className="flex items-center gap-2 md:gap-3">

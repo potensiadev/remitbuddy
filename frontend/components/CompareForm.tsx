@@ -185,7 +185,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               `}
               placeholder="1,000,000"
             />
-            <span className="absolute right-5 lg:right-6 top-1/2 -translate-y-1/2 text-base lg:text-lg font-semibold text-gray-800">
+            <span className="absolute right-5 lg:right-6 top-1/2 -translate-y-1/2 text-base lg:text-lg font-semibold text-gray-800 pointer-events-none">
               KRW
             </span>
           </div>

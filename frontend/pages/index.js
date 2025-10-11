@@ -760,7 +760,7 @@ export default function MainPage() {
             <div className="min-h-screen bg-white font-poppins">
                 {/* Header with Logo */}
                 <header className="px-4 md:px-8 py-4 md:py-6 bg-white">
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-[#00D26A]">
+                    <h1 className="text-3xl md:text-4xl font-extrabold text-[#00D26A]">
                         RemitBuddy
                     </h1>
                 </header>

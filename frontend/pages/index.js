@@ -813,7 +813,7 @@ export default function MainPage() {
                                     <label className="block text-lg md:text-xl font-bold text-[#00D26A] mb-3 md:mb-4 text-left">
                                         {t('amount_label')}
                                     </label>
-                                    <div className="flex items-center gap-3 px-5 md:px-6 py-3 rounded-full bg-white border-2 border-gray-300 hover:border-[#00D26A] focus-within:border-[#00D26A] transition-colors">
+                                    <div className="flex items-center gap-3 px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#E5E7EB] hover:border-[#00D26A] focus-within:border-[#00D26A] transition-colors shadow-sm">
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
                                         <input
                                             type="text"
@@ -821,7 +821,7 @@ export default function MainPage() {
                                             onChange={handleAmountChange}
                                             onBlur={handleAmountBlur}
                                             placeholder="1,000,000"
-                                            className="flex-1 text-base md:text-lg font-semibold text-[#6B7280] text-right bg-white border-0 focus:outline-none"
+                                            className="flex-1 text-base md:text-lg font-semibold text-[#6B7280] text-right bg-transparent border-0 focus:outline-none placeholder:text-[#9CA3AF]"
                                         />
                                         <span className="text-base md:text-lg font-semibold text-[#6B7280] whitespace-nowrap">
                                             KRW

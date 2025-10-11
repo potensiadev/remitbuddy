@@ -167,7 +167,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
             How much do you want to send?
           </label>
 
-          <div className="relative">
+          <div className="relative flex items-center">
             {/* ✅ 흔들림 없는 input */}
             <input
               type="text"
@@ -178,7 +178,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               onBlur={handleBlur}
               onFocus={handleFocus}
               className={`
-                w-full px-5 lg:px-6 py-3 pr-16 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right
+                w-full px-5 lg:px-6 py-3 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right
                 border border-transparent
                 shadow-[inset_0_0_0_2px_rgba(209,213,219,1)]
                 hover:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
@@ -187,8 +187,9 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
                 ${!isAmountValid ? "shadow-[inset_0_0_0_2px_rgb(248,113,113)]" : ""}
               `}
               placeholder="1,000,000"
+              style={{ paddingRight: '4.5rem' }}
             />
-            <span className="absolute right-5 lg:right-6 top-1/2 -translate-y-1/2 text-base lg:text-lg font-semibold text-gray-800">
+            <span className="absolute right-5 lg:right-6 text-base lg:text-lg font-semibold text-gray-800 pointer-events-none">
               KRW
             </span>
           </div>

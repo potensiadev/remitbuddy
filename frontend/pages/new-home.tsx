@@ -119,15 +119,16 @@ export default function NewHome() {
                 <label className="block text-lg md:text-xl font-bold text-[#00D26A] mb-3 md:mb-4 text-left">
                   How much do you want to send?
                 </label>
-                <div className="relative">
+                <div className="relative flex items-center">
                   <input
                     type="text"
                     value={formatNumber(amount)}
                     onChange={handleAmountChange}
-                    className="w-full px-5 md:px-6 py-3 pr-20 border-2 border-[#E5E7EB] rounded-full text-base md:text-lg font-semibold text-[#6B7280] text-right focus:border-[#00D26A] focus:outline-none"
+                    className="w-full px-5 md:px-6 py-3 border-2 border-[#E5E7EB] rounded-full text-base md:text-lg font-semibold text-[#6B7280] text-right focus:border-[#00D26A] focus:outline-none"
                     placeholder="1,000,000"
+                    style={{ paddingRight: '4.5rem' }}
                   />
-                  <span className="absolute right-5 md:right-6 top-1/2 -translate-y-1/2 text-base md:text-lg font-semibold text-[#6B7280]">
+                  <span className="absolute right-5 md:right-6 text-base md:text-lg font-semibold text-[#6B7280] pointer-events-none">
                     KRW
                   </span>
                 </div>

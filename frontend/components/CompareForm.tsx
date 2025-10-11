@@ -94,11 +94,11 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
     Number(amount) >= 10000 && Number(amount) <= 5000000 && amount !== "";
 
   return (
-    <div className="w-full bg-white border-[3px] border-[#34C759] rounded-[32px] shadow-[0_6px_18px_rgba(0,0,0,0.06)] p-8 lg:p-10 transition-colors">
+    <div className="w-full bg-white border-[3px] border-[#2EBF5C] rounded-[32px] shadow-[0_8px_24px_rgba(0,0,0,0.08)] p-10 lg:p-14 transition-colors">
       <form onSubmit={handleSubmit}>
         {/* Country Selector */}
-        <div className="relative mb-6 lg:mb-8" ref={dropdownRef}>
-          <label className="block text-lg lg:text-xl font-bold text-[#34C759] mb-3 lg:mb-4 text-left">
+        <div className="relative mb-8 lg:mb-10" ref={dropdownRef}>
+          <label className="block text-[22px] lg:text-[24px] font-bold text-[#34C759] mb-5 lg:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
             Where are you sending to?
           </label>
 
@@ -106,20 +106,10 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
             aria-expanded={showDropdown}
-            className="w-full flex items-center justify-between px-6 py-4 border-2 border-gray-300 rounded-full bg-white hover:border-[#34C759] focus:border-[#34C759] focus:outline-none transition-colors duration-200"
+            className="w-full flex items-center justify-between px-7 py-5 border-[2.5px] border-gray-300 rounded-[50px] bg-white hover:border-[#34C759] focus:border-[#34C759] focus:outline-none transition-colors duration-200"
           >
-            <div className="flex items-center gap-3">
-              <img
-                src={selectedCountry.flag}
-                alt={`${selectedCountry.name} flag`}
-                className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover"
-              />
-              <span className="text-base lg:text-lg font-semibold text-gray-800">
-                {selectedCountry.name} ({selectedCountry.currency})
-              </span>
-            </div>
             <svg
-              className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+              className={`w-6 h-6 text-gray-500 transition-transform duration-200 ${
                 showDropdown ? "rotate-180" : ""
               }`}
               fill="none"
@@ -129,30 +119,41 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth={2.5}
                 d="M19 9l-7 7-7-7"
               />
             </svg>
+
+            <div className="flex items-center gap-3">
+              <span className="text-[20px] lg:text-[22px] font-semibold text-gray-700">
+                {selectedCountry.name} ({selectedCountry.currency})
+              </span>
+              <img
+                src={selectedCountry.flag}
+                alt={`${selectedCountry.name} flag`}
+                className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover"
+              />
+            </div>
           </button>
 
           {/* Dropdown */}
           {showDropdown && (
-            <div className="absolute top-full left-0 w-full mt-2 bg-white border-2 border-[#34C759] rounded-2xl shadow-xl z-50 max-h-[60vh] overflow-y-auto overscroll-contain animate-fadeIn">
+            <div className="absolute top-full left-0 w-full mt-3 bg-white border-[2.5px] border-[#34C759] rounded-[28px] shadow-xl z-50 max-h-[60vh] overflow-y-auto overscroll-contain animate-fadeIn">
               {COUNTRIES.map((country) => (
                 <button
                   key={country.code}
                   type="button"
                   onClick={() => handleCountrySelect(country)}
-                  className="w-full flex items-center gap-3 px-6 py-4 text-left hover:bg-[#34C759]/10 focus:bg-[#34C759]/10 transition-colors focus:outline-none first:rounded-t-2xl last:rounded-b-2xl"
+                  className="w-full flex items-center justify-between px-7 py-3.5 text-left hover:bg-[#34C759]/10 focus:bg-[#34C759]/10 transition-colors focus:outline-none first:rounded-t-[28px] last:rounded-b-[28px]"
                 >
+                  <span className="text-[18px] lg:text-[20px] font-semibold text-gray-700">
+                    {country.name} ({country.currency})
+                  </span>
                   <img
                     src={country.flag}
                     alt={`${country.name} flag`}
-                    className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover"
+                    className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover"
                   />
-                  <span className="text-base lg:text-lg font-semibold text-gray-800">
-                    {country.name} ({country.currency})
-                  </span>
                 </button>
               ))}
             </div>
@@ -160,8 +161,8 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         </div>
 
         {/* Amount Input */}
-        <div className="mb-6 lg:mb-8">
-          <label className="block text-lg lg:text-xl font-bold text-[#34C759] mb-3 lg:mb-4 text-left">
+        <div className="mb-8 lg:mb-10">
+          <label className="block text-[22px] lg:text-[24px] font-bold text-[#34C759] mb-5 lg:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
             How much do you want to send?
           </label>
 
@@ -174,12 +175,12 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               onChange={handleAmountChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
-              className={`w-full pl-6 pr-20 py-4 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right border-2 ${
+              className={`w-full px-7 py-5 rounded-[50px] text-[20px] lg:text-[22px] font-semibold text-gray-800 text-right border-[2.5px] ${
                 !isAmountValid ? "border-red-400" : "border-gray-300"
               } hover:border-[#34C759] focus:border-[#34C759] focus:outline-none transition-colors duration-200`}
               placeholder="1,000,000"
             />
-            <span className="absolute right-6 top-1/2 -translate-y-1/2 text-base lg:text-lg font-semibold text-gray-800 pointer-events-none">
+            <span className="absolute right-7 top-1/2 -translate-y-1/2 translate-y-[2px] text-[20px] lg:text-[22px] font-semibold text-gray-800 pointer-events-none">
               KRW
             </span>
           </div>
@@ -195,9 +196,9 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         <button
           type="submit"
           disabled={isLoading || !isAmountValid}
-          className="w-full py-4 bg-[#34C759] text-white text-lg lg:text-xl font-bold rounded-full transition-colors hover:enabled:bg-[#00BD5F] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-[60px] bg-[#34C759] text-white text-[22px] lg:text-[24px] font-bold rounded-[50px] transition-colors hover:enabled:bg-[#00B35A] disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? "Comparing..." : "Compare the Best Rates"}
+          {isLoading ? "Comparing..." : "Compare Rates Now"}
         </button>
       </form>
     </div>

@@ -811,8 +811,8 @@ export default function MainPage() {
                                     <label className="block text-[22px] md:text-[24px] font-bold text-[#34C759] mb-5 md:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('amount_label')}
                                     </label>
-                                    <div className={`w-full flex items-center gap-3 px-7 py-5 border-[2.5px] rounded-[50px] bg-white hover:border-[#34C759] focus-within:border-[#34C759] transition-colors duration-200 ${
-                                        amountError ? "border-red-400" : "border-gray-300"
+                                    <div className={`w-full flex items-center gap-3 px-7 py-5 border-[3px] rounded-[50px] bg-white hover:border-[#4CAF60] focus-within:border-[#4CAF60] transition-colors duration-200 shadow-sm ${
+                                        amountError ? "border-red-400" : "border-[#5FBF73]"
                                     }`}>
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
                                         <input

@@ -177,12 +177,12 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               onChange={handleAmountChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
-              className={`w-full px-7 py-5 rounded-[50px] text-[20px] lg:text-[22px] font-semibold text-gray-800 text-center border-[2.5px] ${
-                !isAmountValid ? "border-red-400" : "border-gray-300"
+              className={`w-full pl-7 pr-[90px] py-5 rounded-[50px] text-[20px] lg:text-[22px] font-semibold text-gray-700 text-right border-[2.5px] ${
+                !isAmountValid ? "border-red-400" : "border-[#5FBF73]"
               } hover:border-[#5FBF73] focus:border-[#5FBF73] focus:outline-none transition-colors duration-200`}
               placeholder="1,000,000"
             />
-            <span className="absolute right-7 top-1/2 -translate-y-1/2 translate-y-[2px] text-[20px] lg:text-[22px] font-semibold text-gray-800 pointer-events-none">
+            <span className="absolute right-7 top-1/2 -translate-y-1/2 translate-y-[2px] text-[20px] lg:text-[22px] font-semibold text-gray-700 pointer-events-none">
               KRW
             </span>
           </div>

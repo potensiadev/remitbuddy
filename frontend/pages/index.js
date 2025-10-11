@@ -811,7 +811,7 @@ export default function MainPage() {
                                     <label className="block text-[22px] md:text-[24px] font-bold text-[#34C759] mb-5 md:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('amount_label')}
                                     </label>
-                                    <div className={`w-full flex items-center gap-3 px-7 py-5 border-[5px] rounded-[50px] bg-white hover:border-[#2EBF5C] focus-within:border-[#2EBF5C] transition-colors duration-200 shadow-sm ${
+                                    <div className={`w-full flex items-center gap-2 px-4 md:px-7 py-4 md:py-5 border-[5px] rounded-[50px] bg-white hover:border-[#2EBF5C] focus-within:border-[#2EBF5C] transition-colors duration-200 shadow-sm ${
                                         amountError ? "border-red-400" : "border-[#34C759]"
                                     }`}>
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
@@ -821,9 +821,9 @@ export default function MainPage() {
                                             onChange={handleAmountChange}
                                             onBlur={handleAmountBlur}
                                             placeholder="1,000,000"
-                                            className="flex-1 text-[20px] md:text-[22px] font-semibold text-gray-800 text-right bg-transparent border-0 focus:outline-none placeholder:text-gray-400"
+                                            className="flex-1 text-[18px] md:text-[22px] font-semibold text-gray-800 text-right bg-transparent border-0 focus:outline-none placeholder:text-gray-400 min-w-0"
                                         />
-                                        <span className="text-[20px] md:text-[22px] font-semibold text-gray-800 whitespace-nowrap">
+                                        <span className="text-[18px] md:text-[22px] font-semibold text-gray-800 whitespace-nowrap flex-shrink-0">
                                             KRW
                                         </span>
                                     </div>

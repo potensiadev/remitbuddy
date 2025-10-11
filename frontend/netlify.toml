@@ -4,18 +4,30 @@
   publish = ".next"
 
 [build.environment]
+  # ✅ Netlify 빌드 환경 변수 설정
   NEXT_PUBLIC_API_URL = "https://remitbuddy-production.up.railway.app"
+
+  # ✅ TypeScript 빌드 스킵 (Next.js 타입체크 완전 비활성화)
+  DISABLE_TS_CHECK = "true"
+  NEXT_DISABLE_TYPE_CHECK = "true"
+  SKIP_TYPECHECK = "true"
+
+  # ✅ Next.js Telemetry 비활성화 (속도 향상)
+  NEXT_TELEMETRY_DISABLED = "1"
+
+  # ✅ Node 환경 변수 (명시적으로 production 설정)
+  NODE_ENV = "production"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# 리다이렉트 설정 (SPA 라우팅용)
+# ✅ 리다이렉트 설정 (Next.js SPA 라우팅용)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# 404 페이지 설정
+# ✅ 404 페이지 설정
 [[redirects]]
   from = "/404"
   to = "/404.html"

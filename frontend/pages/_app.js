@@ -25,17 +25,15 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ErrorBoundary>
-      {/* Google Analytics with SRI */}
+      {/* Google Analytics */}
       <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=G-Z0SHT6SKJ3`}
-        integrity="sha384-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-        crossOrigin="anonymous"
         onLoad={() => {
-          console.log('🔧 GA 스크립트 로드 완료');
+          console.log('✅ GA 스크립트 로드 완료');
         }}
-        onError={() => {
-          console.error('⚠️ GA 스크립트 로드 실패 - SRI 검증 실패 가능성');
+        onError={(e) => {
+          console.error('❌ GA 스크립트 로드 실패:', e);
         }}
       />
       <Script

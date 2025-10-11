@@ -182,7 +182,7 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
 // Country Dropdown Component
 const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange, dropdownRef }) => (
     <div ref={dropdownRef}
-    className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] max-h-[60vh] bg-white rounded-2xl shadow-[0_8px_30px_rgba(52,199,89,0.15)] border-2 border-[#34C759]/30 flex flex-col overflow-hidden z-50 animate-slide-down"
+    className="absolute top-full left-0 mt-3 w-full max-h-[60vh] bg-white rounded-[28px] shadow-xl border-[2.5px] border-[#34C759] flex flex-col overflow-hidden z-50 animate-fadeIn"
     >
         <div className="flex-1 overflow-y-auto bg-white">
             {COUNTRIES.map((c) => (
@@ -194,13 +194,10 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
                 setShowDropdown(false);
                 onCountryChange(c);
             }}
-            className="w-full flex items-center justify-end gap-3 px-5 lg:px-6 py-3 lg:py-4 bg-white hover:bg-[#34C759]/5 active:bg-[#34C759]/10 transition-colors focus:outline-none border-b border-[#34C759]/10 last:border-b-0"
+            className="w-full flex items-center justify-between px-7 py-3.5 bg-white hover:bg-[#34C759]/10 focus:bg-[#34C759]/10 active:bg-[#34C759]/10 transition-colors focus:outline-none first:rounded-t-[28px] last:rounded-b-[28px]"
         >
-            <div className="text-right">
-                <div className="font-bold text-sm lg:text-base text-[#1F2937]">{c.name}</div>
-                <div className="text-[#6B7280] text-xs lg:text-sm">{c.currency}</div>
-            </div>
-            <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full ring-2 ring-[#34C759]/20" />
+            <span className="text-[18px] lg:text-[20px] font-semibold text-gray-700">{c.name} ({c.currency})</span>
+            <img src={c.flag} alt={`${c.name} flag`} width="32" height="32" className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover" />
         </button>
     ))}
         </div>
@@ -780,29 +777,29 @@ export default function MainPage() {
                         </div>
 
                         {/* White Input Card - Floating on Green Background */}
-                        <div className="max-w-[620px] mx-auto bg-white rounded-3xl border-[3px] border-[#00D26A] p-8 md:p-10 shadow-2xl">
+                        <div className="max-w-[620px] mx-auto bg-white rounded-[32px] border-[3px] border-[#2EBF5C] p-10 md:p-14 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
                             <form onSubmit={handleSubmit}>
                                 {/* 🔒 CSRF Protection - Server must validate this token */}
                                 <input type="hidden" name="_csrf" value={csrfToken} />
 
                                 {/* Country Selector */}
-                                <div className="mb-6 md:mb-8">
-                                    <label className="block text-lg md:text-xl font-bold text-[#00D26A] mb-3 md:mb-4 text-left">
+                                <div className="mb-8 md:mb-10">
+                                    <label className="block text-[22px] md:text-[24px] font-bold text-[#34C759] mb-5 md:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('country_label')}
                                     </label>
                                     <div className="relative" ref={formRefDesktop}>
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 border-2 border-gray-300 rounded-full bg-white hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors duration-200"
+                                            className="w-full flex items-center justify-between px-7 py-5 border-[2.5px] border-gray-300 rounded-[50px] bg-white hover:border-[#34C759] focus:border-[#34C759] focus:outline-none transition-colors duration-200"
                                             style={{ textDecoration: 'none' }}
                                         >
-                                            <ChevronDownIcon className={`w-5 h-5 text-[#6B7280] transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-                                            <div className="flex items-center gap-2 md:gap-3">
-                                                <span className="text-base md:text-lg font-semibold text-[#6B7280]">
+                                            <ChevronDownIcon className={`w-6 h-6 text-gray-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[20px] md:text-[22px] font-semibold text-gray-700">
                                                     {selectedCountry.name} ({selectedCountry.currency})
                                                 </span>
-                                                <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="32" height="32" className="w-8 h-8 rounded-full object-cover" />
+                                                <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="32" height="32" className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover" />
                                             </div>
                                         </button>
                                         {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRef} />}
@@ -810,11 +807,11 @@ export default function MainPage() {
                                 </div>
 
                                 {/* Amount Input */}
-                                <div className="mb-6 md:mb-8" ref={formRef}>
-                                    <label className="block text-lg md:text-xl font-bold text-[#00D26A] mb-3 md:mb-4 text-left">
+                                <div className="mb-8 md:mb-10" ref={formRef}>
+                                    <label className="block text-[22px] md:text-[24px] font-bold text-[#34C759] mb-5 md:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('amount_label')}
                                     </label>
-                                    <div className="w-full flex items-center justify-between px-5 md:px-6 py-3 border-2 border-gray-300 rounded-full bg-white hover:border-[#00D26A] focus-within:border-[#00D26A] transition-colors duration-200">
+                                    <div className="relative">
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
                                         <input
                                             type="text"
@@ -822,14 +819,16 @@ export default function MainPage() {
                                             onChange={handleAmountChange}
                                             onBlur={handleAmountBlur}
                                             placeholder="1,000,000"
-                                            className="flex-1 text-base md:text-lg font-semibold text-gray-800 text-right bg-transparent border-0 focus:outline-none placeholder:text-[#9CA3AF]"
+                                            className={`w-full px-7 py-5 rounded-[50px] text-[20px] md:text-[22px] font-semibold text-gray-800 text-right border-[2.5px] ${
+                                                amountError ? "border-red-400" : "border-gray-300"
+                                            } hover:border-[#34C759] focus:border-[#34C759] focus:outline-none transition-colors duration-200`}
                                         />
-                                        <span className="text-base md:text-lg font-semibold text-gray-800 whitespace-nowrap ml-2">
+                                        <span className="absolute right-7 top-1/2 -translate-y-1/2 translate-y-[2px] text-[20px] md:text-[22px] font-semibold text-gray-800 pointer-events-none">
                                             KRW
                                         </span>
                                     </div>
                                     {amountError && (
-                                        <div className="text-red-500 text-sm mt-2">
+                                        <div className="text-red-500 text-sm mt-2 text-left">
                                             {amountError}
                                         </div>
                                     )}
@@ -839,8 +838,7 @@ export default function MainPage() {
                                 <button
                                     type="submit"
                                     disabled={!isAmountValid()}
-                                    className="w-full py-3.5 md:py-4 bg-[#00D26A] text-white text-lg md:text-xl font-bold rounded-full hover:bg-[#00BD5F] transition-colors border-0 outline-none focus:outline-none active:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-                                    style={{ border: 'none !important', outline: 'none !important', boxShadow: 'none' }}
+                                    className="w-full h-[60px] bg-[#34C759] text-white text-[22px] md:text-[24px] font-bold rounded-[50px] transition-colors hover:enabled:bg-[#00B35A] disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
                                 </button>

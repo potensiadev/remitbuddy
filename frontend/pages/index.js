@@ -194,13 +194,13 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
                 setShowDropdown(false);
                 onCountryChange(c);
             }}
-            className="w-full flex items-center gap-3 px-5 lg:px-6 py-3 lg:py-4 text-left hover:bg-brand/10 transition-colors focus-ring"
+            className="w-full flex items-center justify-end gap-3 px-5 lg:px-6 py-3 lg:py-4 hover:bg-brand/10 transition-colors focus-ring"
         >
-            <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" />
-            <div>
+            <div className="text-right">
                 <div className="font-bold text-sm lg:text-base text-slate-800">{c.name}</div>
                 <div className="text-gray-500 text-xs lg:text-sm">{c.currency}</div>
             </div>
+            <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" />
         </button>
     ))}
         </div>
@@ -813,7 +813,7 @@ export default function MainPage() {
                                     <label className="block text-lg md:text-xl font-bold text-[#00D26A] mb-3 md:mb-4 text-left">
                                         {t('amount_label')}
                                     </label>
-                                    <div className="flex items-center gap-3 px-5 md:px-6 py-3 rounded-full border-2 border-gray-300 hover:border-[#00D26A] focus-within:border-[#00D26A] transition-colors">
+                                    <div className="flex items-center gap-3 px-5 md:px-6 py-3 rounded-full bg-white border-2 border-gray-300 hover:border-[#00D26A] focus-within:border-[#00D26A] transition-colors">
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
                                         <input
                                             type="text"
@@ -821,7 +821,7 @@ export default function MainPage() {
                                             onChange={handleAmountChange}
                                             onBlur={handleAmountBlur}
                                             placeholder="1,000,000"
-                                            className="flex-1 text-base md:text-lg font-semibold text-[#6B7280] text-right bg-transparent border-0 focus:outline-none"
+                                            className="flex-1 text-base md:text-lg font-semibold text-[#6B7280] text-right bg-white border-0 focus:outline-none"
                                         />
                                         <span className="text-base md:text-lg font-semibold text-[#6B7280] whitespace-nowrap">
                                             KRW

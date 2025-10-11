@@ -794,7 +794,7 @@ export default function MainPage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 rounded-full hover:border hover:border-[#00D26A] transition-colors"
+                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 rounded-full border-2 border-gray-300 hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors"
                                         >
                                             <div className="flex items-center gap-2 md:gap-3">
                                                 <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="32" height="32" className="w-8 h-8 rounded-full object-cover" />
@@ -821,7 +821,7 @@ export default function MainPage() {
                                             onChange={handleAmountChange}
                                             onBlur={handleAmountBlur}
                                             placeholder="1,000,000"
-                                            className="w-full px-5 md:px-6 py-3 rounded-full text-base md:text-lg font-semibold text-[#6B7280] pr-20 hover:border hover:border-[#00D26A] focus:border focus:border-[#00D26A] focus:outline-none transition-colors"
+                                            className="w-full px-5 md:px-6 py-3 pr-20 rounded-full text-base md:text-lg font-semibold text-[#6B7280] text-right border-2 border-gray-300 hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors"
                                         />
                                         <span className="absolute right-5 md:right-6 top-1/2 -translate-y-1/2 text-base md:text-lg font-semibold text-[#6B7280] pointer-events-none">
                                             KRW

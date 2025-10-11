@@ -222,13 +222,24 @@ export const logCompareAgain = (amount, country, currency) => {
 // 4단계: 업체 선택
 export const logClickedProvider = (providerName, amount, country, currency, additionalContext = {}) => {
   console.log('🏦 Provider 클릭 이벤트:', providerName);
-  logEvent('clicked_provider', { 
+  logEvent('clicked_provider', {
+    // GA4 표준 이벤트 파라미터
     content_type: 'provider',
-    content_id: providerName,
+    item_id: providerName,
+    item_name: providerName,
+
+    // 커스텀 파라미터 (GA4에서 커스텀 차원으로 등록 필요)
+    provider_name: providerName,
     provider: providerName,
+
+    // 거래 정보
     amount: amount,
     country: country,
+    receiving_country: country,
     transfer_currency: currency,
+    corridor: `KR-${country}`,
+
+    // 추가 컨텍스트
     ...additionalContext
   });
 };

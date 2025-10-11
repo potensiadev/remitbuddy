@@ -11,6 +11,7 @@ import ResultsView from '../components/ResultsView';
 
 // Utils
 import { focusResults, announceResults } from '../utils/scrollAndFocus';
+import { logViewMain, logClickedCTA, logCompareAgain, logClickedProvider } from '../utils/analytics';
 
 // Types
 interface Country {
@@ -65,14 +66,10 @@ export default function NewRemitBuddyPage() {
   const [hasCompared, setHasCompared] = useState(false);
   const [currentQuery, setCurrentQuery] = useState<QuoteFormData | null>(null);
 
-  // Analytics functions (placeholder - would integrate with existing analytics)
-  const logCTA = (amount: string, countryCode: string, currency: string) => {
-    console.log('CTA clicked:', { amount, countryCode, currency });
-  };
-
-  const logProviderClick = (provider: string) => {
-    console.log('Provider clicked:', provider);
-  };
+  // Initialize session on mount
+  useEffect(() => {
+    logViewMain();
+  }, []);
 
   // API call function
   const fetchQuotes = async (formData: QuoteFormData): Promise<ProviderData[]> => {
@@ -110,21 +107,25 @@ export default function NewRemitBuddyPage() {
     setIsLoading(true);
     setError(null);
     setCurrentQuery(formData);
-    
-    // Log analytics
-    logCTA(formData.amount, formData.country.code, formData.country.currency);
-    
+
+    // Log analytics - first search vs repeat search
+    if (!hasCompared) {
+      logClickedCTA(formData.amount, formData.country.code, formData.country.currency);
+    } else {
+      logCompareAgain(formData.amount, formData.country.code, formData.country.currency);
+    }
+
     try {
       const data = await fetchQuotes(formData);
       setResults(data);
       setHasCompared(true);
-      
+
       // Focus results and announce to screen readers
       setTimeout(() => {
         focusResults();
         announceResults(data.length, formData.country.currency);
       }, 100);
-      
+
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -133,8 +134,15 @@ export default function NewRemitBuddyPage() {
   };
 
   // Handle provider click
-  const handleProviderClick = (provider: string) => {
-    logProviderClick(provider);
+  const handleProviderClick = (provider: string, link: string) => {
+    if (currentQuery) {
+      logClickedProvider(
+        provider,
+        currentQuery.amount,
+        currentQuery.country.code,
+        currentQuery.country.currency
+      );
+    }
   };
 
   const meta = getLocalizedMeta(router.locale || 'en');
@@ -180,6 +188,7 @@ export default function NewRemitBuddyPage() {
             (hasCompared || isLoading) ? (
               <ResultsView
                 data={results}
+                onProviderClick={handleProviderClick}
                 loading={isLoading}
                 error={error}
                 amount={currentQuery?.amount || ''}

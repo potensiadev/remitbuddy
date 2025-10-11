@@ -34,6 +34,7 @@ interface ResultsViewProps {
   amount: string;
   currency: string;
   country: string;
+  onProviderClick?: (provider: string, link: string) => void;
 }
 
 // Skeleton Card Component
@@ -194,20 +195,26 @@ const ProviderCard = ({
   );
 };
 
-export default function ResultsView({ 
-  data, 
-  loading, 
-  error, 
-  amount, 
-  currency, 
-  country 
+export default function ResultsView({
+  data,
+  loading,
+  error,
+  amount,
+  currency,
+  country,
+  onProviderClick
 }: ResultsViewProps) {
   const { t } = useTranslation('common');
   const layoutMode = useLayoutMode();
 
   const handleProviderClick = (provider: string) => {
-    // Analytics tracking would go here
-    console.log(`Provider clicked: ${provider}`);
+    if (onProviderClick) {
+      // Find the provider data to get the link
+      const providerData = data.find(p => p.provider === provider);
+      if (providerData) {
+        onProviderClick(provider, providerData.link);
+      }
+    }
   };
 
   const bestRateProvider = data && data.length > 0 ? data[0] : null;

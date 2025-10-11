@@ -182,7 +182,7 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
 // Country Dropdown Component
 const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange, dropdownRef }) => (
     <div ref={dropdownRef}
-    className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] max-h-[60vh] bg-white rounded-2xl shadow-xl border-2 border-[#E5E7EB] flex flex-col overflow-hidden z-50 animate-slide-down"
+    className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] max-h-[60vh] bg-white rounded-2xl shadow-[0_8px_30px_rgba(52,199,89,0.15)] border-2 border-[#34C759]/30 flex flex-col overflow-hidden z-50 animate-slide-down"
     >
         <div className="flex-1 overflow-y-auto bg-white">
             {COUNTRIES.map((c) => (
@@ -194,13 +194,13 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
                 setShowDropdown(false);
                 onCountryChange(c);
             }}
-            className="w-full flex items-center justify-end gap-3 px-5 lg:px-6 py-3 lg:py-4 bg-white hover:bg-gray-50 transition-colors focus:outline-none focus:bg-gray-50"
+            className="w-full flex items-center justify-end gap-3 px-5 lg:px-6 py-3 lg:py-4 bg-white hover:bg-[#34C759]/5 active:bg-[#34C759]/10 transition-colors focus:outline-none border-b border-[#34C759]/10 last:border-b-0"
         >
             <div className="text-right">
-                <div className="font-bold text-sm lg:text-base text-slate-800">{c.name}</div>
-                <div className="text-gray-500 text-xs lg:text-sm">{c.currency}</div>
+                <div className="font-bold text-sm lg:text-base text-[#1F2937]">{c.name}</div>
+                <div className="text-[#6B7280] text-xs lg:text-sm">{c.currency}</div>
             </div>
-            <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full" />
+            <img src={c.flag} alt={`${c.name} flag`} width="28" height="28" className="rounded-full ring-2 ring-[#34C759]/20" />
         </button>
     ))}
         </div>
@@ -794,7 +794,7 @@ export default function MainPage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#E5E7EB] hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors shadow-sm"
+                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#34C759]/20 hover:border-[#34C759] hover:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] focus:border-[#34C759] focus:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] focus:outline-none transition-all duration-200"
                                         >
                                             <ChevronDownIcon className={`w-5 h-5 text-[#6B7280] transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                                             <div className="flex items-center gap-2 md:gap-3">
@@ -813,7 +813,7 @@ export default function MainPage() {
                                     <label className="block text-lg md:text-xl font-bold text-[#00D26A] mb-3 md:mb-4 text-left">
                                         {t('amount_label')}
                                     </label>
-                                    <div className="flex items-center gap-3 px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#E5E7EB] hover:border-[#00D26A] focus-within:border-[#00D26A] transition-colors shadow-sm">
+                                    <div className="flex items-center gap-3 px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#34C759]/20 hover:border-[#34C759] hover:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] focus-within:border-[#34C759] focus-within:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] transition-all duration-200">
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
                                         <input
                                             type="text"
@@ -821,9 +821,9 @@ export default function MainPage() {
                                             onChange={handleAmountChange}
                                             onBlur={handleAmountBlur}
                                             placeholder="1,000,000"
-                                            className="flex-1 text-base md:text-lg font-semibold text-[#6B7280] text-right bg-transparent border-0 focus:outline-none placeholder:text-[#9CA3AF]"
+                                            className="flex-1 text-base md:text-lg font-semibold text-[#1F2937] text-right bg-transparent border-0 focus:outline-none placeholder:text-[#9CA3AF]"
                                         />
-                                        <span className="text-base md:text-lg font-semibold text-[#6B7280] whitespace-nowrap">
+                                        <span className="text-base md:text-lg font-semibold text-[#34C759] whitespace-nowrap">
                                             KRW
                                         </span>
                                     </div>

@@ -109,11 +109,10 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
             aria-expanded={showDropdown}
             className="
               w-full flex items-center justify-between px-5 lg:px-6 py-3
-              border border-transparent rounded-full bg-white
-              shadow-[inset_0_0_0_2px_rgba(209,213,219,1)]
-              hover:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
-              focus:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
-              focus:outline-none transition-shadow duration-200
+              border-2 border-gray-300 rounded-full bg-white
+              hover:border-brand
+              focus:border-brand
+              focus:outline-none transition-colors duration-200
             "
           >
             <div className="flex items-center gap-2 lg:gap-3">
@@ -179,12 +178,10 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               onFocus={handleFocus}
               className={`
                 w-full px-5 lg:px-6 py-3 pr-16 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right
-                border border-transparent
-                shadow-[inset_0_0_0_2px_rgba(209,213,219,1)]
-                hover:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
-                focus:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
-                focus:outline-none transition-shadow duration-200
-                ${!isAmountValid ? "shadow-[inset_0_0_0_2px_rgb(248,113,113)]" : ""}
+                border-2 ${!isAmountValid ? "border-red-400" : "border-gray-300"}
+                hover:border-brand
+                focus:border-brand
+                focus:outline-none transition-colors duration-200
               `}
               placeholder="1,000,000"
             />

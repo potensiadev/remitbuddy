@@ -191,7 +191,7 @@ body, input, button, select, textarea {
 
 .amount-input {
     flex: 1;
-    border: none;
+    /* border: none; */  /* REMOVED: Conflicts with Tailwind border utilities in CompareForm */
     background: transparent;
     font-size: 20px;
     font-weight: 700;

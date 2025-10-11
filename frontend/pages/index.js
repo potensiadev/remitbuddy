@@ -811,7 +811,9 @@ export default function MainPage() {
                                     <label className="block text-[22px] md:text-[24px] font-bold text-[#34C759] mb-5 md:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('amount_label')}
                                     </label>
-                                    <div className="relative">
+                                    <div className={`w-full flex items-center gap-3 px-7 py-5 border-[2.5px] rounded-[50px] bg-white hover:border-[#34C759] focus-within:border-[#34C759] transition-colors duration-200 ${
+                                        amountError ? "border-red-400" : "border-gray-300"
+                                    }`}>
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
                                         <input
                                             type="text"
@@ -819,11 +821,9 @@ export default function MainPage() {
                                             onChange={handleAmountChange}
                                             onBlur={handleAmountBlur}
                                             placeholder="1,000,000"
-                                            className={`w-full px-7 py-5 rounded-[50px] text-[20px] md:text-[22px] font-semibold text-gray-800 text-right border-[2.5px] ${
-                                                amountError ? "border-red-400" : "border-gray-300"
-                                            } hover:border-[#34C759] focus:border-[#34C759] focus:outline-none transition-colors duration-200`}
+                                            className="flex-1 text-[20px] md:text-[22px] font-semibold text-gray-800 text-right bg-transparent border-0 focus:outline-none placeholder:text-gray-400"
                                         />
-                                        <span className="absolute right-7 top-1/2 -translate-y-1/2 translate-y-[2px] text-[20px] md:text-[22px] font-semibold text-gray-800 pointer-events-none">
+                                        <span className="text-[20px] md:text-[22px] font-semibold text-gray-800 whitespace-nowrap">
                                             KRW
                                         </span>
                                     </div>

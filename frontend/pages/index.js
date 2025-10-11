@@ -181,10 +181,10 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
 
 // Country Dropdown Component
 const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange, dropdownRef }) => (
-    <div ref={dropdownRef} 
-    className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] max-h-[60vh] bg-white rounded-2xl shadow-lg border-2 border-brand flex flex-col overflow-hidden z-50 animate-slide-down"
+    <div ref={dropdownRef}
+    className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] max-h-[60vh] bg-white rounded-2xl shadow-xl border-2 border-[#E5E7EB] flex flex-col overflow-hidden z-50 animate-slide-down"
     >
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-white">
             {COUNTRIES.map((c) => (
                 <button
                     key={c.code}
@@ -194,7 +194,7 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
                 setShowDropdown(false);
                 onCountryChange(c);
             }}
-            className="w-full flex items-center justify-end gap-3 px-5 lg:px-6 py-3 lg:py-4 hover:bg-brand/10 transition-colors focus-ring"
+            className="w-full flex items-center justify-end gap-3 px-5 lg:px-6 py-3 lg:py-4 bg-white hover:bg-gray-50 transition-colors focus:outline-none focus:bg-gray-50"
         >
             <div className="text-right">
                 <div className="font-bold text-sm lg:text-base text-slate-800">{c.name}</div>

@@ -25,7 +25,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  /* ✅ 외부 클릭/탭 시 드롭다운 닫기 */
+  /* 외부 클릭/탭 시 드롭다운 닫기 */
   useEffect(() => {
     function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -40,7 +40,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
     };
   }, []);
 
-  /* ✅ ESC 키로 드롭다운 닫기 */
+  /* ESC 키로 드롭다운 닫기 */
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") setShowDropdown(false);
@@ -49,7 +49,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  /* ✅ 드롭다운 열릴 때 body scroll 잠금 */
+  /* 드롭다운 열릴 때 body scroll 잠금 */
   useEffect(() => {
     document.body.style.overflow = showDropdown ? "hidden" : "auto";
     return () => {
@@ -57,7 +57,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
     };
   }, [showDropdown]);
 
-  /* ✅ 금액 입력 */
+  /* 금액 입력 */
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/,/g, "");
     if (/^\d*$/.test(rawValue) && rawValue.length <= 10) {
@@ -96,17 +96,25 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
   return (
     <div className="w-full bg-white border-[3px] border-brand rounded-3xl shadow-lg p-8 lg:p-10 transition-colors">
       <form onSubmit={handleSubmit}>
-
         {/* Country Selector */}
         <div className="relative mb-6 lg:mb-8" ref={dropdownRef}>
           <label className="block text-lg lg:text-xl font-bold text-brand mb-3 lg:mb-4 text-left">
             Where are you sending to?
           </label>
+
+          {/* ✅ 흔들림 없는 스타일 */}
           <button
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
             aria-expanded={showDropdown}
-            className="w-full flex items-center justify-between px-5 lg:px-6 py-3 border-2 border-gray-300 rounded-full hover:border-brand transition-colors focus:outline-none focus:ring-2 focus:ring-brand/50"
+            className="
+              w-full flex items-center justify-between px-5 lg:px-6 py-3
+              border border-transparent rounded-full bg-white
+              shadow-[inset_0_0_0_2px_rgba(209,213,219,1)]
+              hover:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
+              focus:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
+              focus:outline-none transition-shadow duration-200
+            "
           >
             <div className="flex items-center gap-2 lg:gap-3">
               <img
@@ -158,6 +166,8 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
           <label className="block text-lg lg:text-xl font-bold text-brand mb-3 lg:mb-4 text-left">
             How much do you want to send?
           </label>
+
+          {/* ✅ 흔들림 없는 input */}
           <input
             type="text"
             inputMode="numeric"
@@ -166,11 +176,18 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
             onChange={handleAmountChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            className={`w-full px-5 lg:px-6 py-3 border-2 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right focus:outline-none focus:ring-2 focus:ring-brand/40 ${
-              isAmountValid ? "border-gray-300 focus:border-brand" : "border-red-400"
-            }`}
+            className={`
+              w-full px-5 lg:px-6 py-3 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right
+              border border-transparent
+              shadow-[inset_0_0_0_2px_rgba(209,213,219,1)]
+              hover:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
+              focus:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
+              focus:outline-none transition-shadow duration-200
+              ${!isAmountValid ? "shadow-[inset_0_0_0_2px_rgb(248,113,113)]" : ""}
+            `}
             placeholder="1,000,000 KRW"
           />
+
           {!isAmountValid && (
             <p className="text-red-500 text-sm mt-2 text-left">
               Please enter between ₩10,000 and ₩5,000,000
@@ -182,7 +199,11 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         <button
           type="submit"
           disabled={isLoading || !isAmountValid}
-          className="w-full py-3.5 lg:py-4 bg-brand text-white text-lg lg:text-xl font-bold rounded-full transition-colors hover:enabled:bg-[#00BD5F] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="
+            w-full py-3.5 lg:py-4 bg-brand text-white text-lg lg:text-xl font-bold rounded-full
+            transition-colors hover:enabled:bg-[#00BD5F]
+            disabled:opacity-50 disabled:cursor-not-allowed
+          "
         >
           {isLoading ? "Comparing..." : "Compare the Best Rates"}
         </button>

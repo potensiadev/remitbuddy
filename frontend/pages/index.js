@@ -859,7 +859,7 @@ export default function MainPage() {
                     <div className="max-w-[1200px] mx-auto">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                             <p className="text-xs md:text-sm">© 2025 Potensia Inc. All Rights Reserved</p>
-                            <div className="flex gap-4 md:gap-6 text-xs md:text-sm">
+                            <div className="flex gap-4 md:gap-6 text-xs md:text-sm invisible">
                                 <a href="#" className="hover:text-[#00D26A] transition-colors">About</a>
                                 <a href="#" className="hover:text-[#00D26A] transition-colors">Contact</a>
                                 <a href="#" className="hover:text-[#00D26A] transition-colors">Privacy</a>

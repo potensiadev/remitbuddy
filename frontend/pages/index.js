@@ -791,13 +791,13 @@ export default function MainPage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-between px-7 py-5 border-[2.5px] border-gray-300 rounded-[50px] bg-white hover:border-[#34C759] focus:border-[#34C759] focus:outline-none transition-colors duration-200"
+                                            className="w-full flex items-center justify-end px-7 py-5 border-[2.5px] border-gray-300 rounded-[50px] bg-white hover:border-[#34C759] focus:border-[#34C759] focus:outline-none transition-colors duration-200"
                                             style={{ textDecoration: 'none' }}
                                         >
-                                            <span className="text-[20px] md:text-[22px] font-semibold text-gray-700">
-                                                {selectedCountry.name} ({selectedCountry.currency})
-                                            </span>
                                             <div className="flex items-center gap-3">
+                                                <span className="text-[20px] md:text-[22px] font-semibold text-gray-700">
+                                                    {selectedCountry.name} ({selectedCountry.currency})
+                                                </span>
                                                 <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="32" height="32" className="w-8 h-8 md:w-9 md:h-9 rounded-full object-cover" />
                                                 <ChevronDownIcon className={`w-6 h-6 text-gray-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                                             </div>

@@ -137,7 +137,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
 
           {/* Dropdown */}
           {showDropdown && (
-            <div className="absolute top-full left-0 w-full mt-3 bg-white border-[2.5px] border-[#5FBF73] rounded-[28px] shadow-xl z-50 max-h-[60vh] overflow-y-auto overscroll-contain animate-fadeIn">
+            <div className="absolute top-full left-0 w-full mt-3 bg-white border-[2.5px] border-[#5FBF73] rounded-[28px] shadow-xl z-50 max-h-[60vh] overflow-y-auto overscroll-contain animate-fadeIn dropdown-scroll">
               {COUNTRIES.map((country) => (
                 <button
                   key={country.code}

@@ -13,7 +13,10 @@
       "Bash(git log:*)",
       "Bash(gh repo view:*)",
       "WebFetch(domain:www.remitbuddy.com)",
-      "Bash(PORT=3002 npm run dev)"
+      "Bash(PORT=3002 npm run dev)",
+      "Bash(git revert:*)",
+      "Bash(gh api:*)",
+      "Read(//c/Users/prohu/Downloads/**)"
     ],
     "deny": []
   }

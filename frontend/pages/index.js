@@ -794,7 +794,7 @@ export default function MainPage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#34C759]/20 hover:border-[#34C759] hover:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] focus:border-[#34C759] focus:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] focus:outline-none transition-all duration-200 no-underline"
+                                            className="w-full flex items-center justify-between px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#34C759]/40 hover:border-[#34C759] hover:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] focus:border-[#34C759] focus:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] focus:outline-none transition-all duration-200 no-underline"
                                             style={{ textDecoration: 'none' }}
                                         >
                                             <ChevronDownIcon className={`w-5 h-5 text-[#6B7280] transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
@@ -814,7 +814,7 @@ export default function MainPage() {
                                     <label className="block text-lg md:text-xl font-bold text-[#00D26A] mb-3 md:mb-4 text-left">
                                         {t('amount_label')}
                                     </label>
-                                    <div className="flex items-center justify-between gap-3 px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#34C759]/20 hover:border-[#34C759] hover:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] focus-within:border-[#34C759] focus-within:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] transition-all duration-200">
+                                    <div className="flex items-center justify-between gap-3 px-5 md:px-6 py-3 rounded-full bg-white border-[2px] border-[#34C759]/40 hover:border-[#34C759] hover:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] focus-within:border-[#34C759] focus-within:shadow-[0_0_0_3px_rgba(52,199,89,0.1)] transition-all duration-200">
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
                                         <input
                                             type="text"

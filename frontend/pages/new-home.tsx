@@ -124,7 +124,7 @@ export default function NewHome() {
                     type="text"
                     value={formatNumber(amount)}
                     onChange={handleAmountChange}
-                    className="w-full px-5 md:px-6 py-3 border-2 border-[#E5E7EB] rounded-full text-base md:text-lg font-semibold text-[#6B7280] text-right pr-16 focus:border-[#00D26A] focus:outline-none"
+                    className="w-full px-5 md:px-6 py-3 pr-20 border-2 border-[#E5E7EB] rounded-full text-base md:text-lg font-semibold text-[#6B7280] text-right focus:border-[#00D26A] focus:outline-none"
                     placeholder="1,000,000"
                   />
                   <span className="absolute right-5 md:right-6 top-1/2 -translate-y-1/2 text-base md:text-lg font-semibold text-[#6B7280]">

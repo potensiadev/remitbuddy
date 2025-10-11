@@ -167,26 +167,31 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
             How much do you want to send?
           </label>
 
-          {/* ✅ 흔들림 없는 input */}
-          <input
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={displayAmount}
-            onChange={handleAmountChange}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-            className={`
-              w-full px-5 lg:px-6 py-3 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right
-              border border-transparent
-              shadow-[inset_0_0_0_2px_rgba(209,213,219,1)]
-              hover:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
-              focus:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
-              focus:outline-none transition-shadow duration-200
-              ${!isAmountValid ? "shadow-[inset_0_0_0_2px_rgb(248,113,113)]" : ""}
-            `}
-            placeholder="1,000,000 KRW"
-          />
+          <div className="relative">
+            {/* ✅ 흔들림 없는 input */}
+            <input
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              value={displayAmount}
+              onChange={handleAmountChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
+              className={`
+                w-full px-5 lg:px-6 py-3 pr-16 rounded-full text-base lg:text-lg font-semibold text-gray-800 text-right
+                border border-transparent
+                shadow-[inset_0_0_0_2px_rgba(209,213,219,1)]
+                hover:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
+                focus:shadow-[inset_0_0_0_2px_var(--brand-color,#34C759)]
+                focus:outline-none transition-shadow duration-200
+                ${!isAmountValid ? "shadow-[inset_0_0_0_2px_rgb(248,113,113)]" : ""}
+              `}
+              placeholder="1,000,000"
+            />
+            <span className="absolute right-5 lg:right-6 top-1/2 -translate-y-1/2 text-base lg:text-lg font-semibold text-gray-800">
+              KRW
+            </span>
+          </div>
 
           {!isAmountValid && (
             <p className="text-red-500 text-sm mt-2 text-left">

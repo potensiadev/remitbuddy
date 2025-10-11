@@ -16,7 +16,8 @@
       "Bash(PORT=3002 npm run dev)",
       "Bash(git revert:*)",
       "Bash(gh api:*)",
-      "Read(//c/Users/prohu/Downloads/**)"
+      "Read(//c/Users/prohu/Downloads/**)",
+      "Bash(git rebase:*)"
     ],
     "deny": []
   }

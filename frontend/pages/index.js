@@ -234,10 +234,10 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
                 setShowDropdown(false);
                 onCountryChange(c);
             }}
-            className={`w-full flex items-center justify-between px-6 py-4 bg-white hover:bg-gradient-to-r hover:from-[#00D26A]/8 hover:to-[#00D26A]/5 focus:bg-gradient-to-r focus:from-[#00D26A]/8 focus:to-[#00D26A]/5 active:bg-[#00D26A]/15 transition-all duration-200 focus:outline-none group ${index !== 0 ? 'border-t border-gray-100/80' : ''} ${index === 0 ? 'rounded-t-[24px]' : ''} ${index === COUNTRIES.length - 1 ? 'rounded-b-[24px]' : ''}`}
+            className={`w-full flex items-center justify-between px-6 py-4 bg-white hover:bg-gradient-to-r hover:from-[#00D26A]/8 hover:to-[#00D26A]/5 focus:bg-gradient-to-r focus:from-[#00D26A]/8 focus:to-[#00D26A]/5 active:bg-[#00D26A]/15 transition-all duration-200 focus:outline-none group ${index !== 0 ? 'border-t border-[#00D26A]/10' : ''} ${index === 0 ? 'rounded-t-[24px]' : ''} ${index === COUNTRIES.length - 1 ? 'rounded-b-[24px]' : ''}`}
         >
             <span className="text-[17px] lg:text-[19px] font-semibold text-gray-800 group-hover:text-[#00D26A] transition-colors">{c.name} ({c.currency})</span>
-            <img src={c.flag} alt={`${c.name} flag`} width="32" height="32" className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover shadow-sm ring-1 ring-gray-200/50" />
+            <img src={c.flag} alt={`${c.name} flag`} width="32" height="32" className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover shadow-sm ring-1 ring-[#00D26A]/20 group-hover:ring-[#00D26A]/40 transition-all" />
         </button>
     ))}
         </div>
@@ -876,7 +876,7 @@ export default function MainPage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-end px-5 py-3 border-[2.5px] border-gray-300 rounded-[50px] bg-white hover:border-[#34C759] focus:border-[#34C759] focus:outline-none transition-colors duration-200"
+                                            className="w-full flex items-center justify-end px-5 py-3 border-[2.5px] border-[#00D26A]/30 rounded-[50px] bg-white hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors duration-200 shadow-sm"
                                             style={{ textDecoration: 'none' }}
                                         >
                                             <div className="flex items-center gap-2">

@@ -17,7 +17,8 @@
       "Bash(git revert:*)",
       "Bash(gh api:*)",
       "Read(//c/Users/prohu/Downloads/**)",
-      "Bash(git rebase:*)"
+      "Bash(git rebase:*)",
+      "Read(//c/Users/USER/Downloads/**)"
     ],
     "deny": []
   }

@@ -113,8 +113,16 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
     
     const handleProviderClick = (e) => {
         const analyticsName = PROVIDER_ANALYTICS_MAP[provider] || provider.toLowerCase();
-        logClickedProvider(analyticsName, amount, receiveCountry, currency);
-        
+
+        // Enhanced analytics with additional context
+        logClickedProvider(analyticsName, amount, receiveCountry, currency, {
+            is_best_rate: isBest,
+            recipient_gets: Math.round(recipient_gets),
+            exchange_rate: exchange_rate,
+            fee_krw: fee,
+            provider_rank: isBest ? 1 : undefined,
+        });
+
         // Use the original provider link from API data instead of referral link
         // The href attribute already handles the navigation to providerData.link
         // So we don't need to manually redirect here

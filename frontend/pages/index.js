@@ -56,6 +56,37 @@ const COUNTRIES = [
     { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" },
 ];
 
+// Locale to Country mapping
+const LOCALE_TO_COUNTRY_MAP = {
+    'vi': 'VN',  // Vietnamese -> Vietnam
+    'ne': 'NP',  // Nepali -> Nepal
+    'tl': 'PH',  // Tagalog -> Philippines
+    'km': 'KH',  // Khmer -> Cambodia
+    'my': 'MM',  // Burmese -> Myanmar
+    'th': 'TH',  // Thai -> Thailand
+    'uz': 'UZ',  // Uzbek -> Uzbekistan
+    'id': 'ID',  // Indonesian -> Indonesia
+    'si': 'LK',  // Sinhala -> Sri Lanka
+    'bn': 'BD',  // Bengali -> Bangladesh
+};
+
+// Helper function to get default country based on locale
+const getDefaultCountryByLocale = (locale) => {
+    // Map locale to country code
+    const countryCode = LOCALE_TO_COUNTRY_MAP[locale];
+
+    // Find country in COUNTRIES array
+    if (countryCode) {
+        const country = COUNTRIES.find(c => c.code === countryCode);
+        if (country) {
+            return country;
+        }
+    }
+
+    // Default to Vietnam if locale is not mapped or country not found
+    return COUNTRIES[0];
+};
+
 // Provider name mapping for analytics
 const PROVIDER_ANALYTICS_MAP = {
     'Hanpass': 'hanpass',
@@ -516,7 +547,7 @@ export default function MainPage() {
     const resultsRef = useRef(null);
     const [amount, setAmount] = useState("1000000");
     const [showDropdown, setShowDropdown] = useState(false);
-    const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+    const [selectedCountry, setSelectedCountry] = useState(() => getDefaultCountryByLocale(router.locale));
     const [amountError, setAmountError] = useState("");
     const formRef = useRef(null);
     const formRefDesktop = useRef(null);
@@ -531,7 +562,7 @@ export default function MainPage() {
         // 퍼널 분석을 위해 명확한 세션 시작점이 필요한 경우 주석 해제
         // logSessionStart();
         logViewMain();
-        
+
         // 🔒 Generate CSRF token for this session
         // ⚠️ SECURITY WARNING: This is client-side only!
         // Server MUST:
@@ -541,6 +572,12 @@ export default function MainPage() {
         // 4. Reject requests with invalid/missing tokens
         const token = Math.random().toString(36).substring(2) + Date.now().toString(36);
         setCsrfToken(token);
+    }, [router.locale]);
+
+    // Update selected country when locale changes
+    useEffect(() => {
+        const defaultCountry = getDefaultCountryByLocale(router.locale);
+        setSelectedCountry(defaultCountry);
     }, [router.locale]);
 
     useEffect(() => { 

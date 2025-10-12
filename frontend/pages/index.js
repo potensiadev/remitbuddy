@@ -222,10 +222,10 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
 // Country Dropdown Component
 const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChange, dropdownRef }) => (
     <div ref={dropdownRef}
-    className="absolute top-full left-0 mt-3 w-full max-h-[60vh] bg-white rounded-[28px] shadow-xl border-[2.5px] border-[#34C759] flex flex-col overflow-hidden z-50 animate-fadeIn"
+    className="absolute top-full left-0 mt-3 w-full max-h-[60vh] bg-white rounded-[24px] shadow-[0_8px_32px_rgba(0,210,106,0.15)] border-[2px] border-[#00D26A]/20 flex flex-col overflow-hidden z-50 animate-fadeIn"
     >
-        <div className="flex-1 overflow-y-auto bg-white">
-            {COUNTRIES.map((c) => (
+        <div className="flex-1 overflow-y-auto bg-white scrollbar-thin scrollbar-thumb-[#00D26A]/20 scrollbar-track-transparent">
+            {COUNTRIES.map((c, index) => (
                 <button
                     key={c.code}
                     onClick={(e) => {
@@ -234,10 +234,10 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
                 setShowDropdown(false);
                 onCountryChange(c);
             }}
-            className="w-full flex items-center justify-between px-7 py-3.5 bg-white hover:bg-[#34C759]/10 focus:bg-[#34C759]/10 active:bg-[#34C759]/10 transition-colors focus:outline-none first:rounded-t-[28px] last:rounded-b-[28px]"
+            className={`w-full flex items-center justify-between px-6 py-4 bg-white hover:bg-gradient-to-r hover:from-[#00D26A]/8 hover:to-[#00D26A]/5 focus:bg-gradient-to-r focus:from-[#00D26A]/8 focus:to-[#00D26A]/5 active:bg-[#00D26A]/15 transition-all duration-200 focus:outline-none group ${index !== 0 ? 'border-t border-gray-100/80' : ''} ${index === 0 ? 'rounded-t-[24px]' : ''} ${index === COUNTRIES.length - 1 ? 'rounded-b-[24px]' : ''}`}
         >
-            <span className="text-[18px] lg:text-[20px] font-semibold text-gray-700">{c.name} ({c.currency})</span>
-            <img src={c.flag} alt={`${c.name} flag`} width="32" height="32" className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover" />
+            <span className="text-[17px] lg:text-[19px] font-semibold text-gray-800 group-hover:text-[#00D26A] transition-colors">{c.name} ({c.currency})</span>
+            <img src={c.flag} alt={`${c.name} flag`} width="32" height="32" className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover shadow-sm ring-1 ring-gray-200/50" />
         </button>
     ))}
         </div>

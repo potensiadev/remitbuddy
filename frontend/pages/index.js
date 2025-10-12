@@ -15,13 +15,14 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { 
+import {
   logSessionStart,
   logViewMain,
-  logClickedCTA, 
-  logCompareAgain, 
-  logClickedProvider, 
-  logSendingCountrySwitch 
+  logClickedCTA,
+  logCompareAgain,
+  logClickedProvider,
+  logSendingCountrySwitch,
+  logResultsImpression
 } from '../utils/analytics';
 
 // API Configuration
@@ -219,12 +220,49 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
     const [error, setError] = useState(null);
     const [currentApiCall, setCurrentApiCall] = useState(null);
     const [isRetrying, setIsRetrying] = useState(false);
+    const [impressionLogged, setImpressionLogged] = useState(false);
     const amountRef = useRef(amount);
-    
+    const resultsContainerRef = useRef(null);
+
     // Update ref when amount changes
     useEffect(() => {
         amountRef.current = amount;
     }, [amount]);
+
+    // Scroll and Impression tracking
+    useEffect(() => {
+        if (!results || results.length === 0 || impressionLogged) return;
+
+        const handleScroll = () => {
+            if (!resultsContainerRef.current || impressionLogged) return;
+
+            const rect = resultsContainerRef.current.getBoundingClientRect();
+            const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+            if (isVisible) {
+                // Log impression event
+                logResultsImpression(
+                    amount,
+                    queryParams.receive_country,
+                    queryParams.receive_currency,
+                    results.length
+                );
+                setImpressionLogged(true);
+            }
+        };
+
+        // Check on mount
+        handleScroll();
+
+        // Add scroll listener
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [results, amount, queryParams, impressionLogged]);
+
+    // Reset impression when new results are fetched
+    useEffect(() => {
+        setImpressionLogged(false);
+    }, [queryParams.receive_country, queryParams.receive_currency, forceRefresh]);
 
     useEffect(() => {
         if (!queryParams.receive_country) {
@@ -335,18 +373,18 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
         </div> 
     );
 
-    return ( 
-        <div className="results-container"> 
-            <div className="summary-header"> 
-                <div className="summary-title">{t('real_time_summary')}</div> 
-                <div className="summary-amount"> 
-                    {parseInt(amount).toLocaleString()} KRW → {queryParams.receive_country} 
-                </div> 
+    return (
+        <div ref={resultsContainerRef} className="results-container">
+            <div className="summary-header">
+                <div className="summary-title">{t('real_time_summary')}</div>
+                <div className="summary-amount">
+                    {parseInt(amount).toLocaleString()} KRW → {queryParams.receive_country}
+                </div>
                 {isLoading && (
                     <div className="loading-text">
                         {isRetrying ? t('retrying_text') || '서버 준비 중... 잠시만 기다려주세요' : t('loading_text')}
                     </div>
-                )} 
+                )}
             </div> 
             
             {error && (

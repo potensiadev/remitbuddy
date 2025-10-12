@@ -248,9 +248,21 @@ export const logClickedProvider = (providerName, amount, country, currency, addi
 // 기타 이벤트들
 export const logSendingCountrySwitch = (currency) => {
   console.log('🌍 국가 변경 이벤트:', currency);
-  logEvent('sending_country_switch', { 
+  logEvent('sending_country_switch', {
     item_category: 'destination_country',
     item_name: currency,
     transfer_currency: currency
+  });
+};
+
+// 결과 노출 이벤트 (스크롤하여 결과를 봤을 때)
+export const logResultsImpression = (amount, country, currency, providerCount) => {
+  console.log('👁️ 결과 노출 이벤트 (Impression):', { amount, country, currency, providerCount });
+  logEvent('results_impression', {
+    amount: amount,
+    country: country,
+    transfer_currency: currency,
+    provider_count: providerCount,
+    content_type: 'comparison_results'
   });
 };

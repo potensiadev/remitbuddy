@@ -17,7 +17,7 @@ module.exports = {
       // 'bn', // 준비되면 주석 해제 + locales/bn + hreflang + sitemap 동시 반영
       // 'mn', // 준비되면 주석 해제 + locales/mn + hreflang + sitemap 동시 반영
     ],
-    localeDetection: false, // 성능 및 예측 가능성↑ (루트→/en 리다이렉트로 대체)
+    localeDetection: true, // 브라우저 언어 감지 활성화 (한국어 사용자 자동 감지)
   },
   react: {
     useSuspense: false,

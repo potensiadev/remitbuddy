@@ -89,13 +89,6 @@ const nextConfig = {
 
   async redirects() {
     return [
-      // (A) 루트 → /en 고정 (sitemap/hreflang과 정합성 맞추기)
-      {
-        source: '/',
-        destination: '/en',
-        permanent: true,
-        locale: false, // ❗ 중복 로케일 처리 방지
-      },
       // (B) naked → www 강제
       {
         source: '/:path*',

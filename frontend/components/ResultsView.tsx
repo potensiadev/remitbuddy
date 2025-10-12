@@ -235,7 +235,7 @@ export default function ResultsView({
       aria-live="polite"
     >
       {/* Header */}
-      <div className="text-center lg:text-left">
+      <div className="text-center">
         <h2 className="text-xl font-bold text-gray-900 mb-2">
           {t('real_time_summary') || 'Real-time Comparison Results'}
         </h2>

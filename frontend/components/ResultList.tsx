@@ -116,7 +116,7 @@ export default function ResultList({
     <div className="w-full max-w-6xl mx-auto mt-12">
       {/* 리디자인 포인트: 결과 헤더 */}
       <div className="text-center mb-8">
-        <h2 className="font-poppins text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+        <h2 className="font-poppins text-2xl font-bold text-gray-900 mb-2">
           Compare Results
         </h2>
         <p className="font-poppins text-lg text-gray-600 mb-4">

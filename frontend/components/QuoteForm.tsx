@@ -85,7 +85,7 @@ const CountryDropdown = ({
   return (
     <div
       ref={dropdownRef}
-      className="absolute top-full left-0 mt-2 w-full min-w-[280px] lg:min-w-[320px] max-h-[60vh] bg-white rounded-2xl shadow-lg border-2 border-brand flex flex-col overflow-hidden z-50 animate-slide-down"
+      className="absolute top-full left-0 mt-2 w-full min-w-[280px] max-h-[60vh] bg-white rounded-2xl shadow-lg border-2 border-brand flex flex-col overflow-hidden z-50 animate-slide-down"
     >
       <div className="flex-1 overflow-y-auto">
         {COUNTRIES.map((country) => (
@@ -96,15 +96,15 @@ const CountryDropdown = ({
               onSelect(country);
               onClose();
             }}
-            className="w-full flex items-center gap-3 px-5 lg:px-6 py-3 lg:py-4 text-left hover:bg-brand/10 transition-colors focus-ring"
+            className="w-full flex items-center gap-3 px-5 py-3 text-left hover:bg-brand/10 transition-colors focus-ring"
           >
             <img
               src={country.flag}
               alt={`${country.name} flag`}
-              className="w-7 h-7 lg:w-8 lg:h-8 rounded-full object-cover"
+              className="w-7 h-7 rounded-full object-cover"
             />
             <div className="flex flex-col text-gray-700">
-              <span className="font-semibold text-base lg:text-lg">
+              <span className="font-semibold text-base">
                 {country.name}
               </span>
               <span className="text-sm text-gray-500">{country.currency}</span>

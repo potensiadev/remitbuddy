@@ -94,11 +94,11 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
     Number(amount) >= 10000 && Number(amount) <= 5000000 && amount !== "";
 
   return (
-    <div className="w-full bg-white border-[3px] border-[#5FBF73] rounded-[32px] shadow-[0_8px_24px_rgba(0,0,0,0.08)] p-10 lg:p-14 transition-colors">
+    <div className="w-full bg-white border-[3px] border-[#5FBF73] rounded-[32px] shadow-[0_8px_24px_rgba(0,0,0,0.08)] p-10 transition-colors">
       <form onSubmit={handleSubmit}>
         {/* Country Selector */}
-        <div className="relative mb-8 lg:mb-10" ref={dropdownRef}>
-          <label className="block text-[22px] lg:text-[24px] font-bold text-[#5FBF73] mb-5 lg:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
+        <div className="relative mb-8" ref={dropdownRef}>
+          <label className="block text-[22px] font-bold text-[#5FBF73] mb-5 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
             Where are you sending to?
           </label>
 
@@ -111,10 +111,10 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
             <img
               src={selectedCountry.flag}
               alt={`${selectedCountry.name} flag`}
-              className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover flex-shrink-0"
+              className="w-8 h-8 rounded-full object-cover flex-shrink-0"
             />
 
-            <span className="flex-1 text-center mx-4 text-[20px] lg:text-[22px] font-semibold text-gray-700">
+            <span className="flex-1 text-center mx-4 text-[20px] font-semibold text-gray-700">
               {selectedCountry.name} ({selectedCountry.currency})
             </span>
 
@@ -148,10 +148,10 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
                   <img
                     src={country.flag}
                     alt={`${country.name} flag`}
-                    className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover flex-shrink-0"
+                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                   />
 
-                  <span className="flex-1 text-center mx-4 text-[18px] lg:text-[20px] font-semibold text-gray-700">
+                  <span className="flex-1 text-center mx-4 text-[18px] font-semibold text-gray-700">
                     {country.name} ({country.currency})
                   </span>
 
@@ -163,8 +163,8 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         </div>
 
         {/* Amount Input */}
-        <div className="mb-8 lg:mb-10">
-          <label className="block text-[22px] lg:text-[24px] font-bold text-[#5FBF73] mb-5 lg:mb-6 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
+        <div className="mb-8">
+          <label className="block text-[22px] font-bold text-[#5FBF73] mb-5 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
             How much do you want to send?
           </label>
 
@@ -177,12 +177,12 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
               onChange={handleAmountChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
-              className={`w-full pl-7 pr-[90px] py-5 rounded-[50px] text-[20px] lg:text-[22px] font-semibold text-gray-700 text-right bg-white border-[3px] ${
+              className={`w-full pl-7 pr-[90px] py-5 rounded-[50px] text-[20px] font-semibold text-gray-700 text-right bg-white border-[3px] ${
                 !isAmountValid ? 'border-red-400' : 'border-[#5FBF73]'
               } hover:border-[#4CAF60] focus:border-[#4CAF60] focus:outline-none transition-all duration-200 shadow-sm`}
               placeholder="1,000,000"
             />
-            <span className="absolute right-7 top-1/2 -translate-y-1/2 translate-y-[2px] text-[20px] lg:text-[22px] font-semibold text-gray-700 pointer-events-none">
+            <span className="absolute right-7 top-1/2 -translate-y-1/2 translate-y-[2px] text-[20px] font-semibold text-gray-700 pointer-events-none">
               KRW
             </span>
           </div>
@@ -198,7 +198,7 @@ export default function CompareForm({ onSubmit, isLoading = false }: CompareForm
         <button
           type="submit"
           disabled={isLoading || !isAmountValid}
-          className="w-full h-[60px] bg-[#5FBF73] text-white text-[22px] lg:text-[24px] font-bold rounded-[50px] transition-colors hover:enabled:bg-[#4DA65F] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-[60px] bg-[#5FBF73] text-white text-[22px] font-bold rounded-[50px] transition-colors hover:enabled:bg-[#4DA65F] disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? "Comparing..." : "Compare the Best Rates"}
         </button>

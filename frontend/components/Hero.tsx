@@ -1,21 +1,28 @@
 import React from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 interface HeroProps {
   title?: string;
   subtitle?: string;
 }
 
-const Hero: React.FC<HeroProps> = ({ 
+const Hero: React.FC<HeroProps> = ({
   title = "Find the Best Exchange Rates in 3 Seconds",
   subtitle = "One Click to Compare Fees and Amount"
 }) => {
+  const router = useRouter();
+  const { locale } = router;
+
   return (
     <>
       {/* RemitBuddy Logo */}
       <header className="w-full bg-white px-4 md:px-8 py-4 md:py-6">
-        <h1 className="text-[#00D26A] font-extrabold text-4xl md:text-5xl">
-          RemitBuddy
-        </h1>
+        <Link href={`/${locale}`} locale={locale}>
+          <h1 className="text-[#00D26A] font-extrabold text-4xl md:text-5xl cursor-pointer hover:opacity-80 transition-opacity">
+            RemitBuddy
+          </h1>
+        </Link>
       </header>
 
       {/* Green Hero Section */}

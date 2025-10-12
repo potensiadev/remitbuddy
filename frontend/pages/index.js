@@ -806,9 +806,11 @@ export default function MainPage() {
             <div className="min-h-screen bg-white font-poppins">
                 {/* Header with Logo */}
                 <header className="px-4 md:px-6 py-2 md:py-3 bg-white">
-                    <h1 className="text-xl md:text-2xl font-extrabold text-[#00D26A]">
-                        RemitBuddy
-                    </h1>
+                    <a href={`/${router.locale}`} className="inline-block">
+                        <h1 className="text-xl md:text-2xl font-extrabold text-[#00D26A] cursor-pointer hover:opacity-80 transition-opacity">
+                            RemitBuddy
+                        </h1>
+                    </a>
                 </header>
 
                 {/* Hero Section - Full Width Green Background */}

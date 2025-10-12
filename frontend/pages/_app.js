@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Script from 'next/script';
 import '../styles/globals.css';
-import ErrorBoundary from '../components/ErrorBoundary';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -24,7 +23,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <ErrorBoundary>
+    <>
       {/* Google Analytics */}
       <Script
         strategy="afterInteractive"
@@ -56,7 +55,7 @@ function MyApp({ Component, pageProps }) {
         }}
       />
       <Component {...pageProps} />
-    </ErrorBoundary>
+    </>
   );
 }
 

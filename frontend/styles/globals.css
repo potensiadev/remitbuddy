@@ -502,7 +502,7 @@ body, input, button, select, textarea {
 /* Skeleton Card */
 .skeleton-card {
     background: white;
-    border: 2px solid #e5e7eb;
+    border: 2px solid rgba(0, 210, 106, 0.15);
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 12px;
@@ -548,7 +548,7 @@ body, input, button, select, textarea {
 /* Provider Card Styles - 모바일 최적화 */
 .provider-card {
     background: white;
-    border: 2px solid #e5e7eb;
+    border: 2px solid rgba(0, 210, 106, 0.2);
     border-radius: 12px;
     padding: 16px;
     cursor: pointer;
@@ -562,13 +562,13 @@ body, input, button, select, textarea {
 
 .provider-card:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    border-color: #34C759;
+    box-shadow: 0 4px 16px rgba(0, 210, 106, 0.15);
+    border-color: #00D26A;
     text-decoration: none;
 }
 
 .provider-card.best {
-    border-color: #10b981;
+    border-color: #00D26A;
     background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
 }
 

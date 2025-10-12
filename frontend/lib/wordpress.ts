@@ -24,6 +24,20 @@ export interface WordPressPost {
       href: string;
     }>;
   };
+  _embedded?: {
+    'wp:featuredmedia'?: Array<{
+      source_url?: string;
+      media_details?: {
+        sizes?: {
+          [key: string]: {
+            source_url: string;
+            width: number;
+            height: number;
+          };
+        };
+      };
+    }>;
+  };
 }
 
 export interface WordPressMedia {

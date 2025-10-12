@@ -236,8 +236,8 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
             }}
             className={`w-full flex items-center justify-between px-6 py-4 bg-white hover:bg-gradient-to-r hover:from-[#00D26A]/8 hover:to-[#00D26A]/5 focus:bg-gradient-to-r focus:from-[#00D26A]/8 focus:to-[#00D26A]/5 active:bg-[#00D26A]/15 transition-all duration-200 focus:outline-none group ${index !== 0 ? 'border-t border-[#00D26A]/10' : ''} ${index === 0 ? 'rounded-t-[24px]' : ''} ${index === COUNTRIES.length - 1 ? 'rounded-b-[24px]' : ''}`}
         >
-            <span className="text-[17px] lg:text-[19px] font-semibold text-gray-800 group-hover:text-[#00D26A] transition-colors">{c.name} ({c.currency})</span>
-            <img src={c.flag} alt={`${c.name} flag`} width="32" height="32" className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover shadow-sm ring-1 ring-[#00D26A]/20 group-hover:ring-[#00D26A]/40 transition-all" />
+            <span className="text-[17px] font-semibold text-gray-800 group-hover:text-[#00D26A] transition-colors">{c.name} ({c.currency})</span>
+            <img src={c.flag} alt={`${c.name} flag`} width="32" height="32" className="w-8 h-8 rounded-full object-cover shadow-sm ring-1 ring-[#00D26A]/20 group-hover:ring-[#00D26A]/40 transition-all" />
         </button>
     ))}
         </div>
@@ -842,34 +842,34 @@ export default function MainPage() {
             
             <div className="min-h-screen bg-white font-poppins">
                 {/* Header with Logo */}
-                <header className="px-4 md:px-6 py-2 md:py-3 bg-white">
+                <header className="px-4 py-2 bg-white">
                     <a href={`/${router.locale}`} className="inline-block">
-                        <h1 className="text-xl md:text-2xl font-extrabold text-[#00D26A] cursor-pointer hover:opacity-80 transition-opacity">
+                        <h1 className="text-xl font-extrabold text-[#00D26A] cursor-pointer hover:opacity-80 transition-opacity">
                             RemitBuddy
                         </h1>
                     </a>
                 </header>
 
                 {/* Hero Section - Full Width Green Background */}
-                <section className="bg-[#00D26A] pt-6 md:pt-8 pb-12 md:pb-16 px-4 md:px-6">
+                <section className="bg-[#00D26A] pt-6 pb-12 px-4">
                     <div className="max-w-[1200px] mx-auto">
                         {/* Hero Title - White Text */}
-                        <div className="text-center mb-6 md:mb-8">
-                            <h2 className="text-2xl md:text-[32px] leading-tight md:leading-[40px] font-extrabold text-white mb-2 md:mb-3" dangerouslySetInnerHTML={{ __html: t('main_title') }} />
-                            <p className="text-base md:text-xl leading-6 md:leading-7 font-normal text-white">
+                        <div className="text-center mb-6">
+                            <h2 className="text-2xl leading-tight font-extrabold text-white mb-2" dangerouslySetInnerHTML={{ __html: t('main_title') }} />
+                            <p className="text-base leading-6 font-normal text-white">
                                 {t('main_subtitle')}
                             </p>
                         </div>
 
                         {/* White Input Card - Floating on Green Background */}
-                        <div className="max-w-[620px] mx-auto bg-white rounded-[28px] border-[3px] border-[#2EBF5C] p-6 md:p-8 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
+                        <div className="max-w-[620px] mx-auto bg-white rounded-[28px] border-[3px] border-[#2EBF5C] p-6 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
                             <form onSubmit={handleSubmit}>
                                 {/* 🔒 CSRF Protection - Server must validate this token */}
                                 <input type="hidden" name="_csrf" value={csrfToken} />
 
                                 {/* Country Selector */}
-                                <div className="mb-5 md:mb-6">
-                                    <label className="block text-[15px] md:text-[16px] font-bold text-[#34C759] mb-3 md:mb-4 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                <div className="mb-5">
+                                    <label className="block text-[15px] font-bold text-[#34C759] mb-3 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('country_label')}
                                     </label>
                                     <div className="relative" ref={formRefDesktop}>
@@ -880,10 +880,10 @@ export default function MainPage() {
                                             style={{ textDecoration: 'none' }}
                                         >
                                             <div className="flex items-center gap-2">
-                                                <span className="text-[16px] md:text-[18px] font-semibold text-gray-700">
+                                                <span className="text-[16px] font-semibold text-gray-700">
                                                     {selectedCountry.name} ({selectedCountry.currency})
                                                 </span>
-                                                <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="28" height="28" className="w-7 h-7 md:w-8 md:h-8 rounded-full object-cover" />
+                                                <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="28" height="28" className="w-7 h-7 rounded-full object-cover" />
                                                 <ChevronDownIcon className={`w-5 h-5 text-gray-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                                             </div>
                                         </button>
@@ -892,11 +892,11 @@ export default function MainPage() {
                                 </div>
 
                                 {/* Amount Input */}
-                                <div className="mb-5 md:mb-6" ref={formRef}>
-                                    <label className="block text-[15px] md:text-[16px] font-bold text-[#34C759] mb-3 md:mb-4 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                                <div className="mb-5" ref={formRef}>
+                                    <label className="block text-[15px] font-bold text-[#34C759] mb-3 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('amount_label')}
                                     </label>
-                                    <div className={`w-full flex items-center gap-2 px-4 md:px-5 py-3 md:py-3.5 border-[4px] rounded-[50px] bg-white hover:border-[#2EBF5C] focus-within:border-[#2EBF5C] transition-colors duration-200 shadow-sm ${
+                                    <div className={`w-full flex items-center gap-2 px-4 py-3 border-[4px] rounded-[50px] bg-white hover:border-[#2EBF5C] focus-within:border-[#2EBF5C] transition-colors duration-200 shadow-sm ${
                                         amountError ? "border-red-400" : "border-[#34C759]"
                                     }`}>
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
@@ -906,9 +906,9 @@ export default function MainPage() {
                                             onChange={handleAmountChange}
                                             onBlur={handleAmountBlur}
                                             placeholder="1,000,000"
-                                            className="flex-1 text-[16px] md:text-[18px] font-semibold text-gray-800 text-right bg-transparent border-0 focus:outline-none placeholder:text-gray-400 min-w-0"
+                                            className="flex-1 text-[16px] font-semibold text-gray-800 text-right bg-transparent border-0 focus:outline-none placeholder:text-gray-400 min-w-0"
                                         />
-                                        <span className="text-[16px] md:text-[18px] font-semibold text-gray-800 whitespace-nowrap flex-shrink-0">
+                                        <span className="text-[16px] font-semibold text-gray-800 whitespace-nowrap flex-shrink-0">
                                             KRW
                                         </span>
                                     </div>
@@ -923,7 +923,7 @@ export default function MainPage() {
                                 <button
                                     type="submit"
                                     disabled={!isAmountValid()}
-                                    className="w-full h-[50px] bg-[#34C759] text-white text-[18px] md:text-[20px] font-bold rounded-[50px] transition-colors hover:enabled:bg-[#00B35A] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full h-[50px] bg-[#34C759] text-white text-[18px] font-bold rounded-[50px] transition-colors hover:enabled:bg-[#00B35A] disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
                                 </button>
@@ -934,17 +934,17 @@ export default function MainPage() {
 
                 {/* Results Section */}
                 {showResults && (
-                    <div ref={resultsRef} className="max-w-[1200px] mx-auto px-4 md:px-6 py-4 md:py-6">
+                    <div ref={resultsRef} className="max-w-[1200px] mx-auto px-4 py-4">
                         <ComparisonResults queryParams={queryParams} amount={amount} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
                     </div>
                 )}
 
                 {/* Footer */}
-                <footer className="bg-[#4B5563] text-white py-3 md:py-4 px-4 md:px-6 mt-auto">
+                <footer className="bg-[#4B5563] text-white py-3 px-4 mt-auto">
                     <div className="max-w-[1200px] mx-auto">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                            <p className="text-xs md:text-sm">© 2025 Potensia Inc. All Rights Reserved</p>
-                            <div className="flex gap-4 md:gap-6 text-xs md:text-sm invisible">
+                            <p className="text-xs">© 2025 Potensia Inc. All Rights Reserved</p>
+                            <div className="flex gap-4 text-xs invisible">
                                 <a href="#" className="hover:text-[#00D26A] transition-colors">About</a>
                                 <a href="#" className="hover:text-[#00D26A] transition-colors">Contact</a>
                                 <a href="#" className="hover:text-[#00D26A] transition-colors">Privacy</a>

@@ -943,7 +943,7 @@ export default function MainPage() {
                 <footer className="bg-[#4B5563] text-white py-3 px-4 mt-auto">
                     <div className="max-w-[1200px] mx-auto">
                         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                            <p className="text-xs">© 2025 Potensia Inc. All Rights Reserved</p>
+                            <p className="text-xs">© 2025 RemitBuddy. All Rights Reserved</p>
                             <div className="flex gap-4 text-xs invisible">
                                 <a href="#" className="hover:text-[#00D26A] transition-colors">About</a>
                                 <a href="#" className="hover:text-[#00D26A] transition-colors">Contact</a>

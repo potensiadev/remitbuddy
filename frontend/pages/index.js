@@ -234,7 +234,7 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
                 setShowDropdown(false);
                 onCountryChange(c);
             }}
-            className={`w-full flex items-center justify-between px-6 py-4 bg-white hover:bg-gradient-to-r hover:from-[#00D26A]/8 hover:to-[#00D26A]/5 focus:bg-gradient-to-r focus:from-[#00D26A]/8 focus:to-[#00D26A]/5 active:bg-[#00D26A]/15 transition-all duration-200 focus:outline-none group ${index !== 0 ? 'border-t border-[#00D26A]/10' : ''} ${index === 0 ? 'rounded-t-[24px]' : ''} ${index === COUNTRIES.length - 1 ? 'rounded-b-[24px]' : ''}`}
+            className={`w-full flex items-center justify-between px-6 py-4 bg-white hover:bg-gradient-to-r hover:from-[#00D26A]/8 hover:to-[#00D26A]/5 focus:bg-gradient-to-r focus:from-[#00D26A]/8 focus:to-[#00D26A]/5 active:bg-[#00D26A]/15 transition-all duration-200 border-0 outline-none focus:outline-none active:outline-none group ${index !== 0 ? 'border-t border-[#00D26A]/10' : ''} ${index === 0 ? 'rounded-t-[24px]' : ''} ${index === COUNTRIES.length - 1 ? 'rounded-b-[24px]' : ''}`}
         >
             <span className="text-[17px] font-semibold text-gray-800 group-hover:text-[#00D26A] transition-colors">{c.name} ({c.currency})</span>
             <img src={c.flag} alt={`${c.name} flag`} width="32" height="32" className="w-8 h-8 rounded-full object-cover shadow-sm ring-1 ring-[#00D26A]/20 group-hover:ring-[#00D26A]/40 transition-all" />

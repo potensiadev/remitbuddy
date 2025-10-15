@@ -923,7 +923,7 @@ export default function MainPage() {
                                 <button
                                     type="submit"
                                     disabled={!isAmountValid()}
-                                    className="w-full h-[50px] bg-[#34C759] text-white text-[18px] font-bold rounded-[50px] transition-colors hover:enabled:bg-[#00B35A] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="w-full h-[50px] bg-[#34C759] text-white text-[18px] font-bold rounded-[50px] border-0 outline-none transition-colors hover:enabled:bg-[#00B35A] disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none active:outline-none"
                                 >
                                     {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
                                 </button>

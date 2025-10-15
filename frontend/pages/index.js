@@ -877,7 +877,7 @@ export default function MainPage() {
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
                                             className="w-full flex items-center justify-end px-5 py-3 border-[2.5px] border-[#00D26A]/30 rounded-[50px] bg-white hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors duration-200"
-                                            style={{ textDecoration: 'none' }}
+                                            style={{ textDecoration: 'none', boxShadow: 'none' }}
                                         >
                                             <div className="flex items-center gap-2">
                                                 <span className="text-[16px] font-semibold text-gray-700">

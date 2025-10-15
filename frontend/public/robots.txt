@@ -4,9 +4,9 @@
 User-agent: *
 Allow: /
 
-# 11개 언어 페이지 명시적 허용
+# 13개 언어 페이지 명시적 허용
 Allow: /ko
-Allow: /en  
+Allow: /en
 Allow: /vi
 Allow: /ne
 Allow: /th
@@ -16,6 +16,8 @@ Allow: /km
 Allow: /tl
 Allow: /uz
 Allow: /si
+Allow: /mn
+Allow: /bn
 
 # 국가별 가이드 페이지 허용
 Allow: /ko/guide/
@@ -28,6 +30,8 @@ Allow: /km/guide/
 Allow: /tl/guide/
 Allow: /uz/guide/
 Allow: /si/guide/
+Allow: /mn/guide/
+Allow: /bn/guide/
 
 # 블로그 페이지 허용
 Allow: /blog/
@@ -41,6 +45,8 @@ Allow: /km/blog/
 Allow: /tl/blog/
 Allow: /uz/blog/
 Allow: /si/blog/
+Allow: /mn/blog/
+Allow: /bn/blog/
 
 # 크롤링 금지 영역
 Disallow: /api/

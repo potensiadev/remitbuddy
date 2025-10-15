@@ -876,7 +876,7 @@ export default function MainPage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-end px-5 py-3 border-[2.5px] border-[#00D26A]/30 rounded-[50px] bg-white hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors duration-200 shadow-sm"
+                                            className="w-full flex items-center justify-end px-5 py-3 border-[2.5px] border-[#00D26A]/30 rounded-[50px] bg-white hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors duration-200"
                                             style={{ textDecoration: 'none' }}
                                         >
                                             <div className="flex items-center gap-2">
@@ -896,7 +896,7 @@ export default function MainPage() {
                                     <label className="block text-[15px] font-bold text-[#34C759] mb-3 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
                                         {t('amount_label')}
                                     </label>
-                                    <div className={`w-full flex items-center gap-2 px-4 py-3 border-[4px] rounded-[50px] bg-white hover:border-[#2EBF5C] focus-within:border-[#2EBF5C] transition-colors duration-200 shadow-sm ${
+                                    <div className={`w-full flex items-center gap-2 px-4 py-3 border-[4px] rounded-[50px] bg-white hover:border-[#2EBF5C] focus-within:border-[#2EBF5C] transition-colors duration-200 ${
                                         amountError ? "border-red-400" : "border-[#34C759]"
                                     }`}>
                                         {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}

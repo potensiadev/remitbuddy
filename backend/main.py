@@ -1044,6 +1044,35 @@ async def test_single_proxy(proxy_ip: str):
         "stats": proxy_manager.proxy_stats.get(proxy_ip, {})
     }
 
+# --- Debug Endpoints ---
+@app.get("/debug/test-hanpass")
+async def debug_test_hanpass():
+    """Hanpass API 직접 테스트용 디버그 엔드포인트"""
+    import time
+
+    start_time = time.time()
+    timeout = aiohttp.ClientTimeout(total=5.0)
+
+    try:
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            result = await get_hanpass_quote(session, 1000000, 'VND', 'vietnam')
+            elapsed = time.time() - start_time
+
+            return {
+                "success": result is not None,
+                "elapsed_time": f"{elapsed:.2f}s",
+                "result": result,
+                "timestamp": datetime.utcnow().isoformat()
+            }
+    except Exception as e:
+        elapsed = time.time() - start_time
+        return {
+            "success": False,
+            "elapsed_time": f"{elapsed:.2f}s",
+            "error": f"{type(e).__name__}: {str(e)}",
+            "timestamp": datetime.utcnow().isoformat()
+        }
+
 # --- Health Check Endpoints ---
 @app.get("/health")
 async def health_check():

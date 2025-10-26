@@ -54,7 +54,79 @@ RATE_LIMIT_WINDOW = 60
 request_timestamps = {}
 # Reduced TTL to 60 seconds for fresher data with more cache slots
 cache = TTLCache(maxsize=2048, ttl=60)
-PROXIES = [] 
+PROXIES = []
+
+# --- Hanpass IP Blocking Detection ---
+class HanpassConnectionTracker:
+    """
+    Tracks Hanpass connection failures to detect IP blocking.
+    Automatically switches to proxy when IP blocking is detected.
+    """
+    def __init__(self):
+        self.consecutive_failures = 0
+        self.last_failure_time = 0
+        self.force_proxy_until = 0  # Timestamp until which we force proxy usage
+        self.total_requests = 0
+        self.successful_requests = 0
+
+    def should_use_proxy(self) -> bool:
+        """
+        Determines if we should use proxy based on recent failures.
+        Returns True if we should use proxy, False for direct connection.
+        """
+        current_time = time.time()
+
+        # If we're in forced proxy mode due to recent failures
+        if current_time < self.force_proxy_until:
+            logger.info(f"Using proxy for Hanpass (forced mode, {int((self.force_proxy_until - current_time) / 60)} min remaining)")
+            return True
+
+        # Otherwise try direct connection first
+        return False
+
+    def record_success(self, used_proxy: bool):
+        """Record a successful Hanpass request."""
+        self.total_requests += 1
+        self.successful_requests += 1
+        self.consecutive_failures = 0
+
+        logger.info(f"Hanpass success (proxy={used_proxy}). Success rate: {self.successful_requests}/{self.total_requests}")
+
+    def record_failure(self, used_proxy: bool):
+        """
+        Record a failed Hanpass request.
+        If direct connection fails 3 times in a row, switch to forced proxy mode.
+        """
+        self.total_requests += 1
+        self.last_failure_time = time.time()
+
+        if not used_proxy:
+            # Only count failures for direct connections
+            self.consecutive_failures += 1
+
+            logger.warning(f"Hanpass direct connection failed (consecutive: {self.consecutive_failures})")
+
+            # After 3 consecutive failures, force proxy mode for 1 hour
+            if self.consecutive_failures >= 3:
+                self.force_proxy_until = time.time() + 3600  # 1 hour
+                logger.warning(f"⚠️ IP BLOCKING DETECTED: Switching to proxy mode for 1 hour")
+        else:
+            # Proxy also failed - this is a bigger problem
+            logger.error(f"Hanpass proxy request also failed!")
+
+    def get_stats(self) -> dict:
+        """Get current statistics."""
+        return {
+            "total_requests": self.total_requests,
+            "successful_requests": self.successful_requests,
+            "success_rate": f"{(self.successful_requests / max(self.total_requests, 1)) * 100:.1f}%",
+            "consecutive_failures": self.consecutive_failures,
+            "force_proxy_mode": time.time() < self.force_proxy_until,
+            "force_proxy_remaining_minutes": max(0, int((self.force_proxy_until - time.time()) / 60))
+        }
+
+# Global Hanpass connection tracker
+hanpass_tracker = HanpassConnectionTracker() 
 
 # --- Country Code Mappings ---
 COUNTRY_CODES = { "vietnam": "VN", "philippines": "PH", "indonesia": "ID", "cambodia": "KH", "nepal": "NP", "myanmar": "MM", "thailand": "TH", "uzbekistan": "UZ", "srilanka": "LK", "bangladesh": "BD", "mongolia": "MN" }
@@ -163,118 +235,152 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException):
 # --- Scraper Functions ---
 async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     """
-    Hanpass quote fetcher with residential proxy support.
-    Uses proxy to bypass IP blocking from cloud datacenter IPs.
+    Hanpass quote fetcher with smart IP blocking detection and automatic proxy fallback.
+
+    Logic:
+    1. Check if we should use proxy based on recent failures
+    2. If not forced to use proxy:
+       - Try direct connection first (saves proxy costs)
+       - On failure, automatically retry with proxy
+       - Track failures to detect IP blocking
+    3. If IP blocking detected (3+ consecutive failures):
+       - Automatically switch to proxy mode for 1 hour
+    4. After 1 hour, retry direct connection to check if unblocked
     """
-    try:
-        url = 'https://app.hanpass.com/app/v1/remittance/get-cost'
-        country_code = COUNTRY_CODES.get(receive_country)
-        if not country_code:
+
+    url = 'https://app.hanpass.com/app/v1/remittance/get-cost'
+    country_code = COUNTRY_CODES.get(receive_country)
+    if not country_code:
+        return None
+
+    json_data = {
+        'inputAmount': str(send_amount),
+        'inputCurrencyCode': 'KRW',
+        'fromCurrencyCode': 'KRW',
+        'toCurrencyCode': receive_currency,
+        'toCountryCode': country_code,
+        'memberSeq': '1',
+        'lang': 'ko'
+    }
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'Origin': 'https://www.hanpass.com',
+        'Referer': 'https://www.hanpass.com/',
+        'User-Agent': proxy_manager.get_random_user_agent()
+    }
+
+    # Helper function to make Hanpass request
+    async def make_request(use_proxy: bool) -> Optional[Dict]:
+        """Make a Hanpass API request, optionally using proxy."""
+        try:
+            proxy_url = None
+            proxy_obj = None
+
+            if use_proxy:
+                proxy_obj = proxy_manager.get_best_proxy()
+                if not proxy_obj:
+                    logger.warning("Proxy requested but none available")
+                    return None
+
+                proxy_url = proxy_obj.url
+                proxy_manager.mark_proxy_used(proxy_obj)
+                logger.info(f"Making Hanpass request with proxy {proxy_obj.ip}")
+            else:
+                logger.info("Making Hanpass request with direct connection")
+
+            async with session.post(url, json=json_data, headers=headers, proxy=proxy_url) as response:
+                if response.status != 200:
+                    if proxy_obj:
+                        proxy_manager.mark_proxy_completed(proxy_obj, success=False)
+                    logger.warning(f"Hanpass request failed: status {response.status} (proxy={use_proxy})")
+                    return None
+
+                data = await response.json()
+
+                # Check API result code
+                if data.get('resultCode') != '0':
+                    if proxy_obj:
+                        proxy_manager.mark_proxy_completed(proxy_obj, success=False)
+                    logger.warning(f"Hanpass API error: {data.get('resultMessage')} (proxy={use_proxy})")
+                    return None
+
+                exchange_rate = data.get('exchangeRate')
+                to_amount = data.get('toAmount')
+
+                if not exchange_rate or not to_amount:
+                    if proxy_obj:
+                        proxy_manager.mark_proxy_completed(proxy_obj, success=False)
+                    return None
+
+                fee = float(data.get('transferFee', 0))
+                exchange_rate = float(exchange_rate)
+                recipient_gets = float(to_amount)
+
+                if proxy_obj:
+                    proxy_manager.mark_proxy_completed(proxy_obj, success=True)
+
+                logger.info(f"Hanpass request successful (proxy={use_proxy})")
+
+                return {
+                    "provider": "Hanpass",
+                    "exchange_rate": exchange_rate,
+                    "fee": fee,
+                    "recipient_gets": recipient_gets,
+                    "link": "https://www.hanpass.com/"
+                }
+
+        except (asyncio.TimeoutError, aiohttp.ClientError) as e:
+            if proxy_obj:
+                proxy_manager.mark_proxy_completed(proxy_obj, success=False)
+            logger.error(f"Hanpass connection error (proxy={use_proxy}): {type(e).__name__} - {e}")
+            return None
+        except Exception as e:
+            if proxy_obj:
+                proxy_manager.mark_proxy_completed(proxy_obj, success=False)
+            logger.error(f"Hanpass unexpected error (proxy={use_proxy}): {type(e).__name__} - {e}")
             return None
 
-        json_data = {
-            'inputAmount': str(send_amount),
-            'inputCurrencyCode': 'KRW',
-            'fromCurrencyCode': 'KRW',
-            'toCurrencyCode': receive_currency,
-            'toCountryCode': country_code,
-            'memberSeq': '1',
-            'lang': 'ko'
-        }
+    # Main logic: Smart fallback with IP blocking detection
+    try:
+        should_force_proxy = hanpass_tracker.should_use_proxy()
 
-        headers = {
-            'Content-Type': 'application/json',
-            'Accept': '*/*',
-            'Origin': 'https://www.hanpass.com',
-            'Referer': 'https://www.hanpass.com/',
-            'User-Agent': proxy_manager.get_random_user_agent()
-        }
+        if should_force_proxy:
+            # We're in forced proxy mode due to detected IP blocking
+            result = await make_request(use_proxy=True)
+            if result:
+                hanpass_tracker.record_success(used_proxy=True)
+                return result
+            else:
+                hanpass_tracker.record_failure(used_proxy=True)
+                return None
+        else:
+            # Try direct connection first (cost-effective)
+            result = await make_request(use_proxy=False)
+            if result:
+                hanpass_tracker.record_success(used_proxy=False)
+                return result
 
-        # Try to get a proxy for Hanpass (residential proxy to bypass IP blocking)
-        proxy = proxy_manager.get_best_proxy()
+            # Direct connection failed - try with proxy as fallback
+            logger.warning("Direct connection failed, retrying with proxy...")
+            hanpass_tracker.record_failure(used_proxy=False)
 
-        if proxy:
-            logger.info(f"Using proxy {proxy.ip} for Hanpass request")
-            proxy_manager.mark_proxy_used(proxy)
-
-            try:
-                # Use proxy for the request
-                async with session.post(url, json=json_data, headers=headers, proxy=proxy.url) as response:
-                    if response.status != 200:
-                        proxy_manager.mark_proxy_completed(proxy, success=False)
-                        logger.warning(f"Hanpass request failed with proxy {proxy.ip}: status {response.status}")
-                        return None
-
-                    data = await response.json()
-
-                    # Check if the request was successful
-                    if data.get('resultCode') != '0':
-                        proxy_manager.mark_proxy_completed(proxy, success=False)
-                        logger.warning(f"Hanpass API error with proxy {proxy.ip}: {data.get('resultMessage')}")
-                        return None
-
-                    exchange_rate = data.get('exchangeRate')
-                    to_amount = data.get('toAmount')
-
-                    if not exchange_rate or not to_amount:
-                        proxy_manager.mark_proxy_completed(proxy, success=False)
-                        return None
-
-                    fee = float(data.get('transferFee', 0))
-                    exchange_rate = float(exchange_rate)
-                    recipient_gets = float(to_amount)
-
-                    proxy_manager.mark_proxy_completed(proxy, success=True)
-                    logger.info(f"Hanpass request successful with proxy {proxy.ip}")
-
-                    return {
-                        "provider": "Hanpass",
-                        "exchange_rate": exchange_rate,
-                        "fee": fee,
-                        "recipient_gets": recipient_gets,
-                        "link": "https://www.hanpass.com/"
-                    }
-            except Exception as e:
-                proxy_manager.mark_proxy_completed(proxy, success=False)
-                logger.error(f"Hanpass proxy request error with {proxy.ip}: {type(e).__name__} - {e}")
-                # Don't return None yet, try without proxy
-
-        # Fallback: Try without proxy (will likely fail on Railway due to IP blocking)
-        logger.info("No proxy available for Hanpass, trying direct connection")
-        async with session.post(url, json=json_data, headers=headers) as response:
-            if response.status != 200:
-                logger.warning(f"Hanpass direct request failed: status {response.status}")
+            # Check if proxy is available
+            if not proxy_manager.get_best_proxy():
+                logger.error("No proxy available for fallback")
                 return None
 
-            data = await response.json()
-
-            # Check if the request was successful
-            if data.get('resultCode') != '0':
-                logger.warning(f"Hanpass API error: {data.get('resultMessage')}")
+            result = await make_request(use_proxy=True)
+            if result:
+                hanpass_tracker.record_success(used_proxy=True)
+                logger.info("✅ Proxy fallback successful")
+                return result
+            else:
+                hanpass_tracker.record_failure(used_proxy=True)
+                logger.error("❌ Both direct and proxy requests failed")
                 return None
 
-            exchange_rate = data.get('exchangeRate')
-            to_amount = data.get('toAmount')
-
-            if not exchange_rate or not to_amount:
-                return None
-
-            fee = float(data.get('transferFee', 0))
-            exchange_rate = float(exchange_rate)
-            recipient_gets = float(to_amount)
-
-            logger.info("Hanpass direct request successful")
-
-            return {
-                "provider": "Hanpass",
-                "exchange_rate": exchange_rate,
-                "fee": fee,
-                "recipient_gets": recipient_gets,
-                "link": "https://www.hanpass.com/"
-            }
-    except (asyncio.TimeoutError, aiohttp.ClientError) as e:
-        logger.error(f"Hanpass Error: {type(e).__name__} - {e}")
-        return None
     except Exception as e:
         logger.error(f"Hanpass Error: {type(e).__name__} - {e}")
         return None
@@ -1106,6 +1212,32 @@ async def test_single_proxy(proxy_ip: str):
     }
 
 # --- Debug Endpoints ---
+@app.get("/debug/hanpass-stats")
+async def debug_hanpass_stats():
+    """Get Hanpass connection statistics and current mode."""
+    stats = hanpass_tracker.get_stats()
+
+    return {
+        "hanpass_connection": stats,
+        "proxy_available": len(proxy_manager.proxies) > 0,
+        "proxy_count": len(proxy_manager.proxies),
+        "recommendation": _get_hanpass_recommendation(stats),
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+def _get_hanpass_recommendation(stats: dict) -> str:
+    """Get recommendation based on Hanpass stats."""
+    if stats["force_proxy_mode"]:
+        return f"⚠️ IP BLOCKING DETECTED - Using proxy mode for next {stats['force_proxy_remaining_minutes']} minutes"
+    elif stats["consecutive_failures"] >= 2:
+        return "⚠️ WARNING - 2+ failures detected, close to triggering proxy mode"
+    elif stats["consecutive_failures"] >= 1:
+        return "⚠️ CAUTION - 1 failure detected, monitoring for IP blocking"
+    elif stats["success_rate"] == "100.0%":
+        return "✅ EXCELLENT - All requests successful, no proxy needed"
+    else:
+        return "✅ GOOD - Direct connection working normally"
+
 @app.get("/debug/test-hanpass")
 async def debug_test_hanpass():
     """Hanpass API 직접 테스트용 디버그 엔드포인트"""

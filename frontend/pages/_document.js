@@ -28,6 +28,12 @@ class MyDocument extends Document {
             content="5hrs9JLWBmFrpyyg2B2quAHNcUJCH6dv"
           />
 
+          {/* 🔍 Naver Search Console 인증 */}
+          <meta
+            name="naver-site-verification"
+            content="4b4c8a0547f2a3248db54db903f10c9fc140d0f8"
+          />
+
           {/* ⚡️ 사전 연결 (성능 최적화) */}
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link

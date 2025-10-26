@@ -162,10 +162,15 @@ async def custom_http_exception_handler(request: Request, exc: HTTPException):
 
 # --- Scraper Functions ---
 async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
+    """
+    Hanpass quote fetcher with residential proxy support.
+    Uses proxy to bypass IP blocking from cloud datacenter IPs.
+    """
     try:
         url = 'https://app.hanpass.com/app/v1/remittance/get-cost'
         country_code = COUNTRY_CODES.get(receive_country)
-        if not country_code: return None
+        if not country_code:
+            return None
 
         json_data = {
             'inputAmount': str(send_amount),
@@ -182,17 +187,70 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
             'Accept': '*/*',
             'Origin': 'https://www.hanpass.com',
             'Referer': 'https://www.hanpass.com/',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'
+            'User-Agent': proxy_manager.get_random_user_agent()
         }
 
+        # Try to get a proxy for Hanpass (residential proxy to bypass IP blocking)
+        proxy = proxy_manager.get_best_proxy()
+
+        if proxy:
+            logger.info(f"Using proxy {proxy.ip} for Hanpass request")
+            proxy_manager.mark_proxy_used(proxy)
+
+            try:
+                # Use proxy for the request
+                async with session.post(url, json=json_data, headers=headers, proxy=proxy.url) as response:
+                    if response.status != 200:
+                        proxy_manager.mark_proxy_completed(proxy, success=False)
+                        logger.warning(f"Hanpass request failed with proxy {proxy.ip}: status {response.status}")
+                        return None
+
+                    data = await response.json()
+
+                    # Check if the request was successful
+                    if data.get('resultCode') != '0':
+                        proxy_manager.mark_proxy_completed(proxy, success=False)
+                        logger.warning(f"Hanpass API error with proxy {proxy.ip}: {data.get('resultMessage')}")
+                        return None
+
+                    exchange_rate = data.get('exchangeRate')
+                    to_amount = data.get('toAmount')
+
+                    if not exchange_rate or not to_amount:
+                        proxy_manager.mark_proxy_completed(proxy, success=False)
+                        return None
+
+                    fee = float(data.get('transferFee', 0))
+                    exchange_rate = float(exchange_rate)
+                    recipient_gets = float(to_amount)
+
+                    proxy_manager.mark_proxy_completed(proxy, success=True)
+                    logger.info(f"Hanpass request successful with proxy {proxy.ip}")
+
+                    return {
+                        "provider": "Hanpass",
+                        "exchange_rate": exchange_rate,
+                        "fee": fee,
+                        "recipient_gets": recipient_gets,
+                        "link": "https://www.hanpass.com/"
+                    }
+            except Exception as e:
+                proxy_manager.mark_proxy_completed(proxy, success=False)
+                logger.error(f"Hanpass proxy request error with {proxy.ip}: {type(e).__name__} - {e}")
+                # Don't return None yet, try without proxy
+
+        # Fallback: Try without proxy (will likely fail on Railway due to IP blocking)
+        logger.info("No proxy available for Hanpass, trying direct connection")
         async with session.post(url, json=json_data, headers=headers) as response:
             if response.status != 200:
+                logger.warning(f"Hanpass direct request failed: status {response.status}")
                 return None
 
             data = await response.json()
 
             # Check if the request was successful
             if data.get('resultCode') != '0':
+                logger.warning(f"Hanpass API error: {data.get('resultMessage')}")
                 return None
 
             exchange_rate = data.get('exchangeRate')
@@ -205,6 +263,8 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
             exchange_rate = float(exchange_rate)
             recipient_gets = float(to_amount)
 
+            logger.info("Hanpass direct request successful")
+
             return {
                 "provider": "Hanpass",
                 "exchange_rate": exchange_rate,
@@ -212,7 +272,8 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
                 "recipient_gets": recipient_gets,
                 "link": "https://www.hanpass.com/"
             }
-    except (asyncio.TimeoutError, aiohttp.ClientError):
+    except (asyncio.TimeoutError, aiohttp.ClientError) as e:
+        logger.error(f"Hanpass Error: {type(e).__name__} - {e}")
         return None
     except Exception as e:
         logger.error(f"Hanpass Error: {type(e).__name__} - {e}")

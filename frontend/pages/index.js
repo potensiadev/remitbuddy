@@ -756,9 +756,10 @@ export default function MainPage() {
                 <meta property="og:description" content={getLocalizedMeta(router.locale).description} />
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content={`https://www.remitbuddy.com${router.asPath}`} />
-                <meta property="og:image" content="https://www.remitbuddy.com/logo.svg" />
-                <meta property="og:image:width" content="1200" />
-                <meta property="og:image:height" content="630" />
+                <meta property="og:image" content="https://www.remitbuddy.com/og-image.jpg" />
+                <meta property="og:image:type" content="image/jpeg" />
+                <meta property="og:image:width" content="800" />
+                <meta property="og:image:height" content="400" />
                 <meta property="og:image:alt" content="RemitBuddy - 해외송금 비교 플랫폼" />
                 <meta property="og:site_name" content="RemitBuddy" />
                 <meta property="og:locale" content={getLocalizedMeta(router.locale).ogLocale} />
@@ -769,7 +770,7 @@ export default function MainPage() {
                 <meta name="twitter:creator" content="@RemitBuddy" />
                 <meta name="twitter:title" content={getLocalizedMeta(router.locale).title} />
                 <meta name="twitter:description" content={getLocalizedMeta(router.locale).description} />
-                <meta name="twitter:image" content="https://www.remitbuddy.com/logo.svg" />
+                <meta name="twitter:image" content="https://www.remitbuddy.com/og-image.jpg" />
 
                 {/* 🏢 비즈니스 정보 */}
                 <meta name="author" content="RemitBuddy" />

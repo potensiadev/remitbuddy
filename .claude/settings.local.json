@@ -18,7 +18,10 @@
       "Bash(gh api:*)",
       "Read(//c/Users/prohu/Downloads/**)",
       "Bash(git rebase:*)",
-      "Read(//c/Users/USER/Downloads/**)"
+      "Read(//c/Users/USER/Downloads/**)",
+      "Bash(git pull:*)",
+      "Bash(git fetch:*)",
+      "Bash(git remote set-url:*)"
     ],
     "deny": []
   }

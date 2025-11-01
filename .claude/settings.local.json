@@ -20,8 +20,23 @@
       "Bash(git rebase:*)",
       "Read(//c/Users/USER/Downloads/**)",
       "Bash(git pull:*)",
+      "Bash(git pull --rebase)",
       "Bash(git fetch:*)",
-      "Bash(git remote set-url:*)"
+      "Bash(git stash)",
+      "Bash(git stash pop)",
+      "Bash(git remote set-url:*)",
+      "Bash(curl:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(python test_hanpass.py:*)",
+      "Bash(python:*)",
+      "Bash(railway:*)",
+      "Bash(npm install:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"Attempt $i: Checking if new deployment is live...\")",
+      "Bash(done)",
+      "Bash(do echo -e \"\\n=== Test $i ===\")",
+      "Bash(git restore:*)",
+      "Bash(git stash:*)"
     ],
     "deny": []
   }

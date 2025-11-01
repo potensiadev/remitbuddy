@@ -11,7 +11,7 @@ class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta
             name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
           />
 
           {/* 🧭 기본 SEO / 검색엔진 접근 허용 */}

@@ -252,6 +252,7 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
     const [currentApiCall, setCurrentApiCall] = useState(null);
     const [isRetrying, setIsRetrying] = useState(false);
     const [impressionLogged, setImpressionLogged] = useState(false);
+    const [snapshotTime, setSnapshotTime] = useState(null);
     const amountRef = useRef(amount);
     const resultsContainerRef = useRef(null);
 
@@ -348,9 +349,17 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 }
                 
                 const data = await response.json();
-                
+
                 if (data.results && data.results.length > 0) {
                     setResults(data.results);
+                    // Set snapshot time when results are fetched
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    setSnapshotTime(`${year}-${month}-${day} ${hours}:${minutes}`);
                     setIsLoading(false);
                 } else {
                     setError('No exchange rate providers available');
@@ -411,6 +420,11 @@ function ComparisonResults({ queryParams, amount, t, onCompareAgain, forceRefres
                 <div className="summary-amount">
                     {parseInt(amount).toLocaleString()} KRW → {queryParams.receive_country}
                 </div>
+                {snapshotTime && (
+                    <div className="snapshot-time" style={{ fontSize: '14px', color: '#6B7280', marginTop: '8px' }}>
+                        {snapshotTime}
+                    </div>
+                )}
                 {isLoading && (
                     <div className="loading-text">
                         {isRetrying ? t('retrying_text') || '서버 준비 중... 잠시만 기다려주세요' : t('loading_text')}

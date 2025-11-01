@@ -54,11 +54,13 @@ class MyDocument extends Document {
             crossOrigin="anonymous"
           />
 
-          {/* 🖼️ 파비콘 (캐시 무효화) */}
-          <link rel="icon" href="/icons/icon.svg?v=2" type="image/svg+xml" />
+          {/* 🖼️ 파비콘 (캐시 무효화 - 여러 형식 제공) */}
+          <link rel="icon" href="/icons/favicon.png?v=3" type="image/png" sizes="512x512" />
+          <link rel="icon" href="/icons/icon.svg?v=3" type="image/svg+xml" />
+          <link rel="apple-touch-icon" href="/icons/favicon.png?v=3" />
 
           {/* Manifest to override cached PWA settings */}
-          <link rel="manifest" href="/manifest.json?v=2" />
+          <link rel="manifest" href="/manifest.json?v=3" />
         </Head>
 
         <body>

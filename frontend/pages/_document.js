@@ -22,6 +22,10 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#00D26A" />
           <meta name="msapplication-TileColor" content="#00D26A" />
 
+          {/* 🚫 앱 모드 비활성화 */}
+          <meta name="apple-mobile-web-app-capable" content="no" />
+          <meta name="mobile-web-app-capable" content="no" />
+
           {/* 🔍 Google Search Console 인증 */}
           <meta
             name="google-site-verification"

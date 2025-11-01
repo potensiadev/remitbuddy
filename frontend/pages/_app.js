@@ -8,13 +8,22 @@ import '../styles/globals.css';
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
-  // Unregister Service Worker (PWA disabled)
+  // Unregister Service Worker (PWA disabled) and clear caches
   useEffect(() => {
     if ('serviceWorker' in navigator) {
+      // Unregister all service workers
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         registrations.forEach((registration) => {
           registration.unregister();
-          console.log('Service Worker unregistered');
+        });
+      });
+    }
+
+    // Clear all caches
+    if ('caches' in window) {
+      caches.keys().then((names) => {
+        names.forEach(name => {
+          caches.delete(name);
         });
       });
     }

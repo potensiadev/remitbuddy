@@ -54,8 +54,11 @@ class MyDocument extends Document {
             crossOrigin="anonymous"
           />
 
-          {/* 🖼️ 파비콘 */}
-          <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+          {/* 🖼️ 파비콘 (캐시 무효화) */}
+          <link rel="icon" href="/icons/icon.svg?v=2" type="image/svg+xml" />
+
+          {/* Manifest to override cached PWA settings */}
+          <link rel="manifest" href="/manifest.json?v=2" />
         </Head>
 
         <body>

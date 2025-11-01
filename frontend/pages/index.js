@@ -15,6 +15,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import Image from 'next/image';
 import {
   logSessionStart,
   logViewMain,
@@ -181,9 +182,11 @@ const ProviderCard = ({ providerData, isBest, currency, t, amount, receiveCountr
             <div className="provider-header">
                 <div className="provider-logo-container">
                     {PROVIDER_LOGO_MAP[provider] ? (
-                        <img 
-                            src={PROVIDER_LOGO_MAP[provider]} 
-                            alt={`${provider} logo`} 
+                        <Image
+                            src={PROVIDER_LOGO_MAP[provider]}
+                            alt={`${provider} logo`}
+                            width={40}
+                            height={40}
                             className="provider-logo"
                             onError={(e) => {
                                 e.target.style.display = 'none';
@@ -237,7 +240,7 @@ const CountryDropdown = ({ setSelectedCountry, setShowDropdown, t, onCountryChan
             className={`w-full flex items-center justify-between px-6 py-4 bg-white hover:bg-gradient-to-r hover:from-[#00D26A]/8 hover:to-[#00D26A]/5 focus:bg-gradient-to-r focus:from-[#00D26A]/8 focus:to-[#00D26A]/5 active:bg-[#00D26A]/15 transition-all duration-200 border-0 outline-none focus:outline-none active:outline-none group ${index !== 0 ? 'border-t border-[#00D26A]/10' : ''} ${index === 0 ? 'rounded-t-[24px]' : ''} ${index === COUNTRIES.length - 1 ? 'rounded-b-[24px]' : ''}`}
         >
             <span className="text-[17px] font-semibold text-gray-800 group-hover:text-[#00D26A] transition-colors">{c.name} ({c.currency})</span>
-            <img src={c.flag} alt={`${c.name} flag`} width="32" height="32" className="w-8 h-8 rounded-full object-cover shadow-sm ring-1 ring-[#00D26A]/20 group-hover:ring-[#00D26A]/40 transition-all" />
+            <Image src={c.flag} alt={`${c.name} flag`} width={32} height={32} className="w-8 h-8 rounded-full shadow-sm ring-1 ring-[#00D26A]/20 group-hover:ring-[#00D26A]/40 transition-all" style={{ objectFit: 'cover' }} />
         </button>
     ))}
         </div>
@@ -884,7 +887,7 @@ export default function MainPage() {
                                                 <span className="text-[16px] font-semibold text-gray-700">
                                                     {selectedCountry.name} ({selectedCountry.currency})
                                                 </span>
-                                                <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="28" height="28" className="w-7 h-7 rounded-full object-cover" />
+                                                <Image src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width={28} height={28} className="w-7 h-7 rounded-full" style={{ objectFit: 'cover' }} />
                                                 <ChevronDownIcon className={`w-5 h-5 text-gray-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                                             </div>
                                         </button>

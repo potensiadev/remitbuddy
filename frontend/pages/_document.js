@@ -35,23 +35,23 @@ class MyDocument extends Document {
           />
 
           {/* ⚡️ 사전 연결 (성능 최적화) */}
+          <link rel="preconnect" href="https://remitbuddy-production.up.railway.app" />
+          <link rel="dns-prefetch" href="https://remitbuddy-production.up.railway.app" />
+          <link rel="preconnect" href="https://www.googletagmanager.com" />
+          <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+          <link rel="preconnect" href="https://www.google-analytics.com" />
+          <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+          <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+          <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
             rel="preconnect"
             href="https://fonts.gstatic.com"
             crossOrigin="anonymous"
           />
-          <link rel="preconnect" href="https://www.googletagmanager.com" />
 
           {/* 🖼️ 파비콘 */}
           <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
-
-          {/* 📢 Google AdSense */}
-          <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8945839011287197"
-            crossOrigin="anonymous"
-          />
         </Head>
 
         <body>

@@ -22,36 +22,34 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {/* Google Analytics */}
+      {/* Google Analytics - Optimized loading */}
       <Script
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         src={`https://www.googletagmanager.com/gtag/js?id=G-Z0SHT6SKJ3`}
-        onLoad={() => {
-          console.log('✅ GA 스크립트 로드 완료');
-        }}
-        onError={(e) => {
-          console.error('❌ GA 스크립트 로드 실패:', e);
-        }}
       />
       <Script
         id="google-analytics"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-Z0SHT6SKJ3', {
-              send_page_view: false,  // 🔥 page_view 자동 수집 비활성화
+              send_page_view: false,
               page_path: window.location.pathname,
             });
-            
-            // GA 로딩 완료 확인
-            console.log('🔧 Google Analytics 초기화 완료 (page_view 자동 수집 비활성화)');
-            console.log('🔧 window.gtag 사용 가능:', typeof window.gtag !== 'undefined');
           `,
         }}
       />
+
+      {/* Google AdSense - Optimized loading */}
+      <Script
+        strategy="lazyOnload"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8945839011287197"
+        crossOrigin="anonymous"
+      />
+
       <Component {...pageProps} />
     </>
   );

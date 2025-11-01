@@ -45,7 +45,6 @@ class MyDocument extends Document {
 
           {/* 🖼️ 파비콘 */}
           <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
-          <link rel="alternate icon" href="/vite.svg" type="image/svg+xml" />
 
           {/* 📢 Google AdSense */}
           <script

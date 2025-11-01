@@ -43,10 +43,9 @@ class MyDocument extends Document {
           />
           <link rel="preconnect" href="https://www.googletagmanager.com" />
 
-          {/* 🖼️ 파비콘 및 매니페스트 */}
+          {/* 🖼️ 파비콘 */}
           <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
           <link rel="alternate icon" href="/vite.svg" type="image/svg+xml" />
-          <link rel="manifest" href="/manifest.json" />
 
           {/* 📢 Google AdSense */}
           <script

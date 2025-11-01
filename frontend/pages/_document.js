@@ -47,6 +47,13 @@ class MyDocument extends Document {
           <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
           <link rel="alternate icon" href="/vite.svg" type="image/svg+xml" />
           <link rel="manifest" href="/manifest.json" />
+
+          {/* 📢 Google AdSense */}
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8945839011287197"
+            crossOrigin="anonymous"
+          />
         </Head>
 
         <body>

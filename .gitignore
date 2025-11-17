@@ -29,5 +29,11 @@ out/
 
 # Local Netlify folder
 .netlify
+
+# Sensitive configuration files
+backend/proxy_config.json
 backend/test_*.py
 test_*.py
+
+# Duplicate directory
+remitbuddy/

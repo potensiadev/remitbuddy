@@ -39,8 +39,8 @@ class MyDocument extends Document {
           />
 
           {/* ⚡️ 사전 연결 (성능 최적화) */}
-          <link rel="preconnect" href="https://remitbuddy.up.railway.app" />
-          <link rel="dns-prefetch" href="https://remitbuddy.up.railway.app" />
+          <link rel="preconnect" href="https://remitbuddynew.up.railway.app" />
+          <link rel="dns-prefetch" href="https://remitbuddynew.up.railway.app" />
           <link rel="preconnect" href="https://www.googletagmanager.com" />
           <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
           <link rel="preconnect" href="https://www.google-analytics.com" />

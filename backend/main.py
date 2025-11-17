@@ -126,22 +126,22 @@ class HanpassConnectionTracker:
 hanpass_tracker = HanpassConnectionTracker() 
 
 # --- Country Code Mappings ---
-COUNTRY_CODES = { "vietnam": "VN", "philippines": "PH", "indonesia": "ID", "cambodia": "KH", "nepal": "NP", "myanmar": "MM", "thailand": "TH", "uzbekistan": "UZ", "srilanka": "LK", "bangladesh": "BD", "mongolia": "MN" }
-WIREBARLEY_COUNTRY_CODES = { "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN", "nepal": "NPL", "thailand": "THA", "cambodia": "KHM", "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA", "bangladesh": "BGD", "mongolia": "MNG" }
-SENTBE_COUNTRY_CODES = { "vietnam": 209, "philippines": 154, "indonesia": 92, "nepal": 139, "thailand": 194, "cambodia": 35, "myanmar": 134, "uzbekistan": 205, "srilanka": 189, "bangladesh": 17, "mongolia": 132 }
-GMONEY_COUNTRY_NAMES = { "vietnam": "Viet Nam", "philippines": "Philippines", "indonesia": "Indonesia", "cambodia": "Cambodia", "nepal": "Nepal", "myanmar": "Myanmar", "thailand": "Thailand", "uzbekistan": "Uzbekistan", "srilanka": "Sri Lanka", "bangladesh": "Bangladesh", "mongolia": "Mongolia" }
+COUNTRY_CODES = { "vietnam": "VN", "philippines": "PH", "indonesia": "ID", "cambodia": "KH", "nepal": "NP", "myanmar": "MM", "thailand": "TH", "uzbekistan": "UZ", "srilanka": "LK", "bangladesh": "BD", "mongolia": "MN", "united states": "US" }
+WIREBARLEY_COUNTRY_CODES = { "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN", "nepal": "NPL", "thailand": "THA", "cambodia": "KHM", "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA", "bangladesh": "BGD", "mongolia": "MNG", "united states": "USA" }
+SENTBE_COUNTRY_CODES = { "vietnam": 209, "philippines": 154, "indonesia": 92, "nepal": 139, "thailand": 194, "cambodia": 35, "myanmar": 134, "uzbekistan": 205, "srilanka": 189, "bangladesh": 17, "mongolia": 132, "united states": 204 }
+GMONEY_COUNTRY_NAMES = { "vietnam": "Viet Nam", "philippines": "Philippines", "indonesia": "Indonesia", "cambodia": "Cambodia", "nepal": "Nepal", "myanmar": "Myanmar", "thailand": "Thailand", "uzbekistan": "Uzbekistan", "srilanka": "Sri Lanka", "bangladesh": "Bangladesh", "mongolia": "Mongolia", "united states": "U.S.A" }
 GMONEY_PAYMENT_TYPES = { "uzbekistan": "Humocard", "default": "Bank Account" }
 E9PAY_RECV_CODES = {
     "vietnam": "VN03", "philippines": "PH15", "indonesia": "ID01", "thailand": "TH03",
     "nepal": "NP", "myanmar": "MM01", "uzbekistan": "UZ15",
-    "srilanka": "LK03", "bangladesh": "BD01"
+    "srilanka": "LK03", "bangladesh": "BD01", "united states": "US01"
 }
 
 # Coinshot Currency Mapping
 COINSHOT_CURRENCIES = {
     "vietnam": "VND", "philippines": "PHP", "indonesia": "IDR", "thailand": "THB",
     "nepal": "NPR", "myanmar": "MMK", "uzbekistan": "UZS",
-    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT"
+    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT", "united states": "USD"
 }
 
 # GME Remit Country Mappings
@@ -149,7 +149,7 @@ GMEREMIT_COUNTRY_NAMES = {
     "vietnam": "Vietnam", "philippines": "Philippines", "indonesia": "Indonesia",
     "thailand": "Thailand", "nepal": "Nepal", "myanmar": "Myanmar",
     "uzbekistan": "Uzbekistan", "srilanka": "Sri Lanka", "bangladesh": "Bangladesh",
-    "cambodia": "Cambodia", "mongolia": "Mongolia"
+    "cambodia": "Cambodia", "mongolia": "Mongolia", "united states": "U.S.A."
 }
 
 # GME Remit Delivery Methods by Country
@@ -164,25 +164,28 @@ GMEREMIT_DELIVERY_METHODS = {
     "srilanka": "2",  # Bank Deposit
     "bangladesh": "2",  # Bank Deposit
     "cambodia": "2",  # Bank Deposit
-    "mongolia": "2"  # Bank Deposit
+    "mongolia": "2",  # Bank Deposit
+    "united states": "2" # Bank Deposit
 }
 
 # JP Remit Currency Mappings
 JPREMIT_CURRENCIES = {
     "vietnam": "VND", "philippines": "PHP", "indonesia": "IDR", "thailand": "THB",
     "nepal": "NPR", "myanmar": "MMK", "uzbekistan": "UZS",
-    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT"
+    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT", "united states": "USD"
 }
 
 # The Moin Country/Currency Mappings
 THEMOIN_COUNTRY_CODES = {
     "japan": "JP",
-    "thailand": "TH"
+    "thailand": "TH",
+    "united states": "US"
 }
 
 THEMOIN_CURRENCIES = {
     "japan": "JPY",
-    "thailand": "THB"
+    "thailand": "THB",
+    "united states": "USD"
 }
 
 # Wirebarley Country Mappings
@@ -200,13 +203,13 @@ SBICOSMONEY_COUNTRIES = {
     "vietnam": "VIETNAM", "philippines": "PHILIPPINES", "indonesia": "INDONESIA",
     "thailand": "THAILAND", "nepal": "NEPAL", "myanmar": "MYANMAR",
     "uzbekistan": "UZBEKISTAN", "srilanka": "SRILANKA", "bangladesh": "BANGLADESH",
-    "cambodia": "CAMBODIA", "mongolia": "MONGOLIA"
+    "cambodia": "CAMBODIA", "mongolia": "MONGOLIA", "united states": "U.S.A."
 }
 
 SBICOSMONEY_CURRENCIES = {
     "vietnam": "VND", "philippines": "PHP", "indonesia": "IDR", "thailand": "THB",
     "nepal": "NPR", "myanmar": "MMK", "uzbekistan": "UZS",
-    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT"
+    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT", "united states": "USD"
 }
 
 # E9Pay uses existing E9PAY_RECV_CODES mapping

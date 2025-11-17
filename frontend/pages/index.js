@@ -54,6 +54,7 @@ const COUNTRIES = [
     { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" },
     { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" },
     { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" },
+    { code: "US", currency: "USD", name: "United States", flag: "/images/flags/us.png" },
 ];
 
 // Locale to Country mapping

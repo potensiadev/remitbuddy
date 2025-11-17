@@ -855,121 +855,136 @@ export default function MainPage() {
                 />
             </Head>
             
-            <div className="min-h-screen bg-white font-poppins">
-                {/* Header with Logo */}
-                <header className="px-4 py-2 bg-white">
-                    <a href={`/${router.locale}`} className="inline-block">
-                        <h1 className="text-xl font-extrabold text-[#00D26A] cursor-pointer hover:opacity-80 transition-opacity">
-                            RemitBuddy
-                        </h1>
-                    </a>
+            <div className="min-h-screen bg-gray-50 font-sans">
+                {/* Header */}
+                <header className="bg-white shadow-sm">
+                    <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+                        <a href={`/${router.locale}`} className="flex items-center gap-2">
+                            <img src="/logo.svg" alt="RemitBuddy Logo" className="h-8 w-8" />
+                            <span className="text-2xl font-bold text-gray-800">RemitBuddy</span>
+                        </a>
+                        {/* Desktop Navigation */}
+                        <nav className="hidden md:flex items-center gap-6">
+                            <a href="#" className="text-gray-600 hover:text-brand-500 transition-colors">Blog</a>
+                            <a href="#" className="text-gray-600 hover:text-brand-500 transition-colors">About Us</a>
+                            <a href="#" className="text-gray-600 hover:text-brand-500 transition-colors">Help</a>
+                        </nav>
+                        {/* Mobile Menu Button */}
+                        <button className="md:hidden text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                            </svg>
+                        </button>
+                    </div>
                 </header>
 
-                {/* Hero Section - Full Width Green Background */}
-                <section className="bg-[#00D26A] pt-6 pb-12 px-4">
-                    <div className="max-w-[1200px] mx-auto">
-                        {/* Hero Title - White Text */}
-                        <div className="text-center mb-6">
-                            <h2 className="text-2xl leading-tight font-extrabold text-white mb-2" dangerouslySetInnerHTML={{ __html: t('main_title') }} />
-                            <p className="text-base leading-6 font-normal text-white">
-                                {t('main_subtitle')}
-                            </p>
-                        </div>
-
-                        {/* White Input Card - Floating on Green Background */}
-                        <div className="max-w-[620px] mx-auto bg-white rounded-[28px] border-[3px] border-[#2EBF5C] p-6 shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
-                            <form onSubmit={handleSubmit}>
-                                {/* 🔒 CSRF Protection - Server must validate this token */}
-                                <input type="hidden" name="_csrf" value={csrfToken} />
-
-                                {/* Country Selector */}
-                                <div className="mb-5">
-                                    <label className="block text-[15px] font-bold text-[#34C759] mb-3 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                        {t('country_label')}
-                                    </label>
-                                    <div className="relative" ref={formRefDesktop}>
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowDropdown(prev => !prev)}
-                                            className="w-full flex items-center justify-end px-5 py-3 border-[2.5px] border-[#00D26A]/30 rounded-[50px] bg-white hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors duration-200"
-                                            style={{ textDecoration: 'none', boxShadow: 'none' }}
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-[16px] font-semibold text-gray-700">
-                                                    {selectedCountry.name} ({selectedCountry.currency})
-                                                </span>
-                                                <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} width="28" height="28" className="w-7 h-7 rounded-full object-cover" />
-                                                <ChevronDownIcon className={`w-5 h-5 text-gray-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
-                                            </div>
-                                        </button>
-                                        {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRef} />}
-                                    </div>
-                                </div>
-
-                                {/* Amount Input */}
-                                <div className="mb-5" ref={formRef}>
-                                    <label className="block text-[15px] font-bold text-[#34C759] mb-3 text-left tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                                        {t('amount_label')}
-                                    </label>
-                                    <div className={`w-full flex items-center gap-2 px-4 py-3 border-[4px] rounded-[50px] bg-white hover:border-[#2EBF5C] focus-within:border-[#2EBF5C] transition-colors duration-200 ${
-                                        amountError ? "border-red-400" : "border-[#34C759]"
-                                    }`}>
-                                        {/* ⚠️ SECURITY: Client-side validation only! Server MUST validate */}
-                                        <input
-                                            type="text"
-                                            value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
-                                            onChange={handleAmountChange}
-                                            onBlur={handleAmountBlur}
-                                            placeholder="1,000,000"
-                                            className="flex-1 text-[16px] font-semibold text-gray-800 text-right bg-transparent border-0 focus:outline-none placeholder:text-gray-400 min-w-0"
-                                        />
-                                        <span className="text-[16px] font-semibold text-gray-800 whitespace-nowrap flex-shrink-0">
-                                            KRW
-                                        </span>
-                                    </div>
-                                    {amountError && (
-                                        <div className="text-red-500 text-sm mt-2 text-left">
-                                            {amountError}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* CTA Button */}
-                                <button
-                                    type="submit"
-                                    disabled={!isAmountValid()}
-                                    className="w-full h-[50px] bg-[#34C759] text-white text-[18px] font-bold rounded-[50px] border-0 outline-none transition-colors hover:enabled:bg-[#00B35A] disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none active:outline-none"
-                                >
-                                    {hasComparedOnce ? t('compare_again_button') : t('compare_button')}
-                                </button>
-                            </form>
-                        </div>
+                {/* Hero Section */}
+                <section className="bg-gradient-to-b from-brand-500 to-brand-600 text-white">
+                    <div className="container mx-auto px-4 py-16 md:py-24 text-center">
+                        <h1 className="text-4xl md:text-5xl font-extrabold mb-4" dangerouslySetInnerHTML={{ __html: t('main_title') }} />
+                        <p className="text-lg md:text-xl text-brand-100 max-w-3xl mx-auto">
+                            {t('main_subtitle')}
+                        </p>
                     </div>
                 </section>
 
-                {/* Results Section */}
-                {showResults && (
-                    <div ref={resultsRef} className="max-w-[1200px] mx-auto px-4 py-4">
-                        <ComparisonResults queryParams={queryParams} amount={amount} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
+                {/* Main Content */}
+                <main className="container mx-auto px-4 -mt-16">
+                    <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-4xl mx-auto">
+                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                            {/* Amount Input */}
+                            <div className="md:col-span-5">
+                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="amount-input">
+                                    {t('amount_label')}
+                                </label>
+                                <div className={`flex items-center bg-gray-100 rounded-lg border-2 ${amountError ? 'border-red-500' : 'border-transparent focus-within:border-brand-500'} transition-colors`}>
+                                    <input
+                                        id="amount-input"
+                                        type="text"
+                                        value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
+                                        onChange={handleAmountChange}
+                                        onBlur={handleAmountBlur}
+                                        placeholder="1,000,000"
+                                        className="w-full p-3 bg-transparent font-semibold text-lg text-gray-800 focus:outline-none"
+                                    />
+                                    <span className="text-gray-500 font-semibold px-4">KRW</span>
+                                </div>
+                                {amountError && <p className="text-red-500 text-xs mt-1">{amountError}</p>}
+                            </div>
+
+                            {/* Country Selector */}
+                            <div className="md:col-span-5">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    {t('country_label')}
+                                </label>
+                                <div className="relative" ref={formRef}>
+                                    <button type="button" onClick={() => setShowDropdown(!showDropdown)} className="w-full flex items-center justify-between p-3 bg-gray-100 rounded-lg border-2 border-transparent hover:border-brand-300 focus:border-brand-500 focus:outline-none transition-colors">
+                                        <div className="flex items-center gap-3">
+                                            <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} className="w-6 h-6 rounded-full" />
+                                            <span className="font-semibold text-gray-800">{selectedCountry.name}</span>
+                                        </div>
+                                        <ChevronDownIcon className={`w-5 h-5 text-gray-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    {showDropdown && <CountryDropdown setSelectedCountry={setSelectedCountry} setShowDropdown={setShowDropdown} t={t} onCountryChange={handleCountryChange} dropdownRef={countryDropdownRef} />}
+                                </div>
+                            </div>
+
+                            {/* CTA Button */}
+                            <div className="md:col-span-2">
+                                <button type="submit" disabled={!isAmountValid()} className="w-full bg-brand-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-600 disabled:bg-brand-300 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-brand-200">
+                                    <span className="hidden md:inline">{hasComparedOnce ? t('compare_again_button') : t('compare_button')}</span>
+                                    <span className="md:hidden">{t('compare_button_short')}</span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                )}
+
+                    {/* Results Section */}
+                    {showResults && (
+                        <div ref={resultsRef} className="mt-12">
+                            <ComparisonResults queryParams={queryParams} amount={amount} t={t} onCompareAgain={handleCompareAgain} forceRefresh={forceRefresh} />
+                        </div>
+                    )}
+                </main>
 
                 {/* Footer */}
-                <footer className="bg-[#4B5563] text-white py-3 px-4 mt-auto">
-                    <div className="max-w-[1200px] mx-auto">
-                        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                            <p className="text-xs">© 2025 RemitBuddy. All Rights Reserved</p>
-                            <div className="flex gap-4 text-xs invisible">
-                                <a href="#" className="hover:text-[#00D26A] transition-colors">About</a>
-                                <a href="#" className="hover:text-[#00D26A] transition-colors">Contact</a>
-                                <a href="#" className="hover:text-[#00D26A] transition-colors">Privacy</a>
-                                <a href="#" className="hover:text-[#00D26A] transition-colors">Advertise</a>
+                <footer className="bg-gray-800 text-white mt-24">
+                    <div className="container mx-auto px-4 py-12">
+                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                            {/* About */}
+                            <div>
+                                <h3 className="font-bold text-lg mb-4">RemitBuddy</h3>
+                                <p className="text-gray-400 text-sm">Simplifying international money transfers for everyone.</p>
                             </div>
+                            {/* Links */}
+                            <div>
+                                <h3 className="font-bold text-lg mb-4">Quick Links</h3>
+                                <ul className="space-y-2 text-sm">
+                                    <li><a href="#" className="text-gray-400 hover:text-white">Home</a></li>
+                                    <li><a href="#" className="text-gray-400 hover:text-white">About Us</a></li>
+                                    <li><a href="#" className="text-gray-400 hover:text-white">Contact</a></li>
+                                </ul>
+                            </div>
+                            {/* Legal */}
+                            <div>
+                                <h3 className="font-bold text-lg mb-4">Legal</h3>
+                                <ul className="space-y-2 text-sm">
+                                    <li><a href="#" className="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                                    <li><a href="#" className="text-gray-400 hover:text-white">Terms of Service</a></li>
+                                </ul>
+                            </div>
+                             {/* Disclaimer */}
+                             <div>
+                                <h3 className="font-bold text-lg mb-4">Disclaimer</h3>
+                                 <p className="text-gray-400 text-xs">RemitBuddy is a comparison service and not a licensed remittance provider. We do not handle your money.</p>
+                            </div>
+                        </div>
+                        <div className="mt-8 pt-8 border-t border-gray-700 text-center text-sm text-gray-500">
+                            © {new Date().getFullYear()} RemitBuddy. All Rights Reserved.
                         </div>
                     </div>
                 </footer>
             </div>
-
         </>
     );
 }

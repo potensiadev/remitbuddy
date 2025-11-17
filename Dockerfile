@@ -13,5 +13,5 @@ COPY backend/ ./
 # Expose port (Railway will set $PORT automatically)
 EXPOSE 8000
 
-# Run the application
-CMD python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Run the application (shell form to interpret $PORT)
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}

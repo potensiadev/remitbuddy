@@ -190,24 +190,34 @@ class ProxySession:
             self.proxy_manager.mark_proxy_completed(self.proxy, success)
 
 
+import json
+
 # Global proxy manager instance
 proxy_manager = ProxyManager()
 
-# Example proxy configuration - Add your actual proxy list here
-PROXY_LIST = [
-    # Example proxy configurations
-    # {"ip": "proxy1.example.com", "port": 8080, "username": "user1", "password": "pass1"},
-    # {"ip": "proxy2.example.com", "port": 8080, "username": "user2", "password": "pass2"},
-    # {"ip": "proxy3.example.com", "port": 8080, "username": "user3", "password": "pass3"},
-]
-
 def initialize_proxy_manager():
-    """Initialize the proxy manager with proxy list"""
-    if PROXY_LIST:
-        proxy_manager.add_proxy_list(PROXY_LIST)
-        logging.info(f"Initialized proxy manager with {len(PROXY_LIST)} proxies")
-    else:
-        logging.warning("No proxies configured, running without proxy rotation")
+    """Initialize the proxy manager by loading proxies from config file."""
+    try:
+        with open('proxy_config.json', 'r') as f:
+            proxy_list = json.load(f)
+
+        if proxy_list:
+            # Filter out placeholder configurations
+            actual_proxies = [p for p in proxy_list if p.get('ip') and not p['ip'].startswith('your_proxy_ip')]
+
+            if actual_proxies:
+                proxy_manager.add_proxy_list(actual_proxies)
+                logging.info(f"Initialized proxy manager with {len(actual_proxies)} proxies from proxy_config.json")
+            else:
+                logging.warning("proxy_config.json contains only placeholder configurations. Running without proxies.")
+        else:
+            logging.warning("proxy_config.json is empty. Running without proxy rotation.")
+    except FileNotFoundError:
+        logging.warning("proxy_config.json not found. Running without proxy rotation.")
+    except json.JSONDecodeError:
+        logging.error("Failed to decode proxy_config.json. Please check the file format.")
+    except Exception as e:
+        logging.error(f"An unexpected error occurred while initializing proxy manager: {e}")
 
 # Initialize on import
 initialize_proxy_manager()

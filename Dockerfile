@@ -2,17 +2,16 @@ FROM python:3.11
 
 WORKDIR /app
 
-# Copy requirements and install one by one for better debugging
+# Copy requirements and install dependencies
 COPY backend/requirements.txt ./
-RUN pip install --upgrade pip
-RUN pip install fastapi
-RUN pip install "uvicorn[standard]"
-RUN pip install aiohttp
-RUN pip install cachetools
-RUN pip install python-dotenv
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copy backend code
 COPY backend/ ./
 
-# Run the application
-CMD python -m uvicorn main:app --host 0.0.0.0 --port $PORT
+# Expose port (Railway will set $PORT automatically)
+EXPOSE 8000
+
+# Run the application (shell form to interpret $PORT)
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}

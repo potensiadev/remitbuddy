@@ -1,31 +1,22 @@
-{
-  "proxies": [
-    {
-      "ip": "proxy1.example.com",
-      "port": 8080,
-      "username": "user1",
-      "password": "pass1",
-      "protocol": "http",
-      "max_concurrent": 3,
-      "rate_limit_per_minute": 20
-    },
-    {
-      "ip": "proxy2.example.com",
-      "port": 8080,
-      "username": "user2",
-      "password": "pass2",
-      "protocol": "http",
-      "max_concurrent": 3,
-      "rate_limit_per_minute": 20
-    },
-    {
-      "ip": "proxy3.example.com",
-      "port": 8080,
-      "username": "user3",
-      "password": "pass3",
-      "protocol": "http",
-      "max_concurrent": 3,
-      "rate_limit_per_minute": 20
-    }
-  ]
-}
+// Note for the user: For production environments, it is highly recommended to use environment variables
+// or a secret management service to handle sensitive data like proxy credentials, rather than committing them in a JSON file.
+[
+  {
+    "ip": "your_proxy_ip_1",
+    "port": 8080,
+    "username": "your_username",
+    "password": "your_password",
+    "protocol": "http",
+    "max_concurrent": 5,
+    "rate_limit_per_minute": 30
+  },
+  {
+    "ip": "your_proxy_ip_2",
+    "port": 8080,
+    "username": "your_username",
+    "password": "your_password",
+    "protocol": "http",
+    "max_concurrent": 5,
+    "rate_limit_per_minute": 30
+  }
+]

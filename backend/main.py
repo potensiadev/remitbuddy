@@ -29,21 +29,18 @@ logger = logging.getLogger(__name__)
 
 # --- CORS 설정 ---
 origins = [
-    "*"  # 임시로 모든 origin 허용
+    "https://www.remitbuddy.com",
+    "https://remitbuddy.com",
+    "https://remitbuddy.netlify.app",
+    "http://localhost:3000",  # 로컬 개발용
+    "http://localhost:3001",  # 로컬 개발용
 ]
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],  # 임시로 모든 origin 허용
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 

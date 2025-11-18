@@ -101,24 +101,24 @@ export default function RedesignPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100">
         {/* Navigation */}
-        <nav className="bg-white/80 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-50">
+        <nav className="bg-white/90 backdrop-blur-md border-b border-slate-200/50 sticky top-0 z-50 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center text-white font-bold text-lg">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-md">
                   R
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                <span className="text-xl font-bold text-blue-600">
                   RemitBuddy
                 </span>
               </div>
-              <div className="hidden md:flex items-center gap-6">
-                <a href="/" className="text-sm font-medium text-slate-700 hover:text-blue-600 transition">Original Version</a>
-                <a href="#" className="text-sm font-medium text-slate-700 hover:text-blue-600 transition">How It Works</a>
-                <a href="#" className="text-sm font-medium text-slate-700 hover:text-blue-600 transition">About</a>
-                <button className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 rounded-lg transition-all">
+              <div className="hidden md:flex items-center gap-8">
+                <a href="/" className="text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors">Original Version</a>
+                <a href="#" className="text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors">How It Works</a>
+                <a href="#" className="text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors">About</a>
+                <button className="px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-lg shadow-md hover:shadow-lg transition-all">
                   Get Started
                 </button>
               </div>
@@ -140,12 +140,12 @@ export default function RedesignPage() {
                   <span className="text-sm font-medium text-blue-700">Trusted by 100,000+ users</span>
                 </div>
 
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight">
-                  Find the Best
-                  <span className="block bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+                  <span className="text-slate-900">Find the Best</span>
+                  <span className="block bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
                     Money Transfer Rates
                   </span>
-                  in Real-Time
+                  <span className="text-slate-900">in Real-Time</span>
                 </h1>
 
                 <p className="text-lg text-slate-600 leading-relaxed">
@@ -240,7 +240,7 @@ export default function RedesignPage() {
                   <button
                     onClick={handleCompare}
                     disabled={loading || !amount || parseInt(amount) < 10000}
-                    className="w-full h-14 text-base font-semibold bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full h-14 text-base font-semibold bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 text-white rounded-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {loading ? (
                       <>

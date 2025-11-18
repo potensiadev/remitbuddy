@@ -879,49 +879,29 @@ export default function MainPage() {
                 </header>
 
                 {/* Hero Section */}
-                <section className="bg-gradient-to-b from-brand-500 to-brand-600 text-white">
-                    <div className="container mx-auto px-4 py-16 md:py-24 text-center">
-                        <h1 className="text-4xl md:text-5xl font-extrabold mb-4" dangerouslySetInnerHTML={{ __html: t('main_title') }} />
-                        <p className="text-lg md:text-xl text-brand-100 max-w-3xl mx-auto">
+                <section className="bg-[#00D26A] text-white pt-6 sm:pt-8 md:pt-10 pb-16 sm:pb-20 md:pb-24">
+                    <div className="container mx-auto px-4 text-center mb-6 sm:mb-8 md:mb-10">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4" dangerouslySetInnerHTML={{ __html: t('main_title') }} />
+                        <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium max-w-3xl mx-auto">
                             {t('main_subtitle')}
                         </p>
                     </div>
                 </section>
 
                 {/* Main Content */}
-                <main className="container mx-auto px-4 -mt-16">
-                    <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-4xl mx-auto">
+                <main className="container mx-auto px-4 -mt-12 sm:-mt-16 md:-mt-20 relative z-10">
+                    <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 max-w-2xl md:max-w-4xl mx-auto border-2 sm:border-3 md:border-4 border-[#00D26A]">
                         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-                            {/* Amount Input */}
-                            <div className="md:col-span-5">
-                                <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="amount-input">
-                                    {t('amount_label')}
-                                </label>
-                                <div className={`flex items-center bg-gray-100 rounded-lg border-2 ${amountError ? 'border-red-500' : 'border-transparent focus-within:border-brand-500'} transition-colors`}>
-                                    <input
-                                        id="amount-input"
-                                        type="text"
-                                        value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
-                                        onChange={handleAmountChange}
-                                        onBlur={handleAmountBlur}
-                                        placeholder="1,000,000"
-                                        className="w-full p-3 bg-transparent font-semibold text-lg text-gray-800 focus:outline-none"
-                                    />
-                                    <span className="text-gray-500 font-semibold px-4">KRW</span>
-                                </div>
-                                {amountError && <p className="text-red-500 text-xs mt-1">{amountError}</p>}
-                            </div>
-
                             {/* Country Selector */}
                             <div className="md:col-span-5">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-base sm:text-lg md:text-xl font-bold text-[#00D26A] mb-3 sm:mb-4">
                                     {t('country_label')}
                                 </label>
                                 <div className="relative" ref={formRef}>
-                                    <button type="button" onClick={() => setShowDropdown(!showDropdown)} className="w-full flex items-center justify-between p-3 bg-gray-100 rounded-lg border-2 border-transparent hover:border-brand-300 focus:border-brand-500 focus:outline-none transition-colors">
+                                    <button type="button" onClick={() => setShowDropdown(!showDropdown)} className="w-full h-12 sm:h-14 flex items-center justify-between px-4 sm:px-6 bg-white rounded-full border-2 border-gray-300 hover:border-[#00D26A] focus:border-[#00D26A] focus:outline-none transition-colors">
                                         <div className="flex items-center gap-3">
-                                            <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} className="w-6 h-6 rounded-full" />
-                                            <span className="font-semibold text-gray-800">{selectedCountry.name}</span>
+                                            <img src={selectedCountry.flag} alt={`${selectedCountry.name} flag`} className="w-8 h-8 rounded-full shadow-md" />
+                                            <span className="font-semibold text-gray-700 text-sm sm:text-base">{selectedCountry.name} ({selectedCountry.currency})</span>
                                         </div>
                                         <ChevronDownIcon className={`w-5 h-5 text-gray-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
                                     </button>
@@ -929,9 +909,29 @@ export default function MainPage() {
                                 </div>
                             </div>
 
+                            {/* Amount Input */}
+                            <div className="md:col-span-5">
+                                <label className="block text-base sm:text-lg md:text-xl font-bold text-[#00D26A] mb-3 sm:mb-4" htmlFor="amount-input">
+                                    {t('amount_label')}
+                                </label>
+                                <div className={`relative h-12 sm:h-14 flex items-center bg-white rounded-full border-2 ${amountError ? 'border-red-500' : 'border-gray-300 focus-within:border-[#00D26A]'} transition-colors px-4 sm:px-6`}>
+                                    <input
+                                        id="amount-input"
+                                        type="text"
+                                        value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
+                                        onChange={handleAmountChange}
+                                        onBlur={handleAmountBlur}
+                                        placeholder="1,000,000"
+                                        className="w-full bg-transparent font-semibold text-lg sm:text-xl text-gray-800 text-right focus:outline-none pr-16 sm:pr-20"
+                                    />
+                                    <span className="absolute right-4 sm:right-6 text-lg sm:text-xl font-semibold text-gray-700">KRW</span>
+                                </div>
+                                {amountError && <p className="text-red-500 text-xs mt-1">{amountError}</p>}
+                            </div>
+
                             {/* CTA Button */}
                             <div className="md:col-span-2">
-                                <button type="submit" disabled={!isAmountValid()} className="w-full bg-brand-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-600 disabled:bg-brand-300 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-brand-200">
+                                <button type="submit" disabled={!isAmountValid()} className="w-full h-14 sm:h-16 text-lg sm:text-xl font-bold bg-[#00D26A] hover:bg-[#00B359] disabled:bg-gray-300 text-white rounded-full shadow-lg disabled:cursor-not-allowed transition-all duration-300 focus:outline-none">
                                     <span className="hidden md:inline">{hasComparedOnce ? t('compare_again_button') : t('compare_button')}</span>
                                     <span className="md:hidden">{t('compare_button_short')}</span>
                                 </button>

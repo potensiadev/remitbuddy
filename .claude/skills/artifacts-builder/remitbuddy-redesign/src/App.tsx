@@ -93,8 +93,8 @@ function App() {
                 </p>
               </div>
 
-              {/* Comparison Card - Toss Style */}
-              <div className="bg-gray-50 rounded-3xl p-6 md:p-8 mb-8 md:mb-12">
+              {/* Comparison Card - Toss Style Enhanced */}
+              <div className="bg-white border-2 border-gray-100 rounded-3xl p-6 md:p-8 mb-8 md:mb-12 shadow-sm">
                 {/* Amount Input */}
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-gray-700 mb-3">보내는 금액</label>
@@ -107,13 +107,13 @@ function App() {
                         setAmount(numbers)
                       }}
                       placeholder="1,000,000"
-                      className="w-full h-14 md:h-16 pl-5 pr-16 text-xl md:text-2xl font-bold bg-white border-2 border-gray-200 rounded-2xl focus:border-blue-600 focus:outline-none transition-colors"
+                      className="w-full h-16 md:h-[72px] pl-5 pr-16 text-2xl md:text-3xl font-bold bg-white border-2 border-gray-200 rounded-[20px] focus:border-blue-600 focus:outline-none transition-colors"
                     />
-                    <div className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 font-semibold text-base">
+                    <div className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 font-semibold text-lg">
                       원
                     </div>
                   </div>
-                  <p className="mt-2 text-xs text-gray-500">최소 1만원 • 최대 500만원</p>
+                  <p className="mt-3 text-xs text-gray-500">최소 1만원 • 최대 500만원</p>
                 </div>
 
                 {/* Country Selector */}
@@ -122,19 +122,22 @@ function App() {
                   <div className="relative">
                     <button
                       onClick={() => setDropdownOpen(!dropdownOpen)}
-                      className="w-full h-14 md:h-16 px-5 bg-white border-2 border-gray-200 rounded-2xl flex items-center justify-between hover:border-gray-300 transition-colors"
+                      className="w-full h-16 md:h-[72px] px-5 bg-white border-2 border-gray-200 rounded-[20px] flex items-center justify-between hover:border-gray-300 transition-colors focus:border-blue-600 focus:outline-none"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">{selectedCountryData.flag}</span>
-                        <span className="font-semibold text-gray-900">{selectedCountryData.name}</span>
+                        <span className="text-3xl">{selectedCountryData.flag}</span>
+                        <div className="text-left">
+                          <div className="text-sm text-gray-500 mb-0.5">{selectedCountryData.code}</div>
+                          <div className="font-semibold text-gray-900 text-lg">{selectedCountryData.name}</div>
+                        </div>
                       </div>
-                      <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                      <ChevronDown className={`w-6 h-6 text-gray-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {dropdownOpen && (
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
-                        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden">
+                        <div className="absolute z-50 w-full mt-2 bg-white border-2 border-gray-200 rounded-[20px] shadow-xl overflow-hidden max-h-[320px] overflow-y-auto">
                           {COUNTRIES.map((country) => (
                             <button
                               key={country.code}
@@ -142,11 +145,14 @@ function App() {
                                 setSelectedCountry(country.code)
                                 setDropdownOpen(false)
                               }}
-                              className="w-full px-5 py-4 flex items-center gap-3 hover:bg-gray-50 transition-colors"
+                              className="w-full px-5 py-4 flex items-center gap-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
                             >
-                              <span className="text-2xl">{country.flag}</span>
-                              <span className="font-medium text-gray-900">{country.name}</span>
-                              <span className="ml-auto text-sm text-gray-500">{country.currency}</span>
+                              <span className="text-3xl">{country.flag}</span>
+                              <div className="text-left flex-1">
+                                <div className="text-xs text-gray-500">{country.code}</div>
+                                <div className="font-medium text-gray-900">{country.name}</div>
+                              </div>
+                              <span className="text-sm text-gray-500">{country.currency}</span>
                             </button>
                           ))}
                         </div>
@@ -155,11 +161,11 @@ function App() {
                   </div>
                 </div>
 
-                {/* CTA Button - Toss Style */}
+                {/* CTA Button - Toss Style with more rounded corners */}
                 <button
                   onClick={handleCompare}
                   disabled={loading || !amount || parseInt(amount) < 10000}
-                  className="w-full h-14 md:h-16 bg-blue-600 text-white text-base md:text-lg font-bold rounded-2xl hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                  className="w-full h-16 md:h-[72px] bg-blue-600 text-white text-lg md:text-xl font-bold rounded-[20px] hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20"
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">
@@ -169,7 +175,7 @@ function App() {
                   ) : (
                     <>
                       <span>환율 비교하기</span>
-                      <ArrowRight className="w-5 h-5" />
+                      <ArrowRight className="w-6 h-6" />
                     </>
                   )}
                 </button>

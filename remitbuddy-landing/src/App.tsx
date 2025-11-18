@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import { Menu } from 'lucide-react'
+import { Menu, ArrowRight } from 'lucide-react'
 
 function App() {
   const [selectedCountry, setSelectedCountry] = useState('Vietnam')
@@ -69,50 +69,58 @@ function App() {
           </div>
 
           {/* Input Card */}
-          <div className="max-w-md sm:max-w-lg md:max-w-2xl mx-auto bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg border-2 sm:border-3 md:border-4 border-[#00D26A] -mb-12 sm:-mb-16 md:-mb-20 relative z-10">
+          <div className="max-w-md sm:max-w-lg md:max-w-2xl mx-auto bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-200 -mb-12 sm:-mb-16 md:-mb-20 relative z-10">
             <div className="space-y-5 sm:space-y-6 md:space-y-8">
               {/* Country Select */}
               <div>
                 <label className="block text-base sm:text-lg md:text-xl font-bold text-[#00D26A] mb-3 sm:mb-4">
                   Where are you sending to?
                 </label>
-                <Select value={selectedCountry} onValueChange={setSelectedCountry} modal={false}>
-                  <SelectTrigger className="w-full h-12 sm:h-14 text-base sm:text-lg border-2 border-gray-300 rounded-full px-4 sm:px-6 bg-white hover:border-[#00D26A] focus:border-[#00D26A] focus:ring-0">
+                <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                  <SelectTrigger className="w-full h-16 md:h-[72px] text-base sm:text-lg border-2 border-gray-300 rounded-[20px] px-4 sm:px-6 bg-white hover:border-[#00D26A] focus:border-[#00D26A] focus:ring-0">
                     <SelectValue>
-                      <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full ${countries.find(c => c.name === selectedCountry)?.flagColor} flex items-center justify-center shadow-md`}>
-                          <span className="text-white text-xs font-bold">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full ${countries.find(c => c.name === selectedCountry)?.flagColor} flex items-center justify-center shadow-md`}>
+                          <span className="text-white text-sm md:text-base font-bold">
                             {countries.find(c => c.name === selectedCountry)?.code}
                           </span>
                         </div>
-                        <span className="font-semibold text-gray-700 text-sm sm:text-base">
-                          {selectedCountry} ({countries.find(c => c.name === selectedCountry)?.currency})
-                        </span>
+                        <div className="flex flex-col items-start">
+                          <span className="font-bold text-gray-900 text-base md:text-lg">
+                            {countries.find(c => c.name === selectedCountry)?.code}
+                          </span>
+                          <span className="text-sm md:text-base text-gray-600">
+                            {selectedCountry}
+                          </span>
+                        </div>
                       </div>
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent
-                    className="bg-white max-h-[400px] overflow-y-auto rounded-3xl border-2 border-[#00D26A] shadow-lg"
+                    className="bg-white max-h-[320px] overflow-y-auto rounded-[20px] border-2 border-gray-300 shadow-lg"
                     position="popper"
                     side="bottom"
                     align="start"
                     sideOffset={5}
-                    avoidCollisions={false}
-                    onOpenAutoFocus={(e) => e.preventDefault()}
                   >
                     {countries.map((country) => (
                       <SelectItem
                         key={country.code}
                         value={country.name}
-                        className="text-base py-3 px-4 cursor-pointer hover:bg-gray-50 focus:bg-gray-50"
+                        className="text-base py-4 px-4 cursor-pointer hover:bg-gray-50 focus:bg-gray-50"
                       >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 rounded-full ${country.flagColor} flex items-center justify-center shadow-md`}>
-                            <span className="text-white text-xs font-bold">{country.code}</span>
+                        <div className="flex items-center gap-4">
+                          <div className={`w-10 h-10 rounded-full ${country.flagColor} flex items-center justify-center shadow-md`}>
+                            <span className="text-white text-sm font-bold">{country.code}</span>
                           </div>
-                          <span className="font-normal text-gray-600">
-                            {country.name} ({country.currency})
-                          </span>
+                          <div className="flex flex-col items-start">
+                            <span className="font-bold text-gray-900 text-base">
+                              {country.code}
+                            </span>
+                            <span className="text-sm text-gray-600">
+                              {country.name}
+                            </span>
+                          </div>
                         </div>
                       </SelectItem>
                     ))}
@@ -130,19 +138,20 @@ function App() {
                     type="text"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full h-12 sm:h-14 text-lg sm:text-xl text-right font-semibold border-2 border-gray-300 rounded-full px-4 sm:px-6 pr-16 sm:pr-20 focus:border-[#00D26A] focus:ring-0"
+                    className="w-full h-16 md:h-[72px] text-2xl md:text-3xl text-right font-semibold border-2 border-gray-300 rounded-[20px] px-4 sm:px-6 pr-20 sm:pr-24 focus:border-[#00D26A] focus:ring-0"
                   />
-                  <span className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 text-lg sm:text-xl font-semibold text-gray-700">
-                    KRW
+                  <span className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 text-lg font-bold text-gray-700">
+                    원
                   </span>
                 </div>
               </div>
 
               {/* Compare Button */}
               <Button
-                className="w-full h-14 sm:h-16 text-lg sm:text-xl font-bold bg-[#00D26A] hover:bg-[#00B359] text-white rounded-full shadow-lg"
+                className="w-full h-[72px] text-xl font-bold bg-[#00D26A] hover:bg-[#00B359] text-white rounded-[20px] shadow-lg shadow-[#00D26A]/20 transition-all hover:shadow-xl hover:shadow-[#00D26A]/30 flex items-center justify-center gap-2"
               >
                 Compare the Best Rates
+                <ArrowRight className="w-6 h-6" />
               </Button>
             </div>
           </div>

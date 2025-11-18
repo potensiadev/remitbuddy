@@ -111,7 +111,7 @@ export default function RedesignPage() {
                           setAmount(numbers)
                         }}
                         placeholder="1,000,000"
-                        className="w-full h-16 md:h-[72px] pl-5 pr-16 text-2xl md:text-3xl font-bold bg-white border-2 border-gray-200 rounded-[20px] focus:border-blue-600 focus:outline-none transition-colors"
+                        className="w-full h-16 md:h-[72px] pl-5 pr-16 text-2xl md:text-3xl font-bold bg-white border-2 border-gray-300 rounded-[20px] focus:border-blue-600 focus:outline-none transition-colors"
                       />
                       <div className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 font-semibold text-lg">
                         원
@@ -126,7 +126,7 @@ export default function RedesignPage() {
                     <div className="relative">
                       <button
                         onClick={() => setDropdownOpen(!dropdownOpen)}
-                        className="w-full h-16 md:h-[72px] px-5 bg-white border-2 border-gray-200 rounded-[20px] flex items-center justify-between hover:border-gray-300 transition-colors focus:border-blue-600 focus:outline-none"
+                        className="w-full h-16 md:h-[72px] px-5 bg-white border-2 border-gray-300 rounded-[20px] flex items-center justify-between transition-colors focus:border-blue-600 focus:outline-none"
                       >
                         <div className="flex items-center gap-3">
                           <span className="text-3xl">{selectedCountryData.flag}</span>
@@ -143,7 +143,7 @@ export default function RedesignPage() {
                       {dropdownOpen && (
                         <>
                           <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
-                          <div className="absolute z-50 w-full mt-2 bg-white border-2 border-gray-200 rounded-[20px] shadow-xl overflow-hidden max-h-[320px] overflow-y-auto">
+                          <div className="absolute z-50 w-full mt-2 bg-white border-2 border-gray-300 rounded-[20px] shadow-xl overflow-hidden max-h-[320px] overflow-y-auto">
                             {COUNTRIES.map((country) => (
                               <button
                                 key={country.code}

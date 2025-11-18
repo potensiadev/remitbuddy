@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Inter:700,400&display=swap');
+/* Toss-style Korean-optimized typography */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css');
+@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700;800&display=swap');
 
 /* 기본 리셋 */
 * {
@@ -8,9 +9,9 @@
     box-sizing: border-box;
 }
 
-/* 모바일 우선 설계 */
+/* Toss-style mobile-first design */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', Pretendard, 'SF Pro Display', 'Segoe UI', sans-serif;
     background: #ffffff;
     min-height: 100vh;
     padding: 0;
@@ -19,6 +20,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    letter-spacing: -0.02em;
+    color: #191F28;
 }
 
 /* 웹뷰 및 터치 최적화 */

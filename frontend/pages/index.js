@@ -84,7 +84,7 @@ const TrendingUpIcon = () => (
     </svg>
 );
 
-// Provider Card Component - Enhanced
+// Provider Card Component - Toss Style
 const ProviderCard = ({ provider, isBest, index }) => {
     const displayName = provider.provider === 'JP Remit' ? 'JRF' :
                        provider.provider === 'The Moin' ? 'Moin' : provider.provider;
@@ -98,8 +98,8 @@ const ProviderCard = ({ provider, isBest, index }) => {
             href={provider.link}
             target="_blank"
             rel="noopener noreferrer"
-            className={`block bg-white rounded-3xl p-6 mb-4 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] ${
-                isBest ? 'border-3 border-blue-500 shadow-xl ring-4 ring-blue-100' : 'border border-gray-200 hover:border-blue-300'
+            className={`block bg-white rounded-xl p-6 mb-4 transition-all duration-300 hover:shadow-toss-lg hover:-translate-y-1 ${
+                isBest ? 'border-2 border-brand-500 shadow-card-best ring-4 ring-brand-100' : 'border border-gray-200 hover:border-brand-300 shadow-toss'
             }`}
             style={{ animationDelay: `${index * 50}ms` }}
         >
@@ -113,14 +113,14 @@ const ProviderCard = ({ provider, isBest, index }) => {
                             onError={(e) => { e.target.style.display = 'none'; }}
                         />
                     ) : (
-                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-xl font-bold text-white">
+                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-xl font-bold text-white">
                             {displayName.charAt(0)}
                         </div>
                     )}
                     <div>
                         <span className="text-xl font-bold text-gray-900 block">{displayName}</span>
                         {isBest && (
-                            <span className="flex items-center gap-1 text-sm text-blue-600 font-semibold mt-1">
+                            <span className="flex items-center gap-1 text-sm text-brand-600 font-bold mt-1">
                                 <SparklesIcon />
                                 최고 환율
                             </span>
@@ -128,41 +128,41 @@ const ProviderCard = ({ provider, isBest, index }) => {
                     </div>
                 </div>
                 {isBest && (
-                    <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-bold px-5 py-2.5 rounded-full shadow-lg">
+                    <span className="bg-brand-500 text-white text-sm font-bold px-5 py-2.5 rounded-full shadow-toss">
                         추천
                     </span>
                 )}
             </div>
 
-            <div className="mb-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-5">
-                <div className="text-gray-600 text-sm mb-2 font-medium">받는 금액</div>
-                <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="mb-6 bg-gradient-to-br from-brand-50 to-accent-50 rounded-xl p-5 border border-brand-100">
+                <div className="text-gray-600 text-sm mb-2 font-bold">받는 금액</div>
+                <div className="text-4xl font-bold text-brand-600">
                     {Math.round(provider.recipient_gets).toLocaleString('en-US')}
                     <span className="text-2xl ml-2 text-gray-700">{provider.currency}</span>
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
-                <div className="bg-gray-50 rounded-xl p-3">
-                    <div className="text-xs text-gray-500 mb-1">환율</div>
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-150">
+                <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="text-xs text-gray-600 mb-1 font-bold">환율</div>
                     <div className="text-base font-bold text-gray-900">
                         {(1 / provider.exchange_rate).toFixed(4)}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">KRW per {provider.currency}</div>
+                    <div className="text-xs text-gray-500 mt-1 font-medium">KRW per {provider.currency}</div>
                 </div>
-                <div className="bg-gray-50 rounded-xl p-3">
-                    <div className="text-xs text-gray-500 mb-1">수수료</div>
+                <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="text-xs text-gray-600 mb-1 font-bold">수수료</div>
                     <div className="text-base font-bold text-gray-900">
                         {formattedFeeInKRW}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">KRW</div>
+                    <div className="text-xs text-gray-500 mt-1 font-medium">KRW</div>
                 </div>
             </div>
 
-            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-center">
-                <span className="text-blue-600 font-semibold text-sm flex items-center gap-2 hover:gap-3 transition-all">
+            <div className="mt-4 pt-4 border-t border-gray-150 flex items-center justify-center group">
+                <span className="text-brand-600 font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
                     송금하러 가기
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                 </span>
@@ -246,21 +246,21 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain }
                     {parseInt(amount).toLocaleString()} KRW → {queryParams.receive_country}
                 </h2>
                 {snapshotTime && (
-                    <p className="text-gray-500 flex items-center justify-center gap-2">
+                    <p className="text-gray-600 flex items-center justify-center gap-2 font-medium">
                         <ClockIcon />
                         <span>조회 시각: {snapshotTime}</span>
                     </p>
                 )}
                 {savings > 0 && (
-                    <div className="mt-4 inline-block bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl px-6 py-3">
-                        <p className="text-green-700 font-semibold">
-                            최고 환율로 최대 <span className="text-2xl font-bold text-green-600">{savings.toLocaleString()}</span> {queryParams.receive_currency} 더 받을 수 있어요!
+                    <div className="mt-4 inline-block bg-gradient-to-r from-accent-50 to-accent-100 border border-accent-300 rounded-xl px-6 py-4 shadow-toss-sm">
+                        <p className="text-accent-700 font-bold">
+                            최고 환율로 최대 <span className="text-2xl font-bold text-accent-600">{savings.toLocaleString()}</span> {queryParams.receive_currency} 더 받을 수 있어요!
                         </p>
                     </div>
                 )}
                 <button
                     onClick={onCompareAgain}
-                    className="mt-4 text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-2 mx-auto transition-colors"
+                    className="mt-4 text-brand-600 hover:text-brand-700 font-bold flex items-center gap-2 mx-auto transition-all hover:scale-105"
                 >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -271,11 +271,11 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain }
 
             {isLoading && (
                 <div className="text-center py-16">
-                    <div className="inline-block relative">
-                        <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mb-4"></div>
+                    <div className="inline-block relative mb-6">
+                        <div className="w-16 h-16 border-4 border-brand-200 border-t-brand-500 rounded-full animate-spin"></div>
                     </div>
-                    <p className="text-gray-600 text-lg font-medium">최적의 환율을 찾고 있습니다...</p>
-                    <p className="text-gray-500 text-sm mt-2">10개 송금 업체를 비교하는 중</p>
+                    <p className="text-gray-900 text-lg font-bold mb-2">최적의 환율을 찾고 있습니다...</p>
+                    <p className="text-gray-600 text-sm font-medium">10개 송금 업체를 비교하는 중</p>
                 </div>
             )}
 
@@ -372,103 +372,109 @@ export default function HomePage() {
             </Head>
 
             <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-                {/* Header */}
-                <header className="bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-lg bg-opacity-90">
+                {/* Header - Toss Style */}
+                <header className="bg-white border-b border-gray-150 sticky top-0 z-50 backdrop-blur-xl bg-opacity-95 transition-all duration-300">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10" />
-                            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">RemitBuddy</span>
+                        <div className="flex items-center gap-3 group">
+                            <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
+                            <span className="text-2xl font-bold bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">RemitBuddy</span>
                         </div>
-                        <nav className="hidden md:flex gap-6">
-                            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">이용방법</a>
-                            <a href="#features" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">특징</a>
-                            <a href="#faq" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">FAQ</a>
+                        <nav className="hidden md:flex gap-8">
+                            <a href="#how-it-works" className="text-gray-600 hover:text-brand-500 font-semibold transition-all duration-200 hover:scale-105">이용방법</a>
+                            <a href="#features" className="text-gray-600 hover:text-brand-500 font-semibold transition-all duration-200 hover:scale-105">특징</a>
+                            <a href="#faq" className="text-gray-600 hover:text-brand-500 font-semibold transition-all duration-200 hover:scale-105">FAQ</a>
                         </nav>
                     </div>
                 </header>
 
-                {/* Hero Section - Enhanced */}
-                <section className="bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16 md:py-24">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Hero Section - Toss Style */}
+                <section className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 py-16 md:py-24 relative overflow-hidden">
+                    {/* Background decoration */}
+                    <div className="absolute inset-0 pointer-events-none">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float"></div>
+                        <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-100 rounded-full blur-3xl opacity-20 animate-float" style={{animationDelay: '1s'}}></div>
+                    </div>
+
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="grid lg:grid-cols-2 gap-12 items-center">
                             {/* Left Column - Content */}
-                            <div>
-                                <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                            <div className="animate-fade-in-up">
+                                <div className="inline-flex items-center gap-2 bg-brand-50 text-brand-600 px-4 py-2 rounded-full text-sm font-bold mb-6 border border-brand-200 shadow-toss-sm hover:shadow-toss transition-all duration-300">
                                     <ShieldIcon />
                                     <span>안전하고 투명한 비교 서비스</span>
                                 </div>
 
-                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
                                     해외송금,<br />
-                                    <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                    <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
                                         더 똑똑하게
                                     </span>
                                 </h1>
 
                                 <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
                                     10개국 주요 송금 업체의 환율과 수수료를<br />
-                                    단 3초만에 비교하고 <span className="font-bold text-blue-600">최대 수만원</span>을 절약하세요
+                                    단 3초만에 비교하고 <span className="font-bold text-brand-600">최대 수만원</span>을 절약하세요
                                 </p>
 
                                 {/* Trust Indicators */}
                                 <div className="flex flex-wrap gap-6 mb-8">
-                                    <div className="flex items-center gap-2">
-                                        <div className="text-blue-600"><CheckCircleIcon /></div>
-                                        <span className="text-gray-700 font-medium">실시간 환율 정보</span>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{animationDelay: '0.1s'}}>
+                                        <div className="text-brand-600"><CheckCircleIcon /></div>
+                                        <span className="text-gray-700 font-semibold">실시간 환율 정보</span>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="text-blue-600"><CheckCircleIcon /></div>
-                                        <span className="text-gray-700 font-medium">숨은 수수료 없음</span>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                                        <div className="text-brand-600"><CheckCircleIcon /></div>
+                                        <span className="text-gray-700 font-semibold">숨은 수수료 없음</span>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <div className="text-blue-600"><CheckCircleIcon /></div>
-                                        <span className="text-gray-700 font-medium">100% 무료 비교</span>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{animationDelay: '0.3s'}}>
+                                        <div className="text-brand-600"><CheckCircleIcon /></div>
+                                        <span className="text-gray-700 font-semibold">100% 무료 비교</span>
                                     </div>
                                 </div>
 
-                                {/* Social Proof */}
-                                <div className="bg-white rounded-2xl border border-gray-200 p-6 inline-block">
+                                {/* Social Proof - Toss Style */}
+                                <div className="bg-white rounded-xl border border-gray-150 p-6 inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
                                     <div className="flex items-center gap-8">
                                         <div>
-                                            <div className="text-3xl font-bold text-blue-600">10+</div>
-                                            <div className="text-sm text-gray-600">송금 업체</div>
+                                            <div className="text-3xl font-bold text-brand-600">10+</div>
+                                            <div className="text-sm text-gray-600 font-medium">송금 업체</div>
                                         </div>
                                         <div className="w-px h-12 bg-gray-200"></div>
                                         <div>
-                                            <div className="text-3xl font-bold text-purple-600">10개국</div>
-                                            <div className="text-sm text-gray-600">송금 가능</div>
+                                            <div className="text-3xl font-bold text-accent-600">10개국</div>
+                                            <div className="text-sm text-gray-600 font-medium">송금 가능</div>
                                         </div>
                                         <div className="w-px h-12 bg-gray-200"></div>
                                         <div>
-                                            <div className="text-3xl font-bold text-green-600">3초</div>
-                                            <div className="text-sm text-gray-600">비교 완료</div>
+                                            <div className="text-3xl font-bold text-brand-600">3초</div>
+                                            <div className="text-sm text-gray-600 font-medium">비교 완료</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Right Column - Form */}
-                            <div>
-                                <form onSubmit={handleSubmit} className="bg-white rounded-3xl border-2 border-gray-200 p-8 shadow-2xl hover:shadow-3xl transition-shadow">
+                            {/* Right Column - Form - Toss Style */}
+                            <div className="animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                                <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-150 p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300">
                                     <h2 className="text-2xl font-bold text-gray-900 mb-6">환율 비교 시작하기</h2>
 
                                     <div className="space-y-6">
-                                        {/* Country Selector */}
+                                        {/* Country Selector - Toss Style */}
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-3">
+                                            <label className="block text-sm font-bold text-gray-800 mb-3">
                                                 받는 나라
                                             </label>
                                             <div ref={dropdownRef} className="relative">
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowDropdown(!showDropdown)}
-                                                    className="w-full h-16 px-6 bg-gray-50 rounded-2xl border-2 border-gray-200 hover:border-blue-500 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100 transition-all flex items-center justify-between"
+                                                    className="w-full h-16 px-6 bg-gray-50 rounded-xl border border-gray-200 hover:border-brand-500 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100 transition-all duration-200 flex items-center justify-between group"
                                                     aria-label="Select country"
                                                     aria-expanded={showDropdown}
                                                 >
                                                     <div className="flex items-center gap-3">
-                                                        <img src={selectedCountry.flag} alt="" className="w-8 h-8 rounded-full" />
-                                                        <span className="text-lg font-semibold text-gray-900">
+                                                        <img src={selectedCountry.flag} alt="" className="w-8 h-8 rounded-full shadow-sm" />
+                                                        <span className="text-lg font-bold text-gray-900">
                                                             {selectedCountry.name} ({selectedCountry.currency})
                                                         </span>
                                                     </div>
@@ -476,7 +482,7 @@ export default function HomePage() {
                                                 </button>
 
                                                 {showDropdown && (
-                                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border-2 border-gray-200 shadow-2xl max-h-80 overflow-y-auto z-50">
+                                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-toss-lg max-h-80 overflow-y-auto z-50 animate-fade-in-down">
                                                         {COUNTRIES.map((country) => (
                                                             <button
                                                                 key={country.code}
@@ -485,12 +491,12 @@ export default function HomePage() {
                                                                     setSelectedCountry(country);
                                                                     setShowDropdown(false);
                                                                 }}
-                                                                className="w-full px-6 py-4 flex items-center justify-between hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-b-0"
+                                                                className="w-full px-6 py-4 flex items-center justify-between hover:bg-brand-50 transition-all duration-200 border-b border-gray-100 last:border-b-0 group"
                                                             >
-                                                                <span className="text-base font-semibold text-gray-900">
+                                                                <span className="text-base font-bold text-gray-900 group-hover:text-brand-600 transition-colors">
                                                                     {country.name} ({country.currency})
                                                                 </span>
-                                                                <img src={country.flag} alt="" className="w-8 h-8 rounded-full" />
+                                                                <img src={country.flag} alt="" className="w-8 h-8 rounded-full shadow-sm" />
                                                             </button>
                                                         ))}
                                                     </div>
@@ -498,12 +504,12 @@ export default function HomePage() {
                                             </div>
                                         </div>
 
-                                        {/* Amount Input */}
+                                        {/* Amount Input - Toss Style */}
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-3">
+                                            <label className="block text-sm font-bold text-gray-800 mb-3">
                                                 보내는 금액
                                             </label>
-                                            <div className="relative h-16 bg-gray-50 rounded-2xl border-2 border-gray-200 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100 transition-all px-6 flex items-center">
+                                            <div className="relative h-16 bg-gray-50 rounded-xl border border-gray-200 focus-within:border-brand-500 focus-within:ring-4 focus-within:ring-brand-100 transition-all duration-200 px-6 flex items-center hover:border-gray-300">
                                                 <input
                                                     type="text"
                                                     value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
@@ -514,18 +520,18 @@ export default function HomePage() {
                                                 />
                                                 <span className="absolute right-6 text-xl font-bold text-gray-500">KRW</span>
                                             </div>
-                                            <p className="mt-2 text-sm text-gray-500">최소 금액: 100,000 KRW</p>
+                                            <p className="mt-2 text-sm text-gray-600 font-medium">최소 금액: 100,000 KRW</p>
                                         </div>
 
-                                        {/* Submit Button */}
+                                        {/* Submit Button - Toss Style */}
                                         <button
                                             type="submit"
-                                            className="w-full h-16 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white text-xl font-bold rounded-2xl transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                                            className="w-full h-16 bg-brand-500 hover:bg-brand-600 text-white text-xl font-bold rounded-xl transition-all duration-200 shadow-toss hover:shadow-toss-lg transform hover:scale-[1.02] active:scale-[0.98]"
                                         >
                                             환율 비교하기
                                         </button>
 
-                                        <p className="text-center text-sm text-gray-500">
+                                        <p className="text-center text-sm text-gray-600 font-medium">
                                             비교는 무료이며 개인정보를 요구하지 않습니다
                                         </p>
                                     </div>
@@ -535,47 +541,47 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                {/* How It Works Section */}
+                {/* How It Works Section - Toss Style */}
                 <section id="how-it-works" className="py-20 bg-white">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
                                 이용 방법
                             </h2>
-                            <p className="text-xl text-gray-600">
+                            <p className="text-xl text-gray-600 font-medium">
                                 3단계로 끝나는 간단한 비교 과정
                             </p>
                         </div>
 
                         <div className="grid md:grid-cols-3 gap-8">
-                            <div className="text-center">
-                                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-lg">
+                            <div className="text-center group">
+                                <div className="w-20 h-20 bg-brand-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
                                     1
                                 </div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4">나라와 금액 입력</h3>
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="text-gray-600 leading-relaxed font-medium">
                                     송금받을 나라를 선택하고<br />
                                     보낼 금액을 입력하세요
                                 </p>
                             </div>
 
-                            <div className="text-center">
-                                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-3xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-lg">
+                            <div className="text-center group">
+                                <div className="w-20 h-20 bg-brand-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
                                     2
                                 </div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4">실시간 비교 결과</h3>
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="text-gray-600 leading-relaxed font-medium">
                                     10개 이상 업체의 환율과<br />
                                     수수료를 한눈에 비교하세요
                                 </p>
                             </div>
 
-                            <div className="text-center">
-                                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-3xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-lg">
+                            <div className="text-center group">
+                                <div className="w-20 h-20 bg-accent-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
                                     3
                                 </div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4">최적 업체 선택</h3>
-                                <p className="text-gray-600 leading-relaxed">
+                                <p className="text-gray-600 leading-relaxed font-medium">
                                     가장 유리한 조건의 업체를<br />
                                     선택하고 바로 송금하세요
                                 </p>
@@ -584,55 +590,55 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                {/* Features Section */}
-                <section id="features" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+                {/* Features Section - Toss Style */}
+                <section id="features" className="py-20 bg-gradient-to-br from-gray-50 to-brand-50/30">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
                                 RemitBuddy의 특별한 점
                             </h2>
-                            <p className="text-xl text-gray-600">
+                            <p className="text-xl text-gray-600 font-medium">
                                 해외송금을 더 쉽고 저렴하게 만드는 핵심 기능
                             </p>
                         </div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all">
-                                <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="bg-white rounded-xl p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300 hover:-translate-y-1 group">
+                                <div className="w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600 mb-6 group-hover:scale-110 transition-transform duration-300">
                                     <TrendingUpIcon />
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">실시간 환율</h3>
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 font-medium leading-relaxed">
                                     항상 최신 환율 정보로 정확한 비교가 가능합니다
                                 </p>
                             </div>
 
-                            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all">
-                                <div className="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6">
+                            <div className="bg-white rounded-xl p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300 hover:-translate-y-1 group">
+                                <div className="w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600 mb-6 group-hover:scale-110 transition-transform duration-300">
                                     <ShieldIcon />
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">투명한 수수료</h3>
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 font-medium leading-relaxed">
                                     숨겨진 비용 없이 모든 수수료를 명확하게 표시합니다
                                 </p>
                             </div>
 
-                            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all">
-                                <div className="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 mb-6">
+                            <div className="bg-white rounded-xl p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300 hover:-translate-y-1 group">
+                                <div className="w-14 h-14 bg-accent-50 rounded-xl flex items-center justify-center text-accent-600 mb-6 group-hover:scale-110 transition-transform duration-300">
                                     <GlobeIcon />
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">10개국 지원</h3>
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 font-medium leading-relaxed">
                                     베트남, 필리핀 등 주요 10개국으로의 송금을 지원합니다
                                 </p>
                             </div>
 
-                            <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all">
-                                <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
+                            <div className="bg-white rounded-xl p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300 hover:-translate-y-1 group">
+                                <div className="w-14 h-14 bg-accent-50 rounded-xl flex items-center justify-center text-accent-600 mb-6 group-hover:scale-110 transition-transform duration-300">
                                     <CurrencyIcon />
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">최대 절약</h3>
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 font-medium leading-relaxed">
                                     최적의 환율로 송금하여 수만원을 절약하세요
                                 </p>
                             </div>
@@ -654,43 +660,43 @@ export default function HomePage() {
                     </section>
                 )}
 
-                {/* FAQ Section */}
+                {/* FAQ Section - Toss Style */}
                 <section id="faq" className="py-20 bg-gray-50">
                     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
                                 자주 묻는 질문
                             </h2>
                         </div>
 
                         <div className="space-y-4">
-                            <div className="bg-white rounded-2xl p-6 shadow-md">
-                                <h3 className="text-lg font-bold text-gray-900 mb-2">RemitBuddy는 송금 서비스인가요?</h3>
-                                <p className="text-gray-600">
+                            <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">RemitBuddy는 송금 서비스인가요?</h3>
+                                <p className="text-gray-600 leading-relaxed font-medium">
                                     아니요, RemitBuddy는 여러 송금 업체의 환율과 수수료를 비교해주는 비교 플랫폼입니다.
                                     실제 송금은 선택하신 업체의 서비스를 통해 진행됩니다.
                                 </p>
                             </div>
 
-                            <div className="bg-white rounded-2xl p-6 shadow-md">
-                                <h3 className="text-lg font-bold text-gray-900 mb-2">비교 서비스는 무료인가요?</h3>
-                                <p className="text-gray-600">
+                            <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">비교 서비스는 무료인가요?</h3>
+                                <p className="text-gray-600 leading-relaxed font-medium">
                                     네, RemitBuddy의 모든 비교 서비스는 100% 무료입니다.
                                     회원가입이나 개인정보 제공 없이 자유롭게 이용하실 수 있습니다.
                                 </p>
                             </div>
 
-                            <div className="bg-white rounded-2xl p-6 shadow-md">
-                                <h3 className="text-lg font-bold text-gray-900 mb-2">환율 정보는 얼마나 자주 업데이트되나요?</h3>
-                                <p className="text-gray-600">
+                            <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">환율 정보는 얼마나 자주 업데이트되나요?</h3>
+                                <p className="text-gray-600 leading-relaxed font-medium">
                                     환율 정보는 실시간으로 업데이트됩니다.
                                     비교 버튼을 클릭할 때마다 최신 환율과 수수료 정보를 가져옵니다.
                                 </p>
                             </div>
 
-                            <div className="bg-white rounded-2xl p-6 shadow-md">
-                                <h3 className="text-lg font-bold text-gray-900 mb-2">어떤 나라로 송금할 수 있나요?</h3>
-                                <p className="text-gray-600">
+                            <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 나라로 송금할 수 있나요?</h3>
+                                <p className="text-gray-600 leading-relaxed font-medium">
                                     현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마, 태국, 우즈베키스탄, 인도네시아, 스리랑카, 방글라데시 등
                                     10개국으로의 송금을 비교할 수 있습니다.
                                 </p>
@@ -699,46 +705,47 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                {/* CTA Section */}
-                <section className="py-20 bg-gradient-to-br from-blue-600 to-purple-600">
-                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                {/* CTA Section - Toss Style */}
+                <section className="py-20 bg-gradient-to-br from-brand-500 to-brand-600 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
                             지금 바로 환율을 비교해보세요
                         </h2>
-                        <p className="text-xl text-blue-100 mb-8">
+                        <p className="text-xl text-brand-50 mb-8 font-medium">
                             3초면 충분합니다. 무료로 시작하세요.
                         </p>
                         <button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                            className="bg-white text-blue-600 px-10 py-5 rounded-full text-xl font-bold hover:bg-gray-100 transition-all shadow-2xl hover:shadow-3xl transform hover:scale-105"
+                            className="bg-white text-brand-600 px-10 py-5 rounded-xl text-xl font-bold hover:bg-gray-50 transition-all shadow-toss-xl hover:shadow-2xl transform hover:scale-105 active:scale-95"
                         >
                             환율 비교 시작하기
                         </button>
                     </div>
                 </section>
 
-                {/* Footer - Enhanced */}
+                {/* Footer - Toss Style */}
                 <footer className="bg-gray-900 text-white py-16">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                             <div className="md:col-span-2">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10" />
+                                <div className="flex items-center gap-3 mb-4 group">
+                                    <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10 transition-transform group-hover:scale-110" />
                                     <span className="text-2xl font-bold">RemitBuddy</span>
                                 </div>
-                                <p className="text-gray-400 mb-6 max-w-md">
+                                <p className="text-gray-400 mb-6 max-w-md font-medium leading-relaxed">
                                     해외송금을 더 쉽고 저렴하게. 10개 송금 업체의 환율을 한눈에 비교하고 최적의 선택을 하세요.
                                 </p>
                                 <div className="flex gap-4">
-                                    <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                                    <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-brand-500 transition-all duration-300 hover:scale-110">
                                         <span className="sr-only">Facebook</span>
                                         F
                                     </a>
-                                    <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                                    <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-brand-500 transition-all duration-300 hover:scale-110">
                                         <span className="sr-only">Twitter</span>
                                         T
                                     </a>
-                                    <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                                    <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-brand-500 transition-all duration-300 hover:scale-110">
                                         <span className="sr-only">Instagram</span>
                                         I
                                     </a>
@@ -748,30 +755,30 @@ export default function HomePage() {
                             <div>
                                 <h3 className="font-bold text-lg mb-4">서비스</h3>
                                 <ul className="space-y-3 text-gray-400">
-                                    <li><a href="#" className="hover:text-white transition-colors">환율 비교</a></li>
-                                    <li><a href="#" className="hover:text-white transition-colors">수수료 계산기</a></li>
-                                    <li><a href="#how-it-works" className="hover:text-white transition-colors">이용 방법</a></li>
-                                    <li><a href="#features" className="hover:text-white transition-colors">특징</a></li>
+                                    <li><a href="#" className="hover:text-brand-400 transition-colors font-medium">환율 비교</a></li>
+                                    <li><a href="#" className="hover:text-brand-400 transition-colors font-medium">수수료 계산기</a></li>
+                                    <li><a href="#how-it-works" className="hover:text-brand-400 transition-colors font-medium">이용 방법</a></li>
+                                    <li><a href="#features" className="hover:text-brand-400 transition-colors font-medium">특징</a></li>
                                 </ul>
                             </div>
 
                             <div>
                                 <h3 className="font-bold text-lg mb-4">지원</h3>
                                 <ul className="space-y-3 text-gray-400">
-                                    <li><a href="#faq" className="hover:text-white transition-colors">자주 묻는 질문</a></li>
-                                    <li><a href="#" className="hover:text-white transition-colors">고객 지원</a></li>
-                                    <li><a href="#" className="hover:text-white transition-colors">개인정보처리방침</a></li>
-                                    <li><a href="#" className="hover:text-white transition-colors">이용약관</a></li>
+                                    <li><a href="#faq" className="hover:text-brand-400 transition-colors font-medium">자주 묻는 질문</a></li>
+                                    <li><a href="#" className="hover:text-brand-400 transition-colors font-medium">고객 지원</a></li>
+                                    <li><a href="#" className="hover:text-brand-400 transition-colors font-medium">개인정보처리방침</a></li>
+                                    <li><a href="#" className="hover:text-brand-400 transition-colors font-medium">이용약관</a></li>
                                 </ul>
                             </div>
                         </div>
 
                         <div className="pt-8 border-t border-gray-800">
                             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                                <p className="text-gray-500 text-sm">
+                                <p className="text-gray-500 text-sm font-medium">
                                     © {new Date().getFullYear()} RemitBuddy. All Rights Reserved.
                                 </p>
-                                <p className="text-gray-500 text-sm">
+                                <p className="text-gray-500 text-sm font-medium">
                                     RemitBuddy는 비교 서비스이며 송금업체가 아닙니다.
                                 </p>
                             </div>

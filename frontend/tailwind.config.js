@@ -23,89 +23,181 @@ module.exports = {
           '2xl': '1400px',
         },
       },
-      // Color palette for remittance app
+      // Toss-inspired color palette for professional, stable UI
       colors: {
-        brand: '#34C759',           // Primary green - EXACT HEX from Figma
-        'brand-light': '#E8F9F0',   // Light green background
-        'gray-primary': '#1F2937',  // Text primary (almost black)
-        'gray-secondary': '#6B7280', // Text secondary
-        'gray-button': '#6B7280',   // Gray buttons
-        'gray-border': '#E5E7EB',   // Light gray borders
-        'ad-bg': '#D1D5DB',         // AD section background
-        'footer-dark': '#4B5563',   // Footer dark background
+        // Brand colors - Toss-style signature blue
+        brand: {
+          DEFAULT: '#3182F6',        // Toss signature blue
+          50: '#EBF4FF',
+          100: '#D1E9FF',
+          200: '#B3DDFF',
+          300: '#84C5FF',
+          400: '#549DFF',
+          500: '#3182F6',            // Primary
+          600: '#1B6BE6',
+          700: '#1557CF',
+          800: '#1848A8',
+          900: '#1A3D7C',
+        },
+        // Accent green - refined version
+        accent: {
+          DEFAULT: '#00C853',
+          50: '#E8F9F0',
+          100: '#C8F2DD',
+          200: '#9EE7C5',
+          300: '#6FD9AA',
+          400: '#3FC98F',
+          500: '#00C853',
+          600: '#00B048',
+          700: '#00983D',
+          800: '#007F33',
+          900: '#006629',
+        },
+        // Neutral grays - Toss-style
+        gray: {
+          50: '#F9FAFB',
+          100: '#F3F4F6',
+          150: '#EBEDF0',           // Custom for borders
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9CA3AF',
+          500: '#6B7280',
+          600: '#4B5563',
+          700: '#374151',
+          800: '#1F2937',
+          900: '#111827',
+        },
+        // Primary (kept for compatibility)
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+          50: '#EBF4FF',
+          100: '#D1E9FF',
+          200: '#B3DDFF',
+          300: '#84C5FF',
+          400: '#549DFF',
+          500: '#3182F6',
+          600: '#1B6BE6',
+          700: '#1557CF',
+          800: '#1848A8',
+          900: '#1A3D7C',
         },
         success: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+          50: '#E8F9F0',
+          100: '#C8F2DD',
+          200: '#9EE7C5',
+          300: '#6FD9AA',
+          400: '#3FC98F',
+          500: '#00C853',
+          600: '#00B048',
+          700: '#00983D',
+          800: '#007F33',
+          900: '#006629',
         },
         warning: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+          50: '#FFFBEB',
+          100: '#FEF3C7',
+          200: '#FDE68A',
+          300: '#FCD34D',
+          400: '#FBBF24',
+          500: '#F59E0B',
+          600: '#D97706',
+          700: '#B45309',
+          800: '#92400E',
+          900: '#78350F',
         },
         error: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
+          50: '#FEF2F2',
+          100: '#FEE2E2',
+          200: '#FECACA',
+          300: '#FCA5A5',
+          400: '#F87171',
+          500: '#EF4444',
+          600: '#DC2626',
+          700: '#B91C1C',
+          800: '#991B1B',
+          900: '#7F1D1D',
         }
       },
-      // Animation utilities
+      // Toss-style professional animations
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'slide-down': 'slideDown 0.3s ease-out',
-        'scale-in': 'scaleIn 0.2s ease-out',
-        'pulse-gentle': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        // Fade animations
+        'fade-in': 'fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'fade-in-up': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+        'fade-in-down': 'fadeInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+
+        // Slide animations
+        'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-down': 'slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-left': 'slideLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-right': 'slideRight 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+
+        // Scale animations
+        'scale-in': 'scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        'scale-up': 'scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+
+        // Gentle pulsing
+        'pulse-gentle': 'pulseGentle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+
+        // Shimmer effect for loading states
+        'shimmer': 'shimmer 2s linear infinite',
+
+        // Float animation for emphasis
+        'float': 'float 3s ease-in-out infinite',
+
+        // Bounce subtle
+        'bounce-subtle': 'bounceSubtle 2s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeInDown: {
+          '0%': { opacity: '0', transform: 'translateY(-20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         slideUp: {
-          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '0%': { transform: 'translateY(16px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
         slideDown: {
-          '0%': { transform: 'translateY(-10px)', opacity: '0' },
+          '0%': { transform: 'translateY(-16px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        slideLeft: {
+          '0%': { transform: 'translateX(16px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        slideRight: {
+          '0%': { transform: 'translateX(-16px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
         scaleIn: {
-          '0%': { transform: 'scale(0.9)', opacity: '0' },
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        scaleUp: {
+          '0%': { transform: 'scale(0.9)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        pulseGentle: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.7' },
+        },
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        bounceSubtle: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
         },
       },
       // Typography scale
@@ -125,15 +217,37 @@ module.exports = {
         '88': '22rem',
         '128': '32rem',
       },
-      // Border radius
+      // Toss-style consistent border radius
       borderRadius: {
-        '4xl': '2rem',
+        'sm': '8px',
+        'DEFAULT': '12px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '16px',
+        '2xl': '20px',
+        '3xl': '24px',
+        '4xl': '28px',
+        'full': '9999px',
       },
-      // Box shadows for cards
+      // Toss-style subtle shadows for depth
       boxShadow: {
-        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        'card-best': '0 10px 15px -3px rgba(34, 197, 94, 0.1), 0 4px 6px -2px rgba(34, 197, 94, 0.05)',
+        'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.04)',
+        'DEFAULT': '0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04)',
+        'md': '0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04)',
+        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
+        'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
+        '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.12)',
+        // Toss-specific shadows
+        'toss-sm': '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
+        'toss': '0 4px 12px 0 rgba(0, 0, 0, 0.08)',
+        'toss-lg': '0 8px 24px 0 rgba(0, 0, 0, 0.12)',
+        'toss-xl': '0 12px 32px 0 rgba(0, 0, 0, 0.14)',
+        // Card shadows
+        'card': '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
+        'card-hover': '0 8px 24px 0 rgba(0, 0, 0, 0.12)',
+        'card-best': '0 8px 24px 0 rgba(0, 200, 83, 0.16), 0 2px 8px 0 rgba(0, 200, 83, 0.08)',
+        // Inner shadows
+        'inner-sm': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.04)',
       },
       // Breakpoints for layout mode detection
       screens: {

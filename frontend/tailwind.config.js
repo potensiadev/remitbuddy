@@ -5,7 +5,7 @@ module.exports = {
     "./hooks/**/*.{js,jsx,ts,tsx}",
     "./utils/**/*.{js,jsx,ts,tsx}",
   ],
-  theme: { 
+  theme: {
     extend: {
       // Fonts
       fontFamily: {
@@ -237,11 +237,12 @@ module.exports = {
         'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
         'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
         '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.12)',
-        // Toss-specific shadows
-        'toss-sm': '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
-        'toss': '0 4px 12px 0 rgba(0, 0, 0, 0.08)',
-        'toss-lg': '0 8px 24px 0 rgba(0, 0, 0, 0.12)',
-        'toss-xl': '0 12px 32px 0 rgba(0, 0, 0, 0.14)',
+        // 🎯 새로운 Toss-style shadows (하단 검정 착시 제거 버전)
+        'toss-sm': '0 0 6px rgba(0, 0, 0, 0.05)',
+        'toss': '0 0 12px rgba(0, 0, 0, 0.06)',
+        'toss-lg': '0 0 20px rgba(0, 0, 0, 0.08)',
+        'toss-xl': '0 0 32px rgba(0, 0, 0, 0.10)',
+
         // Card shadows
         'card': '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
         'card-hover': '0 8px 24px 0 rgba(0, 0, 0, 0.12)',
@@ -258,11 +259,11 @@ module.exports = {
         'xl': '1280px',
         '2xl': '1536px',
       },
-    } 
+    }
   },
   plugins: [
     // Custom utilities plugin
-    function({ addUtilities, theme }) {
+    function ({ addUtilities, theme }) {
       const utilities = {
         // Screen reader only class
         '.sr-only': {

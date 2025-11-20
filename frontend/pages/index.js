@@ -404,10 +404,7 @@ export default function HomePage() {
                                 </div>
 
                                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
-                                    해외송금,<br />
-                                    <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
-                                        더 똑똑하게
-                                    </span>
+                                    해외송금 더 똑똑하게
                                 </h1>
 
                                 <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
@@ -531,7 +528,7 @@ export default function HomePage() {
                                         </button>
 
                                         <p className="text-center text-sm text-gray-600 font-medium">
-                                            비교는 무료이며 개인정보를 요구하지 않습니다
+                                            비교는 무료이며 개인정보를 요구하지 않아요
                                         </p>
                                     </div>
                                 </form>

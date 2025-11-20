@@ -374,7 +374,7 @@ export default function HomePage() {
 
             <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
                 {/* Header - Toss Style Refined */}
-                <header className="bg-white/70 backdrop-blur-xl border-b border-gray-150 sticky top-0 z-50 transition-all duration-300 supports-[backdrop-filter]:bg-white/50">
+                <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm transition-all duration-300">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-4 flex items-center justify-between">
                         <div className="flex items-center gap-3 group cursor-pointer">
                             <span className="text-2xl font-bold text-gray-900 tracking-tight">RemitBuddy</span>
@@ -388,7 +388,7 @@ export default function HomePage() {
                 </header>
 
                 {/* Hero Section - Toss Style */}
-                <section className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
+                <section className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
                     {/* Background decoration */}
                     <div className="absolute inset-0 pointer-events-none">
                         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float"></div>
@@ -404,47 +404,47 @@ export default function HomePage() {
                                     <span>안전하고 투명한 비교 서비스</span>
                                 </div>
 
-                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-5 leading-[1.1] tracking-tighter">
+                                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 leading-[1.1] tracking-tighter">
                                     해외송금<br className="md:hidden" /> 더 똑똑하게
                                 </h1>
 
-                                <p className="text-xl md:text-1xl lg:text-2xl text-gray-500 mb-7 leading-relaxed font-medium">
-                                    10개의 해외송금 업체의 환율과 수수료를<br />
-                                    단 3초만에 비교하고 <span className="font-bold text-brand-500">최대 OO만원</span>절약하세요
+                                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-500 mb-5 md:mb-7 leading-relaxed font-medium">
+                                    10개의 해외송금 업체의 환율과 수수료를<br className="hidden sm:block" />
+                                    단 3초만에 비교하고 <span className="font-bold text-brand-500">최대 OO만원</span> 절약하세요
                                 </p>
 
                                 {/* Trust Indicators */}
-                                <div className="flex flex-col md:flex-row md:flex-wrap gap-3 md:gap-6 mb-8">
-                                    <div className="flex items-center gap-2 animate-fade-in-up w-full md:w-auto" style={{ animationDelay: '0.1s' }}>
+                                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 md:gap-6 mb-6 md:mb-8">
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                                         <div className="text-brand-600 flex-shrink-0"><CheckCircleIcon /></div>
                                         <span className="text-gray-700 font-semibold text-sm md:text-base">실시간 환율 정보</span>
                                     </div>
-                                    <div className="flex items-center gap-2 animate-fade-in-up w-full md:w-auto" style={{ animationDelay: '0.2s' }}>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                                         <div className="text-brand-600 flex-shrink-0"><CheckCircleIcon /></div>
                                         <span className="text-gray-700 font-semibold text-sm md:text-base">숨은 수수료 없음</span>
                                     </div>
-                                    <div className="flex items-center gap-2 animate-fade-in-up w-full md:w-auto" style={{ animationDelay: '0.3s' }}>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                                         <div className="text-brand-600 flex-shrink-0"><CheckCircleIcon /></div>
                                         <span className="text-gray-700 font-semibold text-sm md:text-base">100% 무료 비교</span>
                                     </div>
                                 </div>
 
                                 {/* Social Proof - Toss Style */}
-                                <div className="bg-white rounded-xl border border-gray-150 p-6 inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                                    <div className="flex items-center gap-8">
-                                        <div>
-                                            <div className="text-2xl font-bold text-brand-500">10+</div>
-                                            <div className="text-sm text-gray-500 font-medium">송금 업체</div>
+                                <div className="bg-white rounded-xl border border-gray-150 p-4 sm:p-6 w-full sm:w-auto sm:inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                                    <div className="grid grid-cols-3 gap-3 sm:flex sm:items-center sm:gap-6 md:gap-8">
+                                        <div className="text-center sm:text-left">
+                                            <div className="text-xl sm:text-2xl font-bold text-brand-500">10+</div>
+                                            <div className="text-xs sm:text-sm text-gray-500 font-medium">송금 업체</div>
                                         </div>
-                                        <div className="w-px h-12 bg-gray-200"></div>
-                                        <div>
-                                            <div className="text-2xl font-bold text-accent-500">10개국</div>
-                                            <div className="text-sm text-gray-500 font-medium">송금 가능</div>
+                                        <div className="hidden sm:block w-px h-12 bg-gray-200"></div>
+                                        <div className="text-center sm:text-left">
+                                            <div className="text-xl sm:text-2xl font-bold text-accent-500">10개국</div>
+                                            <div className="text-xs sm:text-sm text-gray-500 font-medium">송금 가능</div>
                                         </div>
-                                        <div className="w-px h-12 bg-gray-200"></div>
-                                        <div>
-                                            <div className="text-2xl font-bold text-brand-500">3초</div>
-                                            <div className="text-sm text-gray-500 font-medium">비교 완료</div>
+                                        <div className="hidden sm:block w-px h-12 bg-gray-200"></div>
+                                        <div className="text-center sm:text-left">
+                                            <div className="text-xl sm:text-2xl font-bold text-brand-500">3초</div>
+                                            <div className="text-xs sm:text-sm text-gray-500 font-medium">비교 완료</div>
                                         </div>
                                     </div>
                                 </div>

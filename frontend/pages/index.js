@@ -404,13 +404,13 @@ export default function HomePage() {
                                     <span>안전하고 투명한 비교 서비스</span>
                                 </div>
 
-                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-[1.1] tracking-tighter">
+                                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-5 leading-[1.1] tracking-tighter">
                                     해외송금<br className="md:hidden" /> 더 똑똑하게
                                 </h1>
 
-                                <p className="text-xl md:text-2xl lg:text-3xl text-gray-600 mb-8 leading-relaxed font-medium">
-                                    10개국 주요 송금 업체의 환율과 수수료를<br />
-                                    단 3초만에 비교하고 <span className="font-bold text-brand-600">최대 수만원</span>을 절약하세요
+                                <p className="text-xl md:text-1xl lg:text-2xl text-gray-500 mb-7 leading-relaxed font-medium">
+                                    10개의 해외송금 업체의 환율과 수수료를<br />
+                                    단 3초만에 비교하고 <span className="font-bold text-brand-500">최대 OO만원</span>절약하세요
                                 </p>
 
                                 {/* Trust Indicators */}
@@ -692,7 +692,7 @@ export default function HomePage() {
                 </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 국가의 환율·수수료를 비교할 수 있나요?</h3>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 국가의 송금 수수료를 비교할 수 있나요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
                                     현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마 등 10개의 환율·수수료를 비교할 수 있어요. 다른 국가도 계속 추가될 예정이에요.
                                 </p>
@@ -721,7 +721,7 @@ export default function HomePage() {
                             size="xl"
                             className="bg-white text-brand-600 hover:bg-gray-50 shadow-2xl hover:shadow-button-hover hover:scale-105 transition-all duration-300"
                         >
-                            환율 비교 시작하기
+                            최저 송금 수수료 비교하기
                         </Button>
                     </div>
                 </section>

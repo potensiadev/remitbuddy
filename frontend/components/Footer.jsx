@@ -22,7 +22,6 @@ const Footer = () => {
     company: [
       { label: '회사 소개', href: '#about' },
       { label: '블로그', href: '#blog' },
-      { label: '채용', href: '#careers' },
     ],
   };
 
@@ -50,7 +49,7 @@ const Footer = () => {
             <p className="text-gray-600 mb-8 max-w-md text-base leading-relaxed font-medium">
               해외송금을 더 쉽고 저렴하게.
               <br />
-              10개 송금 업체의 환율을 한번에 비교하세요.
+              10개 송금 업체의 수수료를 한번에 비교하세요.
             </p>
             {/* Social Links */}
             <div className="flex items-center gap-3">

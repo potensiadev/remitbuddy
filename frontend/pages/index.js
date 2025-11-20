@@ -594,10 +594,10 @@ export default function HomePage() {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-                                RemitBuddy의 특별한 점
+                                RemitBuddy 왜 써야할까요?
                             </h2>
                             <p className="text-xl text-gray-600 font-medium">
-                                해외송금을 더 쉽고 저렴하게 만드는 핵심 기능
+                                스마트하게 해외송금하는 핵심 기능
                             </p>
                         </div>
 
@@ -608,7 +608,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">실시간 환율</h3>
                                 <p className="text-gray-600 font-medium leading-relaxed">
-                                    항상 최신 환율 정보로 정확한 비교가 가능합니다
+                                    항상 최신 환율 정보로 정확하게 비교할 수 있어요
                                 </p>
                             </div>
 
@@ -618,7 +618,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">투명한 수수료</h3>
                                 <p className="text-gray-600 font-medium leading-relaxed">
-                                    숨겨진 비용 없이 모든 수수료를 명확하게 표시합니다
+                                    숨겨진 비용 없이 모든 수수료를 명확하게 표시해요
                                 </p>
                             </div>
 
@@ -628,7 +628,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">10개국 지원</h3>
                                 <p className="text-gray-600 font-medium leading-relaxed">
-                                    베트남, 필리핀 등 주요 10개국으로의 송금을 지원합니다
+                                    베트남, 필리핀 등 주요 10개국으로의 송금 환율과 수수료를 비교할 수 있어요
                                 </p>
                             </div>
 
@@ -638,7 +638,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">최대 절약</h3>
                                 <p className="text-gray-600 font-medium leading-relaxed">
-                                    최적의 환율로 송금하여 수만원을 절약하세요
+                                    최적의 환율로 송금하여 수만원을 절약할 수 있어요
                                 </p>
                             </div>
                         </div>
@@ -672,32 +672,32 @@ export default function HomePage() {
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                                 <h3 className="text-lg font-bold text-gray-900 mb-3">RemitBuddy는 송금 서비스인가요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    아니요, RemitBuddy는 여러 송금 업체의 환율과 수수료를 비교해주는 비교 플랫폼입니다.
-                                    실제 송금은 선택하신 업체의 서비스를 통해 진행됩니다.
+                                    아니요, RemitBuddy는 여러 송금 업체의 환율과 수수료를 비교해주는 비교 플랫폼이에요.
+                                    실제 송금은 선택하신 업체의 서비스를 통해 진행돼요.
                                 </p>
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                                 <h3 className="text-lg font-bold text-gray-900 mb-3">비교 서비스는 무료인가요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    네, RemitBuddy의 모든 비교 서비스는 100% 무료입니다.
-                                    회원가입이나 개인정보 제공 없이 자유롭게 이용하실 수 있습니다.
+                                    네, RemitBuddy의 모든 비교 서비스는 100% 무료에요.
+                                    회원가입이나 개인정보 제공 없이 자유롭게 이용할 수 있어요.
                                 </p>
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                                 <h3 className="text-lg font-bold text-gray-900 mb-3">환율 정보는 얼마나 자주 업데이트되나요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    환율 정보는 실시간으로 업데이트됩니다.
-                                    비교 버튼을 클릭할 때마다 최신 환율과 수수료 정보를 가져옵니다.
+                                    환율 정보는 실시간으로 업데이트돼요.
+                                    비교 버튼을 클릭할 때마다 최신 환율과 수수료 정보를 가져와요.
                                 </p>
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 나라로 송금할 수 있나요?</h3>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 통화의 송금 환율과 수수료를 비교할 수 있나요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
                                     현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마, 태국, 우즈베키스탄, 인도네시아, 스리랑카, 방글라데시 등
-                                    10개국으로의 송금을 비교할 수 있습니다.
+                                    10개국으로의 송금 환율과 수수료를 비교할 수 있어요. 다른 통화도 더 추가될 예정이에요.
                                 </p>
                             </div>
                         </div>
@@ -712,7 +712,7 @@ export default function HomePage() {
                             지금 바로 환율을 비교해보세요
                         </h2>
                         <p className="text-xl text-brand-600 mb-8 font-medium">
-                            3초면 충분합니다. 무료로 시작하세요.
+                            3초면 충분해요. 무료로 시작해보세요.
                         </p>
                         <button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

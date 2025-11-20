@@ -37,3 +37,6 @@ test_*.py
 
 # Duplicate directory
 remitbuddy/
+
+# Ignored submodules
+skills

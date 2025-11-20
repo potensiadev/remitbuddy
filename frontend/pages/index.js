@@ -401,43 +401,60 @@ export default function HomePage() {
                         <div className="grid lg:grid-cols-2 gap-12 items-center">
                             {/* Left Column - Content */}
                             <div className="animate-fade-in-up">
-                                <div className="text-brand-600"><CheckCircleIcon /></div>
-                                <span className="text-gray-700 font-semibold">실시간 환율 정보</span>
-                            </div>
-                            <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                                <div className="text-brand-600"><CheckCircleIcon /></div>
-                                <span className="text-gray-700 font-semibold">숨은 수수료 없음</span>
-                            </div>
-                            <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                                <div className="text-brand-600"><CheckCircleIcon /></div>
-                                <span className="text-gray-700 font-semibold">100% 무료 비교</span>
-                            </div>
-                        </div>
+                                <div className="inline-flex items-center gap-2 bg-brand-50 text-brand-600 px-4 py-2 rounded-full text-sm font-bold mb-6 border border-brand-200 shadow-toss-sm hover:shadow-toss transition-all duration-300">
+                                    <ShieldIcon />
+                                    <span>안전하고 투명한 비교 서비스</span>
+                                </div>
 
-                        {/* Social Proof - Toss Style */}
-                        <div className="bg-white rounded-xl border border-gray-150 p-6 inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                            <div className="flex items-center gap-8">
-                                <div>
-                                    <div className="text-2xl font-bold text-brand-500">10+</div>
-                                    <div className="text-sm text-gray-500 font-medium">송금 업체</div>
+                                <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+                                    해외송금 더 똑똑하게
+                                </h1>
+
+                                <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
+                                    10개국 주요 송금 업체의 환율과 수수료를<br />
+                                    단 3초만에 비교하고 <span className="font-bold text-brand-600">최대 수만원</span>을 절약하세요
+                                </p>
+
+                                {/* Trust Indicators */}
+                                <div className="flex flex-wrap gap-6 mb-8">
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                                        <div className="text-brand-600"><CheckCircleIcon /></div>
+                                        <span className="text-gray-700 font-semibold">실시간 환율 정보</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                                        <div className="text-brand-600"><CheckCircleIcon /></div>
+                                        <span className="text-gray-700 font-semibold">숨은 수수료 없음</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                                        <div className="text-brand-600"><CheckCircleIcon /></div>
+                                        <span className="text-gray-700 font-semibold">100% 무료 비교</span>
+                                    </div>
                                 </div>
-                                <div className="w-px h-12 bg-gray-200"></div>
-                                <div>
-                                    <div className="text-2xl font-bold text-accent-500">10개국</div>
-                                    <div className="text-sm text-gray-500 font-medium">송금 가능</div>
-                                </div>
-                                <div className="w-px h-12 bg-gray-200"></div>
-                                <div>
-                                    <div className="text-2xl font-bold text-brand-500">3초</div>
-                                    <div className="text-sm text-gray-500 font-medium">비교 완료</div>
+
+                                {/* Social Proof - Toss Style */}
+                                <div className="bg-white rounded-xl border border-gray-150 p-6 inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                                    <div className="flex items-center gap-8">
+                                        <div>
+                                            <div className="text-2xl font-bold text-brand-500">10+</div>
+                                            <div className="text-sm text-gray-500 font-medium">송금 업체</div>
+                                        </div>
+                                        <div className="w-px h-12 bg-gray-200"></div>
+                                        <div>
+                                            <div className="text-2xl font-bold text-accent-500">10개국</div>
+                                            <div className="text-sm text-gray-500 font-medium">송금 가능</div>
+                                        </div>
+                                        <div className="w-px h-12 bg-gray-200"></div>
+                                        <div>
+                                            <div className="text-2xl font-bold text-brand-500">3초</div>
+                                            <div className="text-sm text-gray-500 font-medium">비교 완료</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* Right Column - Form - Toss Style */}
-                    <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                        <form onSubmit={handleSubmit} className="bg-white rounded-[32px] p-8 md:p-10 shadow-2xl transition-all duration-300 border border-gray-100">
+                            {/* Right Column - Form - Toss Style */}
+                            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                                <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-150 p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">환율 비교 시작하기</h2>
 
                             <div className="space-y-6">
@@ -516,26 +533,26 @@ export default function HomePage() {
                                 <p className="text-center text-sm text-gray-500 font-medium">
                                     비교는 무료이며 개인정보를 요구하지 않아요
                                 </p>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                        </div>
                     </div>
-            </div>
-        </div >
-        </section >
+                </section>
 
-        {/* How It Works Section - Toss Style */ }
-        < section id = "how-it-works" className = "py-20 bg-white" >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-                        이용 방법
-                    </h2>
-                    <p className="text-xl text-gray-600 font-medium">
-                        3단계로 끝나는 간단한 비교 과정
-                    </p>
-                </div>
+                {/* How It Works Section - Toss Style */}
+                <section id="how-it-works" className="py-20 bg-white">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+                                이용 방법
+                            </h2>
+                            <p className="text-xl text-gray-600 font-medium">
+                                3단계로 끝나는 간단한 비교 과정
+                            </p>
+                        </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                        <div className="grid md:grid-cols-3 gap-8">
                     <div className="text-center group">
                         <div className="w-20 h-20 bg-brand-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
                             1
@@ -710,11 +727,8 @@ export default function HomePage() {
                 {/* Footer - Enhanced Toss Style */}
                 <Footer />
             </div>
-        </div>
-    </footer>
-            </div >
 
-        <style jsx global>{`
+            <style jsx global>{`
                 * {
                     margin: 0;
                     padding: 0;

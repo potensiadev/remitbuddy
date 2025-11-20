@@ -375,20 +375,20 @@ export default function HomePage() {
             <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
                 {/* Header - Toss Style Refined */}
                 <header className="bg-white/70 backdrop-blur-xl border-b border-gray-150 sticky top-0 z-50 transition-all duration-300 supports-[backdrop-filter]:bg-white/50">
-                    <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 flex items-center justify-between">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-4 flex items-center justify-between">
                         <div className="flex items-center gap-3 group cursor-pointer">
                             <span className="text-2xl font-bold text-gray-900 tracking-tight">RemitBuddy</span>
                         </div>
-                        <nav className="hidden md:flex gap-12">
-                            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-lg hover:scale-105">이용방법</a>
-                            <a href="#features" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-lg hover:scale-105">특징</a>
-                            <a href="#faq" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-lg hover:scale-105">FAQ</a>
+                        <nav className="hidden md:flex gap-8 lg:gap-12">
+                            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-base lg:text-lg hover:scale-105">이용방법</a>
+                            <a href="#features" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-base lg:text-lg hover:scale-105">특징</a>
+                            <a href="#faq" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-base lg:text-lg hover:scale-105">FAQ</a>
                         </nav>
                     </div>
                 </header>
 
                 {/* Hero Section - Toss Style */}
-                <section className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 py-16 md:py-24 relative overflow-hidden">
+                <section className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
                     {/* Background decoration */}
                     <div className="absolute inset-0 pointer-events-none">
                         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float"></div>
@@ -414,18 +414,18 @@ export default function HomePage() {
                                 </p>
 
                                 {/* Trust Indicators */}
-                                <div className="flex flex-wrap gap-6 mb-8">
-                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                                        <div className="text-brand-600"><CheckCircleIcon /></div>
-                                        <span className="text-gray-700 font-semibold">실시간 환율 정보</span>
+                                <div className="flex flex-col md:flex-row md:flex-wrap gap-3 md:gap-6 mb-8">
+                                    <div className="flex items-center gap-2 animate-fade-in-up w-full md:w-auto" style={{ animationDelay: '0.1s' }}>
+                                        <div className="text-brand-600 flex-shrink-0"><CheckCircleIcon /></div>
+                                        <span className="text-gray-700 font-semibold text-sm md:text-base">실시간 환율 정보</span>
                                     </div>
-                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                                        <div className="text-brand-600"><CheckCircleIcon /></div>
-                                        <span className="text-gray-700 font-semibold">숨은 수수료 없음</span>
+                                    <div className="flex items-center gap-2 animate-fade-in-up w-full md:w-auto" style={{ animationDelay: '0.2s' }}>
+                                        <div className="text-brand-600 flex-shrink-0"><CheckCircleIcon /></div>
+                                        <span className="text-gray-700 font-semibold text-sm md:text-base">숨은 수수료 없음</span>
                                     </div>
-                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                                        <div className="text-brand-600"><CheckCircleIcon /></div>
-                                        <span className="text-gray-700 font-semibold">100% 무료 비교</span>
+                                    <div className="flex items-center gap-2 animate-fade-in-up w-full md:w-auto" style={{ animationDelay: '0.3s' }}>
+                                        <div className="text-brand-600 flex-shrink-0"><CheckCircleIcon /></div>
+                                        <span className="text-gray-700 font-semibold text-sm md:text-base">100% 무료 비교</span>
                                     </div>
                                 </div>
 

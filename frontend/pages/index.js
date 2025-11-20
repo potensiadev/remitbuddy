@@ -403,11 +403,8 @@ export default function HomePage() {
                                     <span>안전하고 투명한 비교 서비스</span>
                                 </div>
 
-                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
-                                    해외송금,<br />
-                                    <span className="bg-gradient-to-r from-brand-500 to-brand-600 bg-clip-text text-transparent">
-                                        더 똑똑하게
-                                    </span>
+                                <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+                                    해외송금 더 똑똑하게
                                 </h1>
 
                                 <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
@@ -435,18 +432,18 @@ export default function HomePage() {
                                 <div className="bg-white rounded-xl border border-gray-150 p-6 inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                                     <div className="flex items-center gap-8">
                                         <div>
-                                            <div className="text-3xl font-bold text-brand-600">10+</div>
-                                            <div className="text-sm text-gray-600 font-medium">송금 업체</div>
+                                            <div className="text-2xl font-bold text-brand-500">10+</div>
+                                            <div className="text-sm text-gray-500 font-medium">송금 업체</div>
                                         </div>
                                         <div className="w-px h-12 bg-gray-200"></div>
                                         <div>
-                                            <div className="text-3xl font-bold text-accent-600">10개국</div>
-                                            <div className="text-sm text-gray-600 font-medium">송금 가능</div>
+                                            <div className="text-2xl font-bold text-accent-500">10개국</div>
+                                            <div className="text-sm text-gray-500 font-medium">송금 가능</div>
                                         </div>
                                         <div className="w-px h-12 bg-gray-200"></div>
                                         <div>
-                                            <div className="text-3xl font-bold text-brand-600">3초</div>
-                                            <div className="text-sm text-gray-600 font-medium">비교 완료</div>
+                                            <div className="text-2xl font-bold text-brand-500">3초</div>
+                                            <div className="text-sm text-gray-500 font-medium">비교 완료</div>
                                         </div>
                                     </div>
                                 </div>
@@ -460,14 +457,14 @@ export default function HomePage() {
                                     <div className="space-y-6">
                                         {/* Country Selector - Toss Style */}
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-800 mb-3">
+                                            <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
                                                 받는 나라
                                             </label>
                                             <div ref={dropdownRef} className="relative">
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowDropdown(!showDropdown)}
-                                                    className="w-full h-16 px-6 bg-gray-50 rounded-xl border border-gray-200 hover:border-brand-500 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100 transition-all duration-200 flex items-center justify-between group"
+                                                    className="w-full h-16 px-6 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus:bg-white focus:ring-2 focus:ring-brand-500 transition-all duration-200 flex items-center justify-between group outline-none"
                                                     aria-label="Select country"
                                                     aria-expanded={showDropdown}
                                                 >
@@ -481,7 +478,7 @@ export default function HomePage() {
                                                 </button>
 
                                                 {showDropdown && (
-                                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-toss-lg max-h-80 overflow-y-auto z-50 animate-fade-in-down">
+                                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] max-h-80 overflow-y-auto z-50 animate-fade-in-down border border-gray-100">
                                                         {COUNTRIES.map((country) => (
                                                             <button
                                                                 key={country.code}
@@ -490,7 +487,7 @@ export default function HomePage() {
                                                                     setSelectedCountry(country);
                                                                     setShowDropdown(false);
                                                                 }}
-                                                                className="w-full px-6 py-4 flex items-center justify-between hover:bg-brand-50 transition-all duration-200 border-b border-gray-100 last:border-b-0 group"
+                                                                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-200 border-b border-gray-50 last:border-b-0 group"
                                                             >
                                                                 <span className="text-base font-bold text-gray-900 group-hover:text-brand-600 transition-colors">
                                                                     {country.name} ({country.currency})
@@ -505,33 +502,33 @@ export default function HomePage() {
 
                                         {/* Amount Input - Toss Style */}
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-800 mb-3">
+                                            <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
                                                 보내는 금액
                                             </label>
-                                            <div className="relative h-16 bg-gray-50 rounded-xl border border-gray-200 focus-within:border-brand-500 focus-within:ring-4 focus-within:ring-brand-100 transition-all duration-200 px-6 flex items-center hover:border-gray-300">
+                                            <div className="relative h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-6 flex items-center">
                                                 <input
                                                     type="text"
                                                     value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
                                                     onChange={handleAmountChange}
                                                     placeholder="1,000,000"
-                                                    className="w-full bg-transparent text-2xl font-bold text-gray-900 text-right focus:outline-none pr-20"
+                                                    className="w-full bg-transparent text-2xl font-bold text-gray-900 text-right focus:outline-none pr-20 placeholder-gray-400"
                                                     aria-label="Amount to send in KRW"
                                                 />
                                                 <span className="absolute right-6 text-xl font-bold text-gray-500">KRW</span>
                                             </div>
-                                            <p className="mt-2 text-sm text-gray-600 font-medium">최소 금액: 100,000 KRW</p>
+                                            <p className="mt-2 text-sm text-gray-500 font-medium ml-1">최소 금액: 100,000 KRW</p>
                                         </div>
 
                                         {/* Submit Button - Toss Style */}
                                         <button
                                             type="submit"
-                                            className="w-full h-16 bg-brand-500 hover:bg-brand-600 text-white text-xl font-bold rounded-xl transition-all duration-200 shadow-toss hover:shadow-toss-lg transform hover:scale-[1.02] active:scale-[0.98]"
+                                            className="w-full h-16 bg-brand-500 hover:bg-brand-600 text-white text-xl font-bold rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
                                         >
                                             환율 비교하기
                                         </button>
 
-                                        <p className="text-center text-sm text-gray-600 font-medium">
-                                            비교는 무료이며 개인정보를 요구하지 않습니다
+                                        <p className="text-center text-sm text-gray-500 font-medium">
+                                            비교는 무료이며 개인정보를 요구하지 않아요
                                         </p>
                                     </div>
                                 </form>
@@ -557,7 +554,7 @@ export default function HomePage() {
                                 <div className="w-20 h-20 bg-brand-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
                                     1
                                 </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">나라와 금액 입력</h3>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-4">송금 국가와 금액 입력</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
                                     송금받을 나라를 선택하고<br />
                                     보낼 금액을 입력하세요
@@ -570,7 +567,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4">실시간 비교 결과</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    10개 이상 업체의 환율과<br />
+                                    10개 업체의 환율과<br />
                                     수수료를 한눈에 비교하세요
                                 </p>
                             </div>
@@ -581,8 +578,8 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4">최적 업체 선택</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    가장 유리한 조건의 업체를<br />
-                                    선택하고 바로 송금하세요
+                                    가장 유리한 조건을<br />
+                                    확인하고 바로 송금하세요
                                 </p>
                             </div>
                         </div>
@@ -593,11 +590,11 @@ export default function HomePage() {
                 <section id="features" className="py-20 bg-gradient-to-br from-gray-50 to-brand-50/30">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-                                RemitBuddy의 특별한 점
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+                                RemitBuddy 왜 써야할까요?
                             </h2>
                             <p className="text-xl text-gray-600 font-medium">
-                                해외송금을 더 쉽고 저렴하게 만드는 핵심 기능
+                                더이상 여러 앱을 비교하지 마세요
                             </p>
                         </div>
 
@@ -608,7 +605,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">실시간 환율</h3>
                                 <p className="text-gray-600 font-medium leading-relaxed">
-                                    항상 최신 환율 정보로 정확한 비교가 가능합니다
+                                    항상 최신 환율 정보로 정확하게 비교할 수 있어요
                                 </p>
                             </div>
 
@@ -618,7 +615,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">투명한 수수료</h3>
                                 <p className="text-gray-600 font-medium leading-relaxed">
-                                    숨겨진 비용 없이 모든 수수료를 명확하게 표시합니다
+                                    숨겨진 비용 없이 모든 수수료를 명확하게 표시해요
                                 </p>
                             </div>
 
@@ -628,7 +625,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">10개국 지원</h3>
                                 <p className="text-gray-600 font-medium leading-relaxed">
-                                    베트남, 필리핀 등 주요 10개국으로의 송금을 지원합니다
+                                    베트남, 필리핀 등 주요 10개국으로의 송금 환율과 수수료를 비교할 수 있어요
                                 </p>
                             </div>
 
@@ -638,7 +635,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">최대 절약</h3>
                                 <p className="text-gray-600 font-medium leading-relaxed">
-                                    최적의 환율로 송금하여 수만원을 절약하세요
+                                    최적의 환율로 송금하여 수만원을 절약할 수 있어요
                                 </p>
                             </div>
                         </div>
@@ -672,32 +669,32 @@ export default function HomePage() {
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                                 <h3 className="text-lg font-bold text-gray-900 mb-3">RemitBuddy는 송금 서비스인가요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    아니요, RemitBuddy는 여러 송금 업체의 환율과 수수료를 비교해주는 비교 플랫폼입니다.
-                                    실제 송금은 선택하신 업체의 서비스를 통해 진행됩니다.
+                                    아니요, RemitBuddy는 여러 송금 업체의 환율과 수수료를 비교해주는 비교 플랫폼이에요.
+                                    실제 송금은 선택하신 업체의 서비스를 통해 진행돼요.
                                 </p>
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">비교 서비스는 무료인가요?</h3>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">해외송금비교 서비스는 무료인가요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    네, RemitBuddy의 모든 비교 서비스는 100% 무료입니다.
-                                    회원가입이나 개인정보 제공 없이 자유롭게 이용하실 수 있습니다.
+                                    네, RemitBuddy의 모든 비교 서비스는 100% 무료에요.
+                                    회원가입이나 개인정보 제공 없이 자유롭게 이용할 수 있어요.
                                 </p>
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                                 <h3 className="text-lg font-bold text-gray-900 mb-3">환율 정보는 얼마나 자주 업데이트되나요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    환율 정보는 실시간으로 업데이트됩니다.
-                                    비교 버튼을 클릭할 때마다 최신 환율과 수수료 정보를 가져옵니다.
+                                    환율 정보는 실시간으로 업데이트돼요.
+                                    비교 버튼을 클릭할 때마다 최신 환율과 수수료 정보를 가져와요.
                                 </p>
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 나라로 송금할 수 있나요?</h3>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 국가의 환율과 수수료를 비교할 수 있나요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
                                     현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마, 태국, 우즈베키스탄, 인도네시아, 스리랑카, 방글라데시 등
-                                    10개국으로의 송금을 비교할 수 있습니다.
+                                    10개국으로의 송금 환율과 수수료를 비교할 수 있어요. 다른 통화도 더 추가될 예정이에요.
                                 </p>
                             </div>
                         </div>
@@ -712,11 +709,11 @@ export default function HomePage() {
                             지금 바로 환율을 비교해보세요
                         </h2>
                         <p className="text-xl text-brand-50 mb-8 font-medium">
-                            3초면 충분해요. 무료로 시작하세요.
+                            3초면 충분합니다. 무료로 시작하세요.
                         </p>
                         <button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                            className="bg-white text-brand-600 px-12 py-5 rounded-full text-xl font-bold hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 active:translate-y-0 active:scale-95"
+                            className="bg-white text-brand-600 px-10 py-5 rounded-xl text-xl font-bold hover:bg-gray-50 transition-all shadow-toss-xl hover:shadow-2xl transform hover:scale-105 active:scale-95"
                         >
                             환율 비교 시작하기
                         </button>

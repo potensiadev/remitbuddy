@@ -37,9 +37,20 @@
       "Bash(do echo -e \"\\n=== Test $i ===\")",
       "Bash(git restore:*)",
       "Bash(git stash:*)",
+<<<<<<< HEAD
       "Bash(FINAL_SUMMARY.txt)",
       "Bash(cat FINAL_SUMMARY.txt)",
       "Bash(git clone:*)"
+=======
+      "Bash(git rm:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git clone:*)",
+      "Bash(git sparse-checkout:*)",
+      "Bash(bash:*)",
+      "Bash(pnpm dev)",
+      "Skill(artifacts-builder)"
+>>>>>>> 0fa5af33a358ea8fd76295089333f798ed43481f
     ],
     "deny": []
   }

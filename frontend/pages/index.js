@@ -432,18 +432,18 @@ export default function HomePage() {
                                 <div className="bg-white rounded-xl border border-gray-150 p-6 inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                                     <div className="flex items-center gap-8">
                                         <div>
-                                            <div className="text-3xl font-bold text-brand-600">10+</div>
-                                            <div className="text-sm text-gray-600 font-medium">송금 업체</div>
+                                            <div className="text-2xl font-bold text-brand-500">10+</div>
+                                            <div className="text-sm text-gray-500 font-medium">송금 업체</div>
                                         </div>
                                         <div className="w-px h-12 bg-gray-200"></div>
                                         <div>
-                                            <div className="text-3xl font-bold text-accent-600">10개국</div>
-                                            <div className="text-sm text-gray-600 font-medium">송금 가능</div>
+                                            <div className="text-2xl font-bold text-accent-500">10개국</div>
+                                            <div className="text-sm text-gray-500 font-medium">송금 가능</div>
                                         </div>
                                         <div className="w-px h-12 bg-gray-200"></div>
                                         <div>
-                                            <div className="text-3xl font-bold text-brand-600">3초</div>
-                                            <div className="text-sm text-gray-600 font-medium">비교 완료</div>
+                                            <div className="text-2xl font-bold text-brand-500">3초</div>
+                                            <div className="text-sm text-gray-500 font-medium">비교 완료</div>
                                         </div>
                                     </div>
                                 </div>

@@ -87,7 +87,7 @@ const TrendingUpIcon = () => (
 // Provider Card Component - Toss Style
 const ProviderCard = ({ provider, isBest, index }) => {
     const displayName = provider.provider === 'JP Remit' ? 'JRF' :
-                       provider.provider === 'The Moin' ? 'Moin' : provider.provider;
+        provider.provider === 'The Moin' ? 'Moin' : provider.provider;
 
     const feeInTargetCurrency = provider.fee * provider.exchange_rate;
     const formattedFeeInTarget = Math.round(feeInTargetCurrency).toLocaleString('en-US');
@@ -98,9 +98,8 @@ const ProviderCard = ({ provider, isBest, index }) => {
             href={provider.link}
             target="_blank"
             rel="noopener noreferrer"
-            className={`block bg-white rounded-xl p-6 mb-4 transition-all duration-300 hover:shadow-toss-lg hover:-translate-y-1 ${
-                isBest ? 'border-2 border-brand-500 shadow-card-best ring-4 ring-brand-100' : 'border border-gray-200 hover:border-brand-300 shadow-toss'
-            }`}
+            className={`block bg-white rounded-xl p-6 mb-4 transition-all duration-300 hover:shadow-toss-lg hover:-translate-y-1 ${isBest ? 'border-2 border-brand-500 shadow-card-best ring-4 ring-brand-100' : 'border border-gray-200 hover:border-brand-300 shadow-toss'
+                }`}
             style={{ animationDelay: `${index * 50}ms` }}
         >
             <div className="flex items-center justify-between mb-6">
@@ -392,7 +391,7 @@ export default function HomePage() {
                     {/* Background decoration */}
                     <div className="absolute inset-0 pointer-events-none">
                         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float"></div>
-                        <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-100 rounded-full blur-3xl opacity-20 animate-float" style={{animationDelay: '1s'}}></div>
+                        <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent-100 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '1s' }}></div>
                     </div>
 
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -418,22 +417,22 @@ export default function HomePage() {
 
                                 {/* Trust Indicators */}
                                 <div className="flex flex-wrap gap-6 mb-8">
-                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{animationDelay: '0.1s'}}>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                                         <div className="text-brand-600"><CheckCircleIcon /></div>
                                         <span className="text-gray-700 font-semibold">실시간 환율 정보</span>
                                     </div>
-                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                                         <div className="text-brand-600"><CheckCircleIcon /></div>
                                         <span className="text-gray-700 font-semibold">숨은 수수료 없음</span>
                                     </div>
-                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{animationDelay: '0.3s'}}>
+                                    <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                                         <div className="text-brand-600"><CheckCircleIcon /></div>
                                         <span className="text-gray-700 font-semibold">100% 무료 비교</span>
                                     </div>
                                 </div>
 
                                 {/* Social Proof - Toss Style */}
-                                <div className="bg-white rounded-xl border border-gray-150 p-6 inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
+                                <div className="bg-white rounded-xl border border-gray-150 p-6 inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                                     <div className="flex items-center gap-8">
                                         <div>
                                             <div className="text-3xl font-bold text-brand-600">10+</div>
@@ -454,7 +453,7 @@ export default function HomePage() {
                             </div>
 
                             {/* Right Column - Form - Toss Style */}
-                            <div className="animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                                 <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-150 p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300">
                                     <h2 className="text-2xl font-bold text-gray-900 mb-6">환율 비교 시작하기</h2>
 
@@ -712,12 +711,12 @@ export default function HomePage() {
                         <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
                             지금 바로 환율을 비교해보세요
                         </h2>
-                        <p className="text-xl text-brand-50 mb-8 font-medium">
+                        <p className="text-xl text-brand-600 mb-8 font-medium">
                             3초면 충분합니다. 무료로 시작하세요.
                         </p>
                         <button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                            className="bg-white text-brand-600 px-10 py-5 rounded-xl text-xl font-bold hover:bg-gray-50 transition-all shadow-toss-xl hover:shadow-2xl transform hover:scale-105 active:scale-95"
+                            className="bg-white text-brand-600 px-10 py-5 rounded-xl text-xl font-bold hover:bg-gray-50 transition-all shadow-md hover:shadow-xl transform hover:scale-105 active:scale-95"
                         >
                             환율 비교 시작하기
                         </button>

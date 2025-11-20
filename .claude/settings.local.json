@@ -36,7 +36,15 @@
       "Bash(done)",
       "Bash(do echo -e \"\\n=== Test $i ===\")",
       "Bash(git restore:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git rm:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git clone:*)",
+      "Bash(git sparse-checkout:*)",
+      "Bash(bash:*)",
+      "Bash(pnpm dev)",
+      "Skill(artifacts-builder)"
     ],
     "deny": []
   }

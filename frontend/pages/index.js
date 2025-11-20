@@ -524,7 +524,7 @@ export default function HomePage() {
                                             type="submit"
                                             className="w-full h-16 bg-brand-500 hover:bg-brand-600 text-white text-xl font-bold rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
                                         >
-                                            환율 비교하기
+                                            최저 환율 비교하기
                                         </button>
 
                                         <p className="text-center text-sm text-gray-500 font-medium">
@@ -669,32 +669,29 @@ export default function HomePage() {
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                                 <h3 className="text-lg font-bold text-gray-900 mb-3">RemitBuddy는 송금 서비스인가요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    아니요, RemitBuddy는 여러 송금 업체의 환율과 수수료를 비교해주는 비교 플랫폼이에요.
-                                    실제 송금은 선택하신 업체의 서비스를 통해 진행돼요.
+                                    아니요. RemitBuddy는 여러 송금 업체의 환율·수수료를 비교해주는 플랫폼이에요.
+                                    실제 송금은 선택한 업체에서 진행됩니다.
                                 </p>
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                                 <h3 className="text-lg font-bold text-gray-900 mb-3">해외송금비교 서비스는 무료인가요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    네, RemitBuddy의 모든 비교 서비스는 100% 무료에요.
-                                    회원가입이나 개인정보 제공 없이 자유롭게 이용할 수 있어요.
+                                    네. 100% 무료이며 회원가입이나 개인 정보 제공 없이 이용할 수 있어요.
                                 </p>
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                                 <h3 className="text-lg font-bold text-gray-900 mb-3">환율 정보는 얼마나 자주 업데이트되나요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    환율 정보는 실시간으로 업데이트돼요.
-                                    비교 버튼을 클릭할 때마다 최신 환율과 수수료 정보를 가져와요.
+                                    비교하기 버튼을 클릭할 때마다 최신 환율과 수수료 정보를 불러옵니다.
                                 </p>
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 국가의 환율과 수수료를 비교할 수 있나요?</h3>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 국가의 환율·수수료를 비교할 수 있나요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마, 태국, 우즈베키스탄, 인도네시아, 스리랑카, 방글라데시 등
-                                    10개국으로의 송금 환율과 수수료를 비교할 수 있어요. 다른 통화도 더 추가될 예정이에요.
+                                    현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마 등 10개의 환율·수수료를 비교할 수 있어요. 다른 국가도 계속 추가될 예정이에요.
                                 </p>
                             </div>
                         </div>

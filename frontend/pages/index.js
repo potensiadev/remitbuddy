@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import Footer from '../components/Footer';
+import { Button } from '../components/ui';
 
 // API Configuration - CRITICAL: DO NOT REMOVE
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://remitbuddy-production.up.railway.app';
@@ -674,79 +676,39 @@ export default function HomePage() {
                     </p>
                 </div>
 
-                <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
-                    <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 국가의 환율·수수료를 비교할 수 있나요?</h3>
-                    <p className="text-gray-600 leading-relaxed font-medium">
-                        현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마 등 10개의 환율·수수료를 비교할 수 있어요. 다른 국가도 계속 추가될 예정이에요.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {/* CTA Section - Toss Style */ }
-    <section className="py-20 bg-gradient-to-br from-brand-500 to-brand-600 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-                지금 바로 환율을 비교해보세요
-            </h2>
-            <p className="text-xl text-brand-50 mb-8 font-medium">
-                3초면 충분헤요. 무료로 시작하세요.
-            </p>
-            <button
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="bg-white text-brand-600 px-12 py-5 rounded-full text-xl font-bold hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 active:translate-y-0 active:scale-95"
-            >
-                환율 비교 시작하기
-            </button>
-        </div>
-    </section>
-
-    {/* Footer - Toss Style */ }
-    {/* Footer - Toss Style Light */ }
-    <footer className="bg-gray-50 text-gray-600 py-20 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-                <div className="md:col-span-2">
-                    <div className="flex items-center gap-3 mb-6 group">
-                        <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10 grayscale opacity-80 transition-all group-hover:grayscale-0 group-hover:opacity-100" />
-                        <span className="text-2xl font-bold text-gray-800">RemitBuddy</span>
+                            <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 국가의 환율·수수료를 비교할 수 있나요?</h3>
+                                <p className="text-gray-600 leading-relaxed font-medium">
+                                    현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마 등 10개의 환율·수수료를 비교할 수 있어요. 다른 국가도 계속 추가될 예정이에요.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <p className="text-gray-500 mb-6 max-w-md font-medium leading-relaxed text-lg">
-                        해외송금을 더 쉽고 저렴하게.<br />
-                        10개 송금 업체의 환율을 한번에 비교하세요.
-                    </p>
-                </div>
+                </section>
 
-                <div>
-                    <h3 className="font-bold text-lg text-gray-900 mb-6">서비스</h3>
-                    <ul className="space-y-4 text-gray-500">
-                        <li><a href="#" className="hover:text-gray-900 transition-colors font-medium">해외송금비교</a></li>
-                        <li><a href="#how-it-works" className="hover:text-gray-900 transition-colors font-medium">이용 방법</a></li>
-                        <li><a href="#features" className="hover:text-gray-900 transition-colors font-medium">특징</a></li>
-                    </ul>
-                </div>
+                {/* CTA Section - Toss Style */}
+                <section className="py-20 bg-gradient-to-br from-brand-500 to-brand-600 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+                            지금 바로 환율을 비교해보세요
+                        </h2>
+                        <p className="text-xl text-brand-50 mb-8 font-medium">
+                            3초면 충분헤요. 무료로 시작하세요.
+                        </p>
+                        <Button
+                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                            variant="secondary"
+                            size="xl"
+                            className="bg-white text-brand-600 hover:bg-gray-50 shadow-button-hover"
+                        >
+                            환율 비교 시작하기
+                        </Button>
+                    </div>
+                </section>
 
-                <div>
-                    <h3 className="font-bold text-lg text-gray-900 mb-6">지원</h3>
-                    <ul className="space-y-4 text-gray-500">
-                        <li><a href="#faq" className="hover:text-gray-900 transition-colors font-medium">자주 묻는 질문</a></li>
-                        <li><a href="#" className="hover:text-gray-900 transition-colors font-medium">개인정보처리방침</a></li>
-                        <li><a href="#" className="hover:text-gray-900 transition-colors font-medium">이용약관</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div className="pt-10 border-t border-gray-200">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-gray-400 text-sm font-medium">
-                        © {new Date().getFullYear()} RemitBuddy. All Rights Reserved.
-                    </p>
-                    <p className="text-gray-400 text-sm font-medium">
-                        RemitBuddy는 비교 서비스이며 송금업체가 아닙니다.
-                    </p>
-                </div>
+                {/* Footer - Enhanced Toss Style */}
+                <Footer />
             </div>
         </div>
     </footer>

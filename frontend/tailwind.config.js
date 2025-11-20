@@ -237,18 +237,31 @@ module.exports = {
         'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
         'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
         '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.12)',
-        // 🎯 새로운 Toss-style shadows (하단 검정 착시 제거 버전)
+
+        // Toss-style ambient shadows (no directional bias)
         'toss-sm': '0 0 6px rgba(0, 0, 0, 0.05)',
         'toss': '0 0 12px rgba(0, 0, 0, 0.06)',
         'toss-lg': '0 0 20px rgba(0, 0, 0, 0.08)',
         'toss-xl': '0 0 32px rgba(0, 0, 0, 0.10)',
 
-        // Card shadows
-        'card': '0 2px 8px 0 rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 8px 24px 0 rgba(0, 0, 0, 0.12)',
+        // Card shadows - refined for Toss quality
+        'card': '0 2px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04)',
+        'card-hover': '0 8px 24px 0 rgba(0, 0, 0, 0.12), 0 4px 8px 0 rgba(0, 0, 0, 0.06)',
         'card-best': '0 8px 24px 0 rgba(0, 200, 83, 0.16), 0 2px 8px 0 rgba(0, 200, 83, 0.08)',
+
+        // Button shadows
+        'button': '0 4px 12px 0 rgba(49, 130, 246, 0.20)',
+        'button-hover': '0 6px 20px 0 rgba(49, 130, 246, 0.30)',
+
         // Inner shadows
         'inner-sm': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.04)',
+      },
+
+      // Transition timing functions - Toss-style smooth
+      transitionTimingFunction: {
+        'toss': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'toss-in': 'cubic-bezier(0.32, 0, 0.67, 0)',
+        'toss-out': 'cubic-bezier(0.33, 1, 0.68, 1)',
       },
       // Breakpoints for layout mode detection
       screens: {

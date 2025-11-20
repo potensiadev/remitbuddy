@@ -403,7 +403,7 @@ export default function HomePage() {
                                     <span>안전하고 투명한 비교 서비스</span>
                                 </div>
 
-                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+                                <h1 className="text-5xl md:text-6xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
                                     해외송금 더 똑똑하게
                                 </h1>
 
@@ -451,20 +451,20 @@ export default function HomePage() {
 
                             {/* Right Column - Form - Toss Style */}
                             <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                                <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-150 p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300">
+                                <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-300">
                                     <h2 className="text-2xl font-bold text-gray-900 mb-6">환율 비교 시작하기</h2>
 
                                     <div className="space-y-6">
                                         {/* Country Selector - Toss Style */}
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-800 mb-3">
+                                            <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
                                                 받는 나라
                                             </label>
                                             <div ref={dropdownRef} className="relative">
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowDropdown(!showDropdown)}
-                                                    className="w-full h-16 px-6 bg-gray-50 rounded-xl border border-gray-200 hover:border-brand-500 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-100 transition-all duration-200 flex items-center justify-between group"
+                                                    className="w-full h-16 px-6 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus:bg-white focus:ring-2 focus:ring-brand-500 transition-all duration-200 flex items-center justify-between group outline-none"
                                                     aria-label="Select country"
                                                     aria-expanded={showDropdown}
                                                 >
@@ -478,7 +478,7 @@ export default function HomePage() {
                                                 </button>
 
                                                 {showDropdown && (
-                                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl border border-gray-200 shadow-toss-lg max-h-80 overflow-y-auto z-50 animate-fade-in-down">
+                                                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] max-h-80 overflow-y-auto z-50 animate-fade-in-down border border-gray-100">
                                                         {COUNTRIES.map((country) => (
                                                             <button
                                                                 key={country.code}
@@ -487,7 +487,7 @@ export default function HomePage() {
                                                                     setSelectedCountry(country);
                                                                     setShowDropdown(false);
                                                                 }}
-                                                                className="w-full px-6 py-4 flex items-center justify-between hover:bg-brand-50 transition-all duration-200 border-b border-gray-100 last:border-b-0 group"
+                                                                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-200 border-b border-gray-50 last:border-b-0 group"
                                                             >
                                                                 <span className="text-base font-bold text-gray-900 group-hover:text-brand-600 transition-colors">
                                                                     {country.name} ({country.currency})
@@ -502,32 +502,32 @@ export default function HomePage() {
 
                                         {/* Amount Input - Toss Style */}
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-800 mb-3">
+                                            <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
                                                 보내는 금액
                                             </label>
-                                            <div className="relative h-16 bg-gray-50 rounded-xl border border-gray-200 focus-within:border-brand-500 focus-within:ring-4 focus-within:ring-brand-100 transition-all duration-200 px-6 flex items-center hover:border-gray-300">
+                                            <div className="relative h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-6 flex items-center">
                                                 <input
                                                     type="text"
                                                     value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
                                                     onChange={handleAmountChange}
                                                     placeholder="1,000,000"
-                                                    className="w-full bg-transparent text-2xl font-bold text-gray-900 text-right focus:outline-none pr-20"
+                                                    className="w-full bg-transparent text-2xl font-bold text-gray-900 text-right focus:outline-none pr-20 placeholder-gray-400"
                                                     aria-label="Amount to send in KRW"
                                                 />
                                                 <span className="absolute right-6 text-xl font-bold text-gray-500">KRW</span>
                                             </div>
-                                            <p className="mt-2 text-sm text-gray-600 font-medium">최소 금액: 100,000 KRW</p>
+                                            <p className="mt-2 text-sm text-gray-500 font-medium ml-1">최소 금액: 100,000 KRW</p>
                                         </div>
 
                                         {/* Submit Button - Toss Style */}
                                         <button
                                             type="submit"
-                                            className="w-full h-16 bg-brand-500 hover:bg-brand-600 text-white text-xl font-bold rounded-xl transition-all duration-200 shadow-toss hover:shadow-toss-lg transform hover:scale-[1.02] active:scale-[0.98]"
+                                            className="w-full h-16 bg-brand-500 hover:bg-brand-600 text-white text-xl font-bold rounded-2xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
                                         >
                                             환율 비교하기
                                         </button>
 
-                                        <p className="text-center text-sm text-gray-600 font-medium">
+                                        <p className="text-center text-sm text-gray-500 font-medium">
                                             비교는 무료이며 개인정보를 요구하지 않아요
                                         </p>
                                     </div>

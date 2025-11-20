@@ -403,7 +403,7 @@ export default function HomePage() {
                                     <span>안전하고 투명한 비교 서비스</span>
                                 </div>
 
-                                <h1 className="text-5xl md:text-6xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+                                <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
                                     해외송금 더 똑똑하게
                                 </h1>
 
@@ -554,7 +554,7 @@ export default function HomePage() {
                                 <div className="w-20 h-20 bg-brand-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
                                     1
                                 </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">나라와 금액 입력</h3>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-4">송금 국가와 금액 입력</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
                                     송금받을 나라를 선택하고<br />
                                     보낼 금액을 입력하세요
@@ -567,7 +567,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4">실시간 비교 결과</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    10개 이상 업체의 환율과<br />
+                                    10개 업체의 환율과<br />
                                     수수료를 한눈에 비교하세요
                                 </p>
                             </div>
@@ -578,8 +578,8 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4">최적 업체 선택</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    가장 유리한 조건의 업체를<br />
-                                    선택하고 바로 송금하세요
+                                    가장 유리한 조건을<br />
+                                    확인하고 바로 송금하세요
                                 </p>
                             </div>
                         </div>
@@ -590,11 +590,11 @@ export default function HomePage() {
                 <section id="features" className="py-20 bg-gradient-to-br from-gray-50 to-brand-50/30">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
                                 RemitBuddy 왜 써야할까요?
                             </h2>
                             <p className="text-xl text-gray-600 font-medium">
-                                스마트하게 해외송금하는 핵심 기능
+                                더이상 여러 앱을 비교하지 마세요
                             </p>
                         </div>
 
@@ -675,7 +675,7 @@ export default function HomePage() {
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">비교 서비스는 무료인가요?</h3>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">해외송금비교 서비스는 무료인가요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
                                     네, RemitBuddy의 모든 비교 서비스는 100% 무료에요.
                                     회원가입이나 개인정보 제공 없이 자유롭게 이용할 수 있어요.
@@ -691,7 +691,7 @@ export default function HomePage() {
                             </div>
 
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 통화의 송금 환율과 수수료를 비교할 수 있나요?</h3>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 국가의 환율과 수수료를 비교할 수 있나요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
                                     현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마, 태국, 우즈베키스탄, 인도네시아, 스리랑카, 방글라데시 등
                                     10개국으로의 송금 환율과 수수료를 비교할 수 있어요. 다른 통화도 더 추가될 예정이에요.

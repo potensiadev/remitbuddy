@@ -36,7 +36,10 @@
       "Bash(done)",
       "Bash(do echo -e \"\\n=== Test $i ===\")",
       "Bash(git restore:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(FINAL_SUMMARY.txt)",
+      "Bash(cat FINAL_SUMMARY.txt)",
+      "Bash(git clone:*)"
     ],
     "deny": []
   }

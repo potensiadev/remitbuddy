@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import Footer from '../components/Footer';
+import { Button } from '../components/ui';
 
 // API Configuration - CRITICAL: DO NOT REMOVE
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://remitbuddy-production.up.railway.app';
@@ -708,61 +710,19 @@ export default function HomePage() {
                         <p className="text-xl text-brand-50 mb-8 font-medium">
                             3초면 충분헤요. 무료로 시작하세요.
                         </p>
-                        <button
+                        <Button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                            className="bg-white text-brand-600 px-10 py-5 rounded-xl text-xl font-bold hover:bg-gray-50 transition-all shadow-toss-xl hover:shadow-2xl transform hover:scale-105 active:scale-95"
+                            variant="secondary"
+                            size="xl"
+                            className="bg-white text-brand-600 hover:bg-gray-50 shadow-button-hover"
                         >
                             환율 비교 시작하기
-                        </button>
+                        </Button>
                     </div>
                 </section>
 
-                {/* Footer - Toss Style */}
-                <footer className="bg-gray-900 text-white py-16">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                            <div className="md:col-span-2">
-                                <div className="flex items-center gap-3 mb-4 group">
-                                    <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10 transition-transform group-hover:scale-110" />
-                                    <span className="text-2xl font-bold">RemitBuddy</span>
-                                </div>
-                                <p className="text-gray-400 mb-6 max-w-md font-medium leading-relaxed">
-                                    해외송금을 더 쉽고 저렴하게
-                                    10개 송금 업체의 환율을 한번에 비교하세요.
-                                </p>
-                            </div>
-
-                            <div>
-                                <h3 className="font-bold text-lg mb-4">서비스</h3>
-                                <ul className="space-y-3 text-gray-400">
-                                    <li><a href="#" className="hover:text-brand-400 transition-colors font-medium">해외송금비교</a></li>
-                                    <li><a href="#how-it-works" className="hover:text-brand-400 transition-colors font-medium">이용 방법</a></li>
-                                    <li><a href="#features" className="hover:text-brand-400 transition-colors font-medium">특징</a></li>
-                                </ul>
-                            </div>
-
-                            <div>
-                                <h3 className="font-bold text-lg mb-4">지원</h3>
-                                <ul className="space-y-3 text-gray-400">
-                                    <li><a href="#faq" className="hover:text-brand-400 transition-colors font-medium">자주 묻는 질문</a></li>
-                                    <li><a href="#" className="hover:text-brand-400 transition-colors font-medium">개인정보처리방침</a></li>
-                                    <li><a href="#" className="hover:text-brand-400 transition-colors font-medium">이용약관</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div className="pt-8 border-t border-gray-800">
-                            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                                <p className="text-gray-500 text-sm font-medium">
-                                    © {new Date().getFullYear()} RemitBuddy. All Rights Reserved.
-                                </p>
-                                <p className="text-gray-500 text-sm font-medium">
-                                    RemitBuddy는 비교 서비스이며 송금업체가 아닙니다.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                {/* Footer - Enhanced Toss Style */}
+                <Footer />
             </div>
 
             <style jsx global>{`

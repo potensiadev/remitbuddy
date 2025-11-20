@@ -706,7 +706,7 @@ export default function HomePage() {
                             지금 바로 환율을 비교해보세요
                         </h2>
                         <p className="text-xl text-brand-50 mb-8 font-medium">
-                            3초면 충분합니다. 무료로 시작하세요.
+                            3초면 충분헤요. 무료로 시작하세요.
                         </p>
                         <button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

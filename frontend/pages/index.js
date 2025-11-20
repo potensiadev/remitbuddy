@@ -373,18 +373,17 @@ export default function HomePage() {
             </Head>
 
             <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-                {/* Header - Toss Style */}
                 {/* Header - Toss Style Refined */}
-                <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 transition-all duration-300 supports-[backdrop-filter]:bg-white/60">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
+                <header className="bg-white/70 backdrop-blur-xl border-b border-gray-150 sticky top-0 z-50 transition-all duration-300 supports-[backdrop-filter]:bg-white/50">
+                    <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-6 flex items-center justify-between">
                         <div className="flex items-center gap-3 group cursor-pointer">
-                            <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
+                            <img src="/logo.svg" alt="RemitBuddy" className="h-11 w-11 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
                             <span className="text-2xl font-bold text-gray-900 tracking-tight">RemitBuddy</span>
                         </div>
-                        <nav className="hidden md:flex gap-10">
-                            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-medium transition-all duration-200 text-lg">이용방법</a>
-                            <a href="#features" className="text-gray-600 hover:text-gray-900 font-medium transition-all duration-200 text-lg">특징</a>
-                            <a href="#faq" className="text-gray-600 hover:text-gray-900 font-medium transition-all duration-200 text-lg">FAQ</a>
+                        <nav className="hidden md:flex gap-12">
+                            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-lg hover:scale-105">이용방법</a>
+                            <a href="#features" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-lg hover:scale-105">특징</a>
+                            <a href="#faq" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-lg hover:scale-105">FAQ</a>
                         </nav>
                     </div>
                 </header>
@@ -406,11 +405,11 @@ export default function HomePage() {
                                     <span>안전하고 투명한 비교 서비스</span>
                                 </div>
 
-                                <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
-                                    해외송금 더 똑똑하게
+                                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-[1.1] tracking-tighter">
+                                    해외송금<br className="md:hidden" /> 더 똑똑하게
                                 </h1>
 
-                                <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
+                                <p className="text-xl md:text-2xl lg:text-3xl text-gray-600 mb-8 leading-relaxed font-medium">
                                     10개국 주요 송금 업체의 환율과 수수료를<br />
                                     단 3초만에 비교하고 <span className="font-bold text-brand-600">최대 수만원</span>을 절약하세요
                                 </p>
@@ -703,21 +702,25 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                {/* CTA Section - Toss Style */}
-                <section className="py-20 bg-gradient-to-br from-brand-500 to-brand-600 relative overflow-hidden">
+                {/* CTA Section - Toss Style Enhanced */}
+                <section className="py-24 bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 relative overflow-hidden">
+                    {/* Sophisticated background decorations */}
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
-                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-                            지금 바로 환율을 비교해보세요
+                    <div className="absolute top-0 left-0 w-96 h-96 bg-accent-400 rounded-full blur-3xl opacity-20 animate-float"></div>
+                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-400 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '1.5s' }}></div>
+
+                    <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10">
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
+                            지금 바로 환율을<br className="md:hidden" /> 비교해보세요
                         </h2>
-                        <p className="text-xl text-brand-50 mb-8 font-medium">
-                            3초면 충분헤요. 무료로 시작하세요.
+                        <p className="text-xl md:text-2xl text-white/90 mb-10 font-medium max-w-2xl mx-auto">
+                            3초면 충분해요. 무료로 시작하세요.
                         </p>
                         <Button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                             variant="secondary"
                             size="xl"
-                            className="bg-white text-brand-600 hover:bg-gray-50 shadow-button-hover"
+                            className="bg-white text-brand-600 hover:bg-gray-50 shadow-2xl hover:shadow-button-hover hover:scale-105 transition-all duration-300"
                         >
                             환율 비교 시작하기
                         </Button>

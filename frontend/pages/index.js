@@ -376,7 +376,6 @@ export default function HomePage() {
                 <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 transition-all duration-300 supports-[backdrop-filter]:bg-white/60">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
                         <div className="flex items-center gap-3 group cursor-pointer">
-                            <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10 transition-transform duration-300 group-hover:scale-110" />
                             <span className="text-2xl font-bold text-gray-900 tracking-tight">RemitBuddy</span>
                         </div>
                         <nav className="hidden md:flex gap-10">
@@ -710,7 +709,6 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                 <div className="md:col-span-2">
                     <div className="flex items-center gap-3 mb-6 group">
-                        <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10 grayscale opacity-80 transition-all group-hover:grayscale-0 group-hover:opacity-100" />
                         <span className="text-2xl font-bold text-gray-800">RemitBuddy</span>
                     </div>
                     <p className="text-gray-500 mb-6 max-w-md font-medium leading-relaxed text-lg">

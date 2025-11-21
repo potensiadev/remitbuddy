@@ -86,7 +86,24 @@ export default function HeroSection() {
             {/* CTA Button */}
             <div className="w-full flex flex-col items-center mt-6 sm:mt-8">
               <div className="w-full flex justify-center items-center">
-                <button className="px-8 py-4 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all text-base sm:text-lg w-full sm:w-auto">최저 환율 비교하기</button>
+                <button className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-lg hover:shadow-xl transition-all text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-300">
+                  <span className="whitespace-nowrap">최저 환율 비교하기</span>
+                  <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/20">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-5 h-5 text-white"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="M13 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </button>
               </div>
               <p className="mt-4 text-xs md:text-sm text-gray-500 text-center">비교는 무료이며 개인정보를 요구하지 않아요</p>
             </div>

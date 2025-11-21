@@ -379,11 +379,11 @@ export default function HomePage() {
                         <div className="flex items-center gap-3 group cursor-pointer">
                             <span className="text-2xl font-bold text-gray-900 tracking-tight">RemitBuddy</span>
                         </div>
-                        <nav className="hidden md:flex gap-8 lg:gap-12">
+                        {/* <nav className="hidden md:flex gap-8 lg:gap-12">
                             <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-base lg:text-lg hover:scale-105">이용방법</a>
                             <a href="#features" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-base lg:text-lg hover:scale-105">특징</a>
                             <a href="#faq" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-base lg:text-lg hover:scale-105">FAQ</a>
-                        </nav>
+                        </nav> */}
                     </div>
                 </header>
 
@@ -523,7 +523,7 @@ export default function HomePage() {
                                 {/* Submit Button - Toss Style */}
                                 <button
                                     type="submit"
-                                    className="w-full sm:w-auto h-14 sm:h-16 px-4 sm:px-8 bg-brand-500 hover:bg-brand-600 text-lg sm:text-xl font-bold rounded-2xl transition-all duration-200 shadow-button hover:shadow-button-hover transform hover:scale-[1.02] active:scale-[0.98] border-0 outline-none"
+                                    className="w-full sm:w-full max-w-xl h-14 sm:h-16 bg-[#2D8CFF] hover:bg-[#1A75FF] text-white font-semibold text-base sm:text-lg rounded-[14px] shadow-[0_4px_12px_rgba(45,140,255,0.35)] transition-all duration-200 transform hover:-translate-y-0.5 active:scale-[0.98]"
                                 >
                                     최저 환율 비교하기
                                 </button>
@@ -709,18 +709,18 @@ export default function HomePage() {
                     <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-400 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '1.5s' }}></div>
 
                     <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10">
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-brand mb-6 tracking-tight leading-tight">
                             지금 바로 환율을<br className="md:hidden" /> 비교해보세요
                         </h2>
-                        <p className="text-xl md:text-2xl text-white/90 mb-10 font-medium max-w-2xl mx-auto">
+                        <p className="text-xl md:text-2xl text-brand/90 mb-10 font-medium max-w-2xl mx-auto">
                             3초면 충분해요. 무료로 시작하세요.
                         </p>
                         <Button
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                             variant="secondary"
                             size="xl"
-                            className="bg-white text-brand-600 hover:bg-gray-50 shadow-2xl hover:shadow-button-hover hover:scale-105 transition-all duration-300"
-                        >
+                            className="bg-blue-600 text-white hover:bg-gray-50 shadow-2xl hover:shadow-button-hover hover:scale-105 transition-all duration-300"
+                        > 
                             최저 송금 수수료 비교하기
                         </Button>
                     </div>

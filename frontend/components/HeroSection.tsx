@@ -1,7 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 
 export default function HeroSection() {
+  const [amount, setAmount] = useState<string>('');
+  const [error, setError] = useState<string>('');
+
+  const MIN_AMOUNT = 10000;
+  const MAX_AMOUNT = 5000000;
+
+  const formatNumber = (value: string) => {
+    const number = value.replace(/[^0-9]/g, '');
+    return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    setAmount(value);
+
+    if (value === '') {
+      setError('');
+      return;
+    }
+
+    const numValue = parseInt(value, 10);
+
+    if (numValue < MIN_AMOUNT) {
+      setError('송금 금액은 최소 10,000원부터 가능해요');
+    } else if (numValue > MAX_AMOUNT) {
+      setError('송금 금액은 최대 5,000,000원까지 입력 가능해요');
+    } else {
+      setError('');
+    }
+  };
+
+  const handleCompare = () => {
+    if (amount === '') {
+      setError('송금할 금액을 입력해주세요');
+      return;
+    }
+
+    const numValue = parseInt(amount, 10);
+    if (numValue < MIN_AMOUNT || numValue > MAX_AMOUNT) {
+      return;
+    }
+
+    // TODO: Navigate to comparison page or trigger comparison logic
+    console.log('Comparing amount:', numValue);
+  };
+
   return (
     <>
       {/* Fixed Header */}
@@ -83,10 +129,62 @@ export default function HeroSection() {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <div className="w-full flex flex-col items-center mt-6 sm:mt-8">
-              <button className="w-full sm:w-full max-w-xl h-14 sm:h-16 bg-[#2D8CFF] hover:bg-[#1A75FF] text-white font-semibold text-base sm:text-lg rounded-[14px] shadow-[0_4px_12px_rgba(45,140,255,0.35)] transition-all duration-200 transform hover:-translate-y-0.5 active:scale-[0.98]">최저 환율 비교하기</button>
-              <p className="mt-4 text-xs md:text-sm text-gray-500">비교는 무료이며 개인정보를 요구하지 않아요</p>
+            {/* Amount Input & CTA */}
+            <div className="w-full flex flex-col items-center mt-6 sm:mt-8 space-y-4">
+              {/* Amount Input Field */}
+              <div className="w-full max-w-xl">
+                <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
+                  보내는 금액
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="amount"
+                    value={formatNumber(amount)}
+                    onChange={handleAmountChange}
+                    placeholder="10,000 ~ 5,000,000"
+                    className={`w-full h-14 px-4 text-lg font-medium border-2 rounded-[14px] transition-all duration-200 focus:outline-none ${
+                      error
+                        ? 'border-red-300 focus:border-red-500 bg-red-50'
+                        : 'border-gray-200 focus:border-[#2D8CFF] bg-white'
+                    }`}
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg font-medium text-gray-500">
+                    원
+                  </span>
+                </div>
+                {/* Error Message */}
+                {error && (
+                  <div className="flex items-start mt-2 space-x-1.5">
+                    <svg
+                      className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <p className="text-sm text-red-600 font-medium">{error}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* CTA Button */}
+              <button
+                onClick={handleCompare}
+                disabled={!!error && amount !== ''}
+                className={`w-full max-w-xl h-14 sm:h-16 font-semibold text-base sm:text-lg rounded-[14px] shadow-[0_4px_12px_rgba(45,140,255,0.35)] transition-all duration-200 transform ${
+                  error && amount !== ''
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-[#2D8CFF] hover:bg-[#1A75FF] text-white hover:-translate-y-0.5 active:scale-[0.98]'
+                }`}
+              >
+                최저 환율 비교하기
+              </button>
+              <p className="mt-2 text-xs md:text-sm text-gray-500">비교는 무료이며 개인정보를 요구하지 않아요</p>
             </div>
           </div>
         </div>

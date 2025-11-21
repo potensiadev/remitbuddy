@@ -84,9 +84,11 @@ export default function HeroSection() {
             </div>
 
             {/* CTA Button */}
-            <div className="mt-8 text-center w-full">
-              <button className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-base md:text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">최저 환율 비교하기</button>
-              <p className="mt-4 text-xs md:text-sm text-gray-500">비교는 무료이며 개인정보를 요구하지 않아요</p>
+            <div className="w-full flex flex-col items-center mt-6 sm:mt-8">
+              <div className="w-full flex justify-center items-center">
+                <button className="px-8 py-4 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all text-base sm:text-lg w-full sm:w-auto">최저 환율 비교하기</button>
+              </div>
+              <p className="mt-4 text-xs md:text-sm text-gray-500 text-center">비교는 무료이며 개인정보를 요구하지 않아요</p>
             </div>
           </div>
         </div>

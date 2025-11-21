@@ -451,11 +451,11 @@ export default function HomePage() {
                             </div>
 
                             {/* Right Column - Form - Toss Style */}
-                            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                                <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-150 p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6">환율 비교 시작하기</h2>
+                            <div className="animate-fade-in-up w-full sm:max-w-xl lg:max-w-2xl" style={{ animationDelay: '0.2s' }}>
+                                <form onSubmit={handleSubmit} className="w-full bg-white rounded-2xl border border-gray-150 p-4 sm:p-6 md:p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300">
+                            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">환율 비교 시작하기</h2>
 
-                            <div className="space-y-6">
+                            <div className="space-y-5 sm:space-y-6">
                                 {/* Country Selector - Toss Style */}
                                 <div>
                                     <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
@@ -465,37 +465,37 @@ export default function HomePage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(!showDropdown)}
-                                            className="w-full h-16 px-6 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus:bg-white focus:ring-2 focus:ring-brand-500 transition-all duration-200 flex items-center justify-between group outline-none border-0 shadow-sm hover:shadow-toss"
+                                            className="w-full h-14 sm:h-16 px-4 sm:px-6 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus:bg-white focus:ring-2 focus:ring-brand-500 transition-all duration-200 flex items-center justify-between group outline-none border-0 shadow-sm hover:shadow-toss"
                                             aria-label="Select country"
                                             aria-expanded={showDropdown}
                                         >
                                             <div className="flex items-center gap-3">
                                                 <img src={selectedCountry.flag} alt="" className="w-8 h-8 rounded-full shadow-sm" />
-                                                <span className="text-lg font-bold text-gray-900">
+                                                <span className="text-base sm:text-lg font-bold text-gray-900">
                                                     {selectedCountry.name} ({selectedCountry.currency})
                                                 </span>
                                             </div>
                                             <ChevronDownIcon />
                                         </button>
 
-                                        {showDropdown && (
-                                            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] max-h-80 overflow-y-auto z-50 animate-fade-in-down border border-gray-100">
-                                                {COUNTRIES.map((country) => (
-                                                    <button
-                                                        key={country.code}
+                                            {showDropdown && (
+                                                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] max-h-80 overflow-y-auto z-50 animate-fade-in-down border border-gray-100">
+                                                    {COUNTRIES.map((country) => (
+                                                        <button
+                                                            key={country.code}
                                                         type="button"
-                                                        onClick={() => {
-                                                            setSelectedCountry(country);
-                                                            setShowDropdown(false);
-                                                        }}
-                                                        className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-200 border-b border-gray-50 last:border-b-0 group"
-                                                    >
-                                                        <span className="text-base font-bold text-gray-900 group-hover:text-brand-600 transition-colors">
-                                                            {country.name} ({country.currency})
-                                                        </span>
-                                                        <img src={country.flag} alt="" className="w-8 h-8 rounded-full shadow-sm" />
-                                                    </button>
-                                                ))}
+                                                            onClick={() => {
+                                                                setSelectedCountry(country);
+                                                                setShowDropdown(false);
+                                                            }}
+                                                            className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-200 border-b border-gray-50 last:border-b-0 group"
+                                                        >
+                                                            <span className="text-sm sm:text-base font-bold text-gray-900 group-hover:text-brand-600 transition-colors">
+                                                                {country.name} ({country.currency})
+                                                            </span>
+                                                            <img src={country.flag} alt="" className="w-8 h-8 rounded-full shadow-sm" />
+                                                        </button>
+                                                    ))}
                                             </div>
                                         )}
                                     </div>
@@ -506,16 +506,16 @@ export default function HomePage() {
                                     <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
                                         보내는 금액
                                     </label>
-                                    <div className="relative h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-6 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss">
+                                    <div className="relative h-14 sm:h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-4 sm:px-6 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss">
                                         <input
                                             type="text"
                                             value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
                                             onChange={handleAmountChange}
                                             placeholder="1,000,000"
-                                            className="flex-1 bg-transparent text-2xl font-bold text-gray-900 text-right focus:outline-none placeholder-gray-400 border-0"
+                                            className="flex-1 bg-transparent text-xl sm:text-2xl font-bold text-gray-900 text-right focus:outline-none placeholder-gray-400 border-0"
                                             aria-label="Amount to send in KRW"
                                         />
-                                        <span className="text-xl font-bold text-gray-500">KRW</span>
+                                        <span className="text-lg sm:text-xl font-bold text-gray-500">KRW</span>
                                     </div>
                                     <p className="mt-2 text-sm text-gray-500 font-medium ml-1">최소 금액: 100,000 KRW</p>
                                 </div>
@@ -523,7 +523,7 @@ export default function HomePage() {
                                 {/* Submit Button - Toss Style */}
                                 <button
                                     type="submit"
-                                    className="w-full h-16 bg-brand-500 hover:bg-brand-600 text-white text-xl font-bold rounded-2xl transition-all duration-200 shadow-button hover:shadow-button-hover transform hover:scale-[1.02] active:scale-[0.98] border-0 outline-none"
+                                    className="w-full sm:w-auto h-14 sm:h-16 px-4 sm:px-8 bg-brand-500 hover:bg-brand-600 text-lg sm:text-xl font-bold rounded-2xl transition-all duration-200 shadow-button hover:shadow-button-hover transform hover:scale-[1.02] active:scale-[0.98] border-0 outline-none"
                                 >
                                     최저 환율 비교하기
                                 </button>

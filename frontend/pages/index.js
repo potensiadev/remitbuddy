@@ -86,8 +86,8 @@ const TrendingUpIcon = () => (
     </svg>
 );
 
-// Provider Card Component - Enhanced Silicon Valley Style
-const ProviderCard = ({ provider, isBest, index, savingsAmount }) => {
+// Provider Card Component - Toss Style
+const ProviderCard = ({ provider, isBest, index }) => {
     const displayName = provider.provider === 'JP Remit' ? 'JRF' :
         provider.provider === 'The Moin' ? 'Moin' : provider.provider;
 
@@ -95,214 +95,80 @@ const ProviderCard = ({ provider, isBest, index, savingsAmount }) => {
     const formattedFeeInTarget = Math.round(feeInTargetCurrency).toLocaleString('en-US');
     const formattedFeeInKRW = provider.fee.toLocaleString('en-US');
 
-    if (isBest) {
-        return (
-            <div className="relative mb-6 sm:mb-8 animate-fade-in-up" style={{ animationDelay: `${index * 50}ms` }}>
-                {/* Best Deal Ribbon */}
-                <div className="absolute -top-4 -left-2 sm:-left-3 z-20">
-                    <div className="relative">
-                        <div className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-500 text-white px-6 py-2.5 rounded-full shadow-2xl transform -rotate-3 animate-pulse-subtle flex items-center gap-2">
-                            <svg className="w-5 h-5 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <span className="font-black text-sm tracking-wide uppercase">BEST DEAL</span>
-                        </div>
-                        <div className="absolute -bottom-2 left-4 w-0 h-0 border-l-8 border-r-8 border-t-8 border-t-amber-600 border-l-transparent border-r-transparent"></div>
-                    </div>
-                </div>
-
-                <a
-                    href={provider.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block relative overflow-hidden bg-gradient-to-br from-white via-blue-50/50 to-purple-50/50 rounded-3xl p-6 sm:p-8 transition-all duration-500 hover:scale-[1.02] shadow-[0_20px_60px_-15px_rgba(59,130,246,0.4)] hover:shadow-[0_30px_70px_-15px_rgba(59,130,246,0.5)] border-2 border-blue-200 hover:border-blue-300 group"
-                >
-                    {/* Animated gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 via-purple-600/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-shimmer"></div>
-
-                    {/* Sparkle effects */}
-                    <div className="absolute top-4 right-4 w-2 h-2 bg-yellow-400 rounded-full animate-ping"></div>
-                    <div className="absolute top-8 right-12 w-1.5 h-1.5 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
-
-                    <div className="relative z-10">
-                        {/* Header with Logo and Badge */}
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-                            <div className="flex items-center gap-4 sm:gap-5">
-                                {PROVIDER_LOGO_MAP[provider.provider] ? (
-                                    <div className="relative">
-                                        <img
-                                            src={PROVIDER_LOGO_MAP[provider.provider]}
-                                            alt={`${provider.provider} logo`}
-                                            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-contain bg-white p-3 shadow-lg ring-2 ring-blue-200 group-hover:ring-blue-400 transition-all duration-300"
-                                            onError={(e) => { e.target.style.display = 'none'; }}
-                                        />
-                                        <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-2xl sm:text-3xl font-bold text-white shadow-lg ring-2 ring-blue-200">
-                                        {displayName.charAt(0)}
-                                    </div>
-                                )}
-                                <div className="min-w-0">
-                                    <span className="text-2xl sm:text-3xl font-black text-gray-900 block break-words mb-1">{displayName}</span>
-                                    <span className="flex items-center gap-2 text-sm sm:text-base text-emerald-600 font-bold">
-                                        <SparklesIcon />
-                                        가장 저렴하게 보낼 수 있어요
-                                    </span>
-                                </div>
-                            </div>
-                            <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-base sm:text-lg font-black px-6 py-3 rounded-full shadow-lg w-full sm:w-auto text-center animate-pulse-subtle">
-                                ⚡ 추천
-                            </span>
-                        </div>
-
-                        {/* Savings Badge */}
-                        {savingsAmount > 0 && (
-                            <div className="mb-6 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl p-4 shadow-lg">
-                                <div className="flex items-center justify-center gap-2 text-white">
-                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                                    </svg>
-                                    <span className="text-base sm:text-lg font-bold">
-                                        다른 업체 대비 최대 <span className="text-xl sm:text-2xl font-black">{savingsAmount.toLocaleString()}</span> {provider.currency} 더 받아요!
-                                    </span>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Amount Display - Prominent */}
-                        <div className="mb-6 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
-                            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] opacity-50"></div>
-                            <div className="relative">
-                                <div className="text-white/90 text-sm sm:text-base mb-3 font-bold flex items-center gap-2">
-                                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                    </svg>
-                                    받는 금액
-                                </div>
-                                <div className="flex items-baseline gap-3 flex-wrap">
-                                    <span className="text-5xl sm:text-6xl font-black text-white tracking-tight animate-number-pop">
-                                        {Math.round(provider.recipient_gets).toLocaleString('en-US')}
-                                    </span>
-                                    <span className="text-2xl sm:text-3xl font-bold text-white/90">{provider.currency}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Details Grid - Enhanced */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border-2 border-gray-200 hover:border-blue-300 transition-colors duration-300">
-                                <div className="text-xs text-gray-600 mb-2 font-bold uppercase tracking-wide">환율</div>
-                                <div className="text-xl sm:text-2xl font-black text-gray-900">
-                                    {(1 / provider.exchange_rate).toFixed(4)}
-                                </div>
-                                <div className="text-xs text-gray-500 mt-1 font-semibold">KRW per {provider.currency}</div>
-                            </div>
-                            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 border-2 border-gray-200 hover:border-blue-300 transition-colors duration-300">
-                                <div className="text-xs text-gray-600 mb-2 font-bold uppercase tracking-wide">수수료</div>
-                                <div className="text-xl sm:text-2xl font-black text-gray-900">
-                                    {formattedFeeInKRW}
-                                </div>
-                                <div className="text-xs text-gray-500 mt-1 font-semibold">KRW</div>
-                            </div>
-                        </div>
-
-                        {/* CTA Button - Prominent */}
-                        <div className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-1 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 group-hover:from-blue-700 group-hover:to-purple-700">
-                            <div className="bg-white rounded-xl px-6 py-4 flex items-center justify-center gap-3 group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
-                                <span className="text-blue-600 group-hover:text-white font-black text-base sm:text-lg flex items-center gap-3 transition-colors duration-300">
-                                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                    </svg>
-                                    지금 바로 송금하러 가기
-                                    <svg className="w-6 h-6 animate-bounce-right" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                    </svg>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        );
-    }
-
-    // Regular provider card - Also enhanced but less prominent
     return (
         <a
             href={provider.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full bg-white rounded-2xl p-5 sm:p-6 mb-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-200 hover:border-blue-200 shadow-md group relative overflow-hidden"
+            className={`block w-full bg-white rounded-2xl p-5 sm:p-6 mb-4 transition-all duration-300 hover:shadow-toss-lg hover:-translate-y-1 ${isBest ? 'border-2 border-brand-500 shadow-card-best ring-4 ring-brand-100' : 'border border-gray-200 hover:border-brand-300 shadow-toss'
+                }`}
             style={{ animationDelay: `${index * 50}ms` }}
         >
-            {/* Subtle hover gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 to-purple-50/0 group-hover:from-blue-50/50 group-hover:to-purple-50/30 transition-all duration-500"></div>
-
-            <div className="relative z-10">
-                {/* Header */}
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-5">
-                    <div className="flex items-center gap-3 sm:gap-4 w-full">
-                        {PROVIDER_LOGO_MAP[provider.provider] ? (
-                            <img
-                                src={PROVIDER_LOGO_MAP[provider.provider]}
-                                alt={`${provider.provider} logo`}
-                                className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-contain bg-gray-50 p-2.5 group-hover:bg-white transition-colors duration-300 border border-gray-200 group-hover:border-blue-200"
-                                onError={(e) => { e.target.style.display = 'none'; }}
-                            />
-                        ) : (
-                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center text-xl sm:text-2xl font-bold text-white group-hover:from-brand-500 group-hover:to-brand-600 transition-all duration-300">
-                                {displayName.charAt(0)}
-                            </div>
+            {/* Mobile-first stacking keeps header elements from overflowing on small screens */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
+                <div className="flex items-center gap-3 sm:gap-4 w-full">
+                    {PROVIDER_LOGO_MAP[provider.provider] ? (
+                        <img
+                            src={PROVIDER_LOGO_MAP[provider.provider]}
+                            alt={`${provider.provider} logo`}
+                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-contain bg-gray-50 p-2"
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                        />
+                    ) : (
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-lg sm:text-xl font-bold text-white">
+                            {displayName.charAt(0)}
+                        </div>
+                    )}
+                    <div className="min-w-0">
+                        <span className="text-lg sm:text-xl font-bold text-gray-900 block break-words">{displayName}</span>
+                        {isBest && (
+                            <span className="flex items-center gap-1 text-xs sm:text-sm text-brand-600 font-bold mt-1">
+                                <SparklesIcon />
+                                가장 저렴하게 보낼 수 있어요
+                            </span>
                         )}
-                        <div className="min-w-0">
-                            <span className="text-xl sm:text-2xl font-bold text-gray-900 block break-words group-hover:text-blue-600 transition-colors duration-300">{displayName}</span>
-                        </div>
                     </div>
                 </div>
-
-                {/* Amount Display */}
-                <div className="mb-5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-5 border border-gray-200 group-hover:border-blue-200 group-hover:from-blue-50 group-hover:to-purple-50 transition-all duration-300">
-                    <div className="text-gray-600 text-xs sm:text-sm mb-2 font-bold">받는 금액</div>
-                    <div className="flex items-baseline gap-2 flex-wrap">
-                        <span className="text-3xl sm:text-4xl font-black text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-                            {Math.round(provider.recipient_gets).toLocaleString('en-US')}
-                        </span>
-                        <span className="text-xl sm:text-2xl font-bold text-gray-600">{provider.currency}</span>
-                    </div>
-                </div>
-
-                {/* Details Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
-                    <div className="bg-gray-50 rounded-lg p-3 sm:p-4 border border-gray-100">
-                        <div className="text-xs text-gray-600 mb-1 font-bold">환율</div>
-                        <div className="text-base sm:text-lg font-bold text-gray-900">
-                            {(1 / provider.exchange_rate).toFixed(4)}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1 font-medium">KRW per {provider.currency}</div>
-                    </div>
-                    <div className="bg-gray-50 rounded-lg p-3 sm:p-4 border border-gray-100">
-                        <div className="text-xs text-gray-600 mb-1 font-bold">수수료</div>
-                        <div className="text-base sm:text-lg font-bold text-gray-900">
-                            {formattedFeeInKRW}
-                        </div>
-                        <div className="text-xs text-gray-500 mt-1 font-medium">KRW</div>
-                    </div>
-                </div>
-
-                {/* CTA */}
-                <div className="mt-5 pt-5 border-t border-gray-150 flex items-center justify-center">
-                    <span className="text-blue-600 font-bold text-sm sm:text-base flex items-center gap-2 group-hover:gap-4 transition-all duration-300">
-                        송금하러 가기
-                        <svg className="w-5 h-5 transition-transform group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                        </svg>
+                {isBest && (
+                    <span className="bg-brand-500 text-white text-xs sm:text-sm font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-toss w-full sm:w-auto text-center">
+                        추천
                     </span>
+                )}
+            </div>
+
+            <div className="mb-5 sm:mb-6 bg-gradient-to-br from-brand-50 to-accent-50 rounded-xl p-4 sm:p-5 border border-brand-100 w-full">
+                <div className="text-gray-600 text-xs sm:text-sm mb-2 font-bold">받는 금액</div>
+                <div className="text-3xl sm:text-4xl font-bold text-brand-600 break-words">
+                    {Math.round(provider.recipient_gets).toLocaleString('en-US')}
+                    <span className="text-xl sm:text-2xl ml-2 text-gray-700">{provider.currency}</span>
                 </div>
+            </div>
+
+            {/* Details grid stacks on mobile to avoid cramped columns */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-gray-150 w-full">
+                <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
+                    <div className="text-xs text-gray-600 mb-1 font-bold">환율</div>
+                    <div className="text-sm sm:text-base font-bold text-gray-900">
+                        {(1 / provider.exchange_rate).toFixed(4)}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1 font-medium">KRW per {provider.currency}</div>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
+                    <div className="text-xs text-gray-600 mb-1 font-bold">수수료</div>
+                    <div className="text-sm sm:text-base font-bold text-gray-900">
+                        {formattedFeeInKRW}
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1 font-medium">KRW</div>
+                </div>
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-gray-150 flex items-center justify-center group">
+                <span className="text-brand-600 font-bold text-xs sm:text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
+                    송금하러 가기
+                    <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                </span>
             </div>
         </a>
     );
@@ -431,36 +297,19 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain }
 
             {!isLoading && !error && results.length > 0 && (
                 <div className="w-full space-y-3 sm:space-y-4">
-                    <div className="mb-6 sm:mb-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6 sm:p-8 text-center shadow-2xl">
-                        <div className="flex items-center justify-center gap-3 mb-3">
-                            <svg className="w-8 h-8 text-white animate-bounce" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                            </svg>
-                            <span className="text-3xl sm:text-4xl font-black text-white">
-                                {results.length}개
-                            </span>
-                            <svg className="w-8 h-8 text-white animate-bounce" fill="currentColor" viewBox="0 0 20 20" style={{ animationDelay: '0.2s' }}>
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                            </svg>
-                        </div>
-                        <p className="text-white text-lg sm:text-xl font-bold">
-                            업체 비교 결과를 확인하세요! 최고의 환율을 찾았습니다 🎯
+                    <div className="mb-2 sm:mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                        <p className="text-gray-600 font-medium text-base sm:text-lg">
+                            <span className="text-xl sm:text-2xl font-bold text-blue-600">{results.length}개</span> 업체 비교 결과
                         </p>
                     </div>
-                    {results.map((provider, index) => {
-                        const savingsVsWorst = worstProvider && index === 0 ?
-                            Math.round(provider.recipient_gets - worstProvider.recipient_gets) : 0;
-
-                        return (
-                            <ProviderCard
-                                key={provider.provider}
-                                provider={{ ...provider, currency: queryParams.receive_currency }}
-                                isBest={index === 0}
-                                index={index}
-                                savingsAmount={savingsVsWorst}
-                            />
-                        );
-                    })}
+                    {results.map((provider, index) => (
+                        <ProviderCard
+                            key={provider.provider}
+                            provider={{ ...provider, currency: queryParams.receive_currency }}
+                            isBest={index === 0}
+                            index={index}
+                        />
+                    ))}
                 </div>
             )}
         </div>
@@ -902,54 +751,8 @@ export default function HomePage() {
                     to { transform: rotate(360deg); }
                 }
 
-                @keyframes spin-slow {
-                    to { transform: rotate(360deg); }
-                }
-
-                @keyframes shimmer {
-                    0% { background-position: -200% center; }
-                    100% { background-position: 200% center; }
-                }
-
-                @keyframes pulse-subtle {
-                    0%, 100% { opacity: 1; transform: scale(1); }
-                    50% { opacity: 0.95; transform: scale(1.02); }
-                }
-
-                @keyframes number-pop {
-                    0% { transform: scale(1); }
-                    50% { transform: scale(1.05); }
-                    100% { transform: scale(1); }
-                }
-
-                @keyframes bounce-right {
-                    0%, 100% { transform: translateX(0); }
-                    50% { transform: translateX(8px); }
-                }
-
                 .animate-spin {
                     animation: spin 1s linear infinite;
-                }
-
-                .animate-spin-slow {
-                    animation: spin-slow 3s linear infinite;
-                }
-
-                .animate-shimmer {
-                    background-size: 200% 100%;
-                    animation: shimmer 3s linear infinite;
-                }
-
-                .animate-pulse-subtle {
-                    animation: pulse-subtle 2s ease-in-out infinite;
-                }
-
-                .animate-number-pop {
-                    animation: number-pop 0.6s ease-out;
-                }
-
-                .animate-bounce-right {
-                    animation: bounce-right 1s ease-in-out infinite;
                 }
 
                 .sr-only {
@@ -966,22 +769,6 @@ export default function HomePage() {
 
                 html {
                     scroll-behavior: smooth;
-                }
-
-                /* Enhanced hover effects */
-                @media (hover: hover) {
-                    .group:hover .group-hover\\:scale-105 {
-                        transform: scale(1.05);
-                    }
-
-                    .group:hover .group-hover\\:scale-110 {
-                        transform: scale(1.1);
-                    }
-                }
-
-                /* Smooth transitions for all interactive elements */
-                button, a, input, select {
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 }
             `}</style>
         </>

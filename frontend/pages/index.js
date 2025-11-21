@@ -100,28 +100,29 @@ const ProviderCard = ({ provider, isBest, index }) => {
             href={provider.link}
             target="_blank"
             rel="noopener noreferrer"
-            className={`block bg-white rounded-2xl p-6 mb-4 transition-all duration-300 hover:shadow-toss-lg hover:-translate-y-1 ${isBest ? 'border-2 border-brand-500 shadow-card-best ring-4 ring-brand-100' : 'border border-gray-200 hover:border-brand-300 shadow-toss'
+            className={`block w-full bg-white rounded-2xl p-5 sm:p-6 mb-4 transition-all duration-300 hover:shadow-toss-lg hover:-translate-y-1 ${isBest ? 'border-2 border-brand-500 shadow-card-best ring-4 ring-brand-100' : 'border border-gray-200 hover:border-brand-300 shadow-toss'
                 }`}
             style={{ animationDelay: `${index * 50}ms` }}
         >
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
+            {/* Mobile-first stacking keeps header elements from overflowing on small screens */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
+                <div className="flex items-center gap-3 sm:gap-4 w-full">
                     {PROVIDER_LOGO_MAP[provider.provider] ? (
                         <img
                             src={PROVIDER_LOGO_MAP[provider.provider]}
                             alt={`${provider.provider} logo`}
-                            className="w-14 h-14 rounded-xl object-contain bg-gray-50 p-2"
+                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-contain bg-gray-50 p-2"
                             onError={(e) => { e.target.style.display = 'none'; }}
                         />
                     ) : (
-                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-xl font-bold text-white">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-lg sm:text-xl font-bold text-white">
                             {displayName.charAt(0)}
                         </div>
                     )}
-                    <div>
-                        <span className="text-xl font-bold text-gray-900 block">{displayName}</span>
+                    <div className="min-w-0">
+                        <span className="text-lg sm:text-xl font-bold text-gray-900 block break-words">{displayName}</span>
                         {isBest && (
-                            <span className="flex items-center gap-1 text-sm text-brand-600 font-bold mt-1">
+                            <span className="flex items-center gap-1 text-xs sm:text-sm text-brand-600 font-bold mt-1">
                                 <SparklesIcon />
                                 가장 저렴하게 보낼 수 있어요
                             </span>
@@ -129,31 +130,32 @@ const ProviderCard = ({ provider, isBest, index }) => {
                     </div>
                 </div>
                 {isBest && (
-                    <span className="bg-brand-500 text-white text-sm font-bold px-5 py-2.5 rounded-full shadow-toss">
+                    <span className="bg-brand-500 text-white text-xs sm:text-sm font-bold px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-toss w-full sm:w-auto text-center">
                         추천
                     </span>
                 )}
             </div>
 
-            <div className="mb-6 bg-gradient-to-br from-brand-50 to-accent-50 rounded-xl p-5 border border-brand-100">
-                <div className="text-gray-600 text-sm mb-2 font-bold">받는 금액</div>
-                <div className="text-4xl font-bold text-brand-600">
+            <div className="mb-5 sm:mb-6 bg-gradient-to-br from-brand-50 to-accent-50 rounded-xl p-4 sm:p-5 border border-brand-100 w-full">
+                <div className="text-gray-600 text-xs sm:text-sm mb-2 font-bold">받는 금액</div>
+                <div className="text-3xl sm:text-4xl font-bold text-brand-600 break-words">
                     {Math.round(provider.recipient_gets).toLocaleString('en-US')}
-                    <span className="text-2xl ml-2 text-gray-700">{provider.currency}</span>
+                    <span className="text-xl sm:text-2xl ml-2 text-gray-700">{provider.currency}</span>
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-150">
-                <div className="bg-gray-50 rounded-lg p-3">
+            {/* Details grid stacks on mobile to avoid cramped columns */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-4 border-t border-gray-150 w-full">
+                <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
                     <div className="text-xs text-gray-600 mb-1 font-bold">환율</div>
-                    <div className="text-base font-bold text-gray-900">
+                    <div className="text-sm sm:text-base font-bold text-gray-900">
                         {(1 / provider.exchange_rate).toFixed(4)}
                     </div>
                     <div className="text-xs text-gray-500 mt-1 font-medium">KRW per {provider.currency}</div>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-3">
+                <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
                     <div className="text-xs text-gray-600 mb-1 font-bold">수수료</div>
-                    <div className="text-base font-bold text-gray-900">
+                    <div className="text-sm sm:text-base font-bold text-gray-900">
                         {formattedFeeInKRW}
                     </div>
                     <div className="text-xs text-gray-500 mt-1 font-medium">KRW</div>
@@ -161,7 +163,7 @@ const ProviderCard = ({ provider, isBest, index }) => {
             </div>
 
             <div className="mt-4 pt-4 border-t border-gray-150 flex items-center justify-center group">
-                <span className="text-brand-600 font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
+                <span className="text-brand-600 font-bold text-xs sm:text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
                     송금하러 가기
                     <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -240,28 +242,28 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain }
         Math.round(bestProvider.recipient_gets - worstProvider.recipient_gets) : 0;
 
     return (
-        <div className="max-w-4xl mx-auto">
-            {/* Results Header */}
-            <div className="mb-8 text-center">
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
+            {/* Mobile-first: tighter spacing and scalable typography to prevent overflow */}
+            <div className="mb-6 sm:mb-8 text-center space-y-3 sm:space-y-4">
+                <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight break-words">
                     {parseInt(amount).toLocaleString()} KRW → {queryParams.receive_country}
                 </h2>
                 {snapshotTime && (
-                    <p className="text-gray-600 flex items-center justify-center gap-2 font-medium">
+                    <p className="text-gray-600 flex items-center justify-center gap-2 text-sm sm:text-base font-medium">
                         <ClockIcon />
-                        <span>조회 시각: {snapshotTime}</span>
+                        <span className="break-words">조회 시각: {snapshotTime}</span>
                     </p>
                 )}
                 {savings > 0 && (
-                    <div className="mt-4 inline-block bg-gradient-to-r from-accent-50 to-accent-100 border border-accent-300 rounded-xl px-6 py-4 shadow-toss-sm">
-                        <p className="text-accent-700 font-bold">
-                            가장 저렴하게 최대 <span className="text-2xl font-bold text-accent-600">{savings.toLocaleString()}</span> {queryParams.receive_currency} 더 보낼 수 있어요!
+                    <div className="mt-2 sm:mt-4 inline-flex w-full sm:w-auto justify-center bg-gradient-to-r from-accent-50 to-accent-100 border border-accent-300 rounded-xl px-4 sm:px-6 py-3 sm:py-4 shadow-toss-sm">
+                        <p className="text-accent-700 text-sm sm:text-base font-bold leading-snug">
+                            가장 저렴하게 최대 <span className="text-xl sm:text-2xl font-bold text-accent-600">{savings.toLocaleString()}</span> {queryParams.receive_currency} 더 보낼 수 있어요!
                         </p>
                     </div>
                 )}
                 <button
                     onClick={onCompareAgain}
-                    className="w-full md:w-auto px-8 py-4 bg-brand-50 hover:bg-brand-100 text-brand-600 rounded-2xl text-lg font-bold transition-all duration-200 flex items-center justify-center gap-2 mx-auto shadow-sm hover:shadow-md active:scale-95"
+                    className="w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 bg-brand-50 hover:bg-brand-100 text-brand-600 rounded-2xl text-base sm:text-lg font-bold transition-all duration-200 flex items-center justify-center gap-2 mx-auto shadow-sm hover:shadow-md active:scale-95"
                 >
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -271,22 +273,22 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain }
             </div>
 
             {isLoading && (
-                <div className="text-center py-16">
+                <div className="text-center py-12 sm:py-16 w-full px-4 sm:px-6">
                     <div className="inline-block relative mb-6">
-                        <div className="w-16 h-16 border-4 border-brand-200 border-t-brand-500 rounded-full animate-spin"></div>
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 border-4 border-brand-200 border-t-brand-500 rounded-full animate-spin"></div>
                     </div>
-                    <p className="text-gray-900 text-lg font-bold mb-2">최적의 환율을 찾고 있습니다...</p>
+                    <p className="text-gray-900 text-base sm:text-lg font-bold mb-2">최적의 환율을 찾고 있습니다...</p>
                     <p className="text-gray-600 text-sm font-medium">10개 송금 업체를 비교하는 중</p>
                 </div>
             )}
 
             {error && (
-                <div className="bg-gradient-to-br from-red-50 to-pink-50 border-2 border-red-200 rounded-3xl p-8 text-center">
-                    <div className="text-5xl mb-4">😔</div>
-                    <p className="text-red-600 text-lg font-semibold mb-6">{error}</p>
+                <div className="bg-gradient-to-br from-red-50 to-pink-50 border-2 border-red-200 rounded-3xl p-6 sm:p-8 text-center w-full">
+                    <div className="text-4xl sm:text-5xl mb-4">😔</div>
+                    <p className="text-red-600 text-base sm:text-lg font-semibold mb-6 leading-snug">{error}</p>
                     <button
                         onClick={() => window.location.reload()}
-                        className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-4 rounded-full font-bold hover:from-red-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
+                        className="w-full sm:w-auto bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold hover:from-red-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
                     >
                         다시 시도하기
                     </button>
@@ -294,10 +296,10 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain }
             )}
 
             {!isLoading && !error && results.length > 0 && (
-                <div>
-                    <div className="mb-6 flex items-center justify-between">
-                        <p className="text-gray-600 font-medium">
-                            <span className="text-2xl font-bold text-blue-600">{results.length}개</span> 업체 비교 결과
+                <div className="w-full space-y-3 sm:space-y-4">
+                    <div className="mb-2 sm:mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                        <p className="text-gray-600 font-medium text-base sm:text-lg">
+                            <span className="text-xl sm:text-2xl font-bold text-blue-600">{results.length}개</span> 업체 비교 결과
                         </p>
                     </div>
                     {results.map((provider, index) => (

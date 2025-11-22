@@ -456,7 +456,7 @@ export default function HomePage() {
                             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">환율 비교 시작하기</h2>
 
                             <div className="space-y-5 sm:space-y-6">
-                                {/* Country Selector - Toss Style */}
+                                {/* Country Selector - Premium Dropdown */}
                                 <div>
                                     <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
                                         받는 나라
@@ -465,37 +465,58 @@ export default function HomePage() {
                                         <button
                                             type="button"
                                             onClick={() => setShowDropdown(!showDropdown)}
-                                            className="w-full h-14 sm:h-16 px-4 sm:px-6 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus:bg-white focus:ring-2 focus:ring-brand-500 transition-all duration-200 flex items-center justify-between group outline-none border-0 shadow-sm hover:shadow-toss"
+                                            className="w-full h-14 sm:h-16 px-4 sm:px-5 md:px-6 bg-white rounded-2xl border border-gray-200 shadow-md shadow-black/5 hover:border-blue-200 hover:shadow-lg transition-all duration-200 flex items-center justify-between group outline-none focus:ring-2 focus:ring-blue-200 focus:ring-offset-1"
                                             aria-label="Select country"
                                             aria-expanded={showDropdown}
                                         >
-                                            <div className="flex items-center gap-3">
-                                                <img src={selectedCountry.flag} alt="" className="w-8 h-8 rounded-full shadow-sm" />
-                                                <span className="text-base sm:text-lg font-bold text-gray-900">
-                                                    {selectedCountry.name} ({selectedCountry.currency})
+                                            <div className="flex items-center gap-3 sm:gap-4">
+                                                <span className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gray-50 border border-gray-100 shadow-inner">
+                                                    <img src={selectedCountry.flag} alt="" className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover" />
                                                 </span>
+                                                <div className="flex flex-col items-start leading-tight">
+                                                    <span className="text-base sm:text-lg font-semibold text-gray-900">{selectedCountry.name}</span>
+                                                    <span className="text-xs sm:text-sm font-medium text-gray-500">{selectedCountry.currency}</span>
+                                                </div>
                                             </div>
                                             <ChevronDownIcon />
                                         </button>
 
-                                            {showDropdown && (
-                                                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] max-h-80 overflow-y-auto z-50 animate-fade-in-down border border-gray-100">
-                                                    {COUNTRIES.map((country) => (
-                                                        <button
-                                                            key={country.code}
-                                                        type="button"
-                                                            onClick={() => {
-                                                                setSelectedCountry(country);
-                                                                setShowDropdown(false);
-                                                            }}
-                                                            className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-200 border-b border-gray-50 last:border-b-0 group"
-                                                        >
-                                                            <span className="text-sm sm:text-base font-bold text-gray-900 group-hover:text-brand-600 transition-colors">
-                                                                {country.name} ({country.currency})
-                                                            </span>
-                                                            <img src={country.flag} alt="" className="w-8 h-8 rounded-full shadow-sm" />
-                                                        </button>
-                                                    ))}
+                                        {showDropdown && (
+                                            <div className="absolute top-full left-0 right-0 mt-2 w-full origin-top transform animate-fade-in-down z-50">
+                                                <div className="w-full rounded-2xl bg-white shadow-lg shadow-black/5 ring-1 ring-gray-100 overflow-hidden border border-gray-100 transition-all duration-150">
+                                                    <div className="max-h-80 overflow-y-auto py-2 sm:py-3 pr-1 scrollbar-thin scrollbar-thumb-gray-300/90 hover:scrollbar-thumb-gray-400 scrollbar-track-transparent scrollbar-thumb-rounded-full">
+                                                        {COUNTRIES.map((country) => {
+                                                            const isSelected = selectedCountry.code === country.code;
+                                                            return (
+                                                                <button
+                                                                    key={country.code}
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setSelectedCountry(country);
+                                                                        setShowDropdown(false);
+                                                                    }}
+                                                                    className={`group relative w-full flex items-center justify-between gap-3 sm:gap-4 px-4 sm:px-5 py-3 sm:py-3.5 min-h-[56px] sm:min-h-[60px] text-left transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-1 border-l-4 ${
+                                                                      isSelected
+                                                                        ? 'bg-[#E8F1FF] border-blue-500 text-blue-700'
+                                                                        : 'border-transparent hover:bg-[#F3F7FF] hover:text-blue-700'
+                                                                    }`}
+                                                                >
+                                                                    <div className="flex items-center gap-3 sm:gap-4">
+                                                                        <span className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gray-50 border border-gray-100 shadow-sm">
+                                                                            <img src={country.flag} alt="" className="w-6 h-6 sm:w-7 sm:h-7 object-cover rounded-full" />
+                                                                        </span>
+                                                                        <div className="flex flex-col items-start justify-center leading-tight">
+                                                                            <span className="font-medium text-gray-900 group-hover:text-blue-700 text-sm sm:text-base">{country.name}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <span className="text-xs sm:text-sm md:text-base font-semibold text-gray-500 group-hover:text-blue-700">
+                                                                        {country.currency}
+                                                                    </span>
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
                                             </div>
                                         )}
                                     </div>

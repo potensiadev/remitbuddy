@@ -30,8 +30,6 @@ const getApiBaseUrl = () => {
   return 'https://remitbuddy-production.up.railway.app';
 };
 
-const API_BASE_URL = getApiBaseUrl();
-
 // Country data
 const COUNTRIES = [
     { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" },
@@ -219,7 +217,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain }
             setResults([]);
 
             // CRITICAL: API call - DO NOT MODIFY
-            const url = `${API_BASE_URL}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}&_t=${Date.now()}`;
+            const url = `${apiBaseUrl}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}&_t=${Date.now()}`;
 
             try {
                 const response = await fetch(url, {
@@ -348,8 +346,16 @@ export default function HomePage() {
     const [showResults, setShowResults] = useState(false);
     const [queryParams, setQueryParams] = useState({});
     const [forceRefresh, setForceRefresh] = useState(0);
+    const [apiBaseUrl, setApiBaseUrl] = useState('https://remitbuddy-production.up.railway.app');
     const dropdownRef = useRef(null);
     const resultsRef = useRef(null);
+
+    // Set API URL on client side only
+    useEffect(() => {
+        const url = getApiBaseUrl();
+        console.log('[RemitBuddy] API Base URL:', url);
+        setApiBaseUrl(url);
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {

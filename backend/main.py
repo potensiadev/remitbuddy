@@ -34,13 +34,15 @@ is_development = os.getenv("ENV", "development") == "development"
 
 if is_development:
     # 개발 환경: 로컬 네트워크의 모든 IP 허용
+    # Supports: localhost, 127.0.0.1, 192.168.x.x, 10.x.x.x, 172.16-31.x.x
     app.add_middleware(
         CORSMiddleware,
-        allow_origin_regex=r"http://(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}):\d+",
+        allow_origin_regex=r"https?://(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}):\d+",
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["*"],
     )
+    logger.info("[DEV MODE] CORS enabled for local network access")
 else:
     # 프로덕션 환경: 특정 도메인만 허용
     origins = [
@@ -55,6 +57,7 @@ else:
         allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["*"],
     )
+    logger.info("[PROD MODE] CORS enabled for production domains")
 
 
 # --- Configuration ---

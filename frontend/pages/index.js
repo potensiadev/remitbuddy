@@ -4,7 +4,33 @@ import Footer from '../components/Footer';
 import { Button } from '../components/ui';
 
 // API Configuration - CRITICAL: DO NOT REMOVE
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://remitbuddy-production.up.railway.app';
+// Dynamically determine API URL based on environment
+const getApiBaseUrl = () => {
+  // 1. Check for explicit environment variable (highest priority)
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+
+  // 2. In browser, detect if running locally and construct URL
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    const protocol = window.location.protocol;
+
+    // Local development: use same hostname with port 8000
+    if (hostname === 'localhost' ||
+        hostname === '127.0.0.1' ||
+        hostname.startsWith('192.168.') ||
+        hostname.startsWith('10.') ||
+        hostname.startsWith('172.')) {
+      return `${protocol}//${hostname}:8000`;
+    }
+  }
+
+  // 3. Production fallback
+  return 'https://remitbuddy-production.up.railway.app';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Country data
 const COUNTRIES = [

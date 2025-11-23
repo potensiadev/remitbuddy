@@ -197,7 +197,7 @@ const ProviderCard = ({ provider, isBest, index }) => {
 };
 
 // Comparison Results Component - CRITICAL: Maintains API integration
-function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain }) {
+function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, apiBaseUrl }) {
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -256,7 +256,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain }
         };
 
         fetchQuotes();
-    }, [queryParams.receive_country, queryParams.receive_currency, forceRefresh]);
+    }, [queryParams.receive_country, queryParams.receive_currency, forceRefresh, apiBaseUrl]);
 
     const bestProvider = results.length > 0 ? results[0] : null;
     const worstProvider = results.length > 1 ? results[results.length - 1] : null;
@@ -706,6 +706,7 @@ export default function HomePage() {
                         amount={amount}
                         forceRefresh={forceRefresh}
                         onCompareAgain={handleCompareAgain}
+                        apiBaseUrl={apiBaseUrl}
                     />
                 </div>
             </section>

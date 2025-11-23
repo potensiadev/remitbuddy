@@ -106,7 +106,7 @@ class HanpassConnectionTracker:
             # After 3 consecutive failures, force proxy mode for 1 hour
             if self.consecutive_failures >= 3:
                 self.force_proxy_until = time.time() + 3600  # 1 hour
-                logger.warning(f"⚠️ IP BLOCKING DETECTED: Switching to proxy mode for 1 hour")
+                logger.warning(f"[WARN] IP BLOCKING DETECTED: Switching to proxy mode for 1 hour")
         else:
             # Proxy also failed - this is a bigger problem
             logger.error(f"Hanpass proxy request also failed!")
@@ -371,11 +371,11 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
             result = await make_request(use_proxy=True)
             if result:
                 hanpass_tracker.record_success(used_proxy=True)
-                logger.info("✅ Proxy fallback successful")
+                logger.info("[OK] Proxy fallback successful")
                 return result
             else:
                 hanpass_tracker.record_failure(used_proxy=True)
-                logger.error("❌ Both direct and proxy requests failed")
+                logger.error("[ERROR] Both direct and proxy requests failed")
                 return None
 
     except Exception as e:
@@ -1095,7 +1095,7 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
         logger.error(f"Error in fetch_all_quotes: {e}")
     
     execution_time = time.time() - start_time
-    logger.info(f"🚀 Total execution time: {execution_time:.2f}s, Results: {len(results)}")
+    logger.info(f"[INFO] Total execution time: {execution_time:.2f}s, Results: {len(results)}")
     
     # Log proxy statistics
     proxy_stats = proxy_manager.get_proxy_stats()
@@ -1121,11 +1121,11 @@ async def get_remittance_quote(request: Request, receive_country: str = Query(..
     # Check cache first
     if cache_key in cache:
         cached_data = cache[cache_key]
-        print(f"📋 Cache hit for {cache_key}")
+        print(f"[CACHE] Cache hit for {cache_key}")
         return cached_data
 
     start_time = time.time()
-    print(f"🔄 Processing request: {country_lower} -> {currency_upper}, Amount: {send_amount}")
+    print(f"[INFO] Processing request: {country_lower} -> {currency_upper}, Amount: {send_amount}")
     
     try:
         # Reduced timeout to 3 seconds total
@@ -1149,15 +1149,15 @@ async def get_remittance_quote(request: Request, receive_country: str = Query(..
         cache[cache_key] = response_data
         
         total_time = time.time() - start_time
-        print(f"✅ Request completed in {total_time:.2f}s, Found {len(quotes)} quotes")
-        
+        print(f"[OK] Request completed in {total_time:.2f}s, Found {len(quotes)} quotes")
+
         return response_data
-        
+
     except asyncio.TimeoutError:
-        print(f"⏰ Request timed out after 3s")
+        print(f"[TIMEOUT] Request timed out after 3s")
         raise HTTPException(status_code=408, detail="Request timed out.")
     except Exception as e:
-        print(f"❌ Unhandled API error: {e}")
+        print(f"[ERROR] Unhandled API error: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error.")
 
 @app.on_event("startup")
@@ -1225,15 +1225,15 @@ async def debug_hanpass_stats():
 def _get_hanpass_recommendation(stats: dict) -> str:
     """Get recommendation based on Hanpass stats."""
     if stats["force_proxy_mode"]:
-        return f"⚠️ IP BLOCKING DETECTED - Using proxy mode for next {stats['force_proxy_remaining_minutes']} minutes"
+        return f"[WARN] IP BLOCKING DETECTED - Using proxy mode for next {stats['force_proxy_remaining_minutes']} minutes"
     elif stats["consecutive_failures"] >= 2:
-        return "⚠️ WARNING - 2+ failures detected, close to triggering proxy mode"
+        return "[WARN] WARNING - 2+ failures detected, close to triggering proxy mode"
     elif stats["consecutive_failures"] >= 1:
-        return "⚠️ CAUTION - 1 failure detected, monitoring for IP blocking"
+        return "[WARN] CAUTION - 1 failure detected, monitoring for IP blocking"
     elif stats["success_rate"] == "100.0%":
-        return "✅ EXCELLENT - All requests successful, no proxy needed"
+        return "[OK] EXCELLENT - All requests successful, no proxy needed"
     else:
-        return "✅ GOOD - Direct connection working normally"
+        return "[OK] GOOD - Direct connection working normally"
 
 @app.get("/debug/test-hanpass")
 async def debug_test_hanpass():

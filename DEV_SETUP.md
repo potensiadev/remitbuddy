@@ -98,6 +98,66 @@ npm install
 
 ---
 
+## 💻 다른 기기에서 접속하기 (노트북 등)
+
+같은 Wi-Fi/네트워크에 있는 다른 기기(노트북 등)에서 개발 서버에 접속할 수 있습니다.
+
+### 방법 1: 네트워크를 통한 접속 (추천)
+
+**1. 서버 실행 중인 PC의 IP 주소 확인**
+
+Windows (PowerShell 또는 CMD):
+```bash
+ipconfig
+```
+
+macOS/Linux:
+```bash
+ifconfig  # 또는
+ip addr show
+```
+
+`IPv4 주소` 찾기 (예: `192.168.0.10`)
+
+**2. Windows 방화벽 설정 (Windows만 해당)**
+
+PowerShell을 관리자 권한으로 실행 후:
+```powershell
+# Frontend 포트 허용
+netsh advfirewall firewall add rule name="Next.js Dev" dir=in action=allow protocol=TCP localport=3000
+
+# Backend 포트 허용
+netsh advfirewall firewall add rule name="FastAPI Dev" dir=in action=allow protocol=TCP localport=8000
+```
+
+**3. 노트북/다른 기기에서 접속**
+
+노트북 브라우저에서 (PC IP가 192.168.0.10인 경우):
+- Frontend: `http://192.168.0.10:3000`
+- Backend API Docs: `http://192.168.0.10:8000/docs`
+
+**참고**: Backend의 CORS 설정이 개발 모드에서는 로컬 네트워크를 자동으로 허용합니다.
+
+### 방법 2: 독립적인 개발 환경 구축
+
+노트북에서도 독립적으로 개발하고 싶다면:
+
+```bash
+# 저장소 클론
+git clone https://github.com/potensiadev/remitbuddy.git
+cd remitbuddy
+
+# 브랜치 체크아웃
+git checkout claude/setup-dev-environment-01EZ2PEuY1yXXw8LPGUehxjb
+
+# 의존성 설치 및 실행
+npm run install:all
+cd frontend && copy .env.example .env.local && cd ..
+npm run dev
+```
+
+---
+
 ## 🔍 트러블슈팅
 
 ### 포트가 이미 사용 중이라는 에러

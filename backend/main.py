@@ -9,6 +9,7 @@ import random
 import json
 import re
 import logging
+import os
 from typing import Optional, Dict, List
 from cachetools import TTLCache
 from proxy_manager import proxy_manager, ProxySession
@@ -28,21 +29,32 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # --- CORS 설정 ---
-origins = [
-    "https://www.remitbuddy.com",
-    "https://remitbuddy.com",
-    "https://remitbuddy.netlify.app",
-    "http://localhost:3000",  # 로컬 개발용
-    "http://localhost:3001",  # 로컬 개발용
-]
+# 개발 모드에서는 로컬 네트워크 접속 허용
+is_development = os.getenv("ENV", "development") == "development"
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
-)
+if is_development:
+    # 개발 환경: 로컬 네트워크의 모든 IP 허용
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=r"http://(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}):\d+",
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["*"],
+    )
+else:
+    # 프로덕션 환경: 특정 도메인만 허용
+    origins = [
+        "https://www.remitbuddy.com",
+        "https://remitbuddy.com",
+        "https://remitbuddy.netlify.app",
+    ]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["*"],
+    )
 
 
 # --- Configuration ---

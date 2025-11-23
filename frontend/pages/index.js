@@ -740,7 +740,7 @@ export default function HomePage() {
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                             variant="secondary"
                             size="xl"
-                            className="bg-blue-600 text-white hover:bg-gray-50 shadow-2xl hover:shadow-button-hover hover:scale-105 transition-all duration-300"
+                            className="bg-blue-600 text-white hover:bg-brand-50 shadow-2xl hover:shadow-button-hover hover:scale-105 transition-all duration-300"
                         > 
                             최저 송금 수수료 비교하기
                         </Button>

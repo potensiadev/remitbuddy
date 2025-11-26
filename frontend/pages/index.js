@@ -498,36 +498,39 @@ export default function HomePage() {
 
                                     <div className="space-y-5 sm:space-y-6">
                                         {/* Country Selector - Premium Dropdown */}
-                                        <div>
-                                            <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
+                                        <div className="relative z-20">
+                                            <label className="block text-sm font-bold text-[#4e5968] mb-2 ml-1">
                                                 받는 나라
                                             </label>
                                             <div ref={dropdownRef} className="relative">
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowDropdown(!showDropdown)}
-                                                    className="w-full h-16 px-6 bg-white rounded-2xl border border-gray-200 hover:border-brand-200 hover:shadow-lg transition-all duration-300 flex items-center justify-between group outline-none focus:ring-2 focus:ring-brand-100"
+                                                    className="w-full h-16 px-6 bg-white rounded-2xl border border-[#e5e8eb] hover:border-brand-300 hover:shadow-lg transition-all duration-300 flex items-center justify-between group outline-none focus:ring-4 focus:ring-brand-100/50"
                                                     aria-label="Select country"
                                                     aria-expanded={showDropdown}
                                                 >
                                                     <div className="flex items-center gap-4">
-                                                        <img src={selectedCountry.flag} alt="" className="w-10 h-10 rounded-full shadow-sm object-cover border border-gray-100" />
+                                                        <div className="relative">
+                                                            <img src={selectedCountry.flag} alt="" className="w-10 h-10 rounded-full shadow-sm object-cover border border-[#e5e8eb] group-hover:scale-105 transition-transform duration-300" />
+                                                            <div className="absolute inset-0 rounded-full ring-1 ring-black/5"></div>
+                                                        </div>
                                                         <div className="text-left">
-                                                            <span className="block text-lg font-bold text-gray-900 leading-tight group-hover:text-brand-600 transition-colors">
+                                                            <span className="block text-lg font-bold text-[#191f28] leading-tight group-hover:text-brand-600 transition-colors">
                                                                 {selectedCountry.name}
                                                             </span>
-                                                            <span className="text-sm font-medium text-gray-500 group-hover:text-brand-400 transition-colors">
+                                                            <span className="text-sm font-medium text-[#8b95a1] group-hover:text-brand-400 transition-colors">
                                                                 {selectedCountry.currency}
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <div className={`transform transition-transform duration-300 ${showDropdown ? 'rotate-180' : ''} text-gray-400 group-hover:text-brand-500`}>
+                                                    <div className={`transform transition-transform duration-300 ${showDropdown ? 'rotate-180 text-brand-500' : 'text-[#b0b8c1]'} group-hover:text-brand-500`}>
                                                         <ChevronDownIcon />
                                                     </div>
                                                 </button>
 
                                                 {showDropdown && (
-                                                    <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] max-h-[400px] overflow-y-auto z-50 animate-fade-in-up border border-gray-100 p-2">
+                                                    <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] max-h-[400px] overflow-y-auto z-50 animate-fade-in-up border border-[#e5e8eb] p-2 ring-1 ring-black/5">
                                                         {COUNTRIES.map((country) => (
                                                             <button
                                                                 key={country.code}
@@ -536,15 +539,18 @@ export default function HomePage() {
                                                                     setSelectedCountry(country);
                                                                     setShowDropdown(false);
                                                                 }}
-                                                                className={`w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 rounded-2xl transition-all duration-200 group mb-1 ${selectedCountry.code === country.code ? 'bg-brand-50/60' : ''}`}
+                                                                className={`w-full px-5 py-4 flex items-center justify-between hover:bg-[#e8f3ff] rounded-2xl transition-all duration-200 group mb-1 ${selectedCountry.code === country.code ? 'bg-[#e8f3ff] ring-1 ring-brand-100' : ''}`}
                                                             >
                                                                 <div className="flex items-center gap-4">
-                                                                    <img src={country.flag} alt="" className="w-10 h-10 rounded-full shadow-sm object-cover border border-gray-100" />
-                                                                    <span className={`text-lg font-bold transition-colors ${selectedCountry.code === country.code ? 'text-brand-600' : 'text-gray-900 group-hover:text-brand-600'}`}>
+                                                                    <div className="relative">
+                                                                        <img src={country.flag} alt="" className="w-10 h-10 rounded-full shadow-sm object-cover border border-[#e5e8eb]" />
+                                                                        <div className="absolute inset-0 rounded-full ring-1 ring-black/5"></div>
+                                                                    </div>
+                                                                    <span className={`text-lg font-bold transition-colors ${selectedCountry.code === country.code ? 'text-brand-600' : 'text-[#191f28] group-hover:text-brand-600'}`}>
                                                                         {country.name}
                                                                     </span>
                                                                 </div>
-                                                                <span className={`text-base font-bold ${selectedCountry.code === country.code ? 'text-brand-500' : 'text-gray-400 group-hover:text-brand-400'}`}>
+                                                                <span className={`text-base font-bold ${selectedCountry.code === country.code ? 'text-brand-500' : 'text-[#8b95a1] group-hover:text-brand-400'}`}>
                                                                     {country.currency}
                                                                 </span>
                                                             </button>

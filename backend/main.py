@@ -30,34 +30,38 @@ logger = logging.getLogger(__name__)
 
 # --- CORS 설정 ---
 # 개발 모드에서는 로컬 네트워크 접속 허용
-is_development = os.getenv("ENV", "development") == "development"
+is_development = os.getenv("ENV", "production") != "production"
 
-if is_development:
-    # 개발 환경: 로컬 네트워크의 모든 IP 허용
-    # Supports: localhost, 127.0.0.1, 192.168.x.x, 10.x.x.x, 172.16-31.x.x
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origin_regex=r"https?://(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}):\d+",
-        allow_credentials=True,
-        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allow_headers=["*"],
-    )
-    logger.info("[DEV MODE] CORS enabled for local network access")
-else:
-    # 프로덕션 환경: 특정 도메인만 허용
-    origins = [
+# Always allow local development origins
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+]
+
+if not is_development:
+    # 프로덕션 환경: 특정 도메인 추가
+    allowed_origins.extend([
         "https://www.remitbuddy.com",
         "https://remitbuddy.com",
         "https://remitbuddy.netlify.app",
-    ]
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allow_headers=["*"],
-    )
-    logger.info("[PROD MODE] CORS enabled for production domains")
+    ])
+
+# Add CORS middleware with explicit origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_origin_regex=r"https?://(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}):\d+",
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+if is_development:
+    logger.info(f"[DEV MODE] CORS enabled for: {allowed_origins}")
+else:
+    logger.info(f"[PROD MODE] CORS enabled for: {allowed_origins}")
 
 
 # --- Configuration ---

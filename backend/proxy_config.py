@@ -19,29 +19,29 @@ class ProxyConfigManager:
         # 1. 환경 변수에서 먼저 로드 시도 (우선순위가 높음)
         env_proxies = load_proxies_from_env()
         if env_proxies:
-            print(f"✅ Loaded {len(env_proxies)} proxies from environment variables")
+            print(f"[OK] Loaded {len(env_proxies)} proxies from environment variables")
             self.proxies = env_proxies
             return
 
         # 2. 파일에서 로드
         try:
             if os.path.exists(self.config_file):
-                with open(self.config_file, 'r') as f:
+                with open(self.config_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     proxies_from_file = data.get('proxies', [])
                     # 예시 프록시가 아닌 실제 프록시만 로드
                     real_proxies = [p for p in proxies_from_file if 'example.com' not in p.get('ip', '')]
                     if real_proxies:
-                        print(f"✅ Loaded {len(real_proxies)} proxies from config file")
+                        print(f"[OK] Loaded {len(real_proxies)} proxies from config file")
                         self.proxies = real_proxies
                     else:
-                        print("⚠️ No valid proxies found in config file (only examples)")
+                        print("[WARN] No valid proxies found in config file (only examples)")
                         self.proxies = []
             else:
-                print("ℹ️ No proxy config file found")
+                print("[INFO] No proxy config file found")
                 self.proxies = []
         except Exception as e:
-            print(f"❌ Error loading proxy config: {e}")
+            print(f"[ERROR] Error loading proxy config: {e}")
             self.proxies = []
     
     def create_default_config(self):
@@ -145,9 +145,9 @@ def load_proxies_from_env():
                     "rate_limit_per_minute": 30
                 }
                 proxies.append(proxy_config)
-                print(f"✅ Loaded proxy from HANPASS_PROXY_URL: {ip}:{port}")
+                print(f"[OK] Loaded proxy from HANPASS_PROXY_URL: {ip}:{port}")
         except Exception as e:
-            print(f"❌ Error parsing HANPASS_PROXY_URL: {e}")
+            print(f"[ERROR] Error parsing HANPASS_PROXY_URL: {e}")
 
     # 방법 2: HANPASS_PROXY_1, HANPASS_PROXY_2, ... (다중 프록시)
     i = 1
@@ -169,9 +169,9 @@ def load_proxies_from_env():
                     "rate_limit_per_minute": 30
                 }
                 proxies.append(proxy_config)
-                print(f"✅ Loaded proxy from HANPASS_PROXY_{i}: {parts[0]}:{parts[1]}")
+                print(f"[OK] Loaded proxy from HANPASS_PROXY_{i}: {parts[0]}:{parts[1]}")
         except Exception as e:
-            print(f"❌ Error parsing HANPASS_PROXY_{i}: {e}")
+            print(f"[ERROR] Error parsing HANPASS_PROXY_{i}: {e}")
 
         i += 1
 

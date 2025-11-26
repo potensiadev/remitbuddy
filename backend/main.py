@@ -9,6 +9,7 @@ import random
 import json
 import re
 import logging
+import os
 from typing import Optional, Dict, List
 from cachetools import TTLCache
 from proxy_manager import proxy_manager, ProxySession
@@ -28,21 +29,35 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # --- CORS 설정 ---
-origins = [
-    "https://www.remitbuddy.com",
-    "https://remitbuddy.com",
-    "https://remitbuddy.netlify.app",
-    "http://localhost:3000",  # 로컬 개발용
-    "http://localhost:3001",  # 로컬 개발용
-]
+# 개발 모드에서는 로컬 네트워크 접속 허용
+is_development = os.getenv("ENV", "development") == "development"
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
-)
+if is_development:
+    # 개발 환경: 로컬 네트워크의 모든 IP 허용
+    # Supports: localhost, 127.0.0.1, 192.168.x.x, 10.x.x.x, 172.16-31.x.x
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=r"https?://(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}):\d+",
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["*"],
+    )
+    logger.info("[DEV MODE] CORS enabled for local network access")
+else:
+    # 프로덕션 환경: 특정 도메인만 허용
+    origins = [
+        "https://www.remitbuddy.com",
+        "https://remitbuddy.com",
+        "https://remitbuddy.netlify.app",
+    ]
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_headers=["*"],
+    )
+    logger.info("[PROD MODE] CORS enabled for production domains")
 
 
 # --- Configuration ---
@@ -106,7 +121,7 @@ class HanpassConnectionTracker:
             # After 3 consecutive failures, force proxy mode for 1 hour
             if self.consecutive_failures >= 3:
                 self.force_proxy_until = time.time() + 3600  # 1 hour
-                logger.warning(f"⚠️ IP BLOCKING DETECTED: Switching to proxy mode for 1 hour")
+                logger.warning(f"[WARN] IP BLOCKING DETECTED: Switching to proxy mode for 1 hour")
         else:
             # Proxy also failed - this is a bigger problem
             logger.error(f"Hanpass proxy request also failed!")
@@ -129,7 +144,16 @@ hanpass_tracker = HanpassConnectionTracker()
 COUNTRY_CODES = { "vietnam": "VN", "philippines": "PH", "indonesia": "ID", "cambodia": "KH", "nepal": "NP", "myanmar": "MM", "thailand": "TH", "uzbekistan": "UZ", "srilanka": "LK", "bangladesh": "BD", "mongolia": "MN" }
 WIREBARLEY_COUNTRY_CODES = { "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN", "nepal": "NPL", "thailand": "THA", "cambodia": "KHM", "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA", "bangladesh": "BGD", "mongolia": "MNG" }
 SENTBE_COUNTRY_CODES = { "vietnam": 209, "philippines": 154, "indonesia": 92, "nepal": 139, "thailand": 194, "cambodia": 35, "myanmar": 134, "uzbekistan": 205, "srilanka": 189, "bangladesh": 17, "mongolia": 132 }
-GMONEY_COUNTRY_NAMES = { "vietnam": "Viet Nam", "philippines": "Philippines", "indonesia": "Indonesia", "cambodia": "Cambodia", "nepal": "Nepal", "myanmar": "Myanmar", "thailand": "Thailand", "uzbekistan": "Uzbekistan", "srilanka": "Sri Lanka", "bangladesh": "Bangladesh", "mongolia": "Mongolia" }
+GMONEY_COUNTRY_NAMES = {
+    "vietnam": "Viet Nam", "philippines": "Philippines", "indonesia": "Indonesia",
+    "cambodia": "Cambodia", "nepal": "Nepal", "myanmar": "Myanmar",
+    "thailand": "Thailand", "uzbekistan": "Uzbekistan", "srilanka": "Sri Lanka",
+    "bangladesh": "Bangladesh", "mongolia": "Mongolia",
+    "united states": "United States", "unitedstates": "United States",
+    "canada": "Canada", "hong kong": "Hong Kong", "hongkong": "Hong Kong",
+    "japan": "Japan", "united kingdom": "United Kingdom", "unitedkingdom": "United Kingdom",
+    "singapore": "Singapore", "china": "China", "malaysia": "Malaysia"
+}
 GMONEY_PAYMENT_TYPES = { "uzbekistan": "Humocard", "default": "Bank Account" }
 E9PAY_RECV_CODES = {
     "vietnam": "VN03", "philippines": "PH15", "indonesia": "ID01", "thailand": "TH03",
@@ -141,7 +165,11 @@ E9PAY_RECV_CODES = {
 COINSHOT_CURRENCIES = {
     "vietnam": "VND", "philippines": "PHP", "indonesia": "IDR", "thailand": "THB",
     "nepal": "NPR", "myanmar": "MMK", "uzbekistan": "UZS",
-    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT"
+    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT",
+    "united states": "USD", "unitedstates": "USD",
+    "canada": "CAD", "singapore": "SGD", "china": "CNY", "malaysia": "MYR",
+    "japan": "JPY", "hong kong": "HKD", "hongkong": "HKD",
+    "united kingdom": "GBP", "unitedkingdom": "GBP"
 }
 
 # GME Remit Country Mappings
@@ -149,7 +177,12 @@ GMEREMIT_COUNTRY_NAMES = {
     "vietnam": "Vietnam", "philippines": "Philippines", "indonesia": "Indonesia",
     "thailand": "Thailand", "nepal": "Nepal", "myanmar": "Myanmar",
     "uzbekistan": "Uzbekistan", "srilanka": "Sri Lanka", "bangladesh": "Bangladesh",
-    "cambodia": "Cambodia", "mongolia": "Mongolia"
+    "cambodia": "Cambodia", "mongolia": "Mongolia",
+    "united states": "United States", "unitedstates": "United States",
+    "canada": "Canada", "singapore": "Singapore", "china": "China",
+    "malaysia": "Malaysia", "japan": "Japan",
+    "hong kong": "Hong Kong", "hongkong": "Hong Kong",
+    "united kingdom": "United kingdom", "unitedkingdom": "United kingdom"
 }
 
 # GME Remit Delivery Methods by Country
@@ -164,7 +197,18 @@ GMEREMIT_DELIVERY_METHODS = {
     "srilanka": "2",  # Bank Deposit
     "bangladesh": "2",  # Bank Deposit
     "cambodia": "2",  # Bank Deposit
-    "mongolia": "2"  # Bank Deposit
+    "mongolia": "2",  # Bank Deposit
+    "united states": "1",  # Cash Payment
+    "unitedstates": "1",  # Cash Payment
+    "canada": "2",  # Bank Deposit
+    "singapore": "2",  # Bank Deposit
+    "china": "2",  # Bank Deposit
+    "malaysia": "2",  # Bank Deposit
+    "japan": "2",  # Bank Deposit
+    "hong kong": "2",  # Bank Deposit
+    "hongkong": "2",  # Bank Deposit
+    "united kingdom": "2",  # Bank Deposit
+    "unitedkingdom": "2"  # Bank Deposit
 }
 
 # JP Remit Currency Mappings
@@ -177,22 +221,45 @@ JPREMIT_CURRENCIES = {
 # The Moin Country/Currency Mappings
 THEMOIN_COUNTRY_CODES = {
     "japan": "JP",
-    "thailand": "TH"
+    "thailand": "TH",
+    "united states": "US",
+    "unitedstates": "US",
+    "canada": "CA",
+    "singapore": "SG",
+    "china": "CN",
+    "malaysia": "MY",
+    "hong kong": "HK",
+    "hongkong": "HK",
+    "united kingdom": "GB",
+    "unitedkingdom": "GB"
 }
 
 THEMOIN_CURRENCIES = {
     "japan": "JPY",
-    "thailand": "THB"
+    "thailand": "THB",
+    "united states": "USD",
+    "unitedstates": "USD",
+    "canada": "CAD",
+    "singapore": "SGD",
+    "china": "CNY",
+    "malaysia": "MYR",
+    "hong kong": "HKD",
+    "hongkong": "HKD",
+    "united kingdom": "GBP",
+    "unitedkingdom": "GBP"
 }
 
 # Wirebarley Country Mappings
 WIREBARLEY_COUNTRIES = {
-    "australia": "AU", "newzealand": "NZ", "philippines": "PH", "vietnam": "VN", 
-    "nepal": "NP", "indonesia": "ID", "china": "CN", "singapore": "SG", 
-    "malaysia": "MY", "thailand": "TH", "uk": "GB", "france": "FR", 
-    "germany": "DE", "usa": "US", "japan": "JP", "india": "IN", 
+    "australia": "AU", "newzealand": "NZ", "philippines": "PH", "vietnam": "VN",
+    "nepal": "NP", "indonesia": "ID", "china": "CN", "singapore": "SG",
+    "malaysia": "MY", "thailand": "TH", "uk": "GB", "france": "FR",
+    "germany": "DE", "usa": "US", "japan": "JP", "india": "IN",
     "cambodia": "KH", "bangladesh": "BD", "hongkong": "HK", "canada": "CA",
-    "uzbekistan": "UZ"
+    "uzbekistan": "UZ",
+    "united states": "US", "unitedstates": "US",
+    "united kingdom": "GB", "unitedkingdom": "GB",
+    "hong kong": "HK", "mongolia": "MN"
 }
 
 # SBI Cosmoney Country/Currency Mappings
@@ -371,11 +438,11 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
             result = await make_request(use_proxy=True)
             if result:
                 hanpass_tracker.record_success(used_proxy=True)
-                logger.info("✅ Proxy fallback successful")
+                logger.info("[OK] Proxy fallback successful")
                 return result
             else:
                 hanpass_tracker.record_failure(used_proxy=True)
-                logger.error("❌ Both direct and proxy requests failed")
+                logger.error("[ERROR] Both direct and proxy requests failed")
                 return None
 
     except Exception as e:
@@ -421,13 +488,18 @@ async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, rece
 async def get_gmoneytrans_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     """Fetches remittance quote from GmoneyTrans using the correct API endpoint and parser."""
     try:
+        print(f"[GmoneyTrans Debug] Starting - Country: {receive_country}, Currency: {receive_currency}, Amount: {send_amount}")
         url = "https://mapi.gmoneytrans.net/exratenew1/ajx_calcRate.asp"
         payout_country = GMONEY_COUNTRY_NAMES.get(receive_country)
-        
+
         # 우즈베키스탄은 'Humocard', 나머지는 'Bank Account'를 기본값으로 사용
         payment_type = GMONEY_PAYMENT_TYPES.get(receive_country, "Bank Account")
 
-        if not payout_country: return None
+        if not payout_country:
+            print(f"[GmoneyTrans Debug] No country mapping found for: {receive_country}")
+            return None
+
+        print(f"[GmoneyTrans Debug] Mapped country: {payout_country}, Payment type: {payment_type}")
 
         # POST 요청이지만, 데이터를 URL 파라미터(params)로 전달합니다.
         params = {
@@ -440,21 +512,26 @@ async def get_gmoneytrans_quote(session: aiohttp.ClientSession, send_amount: int
         async with session.post(url, params=params) as response:
             response.raise_for_status()
             text_data = await response.text()
-            
+            print(f"[GmoneyTrans Debug] API Response: {text_data[:300]}...")
+
             fee_match = re.search(r"serviceCharge--td_clm--([\d.,]+)", text_data)
             rate_match = re.search(r"exchangeRate--td_clm--([\d.,]+)", text_data)
-            
-            if not fee_match or not rate_match:
-                print(f"GmoneyTrans Error: Could not parse data from response: {text_data[:100]}...")
+            receive_match = re.search(r"receiveAmount--td_clm--([\d.,]+)", text_data)
+
+            if not fee_match or not rate_match or not receive_match:
+                print(f"[GmoneyTrans Debug] Parse failed - fee: {bool(fee_match)}, rate: {bool(rate_match)}, receive: {bool(receive_match)}")
+                print(f"GmoneyTrans Error: Could not parse data from response: {text_data[:200]}...")
                 return None
 
             fee = float(fee_match.group(1).replace(',', ''))
             foreign_per_krw = float(rate_match.group(1).replace(',', ''))
+            recipient_gets = float(receive_match.group(1).replace(',', ''))
+
+            print(f"[GmoneyTrans Debug] Parsed - fee: {fee}, rate: {foreign_per_krw}, recipient_gets: {recipient_gets}")
 
             if foreign_per_krw == 0: return None
-            
+
             exchange_rate = foreign_per_krw
-            recipient_gets = (send_amount - fee) * exchange_rate
 
             return {
                 "provider": "GmoneyTrans",
@@ -672,7 +749,9 @@ async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int,
     try:
         # Get country code for Wirebarley
         country_code = WIREBARLEY_COUNTRIES.get(receive_country)
+        print(f"[Wirebarley Debug] receive_country: {receive_country}, country_code: {country_code}")
         if not country_code:
+            print(f"[Wirebarley Debug] No country code found for {receive_country}")
             return None
             
         url = f"https://www.wirebarley.com/my/remittance/api/v1/exrate/KR/KRW"
@@ -701,13 +780,17 @@ async def get_wirebarley_quote(session: aiohttp.ClientSession, send_amount: int,
         
         # Find matching country and currency
         matching_rate = None
+        print(f"[Wirebarley Debug] Looking for country_code: {country_code}, currency: {receive_currency}")
+        print(f"[Wirebarley Debug] Available rates: {len(ex_rates)}")
         for rate in ex_rates:
-            if (rate.get('country') == country_code and 
+            if (rate.get('country') == country_code and
                 rate.get('currency') == receive_currency):
                 matching_rate = rate
+                print(f"[Wirebarley Debug] Found matching rate!")
                 break
-        
+
         if not matching_rate:
+            print(f"[Wirebarley Debug] No matching rate found")
             return None
             
         wb_rate_data = matching_rate.get('wbRateData', {})
@@ -963,11 +1046,15 @@ async def get_e9pay_quote(session: aiohttp.ClientSession, send_amount: int, rece
 async def get_coinshot_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     """Fetches remittance quote from Coinshot using their API endpoint."""
     try:
+        print(f"[Coinshot Debug] Starting - Country: {receive_country}, Currency: {receive_currency}, Amount: {send_amount}")
         url = "https://coinshot.org/calculate/receiving/i"
-        
+
         # Check if the country is supported by Coinshot
         coinshot_currency = COINSHOT_CURRENCIES.get(receive_country)
+        print(f"[Coinshot Debug] Mapped currency: {coinshot_currency}, Expected: {receive_currency}")
+
         if not coinshot_currency or coinshot_currency != receive_currency:
+            print(f"[Coinshot Debug] Currency mismatch or not found - coinshot_currency: {coinshot_currency}, receive_currency: {receive_currency}")
             return None
         
         # Prepare form data
@@ -987,20 +1074,26 @@ async def get_coinshot_quote(session: aiohttp.ClientSession, send_amount: int, r
         }
         
         async with session.post(url, data=data, headers=headers) as response:
+            print(f"[Coinshot Debug] API Response status: {response.status}")
             if response.status != 200:
+                print(f"[Coinshot Debug] Non-200 status code, returning None")
                 return None
-            
+
             data = await response.json()
-            
+            print(f"[Coinshot Debug] API Response data: {data}")
+
             # Extract data from response
             recipient_gets = float(data.get('toAmount', 0))
             fee = float(data.get('fromFee', 0))
-            
+            print(f"[Coinshot Debug] Parsed - recipient_gets: {recipient_gets}, fee: {fee}")
+
             if not recipient_gets or recipient_gets <= 0:
+                print(f"[Coinshot Debug] Invalid recipient_gets, returning None")
                 return None
-            
+
             # Calculate exchange rate: receiving_amount / sending_amount
             exchange_rate = recipient_gets / send_amount
+            print(f"[Coinshot Debug] Calculated exchange_rate: {exchange_rate}")
             
             return {
                 "provider": "Coinshot",
@@ -1095,7 +1188,7 @@ async def fetch_all_quotes(send_amount: int, receive_currency: str, receive_coun
         logger.error(f"Error in fetch_all_quotes: {e}")
     
     execution_time = time.time() - start_time
-    logger.info(f"🚀 Total execution time: {execution_time:.2f}s, Results: {len(results)}")
+    logger.info(f"[INFO] Total execution time: {execution_time:.2f}s, Results: {len(results)}")
     
     # Log proxy statistics
     proxy_stats = proxy_manager.get_proxy_stats()
@@ -1121,11 +1214,11 @@ async def get_remittance_quote(request: Request, receive_country: str = Query(..
     # Check cache first
     if cache_key in cache:
         cached_data = cache[cache_key]
-        print(f"📋 Cache hit for {cache_key}")
+        print(f"[CACHE] Cache hit for {cache_key}")
         return cached_data
 
     start_time = time.time()
-    print(f"🔄 Processing request: {country_lower} -> {currency_upper}, Amount: {send_amount}")
+    print(f"[INFO] Processing request: {country_lower} -> {currency_upper}, Amount: {send_amount}")
     
     try:
         # Reduced timeout to 3 seconds total
@@ -1149,15 +1242,15 @@ async def get_remittance_quote(request: Request, receive_country: str = Query(..
         cache[cache_key] = response_data
         
         total_time = time.time() - start_time
-        print(f"✅ Request completed in {total_time:.2f}s, Found {len(quotes)} quotes")
-        
+        print(f"[OK] Request completed in {total_time:.2f}s, Found {len(quotes)} quotes")
+
         return response_data
-        
+
     except asyncio.TimeoutError:
-        print(f"⏰ Request timed out after 3s")
+        print(f"[TIMEOUT] Request timed out after 3s")
         raise HTTPException(status_code=408, detail="Request timed out.")
     except Exception as e:
-        print(f"❌ Unhandled API error: {e}")
+        print(f"[ERROR] Unhandled API error: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error.")
 
 @app.on_event("startup")
@@ -1225,15 +1318,15 @@ async def debug_hanpass_stats():
 def _get_hanpass_recommendation(stats: dict) -> str:
     """Get recommendation based on Hanpass stats."""
     if stats["force_proxy_mode"]:
-        return f"⚠️ IP BLOCKING DETECTED - Using proxy mode for next {stats['force_proxy_remaining_minutes']} minutes"
+        return f"[WARN] IP BLOCKING DETECTED - Using proxy mode for next {stats['force_proxy_remaining_minutes']} minutes"
     elif stats["consecutive_failures"] >= 2:
-        return "⚠️ WARNING - 2+ failures detected, close to triggering proxy mode"
+        return "[WARN] WARNING - 2+ failures detected, close to triggering proxy mode"
     elif stats["consecutive_failures"] >= 1:
-        return "⚠️ CAUTION - 1 failure detected, monitoring for IP blocking"
+        return "[WARN] CAUTION - 1 failure detected, monitoring for IP blocking"
     elif stats["success_rate"] == "100.0%":
-        return "✅ EXCELLENT - All requests successful, no proxy needed"
+        return "[OK] EXCELLENT - All requests successful, no proxy needed"
     else:
-        return "✅ GOOD - Direct connection working normally"
+        return "[OK] GOOD - Direct connection working normally"
 
 @app.get("/debug/test-hanpass")
 async def debug_test_hanpass():

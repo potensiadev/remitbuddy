@@ -1,22 +1,23 @@
-// Note for the user: For production environments, it is highly recommended to use environment variables
-// or a secret management service to handle sensitive data like proxy credentials, rather than committing them in a JSON file.
-[
-  {
-    "ip": "your_proxy_ip_1",
-    "port": 8080,
-    "username": "your_username",
-    "password": "your_password",
-    "protocol": "http",
-    "max_concurrent": 5,
-    "rate_limit_per_minute": 30
-  },
-  {
-    "ip": "your_proxy_ip_2",
-    "port": 8080,
-    "username": "your_username",
-    "password": "your_password",
-    "protocol": "http",
-    "max_concurrent": 5,
-    "rate_limit_per_minute": 30
-  }
-]
+{
+  "_comment": "For production environments, use environment variables or a secret management service for sensitive data",
+  "proxies": [
+    {
+      "ip": "proxy1.example.com",
+      "port": 8080,
+      "username": "your_username",
+      "password": "your_password",
+      "protocol": "http",
+      "max_concurrent": 5,
+      "rate_limit_per_minute": 30
+    },
+    {
+      "ip": "proxy2.example.com",
+      "port": 8080,
+      "username": "your_username",
+      "password": "your_password",
+      "protocol": "http",
+      "max_concurrent": 5,
+      "rate_limit_per_minute": 30
+    }
+  ]
+}

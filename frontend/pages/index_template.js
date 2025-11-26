@@ -16,6 +16,15 @@ const COUNTRIES = [
     { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" },
     { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" },
     { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" },
+    { code: "US", currency: "USD", name: "United States", flag: "/images/flags/us.png" },
+    { code: "CA", currency: "CAD", name: "Canada", flag: "/images/flags/ca.png" },
+    { code: "SG", currency: "SGD", name: "Singapore", flag: "/images/flags/sg.png" },
+    { code: "CN", currency: "CNY", name: "China", flag: "/images/flags/cn.png" },
+    { code: "MY", currency: "MYR", name: "Malaysia", flag: "/images/flags/my.png" },
+    { code: "JP", currency: "JPY", name: "Japan", flag: "/images/flags/jp.png" },
+    { code: "HK", currency: "HKD", name: "Hong Kong", flag: "/images/flags/hk.png" },
+    { code: "GB", currency: "GBP", name: "United Kingdom", flag: "/images/flags/gb.png" },
+    { code: "MN", currency: "MNT", name: "Mongolia", flag: "/images/flags/mn.png" },
 ];
 
 // Provider logo mapping
@@ -106,7 +115,7 @@ const ProviderCard = ({ provider, isBest, rank }) => {
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 mb-6">
                 <div className="text-gray-600 text-sm mb-2 font-semibold">받는 금액</div>
                 <div className="text-5xl font-bold text-gray-900">
-                    {Math.round(provider.recipient_gets).toLocaleString('en-US')}
+                    {provider.recipient_gets.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
                 <div className="text-2xl font-bold text-blue-600 mt-1">{provider.currency}</div>
             </div>

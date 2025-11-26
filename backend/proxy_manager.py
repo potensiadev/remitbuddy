@@ -198,26 +198,39 @@ proxy_manager = ProxyManager()
 def initialize_proxy_manager():
     """Initialize the proxy manager by loading proxies from config file."""
     try:
-        with open('proxy_config.json', 'r') as f:
-            proxy_list = json.load(f)
+        with open('proxy_config.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        # Support both old format (list) and new format (dict with 'proxies' key)
+        if isinstance(data, list):
+            proxy_list = data
+        elif isinstance(data, dict):
+            proxy_list = data.get('proxies', [])
+        else:
+            proxy_list = []
 
         if proxy_list:
-            # Filter out placeholder configurations
-            actual_proxies = [p for p in proxy_list if p.get('ip') and not p['ip'].startswith('your_proxy_ip')]
+            # Filter out placeholder/example configurations
+            actual_proxies = [
+                p for p in proxy_list
+                if p.get('ip')
+                and not p['ip'].startswith('your_proxy_ip')
+                and 'example.com' not in p.get('ip', '')
+            ]
 
             if actual_proxies:
                 proxy_manager.add_proxy_list(actual_proxies)
-                logging.info(f"Initialized proxy manager with {len(actual_proxies)} proxies from proxy_config.json")
+                logging.info(f"[OK] Initialized proxy manager with {len(actual_proxies)} proxies from proxy_config.json")
             else:
-                logging.warning("proxy_config.json contains only placeholder configurations. Running without proxies.")
+                logging.warning("[WARN] proxy_config.json contains only placeholder configurations. Running without proxies.")
         else:
-            logging.warning("proxy_config.json is empty. Running without proxy rotation.")
+            logging.warning("[WARN] proxy_config.json is empty. Running without proxy rotation.")
     except FileNotFoundError:
-        logging.warning("proxy_config.json not found. Running without proxy rotation.")
-    except json.JSONDecodeError:
-        logging.error("Failed to decode proxy_config.json. Please check the file format.")
+        logging.warning("[WARN] proxy_config.json not found. Running without proxy rotation.")
+    except json.JSONDecodeError as e:
+        logging.error(f"[ERROR] Failed to decode proxy_config.json. Please check the file format: {e}")
     except Exception as e:
-        logging.error(f"An unexpected error occurred while initializing proxy manager: {e}")
+        logging.error(f"[ERROR] An unexpected error occurred while initializing proxy manager: {e}")
 
 # Initialize on import
 initialize_proxy_manager()

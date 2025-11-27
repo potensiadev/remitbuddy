@@ -145,7 +145,16 @@ class HanpassConnectionTracker:
 hanpass_tracker = HanpassConnectionTracker() 
 
 # --- Country Code Mappings ---
-COUNTRY_CODES = { "vietnam": "VN", "philippines": "PH", "indonesia": "ID", "cambodia": "KH", "nepal": "NP", "myanmar": "MM", "thailand": "TH", "uzbekistan": "UZ", "srilanka": "LK", "bangladesh": "BD", "mongolia": "MN" }
+COUNTRY_CODES = {
+    "vietnam": "VN", "philippines": "PH", "indonesia": "ID", "cambodia": "KH",
+    "nepal": "NP", "myanmar": "MM", "thailand": "TH", "uzbekistan": "UZ",
+    "srilanka": "LK", "bangladesh": "BD", "mongolia": "MN",
+    "united states": "US", "unitedstates": "US",
+    "canada": "CA", "singapore": "SG", "china": "CN",
+    "malaysia": "MY", "japan": "JP",
+    "hong kong": "HK", "hongkong": "HK",
+    "united kingdom": "GB", "unitedkingdom": "GB"
+}
 WIREBARLEY_COUNTRY_CODES = { "vietnam": "VNM", "philippines": "PHL", "indonesia": "IDN", "nepal": "NPL", "thailand": "THA", "cambodia": "KHM", "myanmar": "MMR", "uzbekistan": "UZB", "srilanka": "LKA", "bangladesh": "BGD", "mongolia": "MNG" }
 SENTBE_COUNTRY_CODES = { "vietnam": 209, "philippines": 154, "indonesia": 92, "nepal": 139, "thailand": 194, "cambodia": 35, "myanmar": 134, "uzbekistan": 205, "srilanka": 189, "bangladesh": 17, "mongolia": 132 }
 GMONEY_COUNTRY_NAMES = {
@@ -162,7 +171,11 @@ GMONEY_PAYMENT_TYPES = { "uzbekistan": "Humocard", "default": "Bank Account" }
 E9PAY_RECV_CODES = {
     "vietnam": "VN03", "philippines": "PH15", "indonesia": "ID01", "thailand": "TH03",
     "nepal": "NP", "myanmar": "MM01", "uzbekistan": "UZ15",
-    "srilanka": "LK03", "bangladesh": "BD01"
+    "srilanka": "LK03", "bangladesh": "BD01",
+    "united states": "US01", "unitedstates": "US01",
+    "canada": "CA01", "china": "CN09", "malaysia": "MY01",
+    "japan": "JP02", "hong kong": "HK01", "hongkong": "HK01",
+    "united kingdom": "GB01", "unitedkingdom": "GB01", "mongolia": "MN03"
 }
 
 # Coinshot Currency Mapping
@@ -219,7 +232,8 @@ GMEREMIT_DELIVERY_METHODS = {
 JPREMIT_CURRENCIES = {
     "vietnam": "VND", "philippines": "PHP", "indonesia": "IDR", "thailand": "THB",
     "nepal": "NPR", "myanmar": "MMK", "uzbekistan": "UZS",
-    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT"
+    "srilanka": "LKR", "bangladesh": "BDT", "cambodia": "KHR", "mongolia": "MNT",
+    "china": "CNY", "japan": "JPY"
 }
 
 # The Moin Country/Currency Mappings
@@ -456,7 +470,14 @@ async def get_hanpass_quote(session: aiohttp.ClientSession, send_amount: int, re
 async def get_cross_quote(session: aiohttp.ClientSession, send_amount: int, receive_currency: str, receive_country: str) -> Optional[Dict]:
     try:
         url = 'https://crossenf.com/api/v4/remit/quote/'
-        platform_mapping = { "vietnam": 144, "philippines": 20, "indonesia": 68, "thailand": 60, "nepal": 85, "cambodia": 150, "myanmar": 235, "uzbekistan": 233, "bangladesh": 76, "mongolia": 250, "srilanka": 75 }
+        platform_mapping = {
+            "vietnam": 144, "philippines": 20, "indonesia": 68, "thailand": 60,
+            "nepal": 85, "cambodia": 150, "myanmar": 235, "uzbekistan": 233,
+            "bangladesh": 76, "mongolia": 250, "srilanka": 75,
+            "united kingdom": 182, "unitedkingdom": 182,
+            "singapore": 36, "hong kong": 113, "hongkong": 113,
+            "malaysia": 16, "china": 122
+        }
         platform_id = platform_mapping.get(receive_country.lower())
         if not platform_id: return None
         
@@ -1017,7 +1038,16 @@ async def get_e9pay_quote(session: aiohttp.ClientSession, send_amount: int, rece
                     "NP01": 5000,  # 네팔 캐시픽업
                     "NP04": 5000,  # 네팔 E-WALLET
                     "BD01": 5000,  # 방글라데시 캐시픽업
-                    "BD02": 3000   # 방글라데시 BKASH
+                    "BD02": 3000,  # 방글라데시 BKASH
+                    # New currencies
+                    "US01": 5000,  # United States 계좌송금
+                    "CA01": 5000,  # Canada 계좌송금
+                    "CN09": 5000,  # China 계좌송금
+                    "MY01": 5000,  # Malaysia 계좌송금
+                    "JP02": 5000,  # Japan 계좌송금
+                    "HK01": 5000,  # Hong Kong 계좌송금
+                    "GB01": 5000,  # United Kingdom 계좌송금
+                    "MN03": 5000   # Mongolia 계좌송금
                 }
                 
                 fee = fee_mapping.get(recv_code, 5000)  # Default to 5000 if not found

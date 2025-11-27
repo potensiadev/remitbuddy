@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Footer from '../components/Footer';
+import Navigation from '../components/Navigation';
 import { Button } from '../components/ui';
 
 // API Configuration - CRITICAL: DO NOT REMOVE
@@ -407,26 +408,15 @@ export default function HomePage() {
     return (
         <>
             <Head>
-                <title>해외송금 비교 - RemitBuddy | 10개국 송금업체 실시간 환율 비교</title>
-                <meta name="description" content="한국에서 해외송금할 때 가장 저렴한 업체를 찾아보세요. 10개국 송금업체의 환율과 수수료를 3초만에 비교하고 최대 수만원을 절약하세요." />
+                <title>RemitBuddy 해외송금비교</title>
+                <meta name="description" content="3초만에 가장 저렴한 해외송금 업체를 찾아드려요. 18개 국가의 환율과 수수료를 비교하고 최대 OO만원 절약하세요" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <meta name="keywords" content="해외송금, 환율비교, 송금수수료, 베트남송금, 필리핀송금, 국제송금" />
+                <meta name="keywords" content="해외송금, 환율비교, 송금수수료, 베트남송금, 필리핀송금, 국제송금, 미국송금, 캐나다송금, 미얀마송금, 네팔송금, 싱가폴송금, 홍콩송금, 중국송금, money transfer, remittance, overseas transfer" />
             </Head>
 
             <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-                {/* Header - Toss Style Refined */}
-                <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm transition-all duration-300">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-4 flex items-center justify-between">
-                        <div className="flex items-center gap-3 group cursor-pointer">
-                            <span className="text-2xl font-bold text-gray-900 tracking-tight">RemitBuddy</span>
-                        </div>
-                        {/* <nav className="hidden md:flex gap-8 lg:gap-12">
-                            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-base lg:text-lg hover:scale-105">이용방법</a>
-                            <a href="#features" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-base lg:text-lg hover:scale-105">특징</a>
-                            <a href="#faq" className="text-gray-600 hover:text-gray-900 font-semibold transition-all duration-200 text-base lg:text-lg hover:scale-105">FAQ</a>
-                        </nav> */}
-                    </div>
-                </header>
+                {/* Navigation - Toss Style */}
+                <Navigation />
 
                 {/* Hero Section - Toss Style */}
                 <section className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
@@ -758,31 +748,6 @@ export default function HomePage() {
                                 </p>
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                {/* CTA Section - Toss Style Enhanced */}
-                <section className="py-24 bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 relative overflow-hidden">
-                    {/* Sophisticated background decorations */}
-                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
-                    <div className="absolute top-0 left-0 w-96 h-96 bg-accent-400 rounded-full blur-3xl opacity-20 animate-float"></div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-400 rounded-full blur-3xl opacity-20 animate-float" style={{ animationDelay: '1.5s' }}></div>
-
-                    <div className="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 text-center relative z-10">
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-brand mb-6 tracking-tight leading-tight">
-                            지금 바로 환율을<br className="md:hidden" /> 비교해보세요
-                        </h2>
-                        <p className="text-xl md:text-2xl text-brand/90 mb-10 font-medium max-w-2xl mx-auto">
-                            3초면 충분해요. 무료로 시작하세요.
-                        </p>
-                        <Button
-                            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                            variant="secondary"
-                            size="xl"
-                            className="bg-blue-600 text-white hover:bg-brand-50 shadow-2xl hover:shadow-button-hover hover:scale-105 transition-all duration-300"
-                        >
-                            최저 송금 수수료 비교하기
-                        </Button>
                     </div>
                 </section>
 

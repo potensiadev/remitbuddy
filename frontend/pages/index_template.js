@@ -356,7 +356,7 @@ export default function RedesignPage() {
                     <div className="max-w-7xl mx-auto px-6 relative z-10">
                         <div className="text-center mb-16">
                             <div className="inline-block bg-blue-100 border-2 border-blue-300 rounded-full px-6 py-2 mb-6">
-                                <span className="text-blue-600 font-bold text-sm">10개국 • 실시간 환율 비교</span>
+                                <span className="text-blue-600 font-bold text-sm">18개국 • 실시간 환율 비교</span>
                             </div>
                             <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-8 leading-tight">
                                 해외송금,<br />
@@ -456,7 +456,7 @@ export default function RedesignPage() {
                             </div>
                             <div className="text-center">
                                 <div className="text-4xl mb-3">🌏</div>
-                                <div className="font-bold text-gray-900">10개국 지원</div>
+                                <div className="font-bold text-gray-900">18개국 지원</div>
                                 <div className="text-sm text-gray-500">아시아 주요 국가</div>
                             </div>
                         </div>

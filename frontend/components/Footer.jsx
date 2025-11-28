@@ -164,7 +164,7 @@ const Footer = () => {
             <span className="text-2xl font-bold text-gray-900">RemitBuddy</span>
           </div>
           <p className="text-gray-600 text-sm leading-relaxed max-w-3xl">
-            해외송금을 더 쉽고 저렴하게. 10개 송금 업체의 수수료를 한번에 비교하세요.
+            해외송금을 더 쉽고 저렴하게. 8개 송금 업체의 수수료를 한번에 비교하세요.
           </p>
         </div>
 

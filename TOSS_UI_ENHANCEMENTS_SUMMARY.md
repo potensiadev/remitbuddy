@@ -137,7 +137,7 @@ Enhanced both `index.js` and `redesign.js` with Toss-style UI improvements while
     <div className="text-xs md:text-sm text-gray-600">송금업체</div>
   </div>
   <div className="bg-blue-50 rounded-2xl p-4 text-center">
-    <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">10개국</div>
+    <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">18개국</div>
     <div className="text-xs md:text-sm text-gray-600">지원</div>
   </div>
   <div className="bg-blue-50 rounded-2xl p-4 text-center">

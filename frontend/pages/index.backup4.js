@@ -284,7 +284,7 @@ export default function HomePage() {
                             더 똑똑하게
                         </h1>
                         <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-2xl">
-                            10개국 송금 업체 환율을 3초 안에 비교하세요
+                            18개국 송금 업체 환율을 3초 안에 비교하세요
                         </p>
 
                         {/* Main Form - Toss Style */}

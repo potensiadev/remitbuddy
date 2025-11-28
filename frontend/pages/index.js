@@ -310,7 +310,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
                         <div className="w-14 h-14 sm:w-16 sm:h-16 border-4 border-brand-200 border-t-brand-500 rounded-full animate-spin"></div>
                     </div>
                     <p className="text-gray-900 text-base sm:text-lg font-bold mb-2">최적의 환율을 찾고 있습니다...</p>
-                    <p className="text-gray-600 text-sm font-medium">10개 송금 업체를 비교하는 중</p>
+                    <p className="text-gray-600 text-sm font-medium">8개 송금 업체를 비교하는 중</p>
                 </div>
             )}
 
@@ -440,7 +440,7 @@ export default function HomePage() {
                                 </h1>
 
                                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-500 mb-5 md:mb-7 leading-relaxed font-medium">
-                                    10개의 해외송금 업체의 환율과 수수료를<br className="hidden sm:block" />
+                                    8개의 해외송금 업체의 환율과 수수료를<br className="hidden sm:block" />
                                     단 3초만에 비교하고 <span className="font-bold text-brand-500">최대 OO만원</span> 절약하세요
                                 </p>
 
@@ -469,7 +469,7 @@ export default function HomePage() {
                                         </div>
                                         <div className="hidden sm:block w-px h-12 bg-gray-200"></div>
                                         <div className="text-center sm:text-left">
-                                            <div className="text-xl sm:text-2xl font-bold text-accent-500">10개국</div>
+                                            <div className="text-xl sm:text-2xl font-bold text-accent-500">18개국</div>
                                             <div className="text-xs sm:text-sm text-gray-500 font-medium">송금 가능</div>
                                         </div>
                                         <div className="hidden sm:block w-px h-12 bg-gray-200"></div>
@@ -617,7 +617,7 @@ export default function HomePage() {
                                 </div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-4">실시간 비교 결과</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    10개 업체의 환율과<br />
+                                    8개 업체의 환율과<br />
                                     수수료를 한눈에 비교하세요
                                 </p>
                             </div>
@@ -673,9 +673,9 @@ export default function HomePage() {
                                 <div className="w-14 h-14 bg-accent-50 rounded-xl flex items-center justify-center text-accent-600 mb-6 group-hover:scale-110 transition-transform duration-300">
                                     <GlobeIcon />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-3">10개국 지원</h3>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3">18개국 지원</h3>
                                 <p className="text-gray-600 font-medium leading-relaxed">
-                                    베트남, 필리핀 등 주요 10개국으로의 송금 환율과 수수료를 비교할 수 있어요
+                                    베트남, 필리핀 등 주요 18개국으로의 송금 환율과 수수료를 비교할 수 있어요
                                 </p>
                             </div>
 
@@ -744,7 +744,7 @@ export default function HomePage() {
                             <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                                 <h3 className="text-lg font-bold text-gray-900 mb-3">어떤 국가의 송금 수수료를 비교할 수 있나요?</h3>
                                 <p className="text-gray-600 leading-relaxed font-medium">
-                                    현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마 등 10개의 환율·수수료를 비교할 수 있어요. 다른 국가도 계속 추가될 예정이에요.
+                                    현재 베트남, 네팔, 필리핀, 캄보디아, 미얀마 등 8개의 환율·수수료를 비교할 수 있어요. 다른 국가도 계속 추가될 예정이에요.
                                 </p>
                             </div>
                         </div>

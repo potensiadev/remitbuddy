@@ -40,7 +40,7 @@ export default function HeroSection() {
               해외송금 더 똑똑하게
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed px-4">
-              10개의 해외송금 업체의 환율과 수수료를 단 3초만에 비교하고 최대 OO만원 절약하세요
+              8개의 해외송금 업체의 환율과 수수료를 단 3초만에 비교하고 최대 OO만원 절약하세요
             </p>
           </div>
 

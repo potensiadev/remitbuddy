@@ -34,24 +34,17 @@ const Navigation = () => {
     service: {
       title: '서비스',
       links: [
-        { label: '해외송금비교', href: '#compare' },
+        { label: '서비스 소개', href: '#about' },
         { label: '이용 방법', href: '#how-it-works' },
-        { label: '특징', href: '#features' },
-      ],
-    },
-    support: {
-      title: '지원',
-      links: [
-        { label: '자주 묻는 질문', href: '#faq' },
-        { label: '개인정보처리방침', href: '#privacy' },
-        { label: '이용약관', href: '#terms' },
-      ],
-    },
-    company: {
-      title: '회사',
-      links: [
-        { label: '회사 소개', href: '#about' },
         { label: '블로그', href: '#blog' },
+        { label: 'FAQ', href: '#faq' },
+      ],
+    },
+    contact: {
+      title: '문의',
+      links: [
+        { label: '사업 제휴', href: '#partnership' },
+        { label: '광고 문의', href: '#advertising' },
       ],
     },
   };

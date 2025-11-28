@@ -70,19 +70,19 @@ const nextConfig = {
       },
       {
         source: '/images/(.*)',
-        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' }],
+        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable, stale-while-revalidate=604800' }],
       },
       {
         source: '/icons/(.*)',
-        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' }],
+        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable, stale-while-revalidate=604800' }],
       },
       {
         source: '/logos/(.*)',
-        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' }],
+        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable, stale-while-revalidate=604800' }],
       },
       {
         source: '/fonts/(.*)',
-        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable' }],
+        headers: [{ key: 'Cache-Control', value: isDev ? 'no-cache' : 'public, max-age=31536000, immutable, stale-while-revalidate=604800' }],
       },
     ]
   },

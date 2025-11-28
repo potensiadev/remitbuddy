@@ -54,6 +54,8 @@ const COUNTRIES = [
     { code: "MN", currency: "MNT", name: "Mongolia", flag: "/images/flags/mn.png" },
 ];
 
+const FLAG_ASSETS = Array.from(new Set(COUNTRIES.map((country) => country.flag)));
+
 // Provider logo mapping
 const PROVIDER_LOGO_MAP = {
     'Hanpass': '/logos/hanpass.png',
@@ -367,6 +369,24 @@ export default function HomePage() {
         setApiBaseUrl(url);
     }, []);
 
+    // Preload flag images so dropdown thumbnails render instantly
+    useEffect(() => {
+        if (typeof window === 'undefined') return undefined;
+
+        const preloadedImages = FLAG_ASSETS.map((src) => {
+            const img = new window.Image();
+            img.decoding = 'async';
+            img.src = src;
+            return img;
+        });
+
+        return () => {
+            preloadedImages.forEach((img) => {
+                img.src = '';
+            });
+        };
+    }, []);
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -412,6 +432,10 @@ export default function HomePage() {
                 <meta name="description" content="3초만에 가장 저렴한 해외송금 업체를 찾아드려요. 18개 국가의 환율과 수수료를 비교하고 최대 OO만원 절약하세요" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <meta name="keywords" content="해외송금, 환율비교, 송금수수료, 베트남송금, 필리핀송금, 국제송금, 미국송금, 캐나다송금, 미얀마송금, 네팔송금, 싱가폴송금, 홍콩송금, 중국송금, money transfer, remittance, overseas transfer" />
+                <link rel="preconnect" href="https://www.remitbuddy.com" />
+                {FLAG_ASSETS.map((flag) => (
+                    <link key={flag} rel="preload" as="image" href={flag} />
+                ))}
             </Head>
 
             <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">

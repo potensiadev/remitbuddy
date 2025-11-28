@@ -11,21 +11,10 @@ const Footer = () => {
     service: {
       title: '서비스',
       links: [
-        { label: '공지사항', href: '#notice' },
-        { label: '자주 묻는 질문', href: '#faq' },
-        { label: '해외송금비교', href: '#compare' },
+        { label: '서비스 소개', href: '#about' },
         { label: '이용 방법', href: '#how-it-works' },
-        { label: '고객센터', href: '#support' },
-        { label: '특징', href: '#features' },
-      ],
-    },
-    company: {
-      title: '회사',
-      links: [
-        { label: '회사 소개', href: '#about' },
+        { label: 'FAQ', href: '#faq' },
         { label: '블로그', href: '#blog' },
-        { label: '채용', href: '#careers' },
-        { label: '기술 블로그', href: '#tech-blog' },
       ],
     },
     contact: {
@@ -40,15 +29,7 @@ const Footer = () => {
       items: [
         { label: '이메일', value: 'support@remitbuddy.com' },
       ],
-    },
-    legal: {
-      title: '온라인정보',
-      links: [
-        { label: '개인정보처리방침', href: '#privacy' },
-        { label: '이용약관', href: '#terms' },
-        { label: '민원 접수', href: '#complaints' },
-      ],
-    },
+    }
   };
 
   return (

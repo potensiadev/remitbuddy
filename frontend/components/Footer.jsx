@@ -37,7 +37,7 @@ const Footer = () => {
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Footer Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 mb-12">
           {/* Service Section */}
           <div>
             <h3 className="text-gray-900 font-bold text-sm mb-4">
@@ -45,25 +45,6 @@ const Footer = () => {
             </h3>
             <ul className="space-y-3 list-none">
               {footerSections.service.links.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-gray-600 hover:text-gray-900 transition-colors duration-150 text-sm block"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Section */}
-          <div>
-            <h3 className="text-gray-900 font-bold text-sm mb-4">
-              {footerSections.company.title}
-            </h3>
-            <ul className="space-y-3 list-none">
-              {footerSections.company.links.map((link, index) => (
                 <li key={index}>
                   <a
                     href={link.href}
@@ -114,25 +95,6 @@ const Footer = () => {
                       {item.value}
                     </a>
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal Section */}
-          <div>
-            <h3 className="text-gray-900 font-bold text-sm mb-4">
-              {footerSections.legal.title}
-            </h3>
-            <ul className="space-y-3 list-none">
-              {footerSections.legal.links.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-gray-600 hover:text-gray-900 transition-colors duration-150 text-sm block"
-                  >
-                    {link.label}
-                  </a>
                 </li>
               ))}
             </ul>

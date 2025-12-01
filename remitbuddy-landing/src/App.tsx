@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import { Menu, ArrowRight } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import Debug from '@/pages/Debug'
+import { ArrowRight, Menu } from 'lucide-react'
 
-function App() {
+function LandingPage() {
   const [selectedCountry, setSelectedCountry] = useState('Vietnam')
   const [amount, setAmount] = useState('1,000,000')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -163,6 +165,17 @@ function App() {
         {/* Future content can go here */}
       </section>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/debug" element={<Debug />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

@@ -13,8 +13,8 @@ const Footer = () => {
       links: [
         { label: '서비스 소개', href: '#about' },
         { label: '이용 방법', href: '#how-it-works' },
-        { label: 'FAQ', href: '#faq' },
         { label: '블로그', href: '#blog' },
+        { label: 'FAQ', href: '#faq' },
       ],
     },
     contact: {

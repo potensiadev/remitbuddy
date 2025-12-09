@@ -30,7 +30,7 @@ export const getApiBaseUrl = () => {
   }
 
   // 3. Production fallback
-  return 'https://remitbuddy-production.up.railway.app';
+  return 'https://remitbuddy.up.railway.app';
 };
 
 // Export as default for convenience

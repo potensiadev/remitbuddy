@@ -28,7 +28,7 @@ const getApiBaseUrl = () => {
     }
 
     // 3. Production fallback
-    return 'https://remitbuddy-production.up.railway.app';
+    return 'https://remitbuddy.up.railway.app';
 };
 
 // Country data
@@ -358,7 +358,7 @@ export default function HomePage() {
     const [showResults, setShowResults] = useState(false);
     const [queryParams, setQueryParams] = useState({});
     const [forceRefresh, setForceRefresh] = useState(0);
-    const [apiBaseUrl, setApiBaseUrl] = useState('https://remitbuddy-production.up.railway.app');
+    const [apiBaseUrl, setApiBaseUrl] = useState('https://remitbuddy.up.railway.app');
     const dropdownRef = useRef(null);
     const resultsRef = useRef(null);
 

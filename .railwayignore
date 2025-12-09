@@ -1,0 +1,12 @@
+node_modules/
+frontend/
+remitbuddy-landing/
+skills/
+.claude/
+.git/
+*.pyc
+__pycache__/
+.env.local
+.env.development
+*.md
+*.log

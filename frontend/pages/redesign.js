@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 
 // API Configuration - CRITICAL: DO NOT REMOVE
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://remitbuddy-production.up.railway.app';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://remitbuddy.up.railway.app';
 
 // Country data
 const COUNTRIES = [

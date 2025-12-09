@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://remitbuddynew.up.railway.app",
+    "NEXT_TELEMETRY_DISABLED": "1"
+  }
+}

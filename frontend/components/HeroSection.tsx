@@ -58,6 +58,7 @@ export default function HeroSection() {
               <Link href="/" className="text-xl md:text-2xl font-bold text-blue-600">RemitBuddy</Link>
             </div>
             <nav className="hidden md:flex items-center space-x-8">
+              <Link href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">서비스 소개</Link>
               <Link href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition-colors">이용방법</Link>
               <Link href="#features" className="text-gray-700 hover:text-blue-600 transition-colors">특징</Link>
               <Link href="#faq" className="text-gray-700 hover:text-blue-600 transition-colors">FAQ</Link>

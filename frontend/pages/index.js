@@ -649,56 +649,7 @@ export default function HomePage() {
                         </div>
                     </div>
                 </section>
-
-                {/* How It Works Section - Toss Style */}
-                <section id="how-it-works" className="py-20 bg-white">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center mb-16">
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-                                이용 방법
-                            </h2>
-                            <p className="text-xl text-gray-600 font-medium">
-                                3단계로 끝나는 간단한 비교 과정
-                            </p>
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-8">
-                            <div className="text-center group">
-                                <div className="w-20 h-20 bg-brand-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
-                                    1
-                                </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">송금 국가와 금액 입력</h3>
-                                <p className="text-gray-600 leading-relaxed font-medium">
-                                    송금받을 나라를 선택하고<br />
-                                    보낼 금액을 입력하세요
-                                </p>
-                            </div>
-
-                            <div className="text-center group">
-                                <div className="w-20 h-20 bg-brand-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
-                                    2
-                                </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">실시간 비교 결과</h3>
-                                <p className="text-gray-600 leading-relaxed font-medium">
-                                    8개 업체의 환율과<br />
-                                    수수료를 한눈에 비교하세요
-                                </p>
-                            </div>
-
-                            <div className="text-center group">
-                                <div className="w-20 h-20 bg-accent-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
-                                    3
-                                </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">최적 업체 선택</h3>
-                                <p className="text-gray-600 leading-relaxed font-medium">
-                                    가장 유리한 조건을<br />
-                                    확인하고 바로 송금하세요
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section >
-
+                
                 {/* Features Section - Toss Style */}
                 < section id="features" className="py-20 bg-gradient-to-br from-gray-50 to-brand-50/30" >
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -754,6 +705,56 @@ export default function HomePage() {
                         </div>
                     </div>
                 </section >
+
+                {/* How It Works Section - Toss Style */}
+                <section id="how-it-works" className="py-20 bg-white">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+                                이용 방법
+                            </h2>
+                            <p className="text-xl text-gray-600 font-medium">
+                                3단계로 끝나는 간단한 비교 과정
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <div className="text-center group">
+                                <div className="w-20 h-20 bg-brand-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
+                                    1
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-4">송금 국가와 금액 입력</h3>
+                                <p className="text-gray-600 leading-relaxed font-medium">
+                                    송금받을 나라를 선택하고<br />
+                                    보낼 금액을 입력하세요
+                                </p>
+                            </div>
+
+                            <div className="text-center group">
+                                <div className="w-20 h-20 bg-brand-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
+                                    2
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-4">실시간 비교 결과</h3>
+                                <p className="text-gray-600 leading-relaxed font-medium">
+                                    8개 업체의 환율과<br />
+                                    수수료를 한눈에 비교하세요
+                                </p>
+                            </div>
+
+                            <div className="text-center group">
+                                <div className="w-20 h-20 bg-accent-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
+                                    3
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-4">최적 업체 선택</h3>
+                                <p className="text-gray-600 leading-relaxed font-medium">
+                                    가장 유리한 조건을<br />
+                                    확인하고 바로 송금하세요
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section >
+
 
                 {/* Results Section */}
                 {

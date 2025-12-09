@@ -36,17 +36,18 @@ const Navigation = () => {
       links: [
         { label: '서비스 소개', href: '#about' },
         { label: '이용 방법', href: '#how-it-works' },
-        { label: '블로그', href: '#blog' },
+       // { label: '블로그', href: '#blog' },
         { label: 'FAQ', href: '#faq' },
       ],
-    },
-    contact: {
-      title: '문의',
-      links: [
-        { label: '사업 제휴', href: '#partnership' },
-        { label: '광고 문의', href: '#advertising' },
-      ],
-    },
+    }
+    // contact: {
+    //   title: '문의',
+    //   links: [
+    //     { label: '사업제휴', href: '#partnership' },
+    //     { label: '고객센터', href: '#support' },
+    //    // { label: '광고 문의', href: '#advertising' },
+    //   ],
+    // },
   };
 
   const handleLinkClick = (href) => {

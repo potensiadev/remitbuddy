@@ -122,89 +122,103 @@ const TrendingUpIcon = () => (
     </svg>
 );
 
-// Provider Card Component - mobile-first, high-emphasis layout
+// Provider Card Component - mobile-first, high-emphasis layout with clear separation
 const ProviderCard = ({ provider, isBest, index }) => {
     const displayName = provider.provider === 'JP Remit' ? 'JRF' :
         provider.provider === 'The Moin' ? 'Moin' : provider.provider;
 
     const formattedFeeInKRW = provider.fee.toLocaleString('en-US');
 
+    // 1위는 특별한 스타일, 나머지는 명확하게 구분되는 카드 스타일
+    const cardStyles = isBest
+        ? 'border-2 border-blue-400 bg-gradient-to-br from-blue-50 via-white to-blue-50 shadow-xl ring-4 ring-blue-100'
+        : 'border-2 border-gray-200 bg-white shadow-lg hover:border-gray-300 hover:shadow-xl';
+
     return (
-        <a
-            href={provider.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`relative block w-full rounded-2xl bg-white border transition-all duration-200 p-4 sm:p-5 md:p-6 hover:-translate-y-1 hover:shadow-xl ${isBest
-                ? 'border-blue-300 bg-gradient-to-r from-blue-50 via-white to-blue-50 shadow-lg ring-2 ring-blue-100'
-                : 'border-gray-100 shadow-md hover:border-blue-200'
-                }`}
+        <div
+            className={`relative block w-full rounded-3xl transition-all duration-200 overflow-hidden ${cardStyles}`}
             style={{ animationDelay: `${index * 50}ms` }}
         >
-            {isBest && (
-                <span className="absolute top-4 right-4 inline-flex items-center rounded-full bg-blue-600 text-white text-xs font-semibold px-3 py-1 shadow-md">
-                    추천
-                </span>
-            )}
-
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-                    {PROVIDER_LOGO_MAP[provider.provider] ? (
-                        <img
-                            src={PROVIDER_LOGO_MAP[provider.provider]}
-                            alt={`${provider.provider} logo`}
-                            className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl object-contain bg-gray-50 p-2"
-                            onError={(e) => { e.target.style.display = 'none'; }}
-                        />
-                    ) : (
-                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-lg sm:text-xl font-bold text-white">
-                            {displayName.charAt(0)}
-                        </div>
-                    )}
-                    <div className="min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-lg sm:text-xl font-bold text-gray-900 break-keep">{displayName}</span>
-                            <span className="inline-flex items-center rounded-full bg-gray-100 text-gray-700 text-[11px] font-semibold px-2 py-1">{index + 1}위</span>
-                        </div>
-                        {isBest && (
-                            <span className="flex items-center gap-1 text-xs sm:text-sm text-blue-700 font-semibold mt-1">
-                                <SparklesIcon />
-                                가장 저렴하게 보낼 수 있어요
-                            </span>
+            {/* 카드 상단 헤더 - Provider 정보 */}
+            <div className={`px-5 py-4 sm:px-6 sm:py-5 ${isBest ? 'bg-blue-600' : 'bg-gray-800'}`}>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                        {PROVIDER_LOGO_MAP[provider.provider] ? (
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white p-2 shadow-md">
+                                <img
+                                    src={PROVIDER_LOGO_MAP[provider.provider]}
+                                    alt={`${provider.provider} logo`}
+                                    className="w-full h-full object-contain"
+                                    onError={(e) => { e.target.style.display = 'none'; }}
+                                />
+                            </div>
+                        ) : (
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white flex items-center justify-center text-lg sm:text-xl font-bold text-gray-800 shadow-md">
+                                {displayName.charAt(0)}
+                            </div>
                         )}
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-lg sm:text-xl font-bold text-white">{displayName}</span>
+                                <span className={`inline-flex items-center rounded-full text-xs font-bold px-2.5 py-1 ${isBest ? 'bg-yellow-400 text-yellow-900' : 'bg-gray-600 text-gray-200'}`}>
+                                    {index + 1}위
+                                </span>
+                            </div>
+                            {isBest && (
+                                <span className="flex items-center gap-1 text-xs sm:text-sm text-blue-100 font-medium mt-0.5">
+                                    <SparklesIcon />
+                                    최저가 추천
+                                </span>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className="mt-4 sm:mt-5 rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50 to-accent-50 px-4 sm:px-5 py-3 sm:py-4">
-                <div className="text-xs sm:text-sm font-semibold text-gray-600 mb-1">받는 금액</div>
-                <div className="flex items-baseline gap-2 text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-600">
-                    <span className="break-keep">{provider.recipient_gets.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    <span className="text-base sm:text-lg md:text-xl text-gray-700 font-semibold">{provider.currency}</span>
+            {/* 카드 본문 - 금액 정보 */}
+            <div className="p-5 sm:p-6">
+                {/* 받는 금액 - 가장 강조 */}
+                <div className={`rounded-2xl px-5 py-4 sm:px-6 sm:py-5 mb-4 ${isBest ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-100'}`}>
+                    <div className="text-xs sm:text-sm font-semibold text-gray-500 mb-1">받는 금액</div>
+                    <div className="flex items-baseline gap-2">
+                        <span className={`text-3xl sm:text-4xl font-extrabold ${isBest ? 'text-blue-600' : 'text-gray-900'}`}>
+                            {provider.recipient_gets.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </span>
+                        <span className="text-lg sm:text-xl text-gray-600 font-semibold">{provider.currency}</span>
+                    </div>
                 </div>
-            </div>
 
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div className="rounded-xl bg-gray-50 px-3 py-3 sm:px-4 sm:py-4">
-                    <div className="text-[11px] sm:text-xs font-semibold text-gray-600 mb-1">환율</div>
-                    <div className="text-base sm:text-lg font-bold text-gray-900">{(1 / provider.exchange_rate).toFixed(4)}</div>
-                    <div className="text-[11px] sm:text-xs text-gray-500 font-medium mt-1">KRW per {provider.currency}</div>
+                {/* 환율 & 수수료 */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-5">
+                    <div className="rounded-xl bg-gray-100 px-4 py-3">
+                        <div className="text-xs font-semibold text-gray-500 mb-1">환율</div>
+                        <div className="text-base sm:text-lg font-bold text-gray-800">{(1 / provider.exchange_rate).toFixed(4)}</div>
+                        <div className="text-[10px] sm:text-xs text-gray-400 font-medium">KRW per {provider.currency}</div>
+                    </div>
+                    <div className="rounded-xl bg-gray-100 px-4 py-3">
+                        <div className="text-xs font-semibold text-gray-500 mb-1">수수료</div>
+                        <div className="text-base sm:text-lg font-bold text-gray-800">{formattedFeeInKRW}</div>
+                        <div className="text-[10px] sm:text-xs text-gray-400 font-medium">KRW</div>
+                    </div>
                 </div>
-                <div className="rounded-xl bg-gray-50 px-3 py-3 sm:px-4 sm:py-4">
-                    <div className="text-[11px] sm:text-xs font-semibold text-gray-600 mb-1">수수료</div>
-                    <div className="text-base sm:text-lg font-bold text-gray-900">{formattedFeeInKRW}</div>
-                    <div className="text-[11px] sm:text-xs text-gray-500 font-medium mt-1">KRW</div>
-                </div>
-            </div>
 
-            <div className="mt-4 sm:mt-5 flex justify-center sm:justify-end">
-                <span className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-5 sm:px-7 py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm sm:text-base shadow-md hover:bg-blue-700 hover:shadow-lg transition-all">
+                {/* CTA 버튼 */}
+                <a
+                    href={provider.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex w-full items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-base shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${isBest
+                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                        : 'bg-gray-800 text-white hover:bg-gray-900'
+                        }`}
+                >
                     송금하러 가기
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                </span>
+                </a>
             </div>
-        </a>
+        </div>
     );
 };
 
@@ -330,20 +344,22 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
             )}
 
             {!isLoading && !error && results.length > 0 && (
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0 space-y-4 sm:space-y-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-6">
                         <p className="text-gray-600 font-medium text-base sm:text-lg">
                             <span className="text-xl sm:text-2xl font-bold text-blue-600">{results.length}개</span> 업체 비교 결과
                         </p>
                     </div>
-                    {results.map((provider, index) => (
-                        <ProviderCard
-                            key={provider.provider}
-                            provider={{ ...provider, currency: queryParams.receive_currency }}
-                            isBest={index === 0}
-                            index={index}
-                        />
-                    ))}
+                    <div className="space-y-6 sm:space-y-8">
+                        {results.map((provider, index) => (
+                            <ProviderCard
+                                key={provider.provider}
+                                provider={{ ...provider, currency: queryParams.receive_currency }}
+                                isBest={index === 0}
+                                index={index}
+                            />
+                        ))}
+                    </div>
                 </div>
             )}
         </div>

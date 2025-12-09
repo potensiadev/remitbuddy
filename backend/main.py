@@ -34,7 +34,6 @@ allowed_origins = [
     # Production domains
     "https://www.remitbuddy.com",
     "https://remitbuddy.com",
-    "https://remitbuddy.netlify.app",
     # Local development
     "http://localhost:3000",
     "http://localhost:3001",

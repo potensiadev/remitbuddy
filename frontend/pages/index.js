@@ -629,7 +629,7 @@ export default function HomePage() {
                                                 />
                                                 <span className="text-lg sm:text-xl font-bold text-gray-500">KRW</span>
                                             </div>
-                                            <p className="mt-2 text-sm text-gray-500 font-medium ml-1">최소 금액: 100,000 KRW | 최대 금액: 5,000,000 KRW</p>
+                                            <p className="mt-2 text-sm text-gray-500 font-medium ml-1">최소 금액: 10,000 KRW   최대 금액: 5,000,000 KRW</p>
                                         </div>
 
                                         {/* Submit Button - Toss Style */}

@@ -13,25 +13,22 @@ const Footer = () => {
       links: [
         { label: '서비스 소개', href: '#about' },
         { label: '이용 방법', href: '#how-it-works' },
-        //{ label: '블로그', href: '#blog' },
         { label: 'FAQ', href: '#faq' },
       ],
     },
     contact: {
       title: '문의',
       links: [
-        { label: '사업제휴', value: 'business@remitbuddy.com' },
-        //{ label: '사업 제휴', href: '#partnership' },
-        { label: '고객센터', value: 'support@remitbuddy.com' }
-        //{ label: '광고 문의', href: '#advertising' }
+        { label: '사업제휴', href: 'mailto:business@remitbuddy.com' },
+        { label: '고객센터', href: 'mailto:support@remitbuddy.com' }
       ],
     },
-    // customerService: {
-    //   title: '고객센터',
-    //   items: [
-    //     { label: '이메일', value: 'support@remitbuddy.com' },
-    //   ],
-    // }
+    customerService: {
+      title: '고객센터',
+      items: [
+        { label: '이메일', value: 'support@remitbuddy.com' },
+      ],
+    }
   };
 
   return (

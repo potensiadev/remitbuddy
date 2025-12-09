@@ -177,14 +177,14 @@ const ProviderCard = ({ provider, isBest, index }) => {
 
             {/* 카드 본문 - 금액 정보 */}
             <div className="p-5 sm:p-6">
-                {/* 받는 금액 - 가장 강조 */}
+                {/* 받는 금액 */}
                 <div className={`rounded-2xl px-5 py-4 sm:px-6 sm:py-5 mb-4 ${isBest ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-100'}`}>
-                    <div className="text-xs sm:text-sm font-semibold text-gray-500 mb-1">받는 금액</div>
+                    <div className="text-xs font-semibold text-gray-500 mb-1">받는 금액</div>
                     <div className="flex items-baseline gap-2">
-                        <span className={`text-3xl sm:text-4xl font-extrabold ${isBest ? 'text-blue-600' : 'text-gray-900'}`}>
+                        <span className={`text-base sm:text-lg font-bold ${isBest ? 'text-blue-600' : 'text-gray-900'}`}>
                             {provider.recipient_gets.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
-                        <span className="text-lg sm:text-xl text-gray-600 font-semibold">{provider.currency}</span>
+                        <span className="text-[10px] sm:text-xs text-gray-400 font-medium">{provider.currency}</span>
                     </div>
                 </div>
 
@@ -413,6 +413,21 @@ export default function HomePage() {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // 드롭다운 열릴 때 body 스크롤 막기
+    useEffect(() => {
+        if (showDropdown) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [showDropdown]);
+
+    const MAX_AMOUNT = 5000000;
+    const isAmountExceeded = amount && parseInt(amount) > MAX_AMOUNT;
+
     const handleAmountChange = (e) => {
         const value = e.target.value.replace(/,/g, '');
         if (!isNaN(value) && value.length <= 10) {
@@ -422,7 +437,7 @@ export default function HomePage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (selectedCountry && amount) {
+        if (selectedCountry && amount && !isAmountExceeded) {
             setQueryParams({
                 receive_country: selectedCountry.name,
                 receive_currency: selectedCountry.currency
@@ -595,18 +610,23 @@ export default function HomePage() {
                                             <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
                                                 보내는 금액
                                             </label>
-                                            <div className="relative h-14 sm:h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-4 sm:px-6 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss">
+                                            <div className={`relative h-14 sm:h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 transition-all duration-200 px-4 sm:px-6 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss ${isAmountExceeded ? 'focus-within:ring-red-500 ring-2 ring-red-300' : 'focus-within:ring-brand-500'}`}>
                                                 <input
                                                     type="text"
                                                     value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
                                                     onChange={handleAmountChange}
-                                                    placeholder="1,000,000"
+                                                    placeholder="5,000,000"
                                                     className="flex-1 bg-transparent text-xl sm:text-2xl font-bold text-gray-900 text-right focus:outline-none placeholder-gray-400 border-0"
                                                     aria-label="Amount to send in KRW"
                                                 />
                                                 <span className="text-lg sm:text-xl font-bold text-gray-500">KRW</span>
                                             </div>
-                                            <p className="mt-2 text-sm text-gray-500 font-medium ml-1">최소 금액: 100,000 KRW</p>
+                                            <div className="mt-2 flex items-center justify-between ml-1">
+                                                <p className="text-sm text-gray-500 font-medium">최소 금액: 100,000 KRW</p>
+                                                {isAmountExceeded && (
+                                                    <p className="text-sm text-red-500 font-semibold">5,000,000 KRW까지만 입력할 수 있어요</p>
+                                                )}
+                                            </div>
                                         </div>
 
                                         {/* Submit Button - Toss Style */}

@@ -29,24 +29,18 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # --- CORS 설정 ---
-# 개발 모드에서는 로컬 네트워크 접속 허용
-is_development = os.getenv("ENV", "production") != "production"
-
-# Always allow local development origins
+# 모든 환경에서 필요한 origin 허용
 allowed_origins = [
+    # Production domains
+    "https://www.remitbuddy.com",
+    "https://remitbuddy.com",
+    "https://remitbuddy.netlify.app",
+    # Local development
     "http://localhost:3000",
     "http://localhost:3001",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
 ]
-
-if not is_development:
-    # 프로덕션 환경: 특정 도메인 추가
-    allowed_origins.extend([
-        "https://www.remitbuddy.com",
-        "https://remitbuddy.com",
-        "https://remitbuddy.netlify.app",
-    ])
 
 # Add CORS middleware with explicit origins
 app.add_middleware(
@@ -56,12 +50,11 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=600,
 )
 
-if is_development:
-    logger.info(f"[DEV MODE] CORS enabled for: {allowed_origins}")
-else:
-    logger.info(f"[PROD MODE] CORS enabled for: {allowed_origins}")
+logger.info(f"[CORS] Allowed origins: {allowed_origins}")
 
 
 # --- Configuration ---
@@ -1521,8 +1514,8 @@ async def detailed_health_check():
             "stats": proxy_stats
         },
         "cache": {
-            "size": len(rate_cache),
-            "max_size": rate_cache.maxsize
+            "size": len(cache),
+            "max_size": cache.maxsize
         }
     }
 
@@ -1579,8 +1572,8 @@ async def liveness_check():
         
         # 캐시 접근 테스트
         test_key = "health_check_test"
-        rate_cache[test_key] = {"test": True}
-        _ = rate_cache.get(test_key)
+        cache[test_key] = {"test": True}
+        _ = cache.get(test_key)
         
         response_time = (time.time() - start_time) * 1000  # ms
         

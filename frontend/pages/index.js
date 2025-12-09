@@ -426,18 +426,26 @@ export default function HomePage() {
     }, [showDropdown]);
 
     const MAX_AMOUNT = 5000000;
-    const isAmountExceeded = amount && parseInt(amount) > MAX_AMOUNT;
+    const [shakeInput, setShakeInput] = useState(false);
 
     const handleAmountChange = (e) => {
         const value = e.target.value.replace(/,/g, '');
         if (!isNaN(value) && value.length <= 10) {
-            setAmount(value);
+            const numValue = parseInt(value) || 0;
+            if (numValue > MAX_AMOUNT) {
+                // 최대 금액 초과 시 흔들림 효과 + 최대값으로 설정
+                setShakeInput(true);
+                setAmount(MAX_AMOUNT.toString());
+                setTimeout(() => setShakeInput(false), 500);
+            } else {
+                setAmount(value);
+            }
         }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (selectedCountry && amount && !isAmountExceeded) {
+        if (selectedCountry && amount) {
             setQueryParams({
                 receive_country: selectedCountry.name,
                 receive_currency: selectedCountry.currency
@@ -610,7 +618,7 @@ export default function HomePage() {
                                             <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
                                                 보내는 금액
                                             </label>
-                                            <div className={`relative h-14 sm:h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 transition-all duration-200 px-4 sm:px-6 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss ${isAmountExceeded ? 'focus-within:ring-red-500 ring-2 ring-red-300' : 'focus-within:ring-brand-500'}`}>
+                                            <div className={`relative h-14 sm:h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-4 sm:px-6 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss ${shakeInput ? 'animate-shake' : ''}`}>
                                                 <input
                                                     type="text"
                                                     value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
@@ -621,12 +629,7 @@ export default function HomePage() {
                                                 />
                                                 <span className="text-lg sm:text-xl font-bold text-gray-500">KRW</span>
                                             </div>
-                                            <div className="mt-2 flex items-center justify-between ml-1">
-                                                <p className="text-sm text-gray-500 font-medium">최소 금액: 100,000 KRW</p>
-                                                {isAmountExceeded && (
-                                                    <p className="text-sm text-red-500 font-semibold">5,000,000 KRW까지만 입력할 수 있어요</p>
-                                                )}
-                                            </div>
+                                            <p className="mt-2 text-sm text-gray-500 font-medium ml-1">최소 금액: 100,000 KRW | 최대 금액: 5,000,000 KRW</p>
                                         </div>
 
                                         {/* Submit Button - Toss Style */}
@@ -836,6 +839,16 @@ export default function HomePage() {
 
                 .animate-spin {
                     animation: spin 1s linear infinite;
+                }
+
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+                    20%, 40%, 60%, 80% { transform: translateX(4px); }
+                }
+
+                .animate-shake {
+                    animation: shake 0.5s ease-in-out;
                 }
 
                 .sr-only {

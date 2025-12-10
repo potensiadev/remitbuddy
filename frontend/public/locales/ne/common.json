@@ -36,7 +36,7 @@
     "best_badge": "सर्वश्रेष्ठ विकल्प",
     "recipient_gets": "घरमा पुग्ने रकम",
     "exchange_rate": "एक्सचेन्ज रेट",
-    "exchange_unit": "१ {{currency}} = {{value}} KRW",
+    "exchange_unit": "1 {{currency}} = {{value}} KRW",
     "fee": "शुल्क",
     "cta": "साइटमा जानुहोस्"
   },

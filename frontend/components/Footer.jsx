@@ -81,7 +81,7 @@ const Footer = () => {
           </div>
 
           {/* Customer Service Section */}
-          <div>
+          {/* <div>
             <h3 className="text-gray-900 font-bold text-sm mb-4">
               {footerSections.customerService.title}
             </h3>
@@ -102,7 +102,7 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
         </div>
 
         {/* Brand and Description */}
@@ -136,14 +136,14 @@ const Footer = () => {
           </div>
 
           {/* Language Selector */}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <button
               className="px-4 py-2 rounded-lg bg-white border border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-900 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow"
               aria-label="Change language"
             >
               한국어
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 

@@ -15,9 +15,10 @@ module.exports = {
       'si',
       'ne',
       'bn',
-      'mn'
+      'mn',
+      'cn'
     ],
-    localeDetection: false, // 브라우저 언어 감지 비활성화 (빌드 경고 해결)
+    localeDetection: true, // 브라우저 언어 감지 비활성화 (빌드 경고 해결)
   },
   react: {
     useSuspense: false,

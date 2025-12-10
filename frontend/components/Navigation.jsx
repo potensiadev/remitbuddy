@@ -39,7 +39,7 @@ const Navigation = () => {
        // { label: '블로그', href: '#blog' },
         { label: 'FAQ', href: '#faq' },
       ],
-    }
+    },
     contact: {
        title: '문의',
        links: [

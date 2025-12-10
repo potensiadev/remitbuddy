@@ -4,7 +4,6 @@
     "description": "තත්පර 3න්ම අඩුම මුදල් යැවීමේ සේවාව සොයාගන්න. රට 18ක් සඳහා විනිමය අනුපාත හා ගාස්තු සැසඳිමින් වැඩි මුදලක් ඉතුරු කරගන්න.",
     "keywords": "කොරියාවේ සිට මුදල් යැවීම, කොරියා රෙමිට් සැසඳීම, අඩුම ගාස්තු යැවීම, කොරියාවෙන් ශ්‍රී ලංකාවට මුදල්, Korea money transfer, Lanka remittance Korea"
   },
-
   "hero": {
     "badge": "ශීඝ්‍ර හා පාරදර්ශී සැසඳීම",
     "title_line1": "විදේශයට මුදල් යවන්න,",
@@ -17,7 +16,6 @@
     "stats_countries": "රටවල්",
     "stats_seconds": "සසඳා අවසන්"
   },
-
   "form": {
     "title": "සැසඳීම ආරම්භ කරන්න",
     "label_country": "මුදල් ලබන රට",
@@ -26,11 +24,9 @@
     "validation_minmax": "අවම: 10,000 KRW   උපරිම: 5,000,000 KRW",
     "submit": "අඩුම අනුපාතය සසඳන්න",
     "disclaimer": "නොමිලේ සැසඳීම — පුද්ගලික තොරතුරු අවශ්‍ය නොවේ",
-
     "aria_select_country": "මුදල් ලබන රට තෝරන්න",
     "aria_amount_label": "යැවෙන මුදල ලියන්න"
   },
-
   "provider": {
     "rank_suffix": "",
     "best_badge": "සර්වෝත්තම ගනුදෙනුව",
@@ -40,70 +36,77 @@
     "fee": "ගාස්තුව",
     "cta": "විස්තර බලන්න"
   },
-
   "results": {
     "title": "{{amount}} KRW → {{country}}",
     "snapshot": "සංශෝධිත වේලාව: {{time}}",
-
     "loading_title": "ඔබට හොඳම අනුපාතය සොයමින්…",
     "loading_sub": "සමාගම් 8ක් සැසඳෙමින් පවතී",
-
     "compare_again": "නැවත සැසඳන්න",
-
     "savings_prefix": "හොඳම අනුපාතයෙන්",
     "savings_suffix": "{{currency}} දක්වා ඉතුරු කරගන්න!",
     "count_suffix": "සසඳා ගත් සමාගම්",
-
     "retry": "නැවත උත්සාහ කරන්න",
-
     "error_empty": "විනිමය දත්ත හමු නොවීය.",
     "error_api": "දෝෂයක් සිදුවී ඇත: {{message}}"
   },
-
   "features": {
     "title": "ඇයි RemitBuddy?",
     "subtitle": "අඩු ගාස්තුව සෙවීමට ඇප් වලට ඇප් යාම අවශ්‍ය නැහැ",
-
     "f1_title": "තත්කාලීන විනිමය අනුපාත",
     "f1_desc": "නවතම දත්ත සමඟ නිවැරදි සැසඳීමක් කරන්න.",
-
     "f2_title": "පාරදර්ශී ගාස්තු",
     "f2_desc": "සගවුණු ගාස්තු නොමැත — සියලුම ගාස්තු පැහැදිලිව පෙන්වයි.",
-
     "f3_title": "රට 18ක් සඳහා",
     "f3_desc": "ශ්‍රී ලංකාව, වියට්නාම, ෆිලිපීනය සහ තවත් රටවල් සමඟ සැසඳීම.",
-
     "f4_title": "වැඩිපුර ඉතිරි කරන්න",
     "f4_desc": "හොඳම අනුපාතයෙන් මුදල් යවා වැඩිපුර ඉතුරු කරන්න."
   },
-
   "how": {
     "title": "භාවිතා කරන්නේ කෙසේද?",
     "subtitle": "සරල පියවර 3ක්",
-
     "s1_title": "රට සහ මුදල ඇතුල් කරන්න",
     "s1_desc": "මුදල් යවන රට තෝරා මුදල ඇතුල් කරන්න.",
-
     "s2_title": "තත්කාලීන ප්‍රතිඵල බලන්න",
     "s2_desc": "සමාගම් 8ක අනුපාත සහ ගාස්තු එකවර බලන්න.",
-
     "s3_title": "හොඳම විකල්පය තෝරන්න",
     "s3_desc": "සර්වෝත්තම සේවාව තේරූ පසු මුදල් යවන්න."
   },
-
   "faq": {
     "title": "නිතර අසන ප්‍රශ්න",
-
     "q1_title": "RemitBuddy මුදල් යැවීමේ සේවාවක්ද?",
     "q1_desc": "නොවේ. RemitBuddy සමාගම් අතර අනුපාත සහ ගාස්තු සසඳීම පමණි. මුදල් යැවීම ඔබ තේරූ සේවාව මඟින් සිදුවේ.",
-
     "q2_title": "සසඳීමට ගාස්තුවක් තිබේද?",
     "q2_desc": "නැහැ, 100% නොමිලේ — ලියාපදිංචිය හෝ පුද්ගලික දත්ත අවශ්‍ය නැත.",
-
     "q3_title": "අනුපාතය කොපමණ වාරයක් යාවත්කාලීන වෙයි?",
     "q3_desc": "'සසඳන්න' බොත්තම ඔබන සෑම විටම නවතම දත්ත ලබාගනී.",
-
     "q4_title": "කොයි රටවල් සඳහා සසඳා බැලිය හැකිද?",
     "q4_desc": "මෙම වේලාවේ ශ්‍රී ලංකාව, නේපාලය, වියට්නාම, ෆිලිපීනය, කම්බෝජය සහ තවත් රටවල් සහිතයි. ඉදිරියේදී තව රටවල් එකතු වේ."
+  },
+  "nav": {
+    "brand": "RemitBuddy",
+    "menu": "Menu",
+    "service": "Service",
+    "service_intro": "Service Intro",
+    "service_how": "How It Works",
+    "service_faq": "FAQ",
+    "open": "Open menu",
+    "close": "Close menu"
+  },
+  "footer": {
+    "title": "RemitBuddy",
+    "description": "The fastest remittance comparison tool.",
+    "company": "Company",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "service_title": "Service",
+    "service_intro": "Service Intro",
+    "service_how": "How It Works",
+    "service_faq": "FAQ",
+    "contact_business": "Business Partnerships",
+    "contact_support": "Customer Support",
+    "disclaimer_1": "RemitBuddy is a comparison service and not a remittance provider. Actual transfers are completed through your chosen partner.",
+    "disclaimer_2": "Rates and fees may change in real time and can vary by provider at the time of transfer.",
+    "copyright": "© {{year}} RemitBuddy. All Rights Reserved."
   }
 }

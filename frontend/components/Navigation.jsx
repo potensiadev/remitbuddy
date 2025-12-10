@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'next-i18next';
 
 /**
  * Toss-style Navigation Component
@@ -6,6 +7,7 @@ import React, { useState, useEffect } from 'react';
  * Desktop: Horizontal navigation bar
  */
 const Navigation = () => {
+  const { t } = useTranslation('common');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -32,12 +34,12 @@ const Navigation = () => {
 
   const menuItems = {
     service: {
-      title: '서비스',
+      title: t('nav.service'),
       links: [
-        { label: '서비스 소개', href: '#about' },
-        { label: '이용 방법', href: '#how-it-works' },
+        { label: t('nav.service_intro'), href: '#about' },
+        { label: t('nav.service_how'), href: '#how-it-works' },
        // { label: '블로그', href: '#blog' },
-        { label: 'FAQ', href: '#faq' },
+        { label: t('nav.service_faq'), href: '#faq' },
       ],
     }
     // contact: {
@@ -73,7 +75,7 @@ const Navigation = () => {
           <div className="flex-shrink-0">
             <a href="/" className="flex items-center">
               <span className="text-2xl md:text-3xl font-bold text-gray-900 hover:text-brand-600 transition-colors duration-200">
-                RemitBuddy
+                {t('nav.brand', t('footer.title'))}
               </span>
             </a>
           </div>
@@ -111,7 +113,7 @@ const Navigation = () => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="lg:hidden relative w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
-            aria-label="메뉴 열기"
+            aria-label={isMenuOpen ? t('nav.close') : t('nav.open')}
           >
             <div className="w-5 h-5 flex flex-col items-center justify-center">
               <span
@@ -158,11 +160,11 @@ const Navigation = () => {
         >
           {/* Menu Header */}
           <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
-            <span className="text-xl font-bold text-gray-900">메뉴</span>
+            <span className="text-xl font-bold text-gray-900">{t('nav.menu')}</span>
             <button
               onClick={() => setIsMenuOpen(false)}
               className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center"
-              aria-label="메뉴 닫기"
+              aria-label={t('nav.close')}
             >
               <svg
                 className="w-5 h-5 text-gray-700"

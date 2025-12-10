@@ -4,7 +4,6 @@
     "description": "Temukan layanan transfer uang termurah hanya dalam 3 detik. Bandingkan nilai tukar dan biaya ke 18 negara dan hemat lebih banyak.",
     "keywords": "kirim uang dari Korea, transfer uang Korea, perbandingan remitansi, kirim uang ke Indonesia, Korea to IDR, Korea exchange rate, transfer murah dari Korea, bandingkan biaya remitansi Korea"
   },
-
   "hero": {
     "badge": "Perbandingan Cepat & Transparan",
     "title_line1": "Kirim Uang ke Luar Negeri,",
@@ -17,7 +16,6 @@
     "stats_countries": "Negara yang didukung",
     "stats_seconds": "Perbandingan selesai"
   },
-
   "form": {
     "title": "Mulai Perbandingan",
     "label_country": "Negara penerima",
@@ -26,11 +24,9 @@
     "validation_minmax": "Minimum: 10,000 KRW   Maksimum: 5,000,000 KRW",
     "submit": "Bandingkan Tarif Terbaik",
     "disclaimer": "Gratis — tidak perlu data pribadi",
-
     "aria_select_country": "Pilih negara penerima",
     "aria_amount_label": "Masukkan jumlah yang dikirim"
   },
-
   "provider": {
     "rank_suffix": "",
     "best_badge": "Paling Hemat",
@@ -40,70 +36,77 @@
     "fee": "Biaya",
     "cta": "Pilih Ini"
   },
-
   "results": {
     "title": "{{amount}} KRW → {{country}}",
     "snapshot": "Waktu pengecekan: {{time}}",
-
     "loading_title": "Mencari tarif terbaik untuk kamu…",
     "loading_sub": "Membandingkan 8 layanan remitansi",
-
     "compare_again": "Bandingkan Lagi",
-
     "savings_prefix": "Hemat hingga",
     "savings_suffix": "{{currency}} dengan tarif terbaik!",
     "count_suffix": "layanan dibandingkan",
-
     "retry": "Coba Lagi",
-
     "error_empty": "Tidak bisa memuat data nilai tukar.",
     "error_api": "Terjadi kesalahan: {{message}}"
   },
-
   "features": {
     "title": "Kenapa Pakai RemitBuddy?",
     "subtitle": "Tidak perlu buka banyak aplikasi lagi.",
-
     "f1_title": "Nilai Tukar Real-Time",
     "f1_desc": "Bandingkan dengan nilai tukar terbaru dan paling akurat.",
-
     "f2_title": "Biaya Transparan",
     "f2_desc": "Semua biaya ditampilkan jelas — tanpa biaya tambahan.",
-
     "f3_title": "Mendukung 18 Negara",
     "f3_desc": "Bandingkan opsi pengiriman ke Indonesia, Filipina, Vietnam, dan banyak negara lain.",
-
     "f4_title": "Hemat Lebih Banyak",
     "f4_desc": "Kirim lebih banyak dengan tarif terbaik."
   },
-
   "how": {
     "title": "Cara Kerjanya",
     "subtitle": "Cuma 3 langkah mudah",
-
     "s1_title": "Pilih negara & masukkan jumlah",
     "s1_desc": "Pilih negara tujuan dan masukkan jumlah yang mau dikirim.",
-
     "s2_title": "Lihat hasil real-time",
     "s2_desc": "Lihat nilai tukar dan biaya dari 8 layanan dalam satu tampilan.",
-
     "s3_title": "Pilih opsi terbaik",
     "s3_desc": "Pilih layanan dengan tarif terbaik dan lanjut kirim."
   },
-
   "faq": {
     "title": "Pertanyaan Umum",
-
     "q1_title": "Apa RemitBuddy itu layanan transfer uang?",
     "q1_desc": "Bukan, kami hanya membandingkan nilai tukar dan biaya. Pengiriman uang dilakukan di situs layanan yang kamu pilih.",
-
     "q2_title": "Apakah layanan ini gratis?",
     "q2_desc": "Ya, 100% gratis — tidak perlu akun atau data pribadi.",
-
     "q3_title": "Seberapa sering nilai tukar diperbarui?",
     "q3_desc": "Setiap kali kamu tekan 'Bandingkan', kami memuat nilai tukar dan biaya terbaru.",
-
     "q4_title": "Negara mana saja yang bisa dibandingkan?",
     "q4_desc": "Saat ini mendukung Indonesia, Vietnam, Nepal, Filipina, Kamboja, dan banyak negara lain. Negara tambahan akan segera ditambahkan."
+  },
+  "nav": {
+    "brand": "RemitBuddy",
+    "menu": "Menu",
+    "service": "Service",
+    "service_intro": "Service Intro",
+    "service_how": "How It Works",
+    "service_faq": "FAQ",
+    "open": "Open menu",
+    "close": "Close menu"
+  },
+  "footer": {
+    "title": "RemitBuddy",
+    "description": "The fastest remittance comparison tool.",
+    "company": "Company",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "service_title": "Service",
+    "service_intro": "Service Intro",
+    "service_how": "How It Works",
+    "service_faq": "FAQ",
+    "contact_business": "Business Partnerships",
+    "contact_support": "Customer Support",
+    "disclaimer_1": "RemitBuddy is a comparison service and not a remittance provider. Actual transfers are completed through your chosen partner.",
+    "disclaimer_2": "Rates and fees may change in real time and can vary by provider at the time of transfer.",
+    "copyright": "© {{year}} RemitBuddy. All Rights Reserved."
   }
 }

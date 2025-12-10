@@ -266,3 +266,24 @@ export const logResultsImpression = (amount, country, currency, providerCount) =
     content_type: 'comparison_results'
   });
 };
+
+// 결과 영역에서 실제로 스크롤을 했는지 측정
+export const logResultsScroll = (
+  amount,
+  country,
+  currency,
+  providerCount,
+  bestProvider,
+  scrollY
+) => {
+  console.log('📜 결과 영역 스크롤 이벤트:', { amount, country, currency, providerCount, bestProvider, scrollY });
+  logEvent('results_scroll', {
+    amount: amount,
+    country: country,
+    transfer_currency: currency,
+    provider_count: providerCount,
+    best_provider: bestProvider,
+    scroll_position: scrollY,
+    content_type: 'comparison_results'
+  });
+};

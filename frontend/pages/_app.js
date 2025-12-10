@@ -7,6 +7,7 @@ import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-Z0SHT6SKJ3';
 
   // Unregister Service Worker (PWA disabled) and clear caches
   useEffect(() => {
@@ -34,7 +35,7 @@ function MyApp({ Component, pageProps }) {
       {/* Google Analytics - Optimized loading */}
       <Script
         strategy="lazyOnload"
-        src={`https://www.googletagmanager.com/gtag/js?id=G-Z0SHT6SKJ3`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
       />
       <Script
         id="google-analytics"
@@ -42,9 +43,9 @@ function MyApp({ Component, pageProps }) {
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
+            function gtag(){dataLayer.push(arguments);} 
             gtag('js', new Date());
-            gtag('config', 'G-Z0SHT6SKJ3', {
+            gtag('config', '${measurementId}', {
               send_page_view: false,
               page_path: window.location.pathname,
             });

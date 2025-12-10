@@ -5,18 +5,18 @@
     "keywords": "Korea money transfer, send money from Korea, Korea remittance comparison, compare money transfer Korea, cheapest money transfer from Korea, Korea exchange rate comparison, send money from Korea to USA, send money from Korea to Canada, send money from Korea to Singapore, send money from Korea to Hong Kong, Korea to USD transfer, Korea to CAD transfer, Korea to SGD transfer, Korea to HKD transfer, expat money transfer Korea"
   },
 
- "hero": {
-  "badge": "Quick and Transparent Comparison",
-  "title_line1": "Send Money Abroad,",
-  "title_line2": "Smarter",
-  "subtitle": "Stop overpaying for remittance fees. Stop switching between apps to find the cheapest rate.",
-  "trust_1": "Real-time exchange rates",
-  "trust_2": "No hidden fees",
-  "trust_3": "100% free comparison",
-  "stats_companies": "Providers",
-  "stats_countries": "Countries Supported",
-  "stats_seconds": "Comparison Done"
-},
+  "hero": {
+    "badge": "Quick and Transparent Comparison",
+    "title_line1": "Send Money Abroad,",
+    "title_line2": "Smarter",
+    "subtitle": "Stop overpaying for remittance fees. Stop switching between apps to find the cheapest rate.",
+    "trust_1": "Real-time exchange rates",
+    "trust_2": "No hidden fees",
+    "trust_3": "100% free comparison",
+    "stats_companies": "Providers",
+    "stats_countries": "Countries Supported",
+    "stats_seconds": "Comparison Done"
+  },
 
   "form": {
     "title": "Start Your Comparison",
@@ -36,7 +36,7 @@
     "best_badge": "Best Deal",
     "recipient_gets": "Amount Received",
     "exchange_rate": "Exchange Rate",
-    "exchange_unit": "KRW per {{currency}}",
+    "exchange_unit": "1 {{currency}} = {{value}} KRW",
     "fee": "Fee",
     "cta": "Go to Provider"
   },

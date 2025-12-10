@@ -1,33 +1,109 @@
 {
-  "page_title": "So sánh chuyển tiền quốc tế | Tỷ giá tốt nhất từ Hàn Quốc - RemitBuddy",
-  "meta_description": "Nền tảng so sánh chuyển tiền quốc tế lớn nhất Hàn Quốc. Hỗ trợ 10 quốc gia, so sánh tỷ giá thực tế từ 9 công ty uy tín trong 3 giây. Việt Nam, Nepal, Philippines, Thái Lan, Myanmar, Indonesia, Campuchia, Uzbekistan, Sri Lanka. Miễn phí, tiết kiệm tối đa 5%.",
-  "main_title": "So sánh tỷ giá chuyển tiền tốt nhất",
-  "main_subtitle": "Hỗ trợ 10 quốc gia, so sánh tỷ giá thực tế từ 9 công ty trong 3 giây",
-  "social_proof": "120,000 lao động Việt Nam tại Hàn Quốc tin dùng",
-  "rating": "4.9/5 ⭐⭐⭐⭐⭐",
-  "amount_label": "Bạn muốn gửi bao nhiều?",
-  "amount_helper": "Nhập số tiền bằng Won Hàn (tối thiểu ₩10,000, tối đa ₩5,000,000)",
-  "country_label": "Gửi về đâu?",
-  "country_helper": "Chọn quốc gia nhận tiền",
-  "compare_button": "So sánh tỷ giá ngay",
-  "compare_again_button": "So sánh lại",
-  "cta_helper": "3 giây hoàn thành • Hoàn toàn miễn phí • Không cần đăng ký • Hỗ trợ 10 quốc gia",
-  "feature_rates_title": "Tỷ giá tốt nhất đảm bảo",
-  "feature_rates_desc": "So sánh tỷ giá và phí thực tế từ 9 công ty được chính phủ Hàn Quốc cấp phép",
-  "feature_fast_title": "So sánh trong 3 giây",
-  "feature_fast_desc": "Xem ngay số tiền thực nhận mà không cần tính toán phức tạp",
-  "feature_secure_title": "100% An toàn bảo mật",
-  "feature_secure_desc": "Tất cả công ty đều được cấp phép chính thức và giám sát bởi cơ quan tài chính Hàn Quốc",
-  "real_time_summary": "Kết quả so sánh chuyển tiền thời gian thực",
-  "most_amount_receive": "Tỷ giá tốt nhất",
-  "amount_to_receive": "Số tiền nhận được",
-  "fee": "Phí",
-  "loading_text": "Đang lấy tỷ giá thời gian thực...",
-  "retrying_text": "Máy chủ đang khởi động... Vui lòng đợi một chút",
-  "error_title": "Có lỗi xảy ra",
-  "refresh": "Làm mới",
-  "debug_info": "Thông tin debug",
-  "amount_placeholder": "1,000,000",
-  "amount_min_error": "Vui lòng nhập ít nhất ₩10,000",
-  "amount_max_error": "Số tiền tối đa là ₩5,000,000"
+  "seo": {
+    "title": "Gửi tiền quốc tế với chi phí thấp hơn – RemitBuddy",
+    "description": "Tìm dịch vụ chuyển tiền rẻ nhất chỉ trong 3 giây. So sánh tỷ giá và phí tại 18 quốc gia và tiết kiệm nhiều chi phí.",
+    "keywords": "gửi tiền từ Hàn Quốc, so sánh chuyển tiền, tỷ giá Hàn Quốc, gửi tiền sang Việt Nam, gửi tiền sang Philippines, gửi tiền sang Nepal, chuyển tiền giá rẻ, so sánh tỷ giá Hàn Quốc"
+  },
+
+  "hero": {
+    "badge": "So sánh nhanh và minh bạch",
+    "title_line1": "Gửi tiền quốc tế,",
+    "title_line2": "tiết kiệm hơn",
+    "subtitle": "Không cần trả phí chuyển tiền quá cao nữa.\nKhông cần mở nhiều app để tìm tỷ giá tốt nhất.",
+    "trust_1": "Tỷ giá theo thời gian thực",
+    "trust_2": "Không phí ẩn",
+    "trust_3": "So sánh 100% miễn phí",
+    "stats_companies": "Dịch vụ",
+    "stats_countries": "Quốc gia hỗ trợ",
+    "stats_seconds": "giây để so sánh"
+  },
+
+  "form": {
+    "title": "Bắt đầu so sánh",
+    "label_country": "Quốc gia nhận tiền",
+    "label_amount": "Số tiền gửi",
+    "placeholder_amount": "5,000,000",
+    "validation_minmax": "Tối thiểu: 10,000 KRW   Tối đa: 5,000,000 KRW",
+    "submit": "So sánh tỷ giá tốt nhất",
+    "disclaimer": "Miễn phí — không cần cung cấp thông tin cá nhân.",
+
+    "aria_select_country": "Chọn quốc gia nhận tiền",
+    "aria_amount_label": "Nhập số tiền gửi"
+  },
+
+  "provider": {
+    "rank_suffix": "Hạng",
+    "best_badge": "Giá tốt nhất",
+    "recipient_gets": "Số tiền người nhận được",
+    "exchange_rate": "Tỷ giá",
+    "exchange_unit": "1 {{currency}} = {{value}} KRW",
+    "fee": "Phí",
+    "cta": "Gửi tiền ngay"
+  },
+
+  "results": {
+    "title": "{{amount}} KRW → {{country}}",
+    "snapshot": "Thời điểm kiểm tra: {{time}}",
+
+    "loading_title": "Đang tìm tỷ giá tốt nhất cho bạn…",
+    "loading_sub": "Đang so sánh 8 dịch vụ",
+
+    "compare_again": "So sánh lại",
+
+    "savings_prefix": "Tiết kiệm lên đến",
+    "savings_suffix": "{{currency}} với tỷ giá tốt nhất!",
+    "count_suffix": "dịch vụ được so sánh",
+
+    "retry": "Thử lại",
+
+    "error_empty": "Không thể tải dữ liệu tỷ giá.",
+    "error_api": "Đã xảy ra lỗi: {{message}}"
+  },
+
+  "features": {
+    "title": "Tại sao nên dùng RemitBuddy?",
+    "subtitle": "Không cần chuyển qua lại nhiều app nữa.",
+
+    "f1_title": "Tỷ giá theo thời gian thực",
+    "f1_desc": "Luôn sử dụng tỷ giá mới nhất và chính xác nhất để so sánh.",
+
+    "f2_title": "Phí minh bạch",
+    "f2_desc": "Hiển thị rõ ràng mọi loại phí — không có phí ẩn.",
+
+    "f3_title": "Hỗ trợ 18 quốc gia",
+    "f3_desc": "Có thể so sánh gửi tiền sang Việt Nam, Philippines và nhiều quốc gia khác.",
+
+    "f4_title": "Tiết kiệm nhiều hơn",
+    "f4_desc": "Gửi được nhiều hơn với tỷ giá tốt nhất."
+  },
+
+  "how": {
+    "title": "Cách hoạt động",
+    "subtitle": "Quy trình so sánh đơn giản trong 3 bước",
+
+    "s1_title": "Chọn quốc gia và nhập số tiền",
+    "s1_desc": "Chọn nơi cần gửi tiền và nhập số tiền.",
+
+    "s2_title": "Xem kết quả theo thời gian thực",
+    "s2_desc": "Xem tỷ giá và phí từ 8 dịch vụ chỉ trong một màn hình.",
+
+    "s3_title": "Chọn lựa chọn tốt nhất",
+    "s3_desc": "Chọn dịch vụ phù hợp nhất và tiếp tục gửi tiền."
+  },
+
+  "faq": {
+    "title": "Câu hỏi thường gặp",
+
+    "q1_title": "RemitBuddy có phải là dịch vụ chuyển tiền không?",
+    "q1_desc": "Không. RemitBuddy chỉ so sánh tỷ giá và phí. Việc gửi tiền thực tế được thực hiện trên trang của dịch vụ bạn chọn.",
+
+    "q2_title": "Dịch vụ so sánh có miễn phí không?",
+    "q2_desc": "Có. Hoàn toàn miễn phí — không cần đăng ký hay cung cấp thông tin cá nhân.",
+
+    "q3_title": "Tỷ giá được cập nhật bao lâu một lần?",
+    "q3_desc": "Mỗi lần bạn nhấn 'So sánh', chúng tôi sẽ tải tỷ giá và phí mới nhất.",
+
+    "q4_title": "Có thể so sánh gửi tiền đến những quốc gia nào?",
+    "q4_desc": "Hiện hỗ trợ gửi đến Việt Nam, Nepal, Philippines, Cambodia và nhiều quốc gia khác. Sẽ cập nhật thêm nữa."
+  }
 }

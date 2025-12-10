@@ -36,7 +36,7 @@
     "best_badge": "최저가 추천",
     "recipient_gets": "받는 금액",
     "exchange_rate": "환율",
-    "exchange_unit": "KRW per {{currency}}",
+    "exchange_unit": "1 {{currency}} = {{value}} KRW",
     "fee": "수수료",
     "cta": "송금하러 가기"
   },

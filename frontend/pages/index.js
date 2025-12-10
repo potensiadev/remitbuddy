@@ -4,6 +4,12 @@ import Footer from '../components/Footer';
 import Navigation from '../components/Navigation';
 import { Button } from '../components/ui';
 import { useTranslation } from 'next-i18next';
+import {
+  logClickedCTA,
+  logClickedProvider,
+  logResultsImpression,
+  logResultsScroll
+} from '../utils/analytics';
 
 // API Configuration - CRITICAL: DO NOT REMOVE
 // Dynamically determine API URL based on environment
@@ -150,7 +156,7 @@ const TrendingUpIcon = () => (
 );
 
 // Provider Card Component - mobile-first, high-emphasis layout with clear separation
-const ProviderCard = ({ provider, isBest, index }) => {
+const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
   const { t } = useTranslation('common');
 
   const displayName =
@@ -273,6 +279,7 @@ const ProviderCard = ({ provider, isBest, index }) => {
           href={provider.link}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={onProviderClick}
           className={`flex w-full items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-base shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${
             isBest ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-800 text-white hover:bg-gray-900'
           }`}
@@ -288,7 +295,7 @@ const ProviderCard = ({ provider, isBest, index }) => {
 };
 
 // Comparison Results Component - CRITICAL: Maintains API integration
-function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, apiBaseUrl }) {
+function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, apiBaseUrl, isAutoScrolling }) {
   const { t } = useTranslation('common');
 
   const [results, setResults] = useState([]);
@@ -296,10 +303,18 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
   const [error, setError] = useState(null); // { type: 'empty' | 'api', message?: string }
   const [snapshotTime, setSnapshotTime] = useState(null);
   const amountRef = useRef(amount);
+  const resultsContainerRef = useRef(null);
+  const [hasLoggedImpression, setHasLoggedImpression] = useState(false);
+  const [hasLoggedScroll, setHasLoggedScroll] = useState(false);
 
   useEffect(() => {
     amountRef.current = amount;
   }, [amount]);
+
+  useEffect(() => {
+    setHasLoggedImpression(false);
+    setHasLoggedScroll(false);
+  }, [forceRefresh, queryParams.receive_country, queryParams.receive_currency, amount]);
 
   useEffect(() => {
     if (!queryParams.receive_country) return;
@@ -358,10 +373,71 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
       ? Math.round(bestProvider.recipient_gets - worstProvider.recipient_gets)
       : 0;
 
+  const handleProviderClick = (provider, index) => {
+    logClickedProvider(
+      provider.provider,
+      parseInt(amountRef.current || '0', 10),
+      queryParams.receive_country,
+      queryParams.receive_currency,
+      {
+        rank: index + 1,
+        is_top_provider: index === 0,
+        provider_count: results.length,
+        recipient_gets: provider.recipient_gets,
+        exchange_rate: provider.exchange_rate
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (!isLoading && !error && results.length > 0 && !hasLoggedImpression) {
+      logResultsImpression(
+        parseInt(amountRef.current || '0', 10),
+        queryParams.receive_country,
+        queryParams.receive_currency,
+        results.length
+      );
+      setHasLoggedImpression(true);
+    }
+  }, [isLoading, error, results.length, hasLoggedImpression, queryParams.receive_country, queryParams.receive_currency]);
+
+  useEffect(() => {
+    if (hasLoggedScroll || isLoading || error || results.length === 0) return;
+
+    const handleScroll = () => {
+      if (hasLoggedScroll || isAutoScrolling) return;
+
+      const sectionTop = resultsContainerRef.current?.offsetTop ?? 0;
+      if (window.scrollY > sectionTop + 50) {
+        logResultsScroll(
+          parseInt(amountRef.current || '0', 10),
+          queryParams.receive_country,
+          queryParams.receive_currency,
+          results.length,
+          bestProvider?.provider,
+          window.scrollY
+        );
+        setHasLoggedScroll(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [
+    hasLoggedScroll,
+    isAutoScrolling,
+    isLoading,
+    error,
+    results.length,
+    queryParams.receive_country,
+    queryParams.receive_currency,
+    bestProvider?.provider
+  ]);
+
   const formattedAmount = parseInt(amount || '0', 10).toLocaleString();
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
+    <div ref={resultsContainerRef} className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
       {/* Mobile-first: tighter spacing and scalable typography to prevent overflow */}
       <div className="mb-6 sm:mb-8 text-center space-y-3 sm:space-y-4">
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight break-words">
@@ -449,6 +525,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
                 provider={{ ...provider, currency: queryParams.receive_currency }}
                 isBest={index === 0}
                 index={index}
+                onProviderClick={() => handleProviderClick(provider, index)}
               />
             ))}
           </div>
@@ -469,6 +546,7 @@ export default function HomePage() {
   const [queryParams, setQueryParams] = useState({});
   const [forceRefresh, setForceRefresh] = useState(0);
   const [apiBaseUrl, setApiBaseUrl] = useState('https://remitbuddy.up.railway.app');
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const dropdownRef = useRef(null);
   const resultsRef = useRef(null);
 
@@ -540,6 +618,10 @@ export default function HomePage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (selectedCountry && amount) {
+      const numericAmount = parseInt(amount.replace(/,/g, ''), 10) || 0;
+
+      logClickedCTA(numericAmount, selectedCountry.code || selectedCountry.name, selectedCountry.currency);
+
       setQueryParams({
         receive_country: selectedCountry.name,
         receive_currency: selectedCountry.currency
@@ -547,15 +629,20 @@ export default function HomePage() {
       setShowResults(true);
       setForceRefresh((prev) => prev + 1);
 
+      setIsAutoScrolling(true);
+
       // Smooth scroll to results
       setTimeout(() => {
         resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => setIsAutoScrolling(false), 600);
       }, 100);
     }
   };
 
   const handleCompareAgain = () => {
+    setIsAutoScrolling(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => setIsAutoScrolling(false), 500);
   };
 
   const formattedAmount = amount ? parseInt(amount, 10).toLocaleString('en-US') : '';
@@ -920,6 +1007,7 @@ export default function HomePage() {
                 forceRefresh={forceRefresh}
                 onCompareAgain={handleCompareAgain}
                 apiBaseUrl={apiBaseUrl}
+                isAutoScrolling={isAutoScrolling}
               />
             </div>
           </section>

@@ -71,7 +71,7 @@ export default function HeroSection() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative w-full max-w-full min-h-screen pt-20 md:pt-24 overflow-x-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <section id="about" className="relative w-full max-w-full min-h-screen pt-20 md:pt-24 overflow-x-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
         {/* Background Circle - Desktop Only */}
         <div className="hidden md:block absolute top-20 right-0 w-96 h-96 bg-blue-100 rounded-full opacity-40 blur-3xl -z-10" />
         <div className="hidden md:block absolute bottom-20 left-0 w-80 h-80 bg-purple-100 rounded-full opacity-30 blur-3xl -z-10" />

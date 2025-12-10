@@ -1,33 +1,101 @@
 {
-  "page_title": "3초만에 최저 해외송금수수료 실시간 환율 비교 - RemitBuddy",
-  "meta_description": "한국 최대 해외송금수수료 비교 플랫폼. 18개국 지원, 9개 송금업체 실시간 환율·수수료 3초 비교. 베트남, 네팔, 필리핀, 태국, 미얀마, 인도네시아, 캄보디아, 우즈베키스탄, 스리랑카. 무료 이용, 최대 5% 절약.",
-  "main_title": "가장 저렴한 송금환율을 비교하세요",
-  "main_subtitle": "18개국 지원, 9개 송금업체 실시간 환율 3초 비교",
-  "social_proof": "한국 거주 외국인 12만명이 신뢰하는 송금 비교 서비스",
-  "rating": "4.9/5 ⭐⭐⭐⭐⭐",
-  "amount_label": "얼마를 보내시나요?",
-  "amount_helper": "한국 원화로 입력하세요 (최소 ₩10,000, 최대 ₩5,000,000)",
-  "country_label": "어디로 보내시나요?",
-  "country_helper": "송금 받을 국가를 선택하세요",
-  "compare_button": "실시간 환율 비교하기",
-  "compare_again_button": "다시 비교하기",
-  "cta_helper": "3초 완료 • 100% 무료 • 회원가입 불필요 • 18개국 지원",
-  "feature_rates_title": "최고 환율 보장",
-  "feature_rates_desc": "9개 송금업체 실시간 환율·수수료 투명 비교",
-  "feature_fast_title": "3초 즉시 비교",
-  "feature_fast_desc": "복잡한 계산 없이 실제 받는 금액을 바로 확인",
-  "feature_secure_title": "100% 안전 보장",
-  "feature_secure_desc": "모든 업체는 한국 금융당국 정식 허가·감독하에 운영",
-  "real_time_summary": "실시간 송금 비교 결과",
-  "most_amount_receive": "최고 수령액",
-  "amount_to_receive": "받는 금액",
-  "fee": "수수료",
-  "loading_text": "실시간 환율을 가져오는 중...",
-  "retrying_text": "서버 준비 중... 잠시만 기다려주세요",
-  "error_title": "오류가 발생했습니다",
-  "refresh": "새로고침",
-  "debug_info": "디버그 정보",
-  "amount_placeholder": "1,000,000",
-  "amount_min_error": "최소 10,000원 이상 입력해주세요",
-  "amount_max_error": "최대 5,000,000원까지 입력 가능합니다"
+  "seo": {
+    "title": "RemitBuddy 해외송금비교",
+    "description": "3초만에 가장 저렴한 해외송금 업체를 찾아드려요.",
+    "keywords": "해외송금, 송금비교, 환율비교, 베트남송금, 필리핀송금"
+  },
+
+  "hero": {
+    "badge": "안전하고 투명한 비교 서비스",
+    "title_line1": "해외송금",
+    "title_line2": "더 똑똑하게",
+    "subtitle": "8개의 해외송금 업체를 단 3초만에 비교하고 최대 {{amount}} 절약하세요",
+    "trust_1": "실시간 환율 정보",
+    "trust_2": "숨은 수수료 없음",
+    "trust_3": "100% 무료 비교",
+    "stats_companies": "송금 업체",
+    "stats_countries": "송금 가능",
+    "stats_seconds": "비교 완료"
+  },
+
+  "form": {
+    "title": "환율 비교 시작하기",
+    "label_country": "받는 나라",
+    "label_amount": "보내는 금액",
+    "placeholder_amount": "5,000,000",
+    "validation_minmax": "최소 금액: 10,000 KRW   최대 금액: 5,000,000 KRW",
+    "submit": "최저 환율 비교하기",
+    "disclaimer": "비교는 무료이며 개인정보를 요구하지 않아요"
+  },
+
+  "results": {
+    "title": "{{amount}} KRW → {{country}}",
+    "snapshot": "조회 시각: {{time}}",
+    "savings": "가장 저렴하게 최대 {{value}} {{currency}} 더 보낼 수 있어요!",
+    "compare_again": "다시 비교하기",
+
+    "loading_title": "최적의 환율을 찾고 있습니다...",
+    "loading_sub": "8개 송금 업체를 비교하는 중",
+
+    "error_api": "오류가 발생했습니다: {{message}}",
+    "error_empty": "환율 정보를 불러올 수 없습니다",
+    "retry": "다시 시도하기",
+
+    "count_label": "{{count}}개 업체 비교 결과"
+  },
+
+  "provider": {
+    "best_badge": "최저가 추천",
+    "recipient_gets": "받는 금액",
+    "exchange_rate": "환율",
+    "fee": "수수료",
+    "cta": "송금하러 가기"
+  },
+
+  "features": {
+    "title": "RemitBuddy 왜 써야할까요?",
+    "subtitle": "더이상 여러 앱을 비교하지 마세요",
+
+    "f1_title": "실시간 환율",
+    "f1_desc": "항상 최신 환율 정보로 정확하게 비교할 수 있어요",
+
+    "f2_title": "투명한 수수료",
+    "f2_desc": "숨겨진 비용 없이 모든 수수료를 명확하게 표시해요",
+
+    "f3_title": "18개국 지원",
+    "f3_desc": "베트남, 필리핀 등 주요 18개국으로 송금 비교를 지원해요",
+
+    "f4_title": "최대 절약",
+    "f4_desc": "최적의 환율로 송금하여 수만원을 절약할 수 있어요"
+  },
+
+  "how": {
+    "title": "이용 방법",
+    "subtitle": "3단계로 끝나는 간단한 비교 과정",
+
+    "s1_title": "송금 국가와 금액 입력",
+    "s1_desc": "송금받을 나라를 선택하고 보낼 금액을 입력하세요",
+
+    "s2_title": "실시간 비교 결과",
+    "s2_desc": "8개 업체의 환율과 수수료를 한눈에 비교하세요",
+
+    "s3_title": "최적 업체 선택",
+    "s3_desc": "가장 유리한 조건을 확인하고 바로 송금하세요"
+  },
+
+  "faq": {
+    "title": "자주 묻는 질문",
+
+    "q1_title": "RemitBuddy는 송금 서비스인가요?",
+    "q1_desc": "아니요. RemitBuddy는 여러 송금 업체의 환율·수수료를 비교해주는 플랫폼이에요.",
+
+    "q2_title": "해외송금비교 서비스는 무료인가요?",
+    "q2_desc": "네. 100% 무료이며 회원가입이나 개인 정보 제공 없이 이용할 수 있어요.",
+
+    "q3_title": "환율 정보는 얼마나 자주 업데이트되나요?",
+    "q3_desc": "비교하기 버튼을 누를 때마다 최신 환율과 수수료 정보를 불러옵니다.",
+
+    "q4_title": "어떤 국가를 지원하나요?",
+    "q4_desc": "현재 베트남, 네팔, 필리핀 등 18개국 송금 비교를 지원하며 앞으로 더 늘어날 예정이에요."
+  }
 }

@@ -22,13 +22,13 @@ const Footer = () => {
         { label: '사업제휴', value: 'business@remitbuddy.com' },
         { label: '고객센터', value: 'support@remitbuddy.com' },
       ],
-    },
-    customerService: {
-      title: '고객센터',
-      items: [
-        { label: '이메일', value: 'support@remitbuddy.com' },
-      ],
-    },
+    }
+    // customerService: {
+    //   title: '고객센터',
+    //   items: [
+    //     { label: '이메일', value: 'support@remitbuddy.com' },
+    //   ],
+    // },
   };
 
   return (

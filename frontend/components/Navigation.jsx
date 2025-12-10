@@ -40,14 +40,14 @@ const Navigation = () => {
         { label: 'FAQ', href: '#faq' },
       ],
     }
-    // contact: {
-    //   title: '문의',
-    //   links: [
-    //     { label: '사업제휴', href: '#partnership' },
-    //     { label: '고객센터', href: '#support' },
+    contact: {
+       title: '문의',
+       links: [
+         { label: '사업제휴', href: '#partnership' },
+         { label: '고객센터', href: '#support' },
     //    // { label: '광고 문의', href: '#advertising' },
-    //   ],
-    // },
+       ],
+     },
   };
 
   const handleLinkClick = (href) => {

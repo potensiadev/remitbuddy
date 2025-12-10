@@ -4,7 +4,6 @@
     "description": "Tìm dịch vụ chuyển tiền rẻ nhất chỉ trong 3 giây. So sánh tỷ giá và phí tại 18 quốc gia và tiết kiệm nhiều chi phí.",
     "keywords": "gửi tiền từ Hàn Quốc, so sánh chuyển tiền, tỷ giá Hàn Quốc, gửi tiền sang Việt Nam, gửi tiền sang Philippines, gửi tiền sang Nepal, chuyển tiền giá rẻ, so sánh tỷ giá Hàn Quốc"
   },
-
   "hero": {
     "badge": "So sánh nhanh và minh bạch",
     "title_line1": "Gửi tiền quốc tế,",
@@ -17,7 +16,6 @@
     "stats_countries": "Quốc gia hỗ trợ",
     "stats_seconds": "giây để so sánh"
   },
-
   "form": {
     "title": "Bắt đầu so sánh",
     "label_country": "Quốc gia nhận tiền",
@@ -26,11 +24,9 @@
     "validation_minmax": "Tối thiểu: 10,000 KRW   Tối đa: 5,000,000 KRW",
     "submit": "So sánh tỷ giá tốt nhất",
     "disclaimer": "Miễn phí — không cần cung cấp thông tin cá nhân.",
-
     "aria_select_country": "Chọn quốc gia nhận tiền",
     "aria_amount_label": "Nhập số tiền gửi"
   },
-
   "provider": {
     "rank_suffix": "Hạng",
     "best_badge": "Giá tốt nhất",
@@ -40,70 +36,77 @@
     "fee": "Phí",
     "cta": "Gửi tiền ngay"
   },
-
   "results": {
     "title": "{{amount}} KRW → {{country}}",
     "snapshot": "Thời điểm kiểm tra: {{time}}",
-
     "loading_title": "Đang tìm tỷ giá tốt nhất cho bạn…",
     "loading_sub": "Đang so sánh 8 dịch vụ",
-
     "compare_again": "So sánh lại",
-
     "savings_prefix": "Tiết kiệm lên đến",
     "savings_suffix": "{{currency}} với tỷ giá tốt nhất!",
     "count_suffix": "dịch vụ được so sánh",
-
     "retry": "Thử lại",
-
     "error_empty": "Không thể tải dữ liệu tỷ giá.",
     "error_api": "Đã xảy ra lỗi: {{message}}"
   },
-
   "features": {
     "title": "Tại sao nên dùng RemitBuddy?",
     "subtitle": "Không cần chuyển qua lại nhiều app nữa.",
-
     "f1_title": "Tỷ giá theo thời gian thực",
     "f1_desc": "Luôn sử dụng tỷ giá mới nhất và chính xác nhất để so sánh.",
-
     "f2_title": "Phí minh bạch",
     "f2_desc": "Hiển thị rõ ràng mọi loại phí — không có phí ẩn.",
-
     "f3_title": "Hỗ trợ 18 quốc gia",
     "f3_desc": "Có thể so sánh gửi tiền sang Việt Nam, Philippines và nhiều quốc gia khác.",
-
     "f4_title": "Tiết kiệm nhiều hơn",
     "f4_desc": "Gửi được nhiều hơn với tỷ giá tốt nhất."
   },
-
   "how": {
     "title": "Cách hoạt động",
     "subtitle": "Quy trình so sánh đơn giản trong 3 bước",
-
     "s1_title": "Chọn quốc gia và nhập số tiền",
     "s1_desc": "Chọn nơi cần gửi tiền và nhập số tiền.",
-
     "s2_title": "Xem kết quả theo thời gian thực",
     "s2_desc": "Xem tỷ giá và phí từ 8 dịch vụ chỉ trong một màn hình.",
-
     "s3_title": "Chọn lựa chọn tốt nhất",
     "s3_desc": "Chọn dịch vụ phù hợp nhất và tiếp tục gửi tiền."
   },
-
   "faq": {
     "title": "Câu hỏi thường gặp",
-
     "q1_title": "RemitBuddy có phải là dịch vụ chuyển tiền không?",
     "q1_desc": "Không. RemitBuddy chỉ so sánh tỷ giá và phí. Việc gửi tiền thực tế được thực hiện trên trang của dịch vụ bạn chọn.",
-
     "q2_title": "Dịch vụ so sánh có miễn phí không?",
     "q2_desc": "Có. Hoàn toàn miễn phí — không cần đăng ký hay cung cấp thông tin cá nhân.",
-
     "q3_title": "Tỷ giá được cập nhật bao lâu một lần?",
     "q3_desc": "Mỗi lần bạn nhấn 'So sánh', chúng tôi sẽ tải tỷ giá và phí mới nhất.",
-
     "q4_title": "Có thể so sánh gửi tiền đến những quốc gia nào?",
     "q4_desc": "Hiện hỗ trợ gửi đến Việt Nam, Nepal, Philippines, Cambodia và nhiều quốc gia khác. Sẽ cập nhật thêm nữa."
+  },
+  "nav": {
+    "brand": "RemitBuddy",
+    "menu": "Menu",
+    "service": "Service",
+    "service_intro": "Service Intro",
+    "service_how": "How It Works",
+    "service_faq": "FAQ",
+    "open": "Open menu",
+    "close": "Close menu"
+  },
+  "footer": {
+    "title": "RemitBuddy",
+    "description": "The fastest remittance comparison tool.",
+    "company": "Company",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "service_title": "Service",
+    "service_intro": "Service Intro",
+    "service_how": "How It Works",
+    "service_faq": "FAQ",
+    "contact_business": "Business Partnerships",
+    "contact_support": "Customer Support",
+    "disclaimer_1": "RemitBuddy is a comparison service and not a remittance provider. Actual transfers are completed through your chosen partner.",
+    "disclaimer_2": "Rates and fees may change in real time and can vary by provider at the time of transfer.",
+    "copyright": "© {{year}} RemitBuddy. All Rights Reserved."
   }
 }

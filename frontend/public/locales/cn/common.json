@@ -81,5 +81,32 @@
     "q3_desc": "每次点击「比较」按钮时，都会实时获取最新汇率和手续费。",
     "q4_title": "支持哪些国家？",
     "q4_desc": "目前支持越南、尼泊尔、菲律宾、柬埔寨、中国等多个国家，后续还会继续增加。"
+  },
+  "nav": {
+    "brand": "RemitBuddy",
+    "menu": "Menu",
+    "service": "Service",
+    "service_intro": "Service Intro",
+    "service_how": "How It Works",
+    "service_faq": "FAQ",
+    "open": "Open menu",
+    "close": "Close menu"
+  },
+  "footer": {
+    "title": "RemitBuddy",
+    "description": "The fastest remittance comparison tool.",
+    "company": "Company",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact",
+    "service_title": "Service",
+    "service_intro": "Service Intro",
+    "service_how": "How It Works",
+    "service_faq": "FAQ",
+    "contact_business": "Business Partnerships",
+    "contact_support": "Customer Support",
+    "disclaimer_1": "RemitBuddy is a comparison service and not a remittance provider. Actual transfers are completed through your chosen partner.",
+    "disclaimer_2": "Rates and fees may change in real time and can vary by provider at the time of transfer.",
+    "copyright": "© {{year}} RemitBuddy. All Rights Reserved."
   }
 }

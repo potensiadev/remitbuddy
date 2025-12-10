@@ -68,9 +68,12 @@ const Footer = () => {
                     <span className="block font-medium text-gray-700">
                       {item.label}
                     </span>
-                    <span className="hover:text-brand-600 transition-colors duration-150">
+                    <a
+                      href={`mailto:${item.value}`}
+                      className="hover:text-brand-600 transition-colors duration-150"
+                    >
                       {item.value}
-                    </span>
+                    </a>
                   </div>
                 </li>
               ))}

@@ -18,9 +18,9 @@ const Footer = () => {
     },
     contact: {
       title: '문의',
-      links: [
-        { label: '사업제휴', href: 'mailto:business@remitbuddy.com' },
-        { label: '고객센터', href: 'mailto:support@remitbuddy.com' }
+      items: [
+        { label: '사업제휴', value: 'business@remitbuddy.com' },
+        { label: '고객센터', value: 'support@remitbuddy.com' },
       ],
     },
     customerService: {
@@ -28,7 +28,7 @@ const Footer = () => {
       items: [
         { label: '이메일', value: 'support@remitbuddy.com' },
       ],
-    }
+    },
   };
 
   return (
@@ -62,14 +62,16 @@ const Footer = () => {
               {footerSections.contact.title}
             </h3>
             <ul className="space-y-3 list-none">
-              {footerSections.contact.links.map((link, index) => (
+              {footerSections.contact.items.map((item, index) => (
                 <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-gray-600 hover:text-gray-900 transition-colors duration-150 text-sm block"
-                  >
-                    {link.label}
-                  </a>
+                  <div className="text-gray-600 text-sm">
+                    <span className="block font-medium text-gray-700">
+                      {item.label}
+                    </span>
+                    <span className="hover:text-brand-600 transition-colors duration-150">
+                      {item.value}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>

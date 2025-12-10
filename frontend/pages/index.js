@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import Navigation from '../components/Navigation';
 import { Button } from '../components/ui';
 import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {
   logClickedCTA,
   logClickedProvider,
@@ -1125,4 +1126,14 @@ export default function HomePage() {
       `}</style>
     </>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  const currentLocale = locale || 'en';
+
+  return {
+    props: {
+      ...(await serverSideTranslations(currentLocale, ['common']))
+    }
+  };
 }

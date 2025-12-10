@@ -158,6 +158,12 @@ const ProviderCard = ({ provider, isBest, index }) => {
 
   const formattedFeeInKRW = provider.fee.toLocaleString('en-US');
 
+  const rateValue = provider.exchange_rate;
+  const formattedRate = rateValue.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4
+  });
+
   // 1위는 특별한 스타일, 나머지는 명확하게 구분되는 카드 스타일
   const cardStyles = isBest
     ? 'border-2 border-blue-400 bg-gradient-to-br from-blue-50 via-white to-blue-50 shadow-xl ring-4 ring-blue-100'
@@ -240,12 +246,19 @@ const ProviderCard = ({ provider, isBest, index }) => {
         {/* 환율 & 수수료 */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-5">
           <div className="rounded-xl bg-gray-100 px-4 py-3">
-            <div className="text-xs font-semibold text-gray-500 mb-1">{t('provider.exchange_rate')}</div>
-            <div className="text-base sm:text-lg font-bold text-gray-800">
-              {(1 / provider.exchange_rate).toFixed(4)}
+            <div className="text-xs font-semibold text-gray-500 mb-1">
+              {t('provider.exchange_rate')}
             </div>
+
+            <div className="text-base sm:text-lg font-bold text-gray-800">
+              1 {provider.currency} = {formattedRate} KRW
+            </div>
+
             <div className="text-[10px] sm:text-xs text-gray-400 font-medium">
-              {t('provider.exchange_unit', { currency: provider.currency })}
+              {t('provider.exchange_unit', {
+                currency: provider.currency,
+                value: formattedRate
+              })}
             </div>
           </div>
           <div className="rounded-xl bg-gray-100 px-4 py-3">

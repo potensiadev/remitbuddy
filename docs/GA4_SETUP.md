@@ -26,6 +26,14 @@
 | 차원 | `scroll_position` | 결과 영역에서의 스크롤 위치(px) |
 | 차원 | `session_duration_range` | 세션 체류 시간 구간 |
 
+### 📌 Provider 클릭 이벤트는 이렇게 봅니다
+- **이벤트 이름:** `clicked_provider`
+- **사업자 이름:** `provider`(또는 동일 값의 `provider_name`)
+- **순위 정보:** `rank`(1부터 시작), `is_top_provider`(1위 여부)
+- **노출 개수:** `provider_count`
+
+> 즉, GA4의 **이벤트** 테이블에서 `clicked_provider`를 필터링하고, **차원** `provider`를 추가하면 사용자가 결과 목록에서 실제로 클릭한 사업자 이름을 확인할 수 있습니다.
+
 > **TIP:** 필터 이름은 코드에서 사용하는 파라미터 이름과 정확히 일치해야 합니다.
 
 ## 3) 전환(Conversion) 설정

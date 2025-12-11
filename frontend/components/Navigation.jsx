@@ -75,7 +75,7 @@ const Navigation = () => {
           <div className="flex-shrink-0">
             <a href="/" className="flex items-center">
               <span className="text-2xl md:text-3xl font-bold text-gray-900 hover:text-brand-600 transition-colors duration-200">
-                {t('nav.brand', t('footer.title'))}
+                {t('nav.brand')}
               </span>
             </a>
           </div>

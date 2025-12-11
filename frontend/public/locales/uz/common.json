@@ -1,112 +1,29 @@
 {
-  "seo": {
-    "title": "Xorijga Pul Jo'natishni Arzonroq Qiling – RemitBuddy",
-    "description": "Eng arzon pul o'tkazish xizmatini 3 soniyada toping. 18 ta mamlakat bo'yicha kurs va komissiyalarni solishtirib ko'ring va sezilarli mablag' tejang.",
-    "keywords": "Koreyadan pul jo'natish, Koreya remittans solishtirish, eng arzon pul o'tkazish Koreya, Koreya exchange rate solishtirish, Koreyadan O'zbekistonga pul jo'natish, Korea to USD, Korea to UZS, expat money transfer Korea"
-  },
-  "hero": {
-    "badge": "Tez va Aniq Solishtirish",
-    "title_line1": "Xorijga Pul Jo'nating,",
-    "title_line2": "Yanada Aqlli Usulda",
-    "subtitle": "Pul jo'natishda ortiqcha to'lamang.\nEng arzon tarifni topish uchun endi bir nechta ilovani tekshirib yurishingiz shart emas.",
-    "trust_1": "Real vaqt kurslari",
-    "trust_2": "Yashirin to'lovlar yo'q",
-    "trust_3": "100% bepul solishtirish",
-    "stats_companies": "Ilovalar",
-    "stats_countries": "Mamlakatlar",
-    "stats_seconds": "soniyada natija"
-  },
-  "form": {
-    "title": "Solishtirishni Boshlang",
-    "label_country": "Qabul qiluvchi mamlakat",
-    "label_amount": "Yuboriladigan summa",
-    "placeholder_amount": "5,000,000",
-    "validation_minmax": "Minimal: 10,000 KRW   Maksimal: 5,000,000 KRW",
-    "submit": "Eng Yaxshi Kursni Solishtirish",
-    "disclaimer": "Bepul xizmat — shaxsiy maʼlumot talab qilinmaydi",
-    "aria_select_country": "Qabul qiluvchi mamlakatni tanlang",
-    "aria_amount_label": "Yuboriladigan summani kiriting"
-  },
-  "provider": {
-    "rank_suffix": "",
-    "best_badge": "Eng foydali",
-    "recipient_gets": "Qabul qilinadigan summa",
-    "exchange_rate": "Valyuta kursi",
-    "exchange_unit": "1 {{currency}} uchun KRW",
-    "fee": "Komissiya",
-    "cta": "Saytga o'tish"
-  },
-  "results": {
-    "title": "{{amount}} KRW → {{country}}",
-    "snapshot": "Tekshirilgan vaqt: {{time}}",
-    "loading_title": "Siz uchun eng yaxshi kurs izlanmoqda…",
-    "loading_sub": "8 ta ilova solishtirilmoqda",
-    "compare_again": "Yana solishtiring",
-    "savings_prefix": "Eng yaxshi kurs bilan",
-    "savings_suffix": "{{currency}} tejashingiz mumkin!",
-    "count_suffix": "ilova solishtirildi",
-    "retry": "Qayta urinib ko'ring",
-    "error_empty": "Valyuta kursi maʼlumoti topilmadi.",
-    "error_api": "Xato yuz berdi: {{message}}"
-  },
-  "features": {
-    "title": "Nega RemitBuddy?",
-    "subtitle": "Endi bir nechta ilovani tekshirib yurishga hojat yo'q.",
-    "f1_title": "Real vaqt kurslari",
-    "f1_desc": "Eng so'nggi kurslar bilan aniq solishtirish imkoniyati.",
-    "f2_title": "Barcha to'lovlar aniq",
-    "f2_desc": "Yashirin to'lovlar yo'q — barcha komissiyalar aniq ko'rsatilgan.",
-    "f3_title": "18 mamlakatni qo'llab-quvvatlaydi",
-    "f3_desc": "O'zbekiston, Vyetnam, Filippin va boshqa mamlakatlar uchun solishtirish.",
-    "f4_title": "Ko'proq tejang",
-    "f4_desc": "Eng qulay kurs bilan pul jo'natib, sezilarli mablag' tejang."
-  },
-  "how": {
-    "title": "Qanday Ishlaydi",
-    "subtitle": "Oddiy 3 bosqichli solishtirish jarayoni",
-    "s1_title": "Mamlakat va summani kiriting",
-    "s1_desc": "Qayerga pul jo'natmoqchi ekaningizni tanlang va summani kiriting.",
-    "s2_title": "Natijalarni ko'ring",
-    "s2_desc": "8 ta ilovaning kurs va komissiyalarini bir joyda ko'ring.",
-    "s3_title": "Eng yaxshi variantni tanlang",
-    "s3_desc": "Eng qulay ilovani tanlab, pul o'tkazing."
-  },
-  "faq": {
-    "title": "Ko'p so'raladigan savollar",
-    "q1_title": "RemitBuddy pul o'tkazish xizmati emasmi?",
-    "q1_desc": "Yo'q. RemitBuddy faqat ilovalar orasidagi kurs va komissiyalarni solishtirib beradi. Pul o'tkazish tanlangan ilova orqali amalga oshiriladi.",
-    "q2_title": "Solishtirish xizmati pullikmi?",
-    "q2_desc": "Yo'q, 100% bepul — ro'yxatdan o'tish yoki shaxsiy maʼlumot talab qilinmaydi.",
-    "q3_title": "Kurslar qanchalik tez yangilanadi?",
-    "q3_desc": "Ha, real vaqtda. 'Solishtirish' tugmasini bosganingizda eng so'nggi kurslar yuklanadi.",
-    "q4_title": "Qaysi mamlakatlarga pul jo'natishni solishtirish mumkin?",
-    "q4_desc": "Hozircha O'zbekiston, Vyetnam, Nepal, Filippin, Kambodja va boshqa mamlakatlar mavjud. Yaqinda yanada ko'proq mamlakat qo'shiladi."
-  },
   "nav": {
     "brand": "RemitBuddy",
-    "menu": "Menu",
-    "service": "Service",
-    "service_intro": "Service Overview",
-    "service_how": "How It Works",
-    "service_faq": "FAQ",
-    "open": "Open menu",
-    "close": "Close menu"
+    "menu": "Menyu",
+    "service": "Xizmatlar",
+    "service_intro": "Xizmatga Kirish",
+    "service_how": "Qanday Ishlaydi",
+    "service_faq": "Savol-Javoblar",
+    "open": "Menyuni ochish",
+    "close": "Menyuni yopish"
   },
   "footer": {
     "title": "RemitBuddy",
-    "description": "The fastest remittance comparison tool.",
-    "company": "Company",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "contact": "Contact",
-    "service_title": "Service",
-    "service_intro": "Service Overview",
-    "service_how": "How It Works",
-    "service_faq": "FAQ",
-    "contact_business": "Business Partnerships",
-    "contact_support": "Customer Support",
-    "disclaimer_1": "RemitBuddy is a comparison service and not a remittance provider. Actual transfers are completed through your chosen partner.",
-    "disclaimer_2": "Rates and fees may change in real time and can vary by provider at the time of transfer.",
-    "copyright": "© {{year}} RemitBuddy. All Rights Reserved."
+    "description": "Eng Tez Pul O‘tkazmalarini Taqqoslash Xizmati",
+    "company": "Kompaniya",
+    "privacy": "Maxfiylik Siyosati",
+    "terms": "Xizmat Ko‘rsatish Shartlari",
+    "contact": "Aloqa",
+    "service_title": "Xizmatlar",
+    "service_intro": "Xizmatga Kirish",
+    "service_how": "Qanday Ishlaydi",
+    "service_faq": "Savol-Javoblar",
+    "contact_business": "Biznes Hamkorlik",
+    "contact_support": "Mijozlarni Qo‘llab-quvvatlash",
+    "disclaimer_1": "RemitBuddy — taqqoslash xizmati, pul o‘tkazmalari provayderi emas. Asosiy o‘tkazmalar siz tanlagan provayder orqali amalga oshiriladi.",
+    "disclaimer_2": "Valyuta kurslari va to‘lovlar real vaqt davomida o‘zgarishi mumkin va provayderga qarab farq qilishi мумкин.",    
+    "copyright": "© {{year}} RemitBuddy."
   }
 }

@@ -14,7 +14,8 @@
     "trust_3": "100% free comparison",
     "stats_companies": "Providers",
     "stats_countries": "Countries Supported",
-    "stats_seconds": "Comparison Done"
+    "stats_seconds": "Seconds",
+    "stats_seconds_label": "Comparison"
   },
   "form": {
     "title": "Start Your Comparison",
@@ -76,11 +77,11 @@
     "q1_title": "Is RemitBuddy a money transfer service?",
     "q1_desc": "No. RemitBuddy compares exchange rates and fees from multiple providers. Actual transfers are made on the provider's website.",
     "q2_title": "Is the comparison service free?",
-    "q2_desc": "Yes. It’s 100% free and requires no sign-up or personal information.",
+    "q2_desc": "Yes. It’s 100% free.",
     "q3_title": "How often is the exchange rate updated?",
     "q3_desc": "We fetch the latest exchange rate and fee information every time you click Compare.",
     "q4_title": "Which countries can I compare?",
-    "q4_desc": "You can compare transfers to Vietnam, Nepal, the Philippines, Cambodia, and more. Additional countries are being added."
+    "q4_desc": "You can compare transfers to Vietnam, Nepal, Cambodia, United States and more. Additional countries are being added."
   },
   "nav": {
     "brand": "RemitBuddy",

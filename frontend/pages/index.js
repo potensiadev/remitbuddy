@@ -729,7 +729,7 @@ export default function HomePage() {
                 >
                   <div className="grid grid-cols-3 gap-3 sm:flex sm:items-center sm:gap-6 md:gap-8">
                     <div className="text-center sm:text-left">
-                      <div className="text-xl sm:text-2xl font-bold text-brand-500">10+</div>
+                      <div className="text-xl sm:text-2xl font-bold text-brand-500">8</div>
                       <div className="text-xs sm:text-sm text-gray-500 font-medium">
                         {t('hero.stats_companies')}
                       </div>
@@ -743,9 +743,12 @@ export default function HomePage() {
                     </div>
                     <div className="hidden sm:block w-px h-12 bg-gray-200" />
                     <div className="text-center sm:text-left">
-                      <div className="text-xl sm:text-2xl font-bold text-brand-500">3</div>
-                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
-                        {t('hero.stats_seconds')}
+                      <div className="text-brand-500 font-bold">
+                        <span className="text-xl sm:text-2xl">3</span>
+                        <span className="text-xs sm:text-sm ml-0.5">{t('hero.stats_seconds')}</span>
+                      </div>
+                      <div className="text-xs sm:text-sm text-gray-500 font-medium mt-1">
+                        {t('hero.stats_seconds_label')}
                       </div>
                     </div>
                   </div>

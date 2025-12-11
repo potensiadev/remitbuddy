@@ -1128,12 +1128,8 @@ export default function HomePage() {
   );
 }
 
-export async function getStaticProps({ locale }) {
-  const currentLocale = locale || 'en';
-
-  return {
-    props: {
-      ...(await serverSideTranslations(currentLocale, ['common']))
-    }
-  };
-}
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale || 'en', ['common']))
+  }
+});

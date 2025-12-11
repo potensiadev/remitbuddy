@@ -2,22 +2,7 @@
 module.exports = {
   i18n: {
     defaultLocale: 'en',
-    locales: [
-      'en',
-      'ko',
-      'vi',
-      'tl',
-      'km',
-      'my',
-      'th',
-      'uz',
-      'id',
-      'si',
-      'ne',
-      'bn',
-      'mn',
-      'cn'
-    ],
+    locales: ['en', 'vi', 'ko', 'id', 'km', 'bn', 'mn', 'my', 'ne', 'si', 'th', 'tl', 'uz', 'cn'],
     localeDetection: true, // 브라우저 언어 감지 비활성화 (빌드 경고 해결)
   },
   react: {

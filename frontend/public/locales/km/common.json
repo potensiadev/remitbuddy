@@ -1,112 +1,29 @@
 {
-  "seo": {
-    "title": "ផ្ញើប្រាក់ទៅបរទេសក្នុងតម្លៃថោកជាង — RemitBuddy",
-    "description": "រកសេវាផ្ញើប្រាក់ដែលថោកជាងគេក្នុងរយៈពេលតែ 3 វិនាទី។ ប្រៀបធៀបទ្រង់ទ្រាយអត្រាប្តូរប្រាក់ និងកម្រៃសេវាកម្មរហូតដល់ 18 ប្រទេស ហើយអាចសន្សំបានប្រាក់ច្រើនជាងមុន។",
-    "keywords": "ផ្ញើប្រាក់ពីកូរ៉េ, ប្រៀបធៀបផ្ញើប្រាក់កូរ៉េ, Korean remittance Cambodia, KRW to KHR, Korea to Cambodia money transfer, cheapest money transfer Korea"
-  },
-  "hero": {
-    "badge": "ផ្ទៀងផ្ទាត់រហ័ស និងតម្លាភាព",
-    "title_line1": "ផ្ញើប្រាក់ទៅបរទេស",
-    "title_line2": "ឲ្យឆ្លាតវៃជាងមុន",
-    "subtitle": "ឈប់ចំណាយកម្រៃសេវាខ្ពស់ពេក។\nឈប់ប្តូររវាងកម្មវិធីជាច្រើនដើម្បីស្វែងរកអត្រាថោកបំផុត។",
-    "trust_1": "អត្រាប្តូរប្រាក់ពេលជាក់ស្តែង",
-    "trust_2": "គ្មានកម្រៃសេវាលាក់លៀម",
-    "trust_3": "ប្រៀបធៀប 100% ឥតគិតថ្លៃ",
-    "stats_companies": "សេវាកម្ម",
-    "stats_countries": "ប្រទេសដែលគាំទ្រ",
-    "stats_seconds": "វិនាទី"
-  },
-  "form": {
-    "title": "ចាប់ផ្ដើមប្រៀបធៀប",
-    "label_country": "ប្រទេសទទួលប្រាក់",
-    "label_amount": "ចំនួនប្រាក់ផ្ញើ",
-    "placeholder_amount": "5,000,000",
-    "validation_minmax": "អប្បបរមា: 10,000 KRW   អតិបរមា: 5,000,000 KRW",
-    "submit": "ប្រៀបធៀបអត្រាល្អបំផុត",
-    "disclaimer": "ប្រៀបធៀបឥតគិតថ្លៃ — មិនត្រូវការព័ត៌មានផ្ទាល់ខ្លួន",
-    "aria_select_country": "ជ្រើសរើសប្រទេសទទួលប្រាក់",
-    "aria_amount_label": "បញ្ចូលចំនួនប្រាក់ផ្ញើ"
-  },
-  "provider": {
-    "rank_suffix": "",
-    "best_badge": "តម្លៃល្អបំផុត",
-    "recipient_gets": "ប្រាក់ដែលទទួល",
-    "exchange_rate": "អត្រា",
-    "exchange_unit": "1 {{currency}} = {{value}} KRW",
-    "fee": "កម្រៃសេវា",
-    "cta": "ទៅកាន់សេវាកម្ម"
-  },
-  "results": {
-    "title": "{{amount}} KRW → {{country}}",
-    "snapshot": "ពេលវេលាស្វែងរក: {{time}}",
-    "loading_title": "កំពុងស្វែងរកអត្រាល្អបំផុត…",
-    "loading_sub": "កំពុងប្រៀបធៀបសេវាកម្ម 8 មុខ",
-    "compare_again": "ប្រៀបធៀបម្តងទៀត",
-    "savings_prefix": "អាចសន្សំបានរហូតដល់",
-    "savings_suffix": "{{currency}} ជាមួយអត្រាល្អបំផុត!",
-    "count_suffix": "សេវាកម្មបានប្រៀបធៀបរួច",
-    "retry": "សាកល្បងម្ដងទៀត",
-    "error_empty": "រកមិនឃើញព័ត៌មានអត្រាប្តូរប្រាក់ទេ។",
-    "error_api": "មានបញ្ហា៖ {{message}}"
-  },
-  "features": {
-    "title": "ហេតុអ្វីត្រូវប្រើ RemitBuddy?",
-    "subtitle": "មិនចាំបាច់ប្តូរកម្មវិធីជាច្រើនទៀត។",
-    "f1_title": "អត្រាពេលជាក់ស្តែង",
-    "f1_desc": "ប្រៀបធៀបដោយប្រើអត្រាចុងក្រោយបង្អស់ និងត្រឹមត្រូវបំផុត។",
-    "f2_title": "កម្រៃសេវាច្បាស់លាស់",
-    "f2_desc": "មិនមានថ្លៃបន្ថែមលាក់លៀមទេ — គ្រប់កម្រៃសេវាបង្ហាញយ៉ាងច្បាស់។",
-    "f3_title": "គាំទ្រ 18 ប្រទេស",
-    "f3_desc": "អាចប្រៀបធៀបទៅវៀតណាម ភូមា ហ្វីលីពីន កម្ពុជា និងប្រទេសផ្សេងទៀត។",
-    "f4_title": "សន្សំប្រាក់បានច្រើន",
-    "f4_desc": "ផ្ញើប្រាក់ជាមួយអត្រាល្អបំផុត ហើយទទួលបានច្រើនជាងមុន។"
-  },
-  "how": {
-    "title": "វាដំណើរការយ៉ាងដូចម្តេច?",
-    "subtitle": "ដំណើរការប្រៀបធៀប 3 ជំហានងាយស្រួល",
-    "s1_title": "ជ្រើសរើសប្រទេស និងចំនួនប្រាក់",
-    "s1_desc": "ជ្រើសប្រទេសដែលចង់ផ្ញើ ហើយបញ្ចូលចំនួនប្រាក់។",
-    "s2_title": "មើលលទ្ធផលពេលជាក់ស្តែង",
-    "s2_desc": "មើលអត្រា និងកម្រៃសេវាពីសេវាកម្ម 8 មុខក្នុងទីតែមួយ។",
-    "s3_title": "ជ្រើសរើសជម្រើសល្អបំផុត",
-    "s3_desc": "ជ្រើសសេវាកម្មដែលមានអត្រាល្អបំផុត ហើយបន្តការផ្ញើប្រាក់។"
-  },
-  "faq": {
-    "title": "សំណួរញឹកញាប់",
-    "q1_title": "RemitBuddy ជាសេវាផ្ញើប្រាក់មែនទេ?",
-    "q1_desc": "ទេ។ RemitBuddy គ្រាន់តែប្រៀបធៀបអត្រា និងកម្រៃសេវា។ ការផ្ញើប្រាក់ពិតប្រាកដធ្វើនៅលើគេហទំព័ររបស់សេវាកម្មដែលអ្នកជ្រើសរើស។",
-    "q2_title": "តើការប្រៀបធៀបត្រូវបង់ថ្លៃមែនទេ?",
-    "q2_desc": "ទេ។ វា 100% ឥតគិតថ្លៃ — មិនចាំបាច់បញ្ចូលព័ត៌មានផ្ទាល់ខ្លួន។",
-    "q3_title": "តើអត្រាប្តូរប្រាក់ត្រូវបានធ្វើបច្ចុប្បន្នភាពញឹកញាប់ប៉ុណ្ណា?",
-    "q3_desc": "រាល់ពេលអ្នកចុច “ប្រៀបធៀប” RemitBuddy នឹងទាញអត្រាចុងក្រោយបង្អស់។",
-    "q4_title": "តើអាចប្រៀបធៀបទៅប្រទេសណាខ្លះ?",
-    "q4_desc": "អាចប្រៀបធៀបទៅវៀតណាម នេប៉ាល់ ភូមា ហ្វីលីពីន កម្ពុជា និងប្រទេសផ្សេងៗទៀត។ នឹងមានប្រទេសថ្មីបន្ថែម។"
-  },
   "nav": {
     "brand": "RemitBuddy",
-    "menu": "Menu",
-    "service": "Service",
-    "service_intro": "Service Overview",
-    "service_how": "How It Works",
-    "service_faq": "FAQ",
-    "open": "Open menu",
-    "close": "Close menu"
+    "menu": "ម៉ឺនុយ",
+    "service": "សេវា",
+    "service_intro": "ការណែនាំសេវា",
+    "service_how": "របៀបធ្វើការ",
+    "service_faq": "សំណួរញឹកញាប់",
+    "open": "បើកម៉ឺនុយ",
+    "close": "បិទម៉ឺនុយ"
   },
   "footer": {
     "title": "RemitBuddy",
-    "description": "The fastest remittance comparison tool.",
-    "company": "Company",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "contact": "Contact",
-    "service_title": "Service",
-    "service_intro": "Service Overview",
-    "service_how": "How It Works",
-    "service_faq": "FAQ",
-    "contact_business": "Business Partnerships",
-    "contact_support": "Customer Support",
-    "disclaimer_1": "RemitBuddy is a comparison service and not a remittance provider. Actual transfers are completed through your chosen partner.",
-    "disclaimer_2": "Rates and fees may change in real time and can vary by provider at the time of transfer.",
-    "copyright": "© {{year}} RemitBuddy. All Rights Reserved."
+    "description": "សេវាប្រៀបធៀបការផ្ញើប្រាក់លឿនជាងគេ",
+    "company": "ក្រុមហ៊ុន",
+    "privacy": "គោលការណ៍ឯកជនភាព",
+    "terms": "លក្ខខណ្ឌសេវា",
+    "contact": "ទំនាក់ទំនង",
+    "service_title": "សេវា",
+    "service_intro": "ការណែនាំសេវា",
+    "service_how": "របៀបធ្វើការ",
+    "service_faq": "សំណួរញឹកញាប់",
+    "contact_business": "ដៃគូអាជីវកម្ម",
+    "contact_support": "ការគាំទ្រអតិថិជន",
+    "disclaimer_1": "RemitBuddy គ្រាន់តែជាសេវាប្រៀបធៀប មិនមែនជាអ្នកផ្ញើប្រាក់ទេ។ ការផ្ញើប្រាក់ពិតប្រាកដត្រូវបានអនុវត្តដោយអ្នកផ្តល់សេវាដែលអ្នកជ្រើសរើស।",
+    "disclaimer_2": "អត្រាប្តូរប្រាក់ និងកម្រៃសេវា អាចផ្លាស់ប្តូររៀងរាល់ពេល និងខុសគ្នាតាមអ្នកផ្តល់សេវា។",    
+    "copyright": "© {{year}} RemitBuddy."
   }
 }

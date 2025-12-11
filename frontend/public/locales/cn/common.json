@@ -1,112 +1,29 @@
 {
-  "seo": {
-    "title": "跨境汇款更省钱 — RemitBuddy",
-    "description": "3秒找到最便宜的汇款服务。比较18个国家的汇率和手续费，帮您省更多。",
-    "keywords": "韩国汇款, 韩国跨境汇款, 韩国汇率比较, 韩国汇款到中国, 韩国汇款到美国, 韩元兑人民币, 韩国汇款手续费, 跨境汇款最便宜, 跨境转账比较"
-  },
-  "hero": {
-    "badge": "快速透明的比价服务",
-    "title_line1": "跨境汇款，",
-    "title_line2": "更聪明",
-    "subtitle": "别再花冤枉钱付手续费。\n也不用在多个App之间来回切换找最低价。",
-    "trust_1": "实时汇率",
-    "trust_2": "无隐藏费用",
-    "trust_3": "100%免费比价",
-    "stats_companies": "家服务商",
-    "stats_countries": "个支持国家",
-    "stats_seconds": "秒"
-  },
-  "form": {
-    "title": "开始比较汇率",
-    "label_country": "收款国家",
-    "label_amount": "汇款金额",
-    "placeholder_amount": "5,000,000",
-    "validation_minmax": "最低：10,000韩元 | 最高：5,000,000韩元",
-    "submit": "比较最优汇率",
-    "disclaimer": "比价完全免费，无需填写个人信息",
-    "aria_select_country": "选择收款国家",
-    "aria_amount_label": "输入汇款金额"
-  },
-  "provider": {
-    "rank_suffix": "",
-    "best_badge": "最优选择",
-    "recipient_gets": "对方收到",
-    "exchange_rate": "汇率",
-    "exchange_unit": "1 {{currency}} = {{value}} 韩元",
-    "fee": "手续费",
-    "cta": "前往办理"
-  },
-  "results": {
-    "title": "{{amount}} 韩元 → {{country}}",
-    "snapshot": "查询时间：{{time}}",
-    "loading_title": "正在为您查找最优汇率…",
-    "loading_sub": "正在比较8家汇款服务商",
-    "compare_again": "重新比较",
-    "savings_prefix": "最多可省",
-    "savings_suffix": "{{currency}}！",
-    "count_suffix": "家服务商已比较",
-    "retry": "重试",
-    "error_empty": "暂未获取到汇率信息，请稍后再试。",
-    "error_api": "出错了：{{message}}"
-  },
-  "features": {
-    "title": "为什么选择 RemitBuddy？",
-    "subtitle": "不用再反复切换多个App。",
-    "f1_title": "实时汇率",
-    "f1_desc": "使用最新最准确的汇率进行比较。",
-    "f2_title": "费用透明",
-    "f2_desc": "所有手续费一目了然，绝无隐藏收费。",
-    "f3_title": "覆盖18个国家",
-    "f3_desc": "支持越南、菲律宾、尼泊尔、中国等热门地区。",
-    "f4_title": "省得更多",
-    "f4_desc": "用最优汇率汇款，让对方收到更多。"
-  },
-  "how": {
-    "title": "如何使用",
-    "subtitle": "简单3步完成比价",
-    "s1_title": "选择国家和金额",
-    "s1_desc": "选择收款国家，输入汇款金额。",
-    "s2_title": "查看实时比价结果",
-    "s2_desc": "一次性查看8家服务商的汇率和手续费。",
-    "s3_title": "选择最划算的方案",
-    "s3_desc": "确认最优方案后，直接前往办理汇款。"
-  },
-  "faq": {
-    "title": "常见问题",
-    "q1_title": "RemitBuddy 是汇款服务吗？",
-    "q1_desc": "不是。RemitBuddy 只提供汇率和手续费比价，实际汇款需要到您选择的服务商官网完成。",
-    "q2_title": "比价服务收费吗？",
-    "q2_desc": "完全免费，无需注册，也不用填写个人信息。",
-    "q3_title": "汇率多久更新一次？",
-    "q3_desc": "每次点击「比较」按钮时，都会实时获取最新汇率和手续费。",
-    "q4_title": "支持哪些国家？",
-    "q4_desc": "目前支持越南、尼泊尔、菲律宾、柬埔寨、中国等多个国家，后续还会继续增加。"
-  },
   "nav": {
     "brand": "RemitBuddy",
-    "menu": "Menu",
-    "service": "Service",
-    "service_intro": "Service Overview",
-    "service_how": "How It Works",
-    "service_faq": "FAQ",
-    "open": "Open menu",
-    "close": "Close menu"
+    "menu": "菜单",
+    "service": "服务",
+    "service_intro": "服务介绍",
+    "service_how": "如何运作",
+    "service_faq": "常见问题",
+    "open": "打开菜单",
+    "close": "关闭菜单"
   },
   "footer": {
     "title": "RemitBuddy",
-    "description": "The fastest remittance comparison tool.",
-    "company": "Company",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "contact": "Contact",
-    "service_title": "Service",
-    "service_intro": "Service Overview",
-    "service_how": "How It Works",
-    "service_faq": "FAQ",
-    "contact_business": "Business Partnerships",
-    "contact_support": "Customer Support",
-    "disclaimer_1": "RemitBuddy is a comparison service and not a remittance provider. Actual transfers are completed through your chosen partner.",
-    "disclaimer_2": "Rates and fees may change in real time and can vary by provider at the time of transfer.",
-    "copyright": "© {{year}} RemitBuddy. All Rights Reserved."
+    "description": "最快的汇款比价服务",
+    "company": "公司",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "contact": "联系我们",
+    "service_title": "服务",
+    "service_intro": "服务介绍",
+    "service_how": "如何运作",
+    "service_faq": "常见问题",
+    "contact_business": "商务合作",
+    "contact_support": "客户支持",
+    "disclaimer_1": "RemitBuddy 是比价服务，而非汇款提供商。实际汇款由您选择的服务商完成。",
+    "disclaimer_2": "汇率和费用可能实时变化，并因服务商而异。",    
+    "copyright": "© {{year}} RemitBuddy. 版权所有."
   }
 }

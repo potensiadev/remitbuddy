@@ -1,112 +1,29 @@
 {
-  "seo": {
-    "title": "বিদেশে টাকা পাঠান কম খরচে – RemitBuddy",
-    "description": "মাত্র ৩ সেকেন্ডে সবচেয়ে কম খরচের মানি ট্রান্সফার সেবা খুঁজে নিন। ১৮টি দেশে পাঠানোর রেট ও ফি তুলনা করে অনেক টাকা বাঁচান।",
-    "keywords": "দক্ষিণ কোরিয়া মানি ট্রান্সফার, কোরিয়া থেকে টাকা পাঠানো, কোরিয়া রেমিট্যান্স তুলনা, কোরিয়া থেকে বাংলাদেশ টাকা পাঠানো, কোরিয়া থেকে USA টাকা পাঠানো, কোরিয়া USD ট্রান্সফার, কোরিয়া থেকে সবচেয়ে সস্তা মানি ট্রান্সফার, কোরিয়া এক্সচেঞ্জ রেট তুলনা"
-  },
-  "hero": {
-    "badge": "দ্রুত ও স্বচ্ছ তুলনা",
-    "title_line1": "বিদেশে টাকা পাঠানো,",
-    "title_line2": "আরও স্মার্টভাবে",
-    "subtitle": "বেশি ফি দেওয়া বন্ধ করুন। সবচেয়ে কম খরচের রেট খুঁজতে আর বিভিন্ন অ্যাপ ঘুরতে হবে না।",
-    "trust_1": "রিয়েল-টাইম এক্সচেঞ্জ রেট",
-    "trust_2": "গোপন ফি নেই",
-    "trust_3": "১০০% ফ্রি তুলনা",
-    "stats_companies": "কোম্পানি",
-    "stats_countries": "যেসব দেশে পাঠাতে পারবেন",
-    "stats_seconds": "তুলনা সম্পন্ন"
-  },
-  "form": {
-    "title": "তুলনা শুরু করুন",
-    "label_country": "যে দেশে টাকা পাঠাবেন",
-    "label_amount": "যত টাকা পাঠাবেন",
-    "placeholder_amount": "5,000,000",
-    "validation_minmax": "সর্বনিম্ন: 10,000 KRW   সর্বোচ্চ: 5,000,000 KRW",
-    "submit": "সেরা রেট তুলনা করুন",
-    "disclaimer": "ফ্রি তুলনা — কোনো ব্যক্তিগত তথ্যের প্রয়োজন নেই",
-    "aria_select_country": "যে দেশে পাঠাবেন সেটি বাছাই করুন",
-    "aria_amount_label": "পাঠানোর পরিমাণ লিখুন"
-  },
-  "provider": {
-    "rank_suffix": "",
-    "best_badge": "সেরা অফার",
-    "recipient_gets": "প্রাপক পাবেন",
-    "exchange_rate": "এক্সচেঞ্জ রেট",
-    "exchange_unit": "১ {{currency}} = {{value}} KRW",
-    "fee": "ফি",
-    "cta": "এখানে পাঠান"
-  },
-  "results": {
-    "title": "{{amount}} KRW → {{country}}",
-    "snapshot": "চেক করার সময়: {{time}}",
-    "loading_title": "আপনার জন্য সেরা রেট খোঁজা হচ্ছে…",
-    "loading_sub": "৮টি কোম্পানি তুলনা করা হচ্ছে",
-    "compare_again": "আবার তুলনা করুন",
-    "savings_prefix": "সেরা রেটে",
-    "savings_suffix": "{{currency}} পর্যন্ত বাঁচান!",
-    "count_suffix": "কোম্পানি তুলনা হয়েছে",
-    "retry": "আবার চেষ্টা করুন",
-    "error_empty": "কোনো এক্সচেঞ্জ রেট তথ্য পাওয়া যায়নি।",
-    "error_api": "একটি সমস্যা হয়েছে: {{message}}"
-  },
-  "features": {
-    "title": "RemitBuddy কেন ব্যবহার করবেন?",
-    "subtitle": "বিভিন্ন অ্যাপে ঘুরে বেড়ানো বন্ধ করুন।",
-    "f1_title": "রিয়েল-টাইম রেট",
-    "f1_desc": "সর্বশেষ রেট দিয়ে সঠিক তুলনা করুন।",
-    "f2_title": "স্বচ্ছ ফি",
-    "f2_desc": "গোপন বা লুকানো চার্জ নেই — সব ফি পরিষ্কারভাবে দেখানো হয়।",
-    "f3_title": "১৮টি দেশে পাঠান",
-    "f3_desc": "বাংলাদেশ, ভিয়েতনাম, ফিলিপাইনসহ জনপ্রিয় দেশগুলোতে তুলনা করতে পারবেন।",
-    "f4_title": "বেশি টাকা বাঁচান",
-    "f4_desc": "সেরা রেটে টাকা পাঠিয়ে অনেক টাকা বাঁচান।"
-  },
-  "how": {
-    "title": "কিভাবে কাজ করে",
-    "subtitle": "৩ ধাপে সহজ তুলনা",
-    "s1_title": "দেশ ও পরিমাণ বাছাই করুন",
-    "s1_desc": "যে দেশে পাঠাবেন সেটি বাছাই করে পরিমাণ লিখুন।",
-    "s2_title": "রিয়েল-টাইম ফলাফল দেখুন",
-    "s2_desc": "৮টি কোম্পানির রেট ও ফি একসাথে দেখুন।",
-    "s3_title": "সেরা অপশন বেছে নিন",
-    "s3_desc": "সবচেয়ে ভালো রেট বেছে নিয়ে টাকা পাঠান।"
-  },
-  "faq": {
-    "title": "সাধারণ জিজ্ঞাসা",
-    "q1_title": "RemitBuddy কি মানি ট্রান্সফার সার্ভিস?",
-    "q1_desc": "না। RemitBuddy শুধু রেট ও ফি তুলনা করে দেখায়। আসল টাকা পাঠানো হয় আপনার বাছাই করা কোম্পানির মাধ্যমে।",
-    "q2_title": "তুলনা করতে টাকা লাগে?",
-    "q2_desc": "না, ১০০% ফ্রি — সাইন আপ বা ব্যক্তিগত তথ্যের দরকার নেই।",
-    "q3_title": "রেট কত ঘন ঘন আপডেট হয়?",
-    "q3_desc": "'তুলনা করুন' বাটনে ক্লিক করলেই সর্বশেষ রেট ও ফি দেখাবে।",
-    "q4_title": "কোন কোন দেশে টাকা পাঠাতে পারি?",
-    "q4_desc": "বাংলাদেশ, ভিয়েতনাম, নেপাল, ফিলিপাইন, কম্বোডিয়া সহ ১৮টি দেশে টাকা পাঠানোর রেট তুলনা করতে পারবেন। আরও দেশ শিগগিরই যোগ হবে।"
-  },
   "nav": {
     "brand": "RemitBuddy",
-    "menu": "Menu",
-    "service": "Service",
-    "service_intro": "Service Overview",
-    "service_how": "How It Works",
-    "service_faq": "FAQ",
-    "open": "Open menu",
-    "close": "Close menu"
+    "menu": "মেনু",
+    "service": "সেবা",
+    "service_intro": "সেবা পরিচিতি",
+    "service_how": "কিভাবে কাজ করে",
+    "service_faq": "প্রশ্নোত্তর",
+    "open": "মেনু খুলুন",
+    "close": "মেনু বন্ধ করুন"
   },
   "footer": {
     "title": "RemitBuddy",
-    "description": "The fastest remittance comparison tool.",
-    "company": "Company",
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "contact": "Contact",
-    "service_title": "Service",
-    "service_intro": "Service Overview",
-    "service_how": "How It Works",
-    "service_faq": "FAQ",
-    "contact_business": "Business Partnerships",
-    "contact_support": "Customer Support",
-    "disclaimer_1": "RemitBuddy is a comparison service and not a remittance provider. Actual transfers are completed through your chosen partner.",
-    "disclaimer_2": "Rates and fees may change in real time and can vary by provider at the time of transfer.",
-    "copyright": "© {{year}} RemitBuddy. All Rights Reserved."
+    "description": "সবচেয়ে দ্রুত রেমিট্যান্স তুলনা সেবা",
+    "company": "কোম্পানি",
+    "privacy": "গোপনীয়তা নীতি",
+    "terms": "সেবা শর্তাবলী",
+    "contact": "যোগাযোগ",
+    "service_title": "সেবা",
+    "service_intro": "সেবা পরিচিতি",
+    "service_how": "কিভাবে কাজ করে",
+    "service_faq": "প্রশ্নোত্তর",
+    "contact_business": "ব্যবসায়িক অংশীদারিত্ব",
+    "contact_support": "গ্রাহক সহায়তা",
+    "disclaimer_1": "RemitBuddy একটি তুলনা সেবা, রেমিট্যান্স প্রদানকারী নয়। প্রকৃত অর্থ প্রেরণ আপনার নির্বাচিত সেবাদাতার মাধ্যমে সম্পন্ন হয়।",
+    "disclaimer_2": "হার এবং ফি রিয়েল-টাইমে পরিবর্তিত হতে পারে এবং সেবাদাতা অনুযায়ী ভিন্ন হতে পারে।",
+    "copyright": "© {{year}} RemitBuddy. সর্বস্বত্ব সংরক্ষিত।"
   }
 }

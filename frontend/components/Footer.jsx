@@ -1,26 +1,28 @@
 import React from 'react';
+import { useTranslation } from 'next-i18next';
 
 /**
  * Toss-style Footer Component
  * Comprehensive footer with enhanced sections matching Toss design
  */
 const Footer = () => {
+  const { t } = useTranslation('common');
   const currentYear = new Date().getFullYear();
 
   const footerSections = {
     service: {
-      title: '서비스',
+      title: t('nav.service'),
       links: [
-        { label: '서비스 소개', href: '#about' },
-        { label: '이용 방법', href: '#how-it-works' },
-        { label: 'FAQ', href: '#faq' },
+        { label: t('nav.service_intro'), href: '#hero' },
+        { label: t('nav.service_how'), href: '#how-it-works' },
+        { label: t('nav.service_faq'), href: '#faq' },
       ],
     },
     contact: {
-      title: '문의',
+      title: t('footer.contact'),
       items: [
-        { label: '사업제휴', value: 'business@remitbuddy.com' },
-        { label: '고객센터', value: 'support@remitbuddy.com' },
+        { label: t('footer.contact_business'), value: 'business@remitbuddy.com' },
+        { label: t('footer.contact_support'), value: 'support@remitbuddy.com' },
       ],
     }
     // customerService: {
@@ -108,15 +110,15 @@ const Footer = () => {
           </div> */}
         </div>
 
-        {/* Brand and Description */}
-        <div className="mb-8">
-          <div className="mb-4">
-            <span className="text-2xl font-bold text-gray-900">RemitBuddy</span>
-          </div>
-          <p className="text-gray-600 text-sm leading-relaxed max-w-3xl">
-            해외송금을 더 쉽고 저렴하게. 8개 송금 업체의 수수료를 한번에 비교하세요.
-          </p>
+      {/* Brand and Description */}
+      <div className="mb-8">
+        <div className="mb-4">
+          <span className="text-2xl font-bold text-gray-900">{t('footer.title')}</span>
         </div>
+        <p className="text-gray-600 text-sm leading-relaxed max-w-3xl">
+          {t('footer.description')}
+        </p>
+      </div>
 
         {/* Divider */}
         <div className="border-t border-gray-200 my-8"></div>
@@ -126,15 +128,13 @@ const Footer = () => {
           {/* Copyright and Legal Info */}
           <div className="text-xs text-gray-500 space-y-2">
             <p className="font-medium">
-              © {currentYear} RemitBuddy. All Rights Reserved.
+              {t('footer.copyright', { year: currentYear })}
             </p>
             <p className="leading-relaxed max-w-2xl">
-              RemitBuddy는 비교 서비스이며 송금업체가 아닙니다.
-              실제 송금은 선택하신 제휴 업체를 통해 진행됩니다.
+              {t('footer.disclaimer_1')}
             </p>
             <p className="leading-relaxed max-w-2xl">
-              제공되는 환율 및 수수료 정보는 실시간으로 변동될 수 있으며,
-              최종 송금 시 업체별로 상이할 수 있습니다.
+              {t('footer.disclaimer_2')}
             </p>
           </div>
 

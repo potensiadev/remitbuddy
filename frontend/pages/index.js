@@ -665,7 +665,7 @@ export default function HomePage() {
         <Navigation />
 
         {/* Hero Section - Toss Style */}
-        <section className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
+        <section id="hero" className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
           {/* Background decoration */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float" />
@@ -728,7 +728,7 @@ export default function HomePage() {
                 >
                   <div className="grid grid-cols-3 gap-3 sm:flex sm:items-center sm:gap-6 md:gap-8">
                     <div className="text-center sm:text-left">
-                      <div className="text-xl sm:text-2xl font-bold text-brand-500">10+</div>
+                      <div className="text-xl sm:text-2xl font-bold text-brand-500">8</div>
                       <div className="text-xs sm:text-sm text-gray-500 font-medium">
                         {t('hero.stats_companies')}
                       </div>
@@ -742,9 +742,12 @@ export default function HomePage() {
                     </div>
                     <div className="hidden sm:block w-px h-12 bg-gray-200" />
                     <div className="text-center sm:text-left">
-                      <div className="text-xl sm:text-2xl font-bold text-brand-500">3</div>
-                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
-                        {t('hero.stats_seconds')}
+                      <div className="text-brand-500 font-bold">
+                        <span className="text-xl sm:text-2xl">3</span>
+                        <span className="text-xs sm:text-sm ml-0.5">{t('hero.stats_seconds')}</span>
+                      </div>
+                      <div className="text-xs sm:text-sm text-gray-500 font-medium mt-1">
+                        {t('hero.stats_seconds_label')}
                       </div>
                     </div>
                   </div>
@@ -1126,3 +1129,9 @@ export default function HomePage() {
     </>
   );
 }
+
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale || 'en', ['common']))
+  }
+});

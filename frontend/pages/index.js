@@ -666,7 +666,7 @@ export default function HomePage() {
         <Navigation />
 
         {/* Hero Section - Toss Style */}
-        <section className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
+        <section id="hero" className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
           {/* Background decoration */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float" />

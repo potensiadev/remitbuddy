@@ -36,7 +36,7 @@ const Navigation = () => {
     service: {
       title: t('nav.service'),
       links: [
-        { label: t('nav.service_intro'), href: '#about' },
+        { label: t('nav.service_intro'), href: '#hero' },
         { label: t('nav.service_how'), href: '#how-it-works' },
        // { label: '블로그', href: '#blog' },
         { label: t('nav.service_faq'), href: '#faq' },

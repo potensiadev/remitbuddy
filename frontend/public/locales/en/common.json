@@ -43,7 +43,7 @@
     "loading_sub": "Comparing 8 money transfer providers",
     "compare_again": "Compare Again",
     "savings_prefix": "Save up to",
-    "savings_suffix": "{{currency}} with the best rate!",
+    "savings_suffix": "with the best rate!",
     "count_suffix": "providers compared",
     "retry": "Try Again",
     "error_empty": "We couldn't load any exchange rate data.",

@@ -86,7 +86,7 @@
     "brand": "RemitBuddy",
     "menu": "Menu",
     "service": "Service",
-    "service_intro": "Service Intro",
+    "service_intro": "Service Overview",
     "service_how": "How It Works",
     "service_faq": "FAQ",
     "open": "Open menu",
@@ -94,7 +94,7 @@
   },
   "footer": {
     "title": "RemitBuddy",
-    "description": "The fastest remittance comparison tool.",
+    "description": "The Fastest Remittance Comparison Service",
     "company": "Company",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",

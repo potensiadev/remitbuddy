@@ -666,9 +666,9 @@ export default function HomePage() {
         <Navigation />
 
         {/* Hero Section - Toss Style */}
-        <section id="hero" className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
+        <section id="hero" className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative">
           {/* Background decoration */}
-          <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float" />
             <div
               className="absolute bottom-0 left-0 w-96 h-96 bg-accent-100 rounded-full blur-3xl opacity-20 animate-float"
@@ -905,7 +905,7 @@ export default function HomePage() {
 
         {/* Features Section - Toss Style */}
         <section id="features" className="py-20 bg-gradient-to-br from-gray-50 to-brand-50/30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
                 {t('features.title')}
@@ -959,7 +959,7 @@ export default function HomePage() {
 
         {/* How It Works Section - Toss Style */}
         <section id="how-it-works" className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
                 {t('how.title')}
@@ -1004,7 +1004,7 @@ export default function HomePage() {
         {/* Results Section */}
         {showResults && (
           <section ref={resultsRef} className="bg-white py-20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
               <ComparisonResults
                 queryParams={queryParams}
                 amount={amount}

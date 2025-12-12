@@ -742,20 +742,20 @@ export default function HomePage() {
 
                 {/* Social Proof - Toss Style */}
                 <div
-                  className="bg-white rounded-xl border border-gray-150 p-8 w-full sm:w-auto sm:inline-block shadow-toss hover:shadow-toss-lg transition-all duration-300 animate-fade-in-up"
+                  className="bg-white rounded-xl p-6 sm:p-8 shadow-toss border border-gray-100 w-full sm:w-auto sm:inline-block max-w-xl hover:shadow-toss-lg transition-all duration-300 animate-fade-in-up"
                   style={{ animationDelay: '0.4s' }}
                 >
-                  <div className="grid grid-cols-3 gap-6 sm:flex sm:items-center sm:gap-8">
+                  <div className="grid grid-cols-3 gap-4 sm:flex sm:items-center sm:gap-6 md:gap-8">
                     <div className="text-center sm:text-left">
                       <div className="text-2xl sm:text-3xl font-bold text-brand-500">8</div>
-                      <div className="text-sm sm:text-base text-gray-500 font-medium mt-1">
+                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
                         {t('hero.stats_companies')}
                       </div>
                     </div>
                     <div className="hidden sm:block w-px h-16 bg-gray-200" />
                     <div className="text-center sm:text-left">
                       <div className="text-2xl sm:text-3xl font-bold text-accent-500">18</div>
-                      <div className="text-sm sm:text-base text-gray-500 font-medium mt-1">
+                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
                         {t('hero.stats_countries')}
                       </div>
                     </div>
@@ -763,7 +763,7 @@ export default function HomePage() {
                     <div className="text-center sm:text-left">
                       <div className="text-brand-500 font-bold">
                         <span className="text-2xl sm:text-3xl">3</span>
-                        <span className="text-sm sm:text-base ml-1">{t('hero.stats_seconds')}</span>
+                        <span className="text-xs sm:text-sm ml-1">{t('hero.stats_seconds')}</span>
                       </div>
                       <div className="text-sm sm:text-base text-gray-500 font-medium mt-1">
                         {t('hero.stats_seconds_label')}
@@ -780,7 +780,7 @@ export default function HomePage() {
               >
                 <form
                   onSubmit={handleSubmit}
-                  className="w-full bg-white rounded-2xl border border-gray-150 p-4 sm:p-6 md:p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300"
+                  className="w-full bg-white rounded-xl border border-gray-100 p-6 sm:p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300"
                 >
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                     {t('form.title')}
@@ -884,7 +884,7 @@ export default function HomePage() {
                         {t('form.label_amount')}
                       </label>
                       <div
-                        className={`relative h-20 sm:h-24 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-6 sm:px-8 flex items-center gap-3 border-0 shadow-sm hover:shadow-toss ${
+                        className={`relative h-12 sm:h-14 bg-[#f2f4f6] rounded-xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-4 sm:px-5 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss ${
                           shakeInput ? 'animate-shake' : ''
                         }`}
                       >
@@ -893,10 +893,10 @@ export default function HomePage() {
                           value={formattedAmount}
                           onChange={handleAmountChange}
                           placeholder={t('form.placeholder_amount')}
-                          className="flex-1 bg-transparent text-2xl sm:text-3xl font-bold text-gray-900 text-right focus:outline-none placeholder-gray-400 border-0"
+                          className="flex-1 bg-transparent text-lg sm:text-xl font-bold text-gray-900 text-right focus:outline-none placeholder-gray-400 border-0"
                           aria-label={t('form.aria_amount_label', 'Amount to send in KRW')}
                         />
-                        <span className="text-xl sm:text-2xl font-bold text-gray-500">KRW</span>
+                        <span className="text-base sm:text-lg font-bold text-gray-500">KRW</span>
                       </div>
                       <p className="mt-3 text-sm sm:text-base text-gray-500 font-medium ml-1">
                         {t('form.validation_minmax')}
@@ -906,7 +906,7 @@ export default function HomePage() {
                     {/* Submit Button - Toss Style */}
                     <button
                       type="submit"
-                      className="w-full h-20 sm:h-24 bg-[#2D8CFF] hover:bg-[#1A75FF] text-white font-bold text-lg sm:text-xl rounded-2xl shadow-toss hover:shadow-toss-lg transition-all duration-200 transform hover:-translate-y-1 active:scale-[0.98]"
+                      className="w-full sm:w-full max-w-xl h-12 sm:h-14 bg-[#2D8CFF] hover:bg-[#1A75FF] text-white font-semibold text-base sm:text-lg rounded-xl shadow-[0_4px_12px_rgba(45,140,255,0.35)] transition-all duration-200 transform hover:-translate-y-0.5 active:scale-[0.98]"
                     >
                       {t('form.submit')}
                     </button>

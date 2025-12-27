@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { getPublishedPosts, getPostBySlug } from '../../lib/notionClient';
 
 const textFromRichText = (richText = []) => richText.map((item) => item.plain_text).join('');
@@ -228,37 +229,16 @@ const renderBlock = (block) => {
   }
 };
 
-const groupListBlocks = (blocks = []) => {
-  const grouped = [];
-  let currentList = null;
-
-  blocks.forEach((block) => {
-    if (block.type === 'bulleted_list_item' || block.type === 'numbered_list_item') {
-      const listType = block.type === 'bulleted_list_item' ? 'bulleted' : 'numbered';
-
-      if (!currentList || currentList.listType !== listType) {
-        if (currentList) grouped.push(currentList);
-        currentList = { id: `${block.id}-list`, type: 'list', listType, items: [] };
-      }
-
-      currentList.items.push(block);
-    } else {
-      if (currentList) {
-        grouped.push(currentList);
-        currentList = null;
-      }
-      grouped.push(block);
-    }
-  });
-
-  if (currentList) grouped.push(currentList);
-
-  return grouped;
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.remitbuddy.com';
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
+const LOCALE_MAP = {
+  en: 'en_US',
+  ko: 'ko_KR',
 };
 
-const normalizeBlocks = (blocks = []) => groupListBlocks(blocks.map((block) => ({ ...block, children: normalizeBlocks(block.children || []) })));
-
 const BlogPost = ({ post, blocks }) => {
+  const router = useRouter();
+
   if (!post) {
     return (
       <div className="container mx-auto px-4 py-12">
@@ -267,14 +247,31 @@ const BlogPost = ({ post, blocks }) => {
     );
   }
 
-  const normalizedBlocks = normalizeBlocks(blocks);
+  const pageTitle = post.title ? `${post.title} | RemitBuddy Blog` : 'RemitBuddy Blog';
+  const metaTitle = post.title || 'RemitBuddy Blog';
+  const metaDescription = post.description || 'Read the latest insights from RemitBuddy.';
+  const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+  const ogLocale = LOCALE_MAP[router.locale] || LOCALE_MAP[router.defaultLocale] || 'en_US';
+  const ogImage = post.cover || DEFAULT_OG_IMAGE;
 
   return (
     <div className="container mx-auto px-4 py-12">
       <Head>
-        <title>{post.title} | RemitBuddy Blog</title>
-        {post.description && <meta name="description" content={post.description} />}
-        {post.cover && <meta property="og:image" content={post.cover} />}
+        <title>{pageTitle}</title>
+        <link rel="canonical" href={canonicalUrl} />
+        <meta name="description" content={metaDescription} />
+
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:locale" content={ogLocale} />
+        <meta property="og:type" content="article" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:image" content={ogImage} />
       </Head>
       <article className="prose lg:prose-lg max-w-none">
         <h1 className="text-4xl font-bold mb-4">{post.title}</h1>

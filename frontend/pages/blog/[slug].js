@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { getPublishedPosts, getPostBySlug } from '../../lib/notionClient';
 
 const textFromRichText = (richText = []) => richText.map((item) => item.plain_text).join('');
@@ -192,7 +191,9 @@ const renderBlock = (block) => {
     case 'quote':
       return (
         <div key={id} className="space-y-3">
-          <blockquote className="border-l-4 border-brand-500 pl-4 italic text-gray-700">{renderRichText(value.rich_text)}</blockquote>
+          <blockquote className="border-l-4 border-brand-500 pl-4 italic text-gray-700">
+            {renderRichText(value.rich_text)}
+          </blockquote>
           {renderChildren(block.children)}
         </div>
       );
@@ -229,7 +230,7 @@ const renderBlock = (block) => {
         <p key={id} className="leading-7 text-gray-800">
           {text || '\u00a0'}
           {renderChildren(block.children)}
-        </div>
+        </p>
       );
   }
 };

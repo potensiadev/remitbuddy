@@ -11,7 +11,7 @@
     "build:static": "next build"
   },
   "dependencies": {
-    "@notionhq/client": "^2.2.14",
+    "@notionhq/client": "file:local-packages/notionhq-client",
     "autoprefixer": "^10.0.0",
     "next": "^14.0.0",
     "next-i18next": "^15.0.0",

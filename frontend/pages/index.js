@@ -655,6 +655,24 @@ export default function HomePage() {
         <meta name="description" content={t('seo.description')} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="keywords" content={t('seo.keywords')} />
+
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content={t('seo.title')} />
+        <meta property="og:description" content={t('seo.description')} />
+        <meta property="og:image" content="https://www.remitbuddy.com/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:url" content="https://www.remitbuddy.com" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="RemitBuddy" />
+
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={t('seo.title')} />
+        <meta name="twitter:description" content={t('seo.description')} />
+        <meta name="twitter:image" content="https://www.remitbuddy.com/og-image.png" />
+
         <link rel="preconnect" href="https://www.remitbuddy.com" />
         {FLAG_ASSETS.map((flag) => (
           <link key={flag} rel="preload" as="image" href={flag} />
@@ -666,9 +684,9 @@ export default function HomePage() {
         <Navigation />
 
         {/* Hero Section - Toss Style */}
-        <section className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
+        <section id="hero" className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative">
           {/* Background decoration */}
-          <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float" />
             <div
               className="absolute bottom-0 left-0 w-96 h-96 bg-accent-100 rounded-full blur-3xl opacity-20 animate-float"
@@ -676,8 +694,8 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8 relative z-10">
+            <div className="grid lg:grid-cols-2 gap-10 md:gap-12 items-center">
               {/* Left Column - Content */}
               <div className="animate-fade-in-up">
                 <div className="inline-flex items-center gap-2 bg-brand-50 text-brand-600 px-4 py-2 rounded-full text-sm font-bold mb-6 border border-brand-200 shadow-toss-sm hover:shadow-toss transition-all duration-300">
@@ -685,12 +703,12 @@ export default function HomePage() {
                   <span>{t('hero.badge')}</span>
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 leading-[1.1] tracking-tighter">
+                <h1 className="text-[28px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 leading-[1.1] tracking-tighter">
                   {t('hero.title_line1')}
                   <br className="md:hidden" /> {t('hero.title_line2')}
                 </h1>
 
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-500 mb-5 md:mb-7 leading-relaxed font-medium">
+                <p className="text-[15px] sm:text-lg md:text-xl lg:text-2xl text-gray-500 mb-5 md:mb-7 leading-relaxed font-medium">
                   {t('hero.subtitle')}
                 </p>
 
@@ -724,28 +742,31 @@ export default function HomePage() {
 
                 {/* Social Proof - Toss Style */}
                 <div
-                  className="bg-white rounded-xl border border-gray-150 p-4 sm:p-6 w-full sm:w-auto sm:inline-block shadow-toss-sm hover:shadow-toss transition-all duration-300 animate-fade-in-up"
+                  className="bg-white rounded-xl p-6 sm:p-8 shadow-toss border border-gray-100 w-full sm:w-auto sm:inline-block max-w-xl hover:shadow-toss-lg transition-all duration-300 animate-fade-in-up"
                   style={{ animationDelay: '0.4s' }}
                 >
-                  <div className="grid grid-cols-3 gap-3 sm:flex sm:items-center sm:gap-6 md:gap-8">
+                  <div className="grid grid-cols-3 gap-4 sm:flex sm:items-center sm:gap-6 md:gap-8">
                     <div className="text-center sm:text-left">
-                      <div className="text-xl sm:text-2xl font-bold text-brand-500">10+</div>
+                      <div className="text-2xl sm:text-3xl font-bold text-brand-500">8</div>
                       <div className="text-xs sm:text-sm text-gray-500 font-medium">
                         {t('hero.stats_companies')}
                       </div>
                     </div>
-                    <div className="hidden sm:block w-px h-12 bg-gray-200" />
+                    <div className="hidden sm:block w-px h-16 bg-gray-200" />
                     <div className="text-center sm:text-left">
-                      <div className="text-xl sm:text-2xl font-bold text-accent-500">18</div>
+                      <div className="text-2xl sm:text-3xl font-bold text-accent-500">18</div>
                       <div className="text-xs sm:text-sm text-gray-500 font-medium">
                         {t('hero.stats_countries')}
                       </div>
                     </div>
-                    <div className="hidden sm:block w-px h-12 bg-gray-200" />
+                    <div className="hidden sm:block w-px h-16 bg-gray-200" />
                     <div className="text-center sm:text-left">
-                      <div className="text-xl sm:text-2xl font-bold text-brand-500">3</div>
-                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
-                        {t('hero.stats_seconds')}
+                      <div className="text-brand-500 font-bold">
+                        <span className="text-2xl sm:text-3xl">3</span>
+                        <span className="text-xs sm:text-sm ml-1">{t('hero.stats_seconds')}</span>
+                      </div>
+                      <div className="text-sm sm:text-base text-gray-500 font-medium mt-1">
+                        {t('hero.stats_seconds_label')}
                       </div>
                     </div>
                   </div>
@@ -759,7 +780,7 @@ export default function HomePage() {
               >
                 <form
                   onSubmit={handleSubmit}
-                  className="w-full bg-white rounded-2xl border border-gray-150 p-4 sm:p-6 md:p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300"
+                  className="w-full bg-white rounded-xl border border-gray-100 p-6 sm:p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300"
                 >
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
                     {t('form.title')}
@@ -859,11 +880,11 @@ export default function HomePage() {
 
                     {/* Amount Input - Toss Style */}
                     <div>
-                      <label className="block text-sm font-bold text-gray-600 mb-2 ml-1">
+                      <label className="block text-base font-bold text-gray-600 mb-3 ml-1">
                         {t('form.label_amount')}
                       </label>
                       <div
-                        className={`relative h-14 sm:h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-4 sm:px-6 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss ${
+                        className={`relative h-12 sm:h-14 bg-[#f2f4f6] rounded-xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-4 sm:px-5 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss ${
                           shakeInput ? 'animate-shake' : ''
                         }`}
                       >
@@ -872,12 +893,12 @@ export default function HomePage() {
                           value={formattedAmount}
                           onChange={handleAmountChange}
                           placeholder={t('form.placeholder_amount')}
-                          className="flex-1 bg-transparent text-xl sm:text-2xl font-bold text-gray-900 text-right focus:outline-none placeholder-gray-400 border-0"
+                          className="flex-1 bg-transparent text-lg sm:text-xl font-bold text-gray-900 text-right focus:outline-none placeholder-gray-400 border-0"
                           aria-label={t('form.aria_amount_label', 'Amount to send in KRW')}
                         />
-                        <span className="text-lg sm:text-xl font-bold text-gray-500">KRW</span>
+                        <span className="text-base sm:text-lg font-bold text-gray-500">KRW</span>
                       </div>
-                      <p className="mt-2 text-sm text-gray-500 font-medium ml-1">
+                      <p className="mt-3 text-sm sm:text-base text-gray-500 font-medium ml-1">
                         {t('form.validation_minmax')}
                       </p>
                     </div>
@@ -885,12 +906,12 @@ export default function HomePage() {
                     {/* Submit Button - Toss Style */}
                     <button
                       type="submit"
-                      className="w-full sm:w-full max-w-xl h-14 sm:h-16 bg-[#2D8CFF] hover:bg-[#1A75FF] text-white font-semibold text-base sm:text-lg rounded-[14px] shadow-[0_4px_12px_rgba(45,140,255,0.35)] transition-all duration-200 transform hover:-translate-y-0.5 active:scale-[0.98]"
+                      className="w-full sm:w-full max-w-xl h-12 sm:h-14 bg-[#2D8CFF] hover:bg-[#1A75FF] text-white font-semibold text-base sm:text-lg rounded-xl shadow-[0_4px_12px_rgba(45,140,255,0.35)] transition-all duration-200 transform hover:-translate-y-0.5 active:scale-[0.98]"
                     >
                       {t('form.submit')}
                     </button>
 
-                    <p className="text-center text-sm text-gray-500 font-medium">
+                    <p className="text-center text-sm sm:text-base text-gray-500 font-medium">
                       {t('form.disclaimer')}
                     </p>
                   </div>
@@ -902,7 +923,7 @@ export default function HomePage() {
 
         {/* Features Section - Toss Style */}
         <section id="features" className="py-20 bg-gradient-to-br from-gray-50 to-brand-50/30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
                 {t('features.title')}
@@ -956,7 +977,7 @@ export default function HomePage() {
 
         {/* How It Works Section - Toss Style */}
         <section id="how-it-works" className="py-20 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
                 {t('how.title')}
@@ -1001,7 +1022,7 @@ export default function HomePage() {
         {/* Results Section */}
         {showResults && (
           <section ref={resultsRef} className="bg-white py-20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
               <ComparisonResults
                 queryParams={queryParams}
                 amount={amount}
@@ -1128,12 +1149,8 @@ export default function HomePage() {
   );
 }
 
-export async function getStaticProps({ locale }) {
-  const currentLocale = locale || 'en';
-
-  return {
-    props: {
-      ...(await serverSideTranslations(currentLocale, ['common']))
-    }
-  };
-}
+export const getStaticProps = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale || 'en', ['common']))
+  }
+});

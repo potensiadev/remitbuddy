@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
-const locales = ['en', 'ko', 'vi', 'tl', 'km', 'my', 'th', 'uz', 'id', 'si', 'ne'];
+const locales = ['en', 'ko'];
+// const locales = ['en', 'ko', 'vi', 'tl', 'km', 'my', 'th', 'uz', 'id', 'si', 'ne'];
 
 export function middleware(req) {
   const url = req.nextUrl;

@@ -1,109 +1,112 @@
 {
   "seo": {
-    "title": "Magpadala ng Pera sa Ibang Bansa nang Mas Mura – RemitBuddy",
-    "description": "Hanapin ang pinakamurang money transfer provider sa loob lang ng 3 segundo. Ikumpara ang exchange rate at fees para sa 18 bansa at makatipid ng malaki.",
-    "keywords": "Korea money transfer, magpadala ng pera mula Korea, remittance Korea to Philippines, compare remittance Korea, pinakamurang remittance Korea, KRW to PHP, send money to Philippines from Korea, cheapest money transfer Korea"
+    "title": "Send Money Abroad for Less – RemitBuddy",
+    "description": "Find the cheapest money transfer provider in just 3 seconds. Compare exchange rates and fees across 18 countries and save up to tens of thousands of KRW.",
+    "keywords": "Korea money transfer, send money from Korea, Korea remittance comparison, compare money transfer Korea, cheapest money transfer from Korea, Korea exchange rate comparison, send money from Korea to USA, send money from Korea to Canada, send money from Korea to Singapore, send money from Korea to Hong Kong, Korea to USD transfer, Korea to CAD transfer, Korea to SGD transfer, Korea to HKD transfer, expat money transfer Korea, 한패스, 센트비, 크로스, 이나인페이, 지머니트랜스, 모인, 핀샷, 코인샷, GME, hanpass, crossenf, sentbe, e9pay, gmoneytrans, gmeremit, finshot, coinshot, moin, JRF"
   },
-
   "hero": {
-    "badge": "Mabilis at Malinaw na Paghahambing",
-    "title_line1": "Magpadala ng Pera sa Ibang Bansa,",
-    "title_line2": "Nang Mas Matalino",
-    "subtitle": "Huwag nang magbayad ng sobrang remittance fees.\nHindi mo na kailangang magpalit-palit ng app para hanapin ang pinakamurang rate.",
+    "badge": "Quick and Transparent Comparison",
+    "title_line1": "Send Money Abroad,",
+    "title_line2": "Smarter",
+    "subtitle": "Stop overpaying for remittance fees. Stop switching between apps to find the cheapest rate.",
     "trust_1": "Real-time exchange rates",
-    "trust_2": "Walang hidden fees",
-    "trust_3": "100% libreng paghahambing",
+    "trust_2": "No hidden fees",
+    "trust_3": "100% free comparison",
     "stats_companies": "Providers",
-    "stats_countries": "Bansang Sinusuportahan",
-    "stats_seconds": "Segundong Paghahambing"
+    "stats_countries": "Countries Supported",
+    "stats_seconds": "Comparison Done"
   },
-
   "form": {
-    "title": "Simulan ang Paghahambing",
-    "label_country": "Bansang Padalhan",
-    "label_amount": "Halagang Ipapadala",
+    "title": "Start Your Comparison",
+    "label_country": "Receiving Country",
+    "label_amount": "Amount to Send",
     "placeholder_amount": "5,000,000",
-    "validation_minmax": "Minimum: ₩10,000   Maximum: ₩5,000,000",
-    "submit": "Ikumpara ang Pinakamabuting Rate",
-    "disclaimer": "Libre ang paghahambing — hindi kailangan ng personal na impormasyon",
-
-    "aria_select_country": "Piliin ang bansang padalhan",
-    "aria_amount_label": "Ilagay ang halagang ipapadala"
+    "validation_minmax": "Minimum: 10,000 KRW   Maximum: 5,000,000 KRW",
+    "submit": "Compare Best Rates",
+    "disclaimer": "Free comparison — no personal information required",
+    "aria_select_country": "Select receiving country",
+    "aria_amount_label": "Enter amount to send"
   },
-
   "provider": {
     "rank_suffix": "",
-    "best_badge": "Pinakamabuting Presyo",
-    "recipient_gets": "Matatanggap na Halaga",
+    "best_badge": "Best Deal",
+    "recipient_gets": "Amount Received",
     "exchange_rate": "Exchange Rate",
     "exchange_unit": "1 {{currency}} = {{value}} KRW",
-    "fee": "Bayad",
-    "cta": "Pumunta sa Site"
+    "fee": "Fee",
+    "cta": "Go to Provider"
   },
-
   "results": {
     "title": "{{amount}} KRW → {{country}}",
-    "snapshot": "Oras ng Pag-check: {{time}}",
-
-    "loading_title": "Hinahanap ang pinakamabuting rate para sa iyo…",
-    "loading_sub": "Kinukumpara ang 8 money transfer providers",
-
-    "compare_again": "Ikumpara Ulit",
-
-    "savings_prefix": "Makatipid ng hanggang",
-    "savings_suffix": "{{currency}} gamit ang pinakamabuting rate!",
-    "count_suffix": "providers ang naikumpara",
-
-    "retry": "Subukan Ulit",
-
-    "error_empty": "Hindi makuha ang exchange rate data.",
-    "error_api": "May error na nangyari: {{message}}"
+    "snapshot": "Checked at: {{time}}",
+    "loading_title": "Finding the best rate for you…",
+    "loading_sub": "Comparing 8 money transfer providers",
+    "compare_again": "Compare Again",
+    "savings_prefix": "Save up to",
+    "savings_suffix": "{{currency}} with the best rate!",
+    "count_suffix": "providers compared",
+    "retry": "Try Again",
+    "error_empty": "We couldn't load any exchange rate data.",
+    "error_api": "An error occurred: {{message}}"
   },
-
   "features": {
-    "title": "Bakit Dapat Gamitin ang RemitBuddy?",
-    "subtitle": "Huwag nang magpalit-palit ng apps.",
-
+    "title": "Why Use RemitBuddy?",
+    "subtitle": "Stop switching between multiple apps.",
     "f1_title": "Real-Time Rates",
-    "f1_desc": "Ikumpara gamit ang pinakabago at pinakatumpak na exchange rates.",
-
-    "f2_title": "Malinaw na Bayarin",
-    "f2_desc": "Walang hidden fees — malinaw ang lahat ng singil.",
-
-    "f3_title": "18 Bansang Sinusuportahan",
-    "f3_desc": "Ikumpara ang mga pagpipilian sa pagpapadala sa Vietnam, Philippines, at iba pang mga bansa.",
-
-    "f4_title": "Mas Malaking Matitipid",
-    "f4_desc": "Magpadala ng mas malaki sa mas mababang gastos gamit ang pinakamabuting rate."
+    "f1_desc": "Compare using the latest and most accurate exchange rates.",
+    "f2_title": "Transparent Fees",
+    "f2_desc": "See every fee clearly — no hidden charges.",
+    "f3_title": "18 Countries Supported",
+    "f3_desc": "Compare transfer options to Vietnam, the Philippines, and many other major countries.",
+    "f4_title": "Maximize Your Savings",
+    "f4_desc": "Send more for less with the best available rate."
   },
-
   "how": {
-    "title": "Paano Ito Gumagana",
-    "subtitle": "Simpleng 3-step na proseso",
-
-    "s1_title": "Ilagay ang Bansa at Halaga",
-    "s1_desc": "Piliin kung saang bansa ka magpapadala at ilagay ang halaga.",
-
-    "s2_title": "Tingnan ang Real-Time Results",
-    "s2_desc": "Tingnan ang exchange rates at fees mula sa 8 providers sa isang tingin.",
-
-    "s3_title": "Piliin ang Pinakamabuting Opsyon",
-    "s3_desc": "Piliin ang provider na may pinakamabuting presyo at magpatuloy sa pagpapadala."
+    "title": "How It Works",
+    "subtitle": "A simple 3-step comparison process",
+    "s1_title": "Enter Country and Amount",
+    "s1_desc": "Choose where you're sending money and enter the amount.",
+    "s2_title": "View Real-Time Results",
+    "s2_desc": "See exchange rates and fees from 8 providers at a glance.",
+    "s3_title": "Choose the Best Option",
+    "s3_desc": "Select the provider with the best deal and continue to transfer."
   },
-
   "faq": {
-    "title": "Mga Madalas na Tanong",
-
-    "q1_title": "Ang RemitBuddy ba ay money transfer service?",
-    "q1_desc": "Hindi. Ang RemitBuddy ay naghahambing lang ng exchange rates at fees. Ang mismong pagpapadala ay ginagawa sa website ng napili mong provider.",
-
-    "q2_title": "Libre ba ang paghahambing?",
-    "q2_desc": "Oo. Ito ay 100% libre at hindi kailangan ng sign-up o personal na impormasyon.",
-
-    "q3_title": "Gaano kadalas ina-update ang exchange rate?",
-    "q3_desc": "Tuwing pipindutin mo ang 'Ikumpara', kinukuha namin ang pinakabagong rate at fees.",
-
-    "q4_title": "Aling mga bansa ang pwedeng ikumpara?",
-    "q4_desc": "Pwede kang magkumpara ng pagpapadala sa Vietnam, Nepal, Philippines, Cambodia, at marami pa. Patuloy kaming magdadagdag ng mga bansa."
+    "title": "Frequently Asked Questions",
+    "q1_title": "Is RemitBuddy a money transfer service?",
+    "q1_desc": "No. RemitBuddy compares exchange rates and fees from multiple providers. Actual transfers are made on the provider's website.",
+    "q2_title": "Is the comparison service free?",
+    "q2_desc": "Yes. It’s 100% free and requires no sign-up or personal information.",
+    "q3_title": "How often is the exchange rate updated?",
+    "q3_desc": "We fetch the latest exchange rate and fee information every time you click Compare.",
+    "q4_title": "Which countries can I compare?",
+    "q4_desc": "You can compare transfers to Vietnam, Nepal, the Philippines, Cambodia, and more. Additional countries are being added."
+  },
+  "nav": {
+    "brand": "RemitBuddy",
+    "menu": "Menu",
+    "service": "Serbisyo",
+    "service_intro": "Panimula sa Serbisyo",
+    "service_how": "Paano Ito Gumagana",
+    "service_faq": "FAQ",
+    "open": "Buksan ang menu",
+    "close": "Isara ang menu"
+  },
+  "footer": {
+    "title": "RemitBuddy",
+    "description": "Ang Pinakamabilis na Serbisyo sa Paghahambing ng Remittance",
+    "company": "Kompanya",
+    "privacy": "Patakaran sa Privacy",
+    "terms": "Mga Tuntunin ng Serbisyo",
+    "contact": "Makipag-ugnayan",
+    "service_title": "Serbisyo",
+    "service_intro": "Panimula sa Serbisyo",
+    "service_how": "Paano Ito Gumagana",
+    "service_faq": "FAQ",
+    "contact_business": "Pakikipagsosyong Pang-negosyo",
+    "contact_support": "Suporta sa Customer",
+    "disclaimer_1": "Ang RemitBuddy ay isang paghahambing na serbisyo, hindi isang remittance provider. Ang aktwal na pagpapadala ay isinasagawa ng provider na iyong pinili.",
+    "disclaimer_2": "Ang mga rate at bayarin ay maaaring magbago sa real-time at magkaiba depende sa provider sa oras ng pagpapadala.",
+    "copyright": "© {{year}} RemitBuddy."
   }
 }

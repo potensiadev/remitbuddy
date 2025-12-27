@@ -1,109 +1,112 @@
 {
   "seo": {
-    "title": "विदेशमा पैसा सस्तोमा पठाउनुहोस् – RemitBuddy",
-    "description": "३ सेकेन्डमै सबैभन्दा सस्तो रेमिट्यान्स सेवा फेला पार्नुहोस्। १८ देशका दर र शुल्क तुलना गरेर धेरै रकम बचत गर्नुहोस्।",
-    "keywords": "कोरियाबाट पैसा पठाउने, Korea bata Nepal paisa pathaune, कोरिया रेमिट्यान्स तुलना, Korea remittance compare, कोरिया देखि नेपाल पैसा पठाउने, Korea to Nepal money transfer, कोरिया USD ट्रान्सफर, सस्तो रेमिट्यान्स कोरिया, sasto remittance Korea, कोरिया एक्सचेन्ज रेट तुलना, Korea exchange rate comparison"
+    "title": "Send Money Abroad for Less – RemitBuddy",
+    "description": "Find the cheapest money transfer provider in just 3 seconds. Compare exchange rates and fees across 18 countries and save up to tens of thousands of KRW.",
+    "keywords": "Korea money transfer, send money from Korea, Korea remittance comparison, compare money transfer Korea, cheapest money transfer from Korea, Korea exchange rate comparison, send money from Korea to USA, send money from Korea to Canada, send money from Korea to Singapore, send money from Korea to Hong Kong, Korea to USD transfer, Korea to CAD transfer, Korea to SGD transfer, Korea to HKD transfer, expat money transfer Korea, 한패스, 센트비, 크로스, 이나인페이, 지머니트랜스, 모인, 핀샷, 코인샷, GME, hanpass, crossenf, sentbe, e9pay, gmoneytrans, gmeremit, finshot, coinshot, moin, JRF"
   },
-
   "hero": {
-    "badge": "छिटो र स्पष्ट तुलना सेवा",
-    "title_line1": "विदेशमा पैसा पठाउने,",
-    "title_line2": "अब अझ स्मार्ट तरिकाले",
-    "subtitle": "रेमिट्यान्स शुल्कमा बढी पैसा तिर्नु पर्दैन। सस्तो विकल्प खोज्न धेरै एप घुम्नुपर्ने आवश्यकता छैन।",
-    "trust_1": "रियल–टाइम एक्सचेन्ज रेट",
-    "trust_2": "लुकेको शुल्क छैन",
-    "trust_3": "१००% निःशुल्क तुलना",
-    "stats_companies": "कम्पनी",
-    "stats_countries": "समर्थित देशहरू",
-    "stats_seconds": "तुलना पूरा"
+    "badge": "Quick and Transparent Comparison",
+    "title_line1": "Send Money Abroad,",
+    "title_line2": "Smarter",
+    "subtitle": "Stop overpaying for remittance fees. Stop switching between apps to find the cheapest rate.",
+    "trust_1": "Real-time exchange rates",
+    "trust_2": "No hidden fees",
+    "trust_3": "100% free comparison",
+    "stats_companies": "Providers",
+    "stats_countries": "Countries Supported",
+    "stats_seconds": "Comparison Done"
   },
-
   "form": {
-    "title": "तुलना सुरु गर्नुहोस्",
-    "label_country": "पैसा पठाउने देश",
-    "label_amount": "पठाउने रकम",
+    "title": "Start Your Comparison",
+    "label_country": "Receiving Country",
+    "label_amount": "Amount to Send",
     "placeholder_amount": "5,000,000",
-    "validation_minmax": "न्यूनतम: 10,000 KRW   अधिकतम: 5,000,000 KRW",
-    "submit": "सर्वोत्कृष्ट दर तुलना गर्नुहोस्",
-    "disclaimer": "तुलना निःशुल्क छ — कुनै व्यक्तिगत जानकारी आवश्यक छैन।",
-
-    "aria_select_country": "देश चयन गर्नुहोस्",
-    "aria_amount_label": "पठाउने रकम लेख्नुहोस्"
+    "validation_minmax": "Minimum: 10,000 KRW   Maximum: 5,000,000 KRW",
+    "submit": "Compare Best Rates",
+    "disclaimer": "Free comparison — no personal information required",
+    "aria_select_country": "Select receiving country",
+    "aria_amount_label": "Enter amount to send"
   },
-
   "provider": {
     "rank_suffix": "",
-    "best_badge": "सर्वश्रेष्ठ विकल्प",
-    "recipient_gets": "घरमा पुग्ने रकम",
-    "exchange_rate": "एक्सचेन्ज रेट",
+    "best_badge": "Best Deal",
+    "recipient_gets": "Amount Received",
+    "exchange_rate": "Exchange Rate",
     "exchange_unit": "1 {{currency}} = {{value}} KRW",
-    "fee": "शुल्क",
-    "cta": "साइटमा जानुहोस्"
+    "fee": "Fee",
+    "cta": "Go to Provider"
   },
-
   "results": {
     "title": "{{amount}} KRW → {{country}}",
-    "snapshot": "जांच गरिएको समय: {{time}}",
-
-    "loading_title": "तपाईंका लागि सर्वोत्तम दर खोजिँदै…",
-    "loading_sub": "८ वटा कम्पनी तुलना भइरहेको छ",
-
-    "compare_again": "फेरि तुलना गर्नुहोस्",
-
-    "savings_prefix": "सर्वश्रेष्ठ दरले",
-    "savings_suffix": "{{currency}} बचत गर्न सक्नुहुन्छ!",
-    "count_suffix": "कम्पनीहरूको तुलना गरियो",
-
-    "retry": "फेरि प्रयास गर्नुहोस्",
-
-    "error_empty": "एक्सचेन्ज रेट डाटा प्राप्त गर्न सकिएन।",
-    "error_api": "त्रुटि भयो: {{message}}"
+    "snapshot": "Checked at: {{time}}",
+    "loading_title": "Finding the best rate for you…",
+    "loading_sub": "Comparing 8 money transfer providers",
+    "compare_again": "Compare Again",
+    "savings_prefix": "Save up to",
+    "savings_suffix": "{{currency}} with the best rate!",
+    "count_suffix": "providers compared",
+    "retry": "Try Again",
+    "error_empty": "We couldn't load any exchange rate data.",
+    "error_api": "An error occurred: {{message}}"
   },
-
   "features": {
-    "title": "किन RemitBuddy प्रयोग गर्ने?",
-    "subtitle": "धेरै एपहरू घुम्नु बन्द गर्नुहोस्।",
-
-    "f1_title": "रियल–टाइम दर",
-    "f1_desc": "सबैभन्दा नयाँ र सही एक्सचेन्ज दर प्रयोग गरेर तुलना गर्नुहोस्।",
-
-    "f2_title": "स्पष्ट शुल्क",
-    "f2_desc": "लुकेको शुल्क छैन — सबै शुल्क स्पष्ट रूपमा देखाइन्छ।",
-
-    "f3_title": "१८ देशहरूमा पठाउन सकिन्छ",
-    "f3_desc": "नेपाल, बंगलादेश, भियतनाम, फिलिपिन्ससहित प्रमुख देशहरूमा तुलना उपलब्ध।",
-
-    "f4_title": "अधिक बचत",
-    "f4_desc": "सबैभन्दा सही रेटमा पैसा पठाएर धेरै रकम बचत गर्नुहोस्।"
+    "title": "Why Use RemitBuddy?",
+    "subtitle": "Stop switching between multiple apps.",
+    "f1_title": "Real-Time Rates",
+    "f1_desc": "Compare using the latest and most accurate exchange rates.",
+    "f2_title": "Transparent Fees",
+    "f2_desc": "See every fee clearly — no hidden charges.",
+    "f3_title": "18 Countries Supported",
+    "f3_desc": "Compare transfer options to Vietnam, the Philippines, and many other major countries.",
+    "f4_title": "Maximize Your Savings",
+    "f4_desc": "Send more for less with the best available rate."
   },
-
   "how": {
-    "title": "कसरी काम गर्छ?",
-    "subtitle": "३ चरणमा सजिलो तुलना प्रक्रिया",
-
-    "s1_title": "देश र रकम चयन गर्नुहोस्",
-    "s1_desc": "जहाँ पैसा पठाउन चाहनुहुन्छ त्यो देश चयन गरी रकम प्रविष्ट गर्नुहोस्।",
-
-    "s2_title": "रियल–टाइम नतिजा हेर्नुहोस्",
-    "s2_desc": "८ कम्पनीका दर र शुल्क एउटै ठाउँमा तुलना गर्नुहोस्।",
-
-    "s3_title": "सर्वश्रेष्ठ विकल्प छान्नुहोस्",
-    "s3_desc": "सबैभन्दा राम्रो दर पाउने कम्पनी छानेर पैसा पठाउन अगाडि बढ्नुहोस्।"
+    "title": "How It Works",
+    "subtitle": "A simple 3-step comparison process",
+    "s1_title": "Enter Country and Amount",
+    "s1_desc": "Choose where you're sending money and enter the amount.",
+    "s2_title": "View Real-Time Results",
+    "s2_desc": "See exchange rates and fees from 8 providers at a glance.",
+    "s3_title": "Choose the Best Option",
+    "s3_desc": "Select the provider with the best deal and continue to transfer."
   },
-
   "faq": {
-    "title": "बारम्बार सोधिने प्रश्नहरू",
-
-    "q1_title": "के RemitBuddy रेमिट्यान्स सेवा हो?",
-    "q1_desc": "होइन। RemitBuddy ले धेरै प्रदायकका दर र शुल्क मात्र तुलना गरेर देखाउँछ। पैसा पठाउने प्रक्रिया तपाईंले छानेको सेवा प्रदायकबाट हुन्छ।",
-
-    "q2_title": "तुलना निःशुल्क हो?",
-    "q2_desc": "हो, १००% निःशुल्क — कुनै साइन अप वा व्यक्तिगत जानकारी आवश्यक छैन।",
-
-    "q3_title": "एक्सचेन्ज रेट कहिले अपडेट हुन्छ?",
-    "q3_desc": "'तुलना गर्नुहोस्' थिच्ने बित्तिकै सबैभन्दा नयाँ दर र शुल्क लोड हुनेछ।",
-
-    "q4_title": "कुन–कुन देशमा पैसा पठाउन सकिन्छ?",
-    "q4_desc": "नेपाल, भियतनाम, बंगलादेश, फिलिपिन्स, कम्बोडियासहित १८ देशमा तुलना गर्न सकिन्छ। थप देशहरू छिट्टै थपिनेछन्।"
+    "title": "Frequently Asked Questions",
+    "q1_title": "Is RemitBuddy a money transfer service?",
+    "q1_desc": "No. RemitBuddy compares exchange rates and fees from multiple providers. Actual transfers are made on the provider's website.",
+    "q2_title": "Is the comparison service free?",
+    "q2_desc": "Yes. It’s 100% free and requires no sign-up or personal information.",
+    "q3_title": "How often is the exchange rate updated?",
+    "q3_desc": "We fetch the latest exchange rate and fee information every time you click Compare.",
+    "q4_title": "Which countries can I compare?",
+    "q4_desc": "You can compare transfers to Vietnam, Nepal, the Philippines, Cambodia, and more. Additional countries are being added."
+  },
+  "nav": {
+    "brand": "RemitBuddy",
+    "menu": "मेनु",
+    "service": "सेवा",
+    "service_intro": "सेवा परिचय",
+    "service_how": "कसरी काम गर्छ",
+    "service_faq": "प्रश्नोत्तर",
+    "open": "मेनु खोल्नुहोस्",
+    "close": "मेनु बन्द गर्नुहोस्"
+  },
+  "footer": {
+    "title": "RemitBuddy",
+    "description": "सबैभन्दा छिटो रेमिट्यान्स तुलना सेवा",
+    "company": "कम्पनी",
+    "privacy": "गोपनीयता नीति",
+    "terms": "सेवा सर्तहरू",
+    "contact": "सम्पर्क",
+    "service_title": "सेवा",
+    "service_intro": "सेवा परिचय",
+    "service_how": "कसरी काम गर्छ",
+    "service_faq": "प्रश्नोत्तर",
+    "contact_business": "व्यवसायिक साझेदारी",
+    "contact_support": "ग्राहक सहायता",
+    "disclaimer_1": "RemitBuddy तुलना सेवा हो, रेमिट्यान्स प्रदायक होइन। वास्तविक रकम प्रेषण तपाईंले चयन गरेको सेवाप्रदायक मार्फत हुन्छ।",
+    "disclaimer_2": "दर तथा शुल्क वास्तविक समयमा परिवर्तन हुन सक्छ र प्रदायकअनुसार फरक पर्न सक्छ।",
+    "copyright": "© {{year}} RemitBuddy."
   }
 }

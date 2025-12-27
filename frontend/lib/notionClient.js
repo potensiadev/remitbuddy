@@ -83,9 +83,13 @@ const fetchBlockChildren = async (blockId) => {
 
     for (const block of results) {
       let children = [];
-      if (block.has_children) {
+
+      if (block.type === 'synced_block' && block.synced_block?.synced_from?.block_id) {
+        children = await fetchBlockChildren(block.synced_block.synced_from.block_id);
+      } else if (block.has_children) {
         children = await fetchBlockChildren(block.id);
       }
+
       blocks.push({ ...block, children });
     }
 

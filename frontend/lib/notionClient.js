@@ -56,17 +56,31 @@ const mapPageToPost = (page) => {
 
 export const getPublishedPosts = async () => {
   const databaseId = getDatabaseId();
-  const response = await notion.databases.query({
-    database_id: databaseId,
-    sorts: [
-      {
-        timestamp: 'last_edited_time',
-        direction: 'descending',
-      },
-    ],
-  });
+  let cursor = undefined;
+  const results = [];
 
-  const posts = (response.results || []).map(mapPageToPost);
+  do {
+    const response = await notion.databases.query({
+      database_id: databaseId,
+      filter: {
+        property: 'Published',
+        checkbox: { equals: true },
+      },
+      sorts: [
+        {
+          timestamp: 'last_edited_time',
+          direction: 'descending',
+        },
+      ],
+      start_cursor: cursor,
+      page_size: 100,
+    });
+
+    results.push(...(response.results || []));
+    cursor = response.has_more ? response.next_cursor : undefined;
+  } while (cursor);
+
+  const posts = results.map(mapPageToPost);
   return posts.filter((post) => post.slug && post.published);
 };
 
@@ -83,9 +97,13 @@ const fetchBlockChildren = async (blockId) => {
 
     for (const block of results) {
       let children = [];
-      if (block.has_children) {
+
+      if (block.type === 'synced_block' && block.synced_block?.synced_from?.block_id) {
+        children = await fetchBlockChildren(block.synced_block.synced_from.block_id);
+      } else if (block.has_children) {
         children = await fetchBlockChildren(block.id);
       }
+
       blocks.push({ ...block, children });
     }
 

@@ -198,8 +198,8 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, amount }) => {
     };
 
   return (
-    // Added mt-10 if isBest to prevent badge overlap with "X providers compared" text
-    <div className={`mb-8 relative ${isBest ? 'mt-10' : ''}`} style={{ animationDelay: `${index * 50}ms` }}>
+    // Added mt-14 if isBest to prevent badge overlap with "X providers compared" text and add more space
+    <div className={`mb-8 relative ${isBest ? 'mt-14' : ''}`} style={{ animationDelay: `${index * 50}ms` }}>
       {/* Best Rate Badge (Tab) */}
       {isBest && (
         <div className="absolute -top-9 left-0 bg-[#36D362] text-white px-6 py-2 rounded-t-xl font-bold text-sm sm:text-base z-10 shadow-sm">

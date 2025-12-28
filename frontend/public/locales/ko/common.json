@@ -29,14 +29,15 @@
   },
   "provider": {
     "rank_suffix": "위",
-    "best_badge": "최저가 추천",
-    "recipient_gets": "받는 금액",
-    "exchange_rate": "환율",
+    "best_badge": "Best Rate Provider",
+    "recipient_gets": "Recipient Get",
+    "exchange_rate": "Exchange Rate",
     "exchange_unit": "1 {{currency}} = {{value}} KRW",
-    "fee": "수수료",
-    "cta": "송금하러 가기",
-    "logo_alt": "{{provider}} 로고",
-    "exchange_rate_main": "1 {{currency}} = {{value}} KRW"
+    "fee": "Fee",
+    "cta": "Go to {{provider}}",
+    "logo_alt": "{{provider}} Logo",
+    "exchange_rate_main": "1 {{currency}} = {{value}} KRW",
+    "you_pay": "You Pay"
   },
   "results": {
     "title": "{{amount}} KRW → {{country}}",

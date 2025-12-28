@@ -156,14 +156,15 @@ const TrendingUpIcon = () => (
   </svg>
 );
 
-// Provider Card Component - mobile-first, high-emphasis layout with clear separation
-const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
+// ProviderCard Component - Green/Gray Theme Match
+const ProviderCard = ({ provider, isBest, index, onProviderClick, amount }) => {
   const { t } = useTranslation('common');
 
   const displayName =
     provider.provider === 'JP Remit' ? 'JRF' : provider.provider === 'The Moin' ? 'Moin' : provider.provider;
 
   const formattedFeeInKRW = provider.fee.toLocaleString('en-US');
+  // const formattedAmount = parseInt(amount || '0', 10).toLocaleString('en-US'); // Removed as per request
 
   const rateValue = provider.exchange_rate;
   const formattedRate = rateValue.toLocaleString(undefined, {
@@ -171,125 +172,99 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
     maximumFractionDigits: 4
   });
 
-  // 1위는 특별한 스타일, 나머지는 명확하게 구분되는 카드 스타일
-  const cardStyles = isBest
-    ? 'border-2 border-blue-400 bg-gradient-to-br from-blue-50 via-white to-blue-50 shadow-xl ring-4 ring-blue-100'
-    : 'border-2 border-gray-200 bg-white shadow-lg hover:border-gray-300 hover:shadow-xl';
+  // Theme Config
+  const theme = isBest
+    ? {
+      border: 'border-[#36D362] border-2 shadow-lg', // Bright Green
+      badgeBg: 'bg-[#36D362]',
+      badgeText: 'text-white',
+      nameColor: 'text-[#36D362]',
+      labelColor: 'text-[#36D362]',
+      valueColor: 'text-[#36D362]',
+      ctaBg: 'bg-[#36D362] hover:bg-[#2dbb55]',
+      ctaText: 'text-white',
+      divider: 'hidden'
+    }
+    : {
+      border: 'border-gray-400 border shadow-md', // Gray
+      badgeBg: 'hidden',
+      badgeText: '',
+      nameColor: 'text-gray-500',
+      labelColor: 'text-gray-500',
+      valueColor: 'text-gray-700',
+      ctaBg: 'bg-gray-500 hover:bg-gray-600',
+      ctaText: 'text-white',
+      divider: ''
+    };
 
   return (
-    <div
-      className={`relative block w-full rounded-3xl transition-all duration-200 overflow-hidden ${cardStyles}`}
-      style={{ animationDelay: `${index * 50}ms` }}
-    >
-      {/* 카드 상단 헤더 - Provider 정보 */}
-      <div className={`px-5 py-4 sm:px-6 sm:py-5 ${isBest ? 'bg-blue-600' : 'bg-gray-800'}`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            {PROVIDER_LOGO_MAP[provider.provider] ? (
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white p-2 shadow-md">
-                <img
-                  src={PROVIDER_LOGO_MAP[provider.provider]}
-                  alt={t('provider.logo_alt', { provider: displayName })}
-                  className="w-full h-full object-contain"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              </div>
-            ) : (
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white flex items-center justify-center text-lg sm:text-xl font-bold text-gray-800 shadow-md">
-                {displayName.charAt(0)}
-              </div>
-            )}
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg sm:text-xl font-bold text-white">{displayName}</span>
-                <span
-                  className={`inline-flex items-center rounded-full text-xs font-bold px-2.5 py-1 ${
-                    isBest ? 'bg-yellow-400 text-yellow-900' : 'bg-gray-600 text-gray-200'
-                  }`}
-                >
-                  {index + 1}
-                  {t('provider.rank_suffix')}
-                </span>
-              </div>
-              {isBest && (
-                <span className="flex items-center gap-1 text-xs sm:text-sm text-blue-100 font-medium mt-0.5">
-                  <SparklesIcon />
-                  {t('provider.best_badge')}
-                </span>
-              )}
+    // Added mt-10 if isBest to prevent badge overlap with "X providers compared" text
+    <div className={`mb-8 relative ${isBest ? 'mt-10' : ''}`} style={{ animationDelay: `${index * 50}ms` }}>
+      {/* Best Rate Badge (Tab) */}
+      {isBest && (
+        <div className="absolute -top-9 left-0 bg-[#36D362] text-white px-6 py-2 rounded-t-xl font-bold text-sm sm:text-base z-10 shadow-sm">
+          {t('provider.best_badge')}
+        </div>
+      )}
+
+      <div className={`relative block w-full rounded-2xl bg-white overflow-hidden p-5 sm:p-8 transition-all duration-200 ${theme.border} ${isBest ? 'rounded-tl-none' : ''}`}>
+
+        {/* Layout Container: Stack on Mobile, Row on Desktop */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-8">
+
+          {/* 1. Provider Name */}
+          <div className="lg:w-1/4 flex items-center lg:block">
+            <span className={`text-2xl sm:text-3xl font-extrabold ${theme.nameColor}`}>
+              {displayName}
+            </span>
+          </div>
+
+          {/* 2. Details Grid */}
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
+            {/* Recipient Get */}
+            <div className="sm:col-span-2 flex items-center justify-between sm:justify-start sm:gap-12 mb-2">
+              <span className={`text-sm sm:text-base font-bold ${theme.labelColor} min-w-[100px]`}>
+                {t('provider.recipient_gets')}
+              </span>
+              <span className={`text-lg sm:text-xl font-bold ${theme.valueColor}`}>
+                {provider.recipient_gets.toLocaleString('en-US')} {provider.currency}
+              </span>
+            </div>
+
+            {/* Fee */}
+            <div className="flex items-center justify-between sm:justify-start sm:gap-12">
+              <span className={`text-sm font-medium ${theme.labelColor} min-w-[100px]`}>{t('provider.fee')}</span>
+              <span className={`text-sm sm:text-base font-medium whitespace-nowrap ${isBest ? 'text-[#36D362]' : 'text-gray-500'}`}>
+                {formattedFeeInKRW} {provider.currency === 'BDT' ? 'BDT' : 'KRW'} {/* Note: Fee unit logic might need adjustment per provider, defaulting */}
+              </span>
+            </div>
+
+            {/* Exchange Rate */}
+            <div className="flex items-center justify-between sm:justify-start sm:gap-12 sm:col-start-1 sm:row-start-2 sm:col-span-2 sm:mt-0">
+              <span className={`text-sm font-medium ${theme.labelColor} min-w-[100px]`}>{t('provider.exchange_rate')}</span>
+              <span className={`text-sm sm:text-base font-medium ${isBest ? 'text-[#36D362]' : 'text-gray-500'}`}>
+                1 {provider.currency} = {formattedRate} KRW
+              </span>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* 카드 본문 - 금액 정보 */}
-      <div className="p-5 sm:p-6">
-        {/* 받는 금액 */}
-        <div
-          className={`rounded-2xl px-5 py-4 sm:px-6 sm:py-5 mb-4 ${
-            isBest ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-100'
-          }`}
-        >
-          <div className="text-xs font-semibold text-gray-500 mb-1">{t('provider.recipient_gets')}</div>
-          <div className="flex items-baseline gap-2">
-            <span
-              className={`text-base sm:text-lg font-bold ${
-                isBest ? 'text-blue-600' : 'text-gray-900'
-              }`}
+          {/* 3. CTA Button */}
+          <div className="lg:w-1/4">
+            <a
+              href={provider.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onProviderClick}
+              className={`flex items-center justify-center w-full py-4 rounded-xl font-bold text-lg transition-transform active:scale-95 ${theme.ctaBg} ${theme.ctaText}`}
             >
-              {provider.recipient_gets.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })}
-            </span>
-            <span className="text-[10px] sm:text-xs text-gray-400 font-medium">
-              {provider.currency}
-            </span>
+              {t('provider.cta', { provider: displayName })}
+              <svg className="w-6 h-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
           </div>
+
         </div>
-
-        {/* 환율 & 수수료 */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-5">
-          <div className="rounded-xl bg-gray-100 px-4 py-3">
-            <div className="text-xs font-semibold text-gray-500 mb-1">
-              {t('provider.exchange_rate')}
-            </div>
-
-            <div className="text-base sm:text-lg font-bold text-gray-800">
-              {t('provider.exchange_rate_main', { currency: provider.currency, value: formattedRate })}
-            </div>
-
-            <div className="text-[10px] sm:text-xs text-gray-400 font-medium">
-              {t('provider.exchange_unit', {
-                currency: provider.currency,
-                value: formattedRate
-              })}
-            </div>
-          </div>
-          <div className="rounded-xl bg-gray-100 px-4 py-3">
-            <div className="text-xs font-semibold text-gray-500 mb-1">{t('provider.fee')}</div>
-            <div className="text-base sm:text-lg font-bold text-gray-800">{formattedFeeInKRW}</div>
-            <div className="text-[10px] sm:text-xs text-gray-400 font-medium">{t('currency.krw_code')}</div>
-          </div>
-        </div>
-
-        {/* CTA 버튼 */}
-        <a
-          href={provider.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onProviderClick}
-          className={`flex w-full items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-base shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${
-            isBest ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-800 text-white hover:bg-gray-900'
-          }`}
-        >
-          {t('provider.cta')}
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </a>
       </div>
     </div>
   );
@@ -525,6 +500,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
                 provider={{ ...provider, currency: queryParams.receive_currency }}
                 isBest={index === 0}
                 index={index}
+                amount={amountRef.current}
                 onProviderClick={() => handleProviderClick(provider, index)}
               />
             ))}
@@ -798,9 +774,8 @@ export default function HomePage() {
                             </div>
                           </div>
                           <div
-                            className={`transform transition-transform duration-300 ${
-                              showDropdown ? 'rotate-180 text-brand-500' : 'text-[#b0b8c1]'
-                            } group-hover:text-brand-500`}
+                            className={`transform transition-transform duration-300 ${showDropdown ? 'rotate-180 text-brand-500' : 'text-[#b0b8c1]'
+                              } group-hover:text-brand-500`}
                           >
                             <ChevronDownIcon />
                           </div>
@@ -816,11 +791,10 @@ export default function HomePage() {
                                   setSelectedCountry(country);
                                   setShowDropdown(false);
                                 }}
-                                className={`w-full px-5 py-4 flex items-center justify-between hover:bg-[#e8f3ff] rounded-2xl transition-all duration-200 group mb-1 ${
-                                  selectedCountry.code === country.code
-                                    ? 'bg-[#e8f3ff] ring-1 ring-brand-100'
-                                    : ''
-                                }`}
+                                className={`w-full px-5 py-4 flex items-center justify-between hover:bg-[#e8f3ff] rounded-2xl transition-all duration-200 group mb-1 ${selectedCountry.code === country.code
+                                  ? 'bg-[#e8f3ff] ring-1 ring-brand-100'
+                                  : ''
+                                  }`}
                               >
                                 <div className="flex items-center gap-4">
                                   <div className="relative">
@@ -832,21 +806,19 @@ export default function HomePage() {
                                     <div className="absolute inset-0 rounded-full ring-1 ring-black/5" />
                                   </div>
                                   <span
-                                    className={`text-lg font-bold transition-colors ${
-                                      selectedCountry.code === country.code
-                                        ? 'text-brand-600'
-                                        : 'text-[#191f28] group-hover:text-brand-600'
-                                    }`}
+                                    className={`text-lg font-bold transition-colors ${selectedCountry.code === country.code
+                                      ? 'text-brand-600'
+                                      : 'text-[#191f28] group-hover:text-brand-600'
+                                      }`}
                                   >
                                     {country.labelKey ? t(country.labelKey) : country.name}
                                   </span>
                                 </div>
                                 <span
-                                  className={`text-base font-bold ${
-                                    selectedCountry.code === country.code
-                                      ? 'text-brand-500'
-                                      : 'text-[#8b95a1] group-hover:text-brand-400'
-                                  }`}
+                                  className={`text-base font-bold ${selectedCountry.code === country.code
+                                    ? 'text-brand-500'
+                                    : 'text-[#8b95a1] group-hover:text-brand-400'
+                                    }`}
                                 >
                                   {country.currency}
                                 </span>
@@ -863,9 +835,8 @@ export default function HomePage() {
                         {t('form.label_amount')}
                       </label>
                       <div
-                        className={`relative h-14 sm:h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-4 sm:px-6 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss ${
-                          shakeInput ? 'animate-shake' : ''
-                        }`}
+                        className={`relative h-14 sm:h-16 bg-[#f2f4f6] rounded-2xl hover:bg-gray-200 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-500 transition-all duration-200 px-4 sm:px-6 flex items-center gap-2 border-0 shadow-sm hover:shadow-toss ${shakeInput ? 'animate-shake' : ''
+                          }`}
                       >
                         <input
                           type="text"

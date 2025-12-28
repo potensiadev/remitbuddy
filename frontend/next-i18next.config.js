@@ -18,11 +18,12 @@ module.exports = {
       'mn',
       'cn'
     ],
-    localeDetection: true, // 브라우저 언어 감지 비활성화 (빌드 경고 해결)
+    localeDetection: false, // 브라?��? ?�어 감�? 비활?�화 (빌드 경고 ?�결)
   },
   react: {
     useSuspense: false,
   },
-  // 개발 중 즉시 번역 반영이 필요하면:
+  // 개발 �?즉시 번역 반영???�요?�면:
   // reloadOnPrerender: process.env.NODE_ENV === 'development',
 }
+

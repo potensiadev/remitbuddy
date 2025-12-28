@@ -43,25 +43,25 @@ const getApiBaseUrl = () => {
 
 // Country data
 const COUNTRIES = [
-  { code: 'VN', currency: 'VND', name: 'Vietnam', flag: '/images/flags/vn.png' },
-  { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' },
-  { code: 'PH', currency: 'PHP', name: 'Philippines', flag: '/images/flags/ph.png' },
-  { code: 'KH', currency: 'KHR', name: 'Cambodia', flag: '/images/flags/kh.png' },
-  { code: 'MM', currency: 'MMK', name: 'Myanmar', flag: '/images/flags/mm.png' },
-  { code: 'TH', currency: 'THB', name: 'Thailand', flag: '/images/flags/th.png' },
-  { code: 'UZ', currency: 'UZS', name: 'Uzbekistan', flag: '/images/flags/uz.png' },
-  { code: 'ID', currency: 'IDR', name: 'Indonesia', flag: '/images/flags/id.png' },
-  { code: 'LK', currency: 'LKR', name: 'SriLanka', flag: '/images/flags/lk.png' },
-  { code: 'BD', currency: 'BDT', name: 'Bangladesh', flag: '/images/flags/bd.png' },
-  { code: 'US', currency: 'USD', name: 'United States', flag: '/images/flags/us.png' },
-  { code: 'CA', currency: 'CAD', name: 'Canada', flag: '/images/flags/ca.png' },
-  { code: 'SG', currency: 'SGD', name: 'Singapore', flag: '/images/flags/sg.png' },
-  { code: 'CN', currency: 'CNY', name: 'China', flag: '/images/flags/cn.png' },
-  { code: 'MY', currency: 'MYR', name: 'Malaysia', flag: '/images/flags/my.png' },
-  { code: 'JP', currency: 'JPY', name: 'Japan', flag: '/images/flags/jp.png' },
-  { code: 'HK', currency: 'HKD', name: 'Hong Kong', flag: '/images/flags/hk.png' },
-  { code: 'GB', currency: 'GBP', name: 'United Kingdom', flag: '/images/flags/gb.png' },
-  { code: 'MN', currency: 'MNT', name: 'Mongolia', flag: '/images/flags/mn.png' }
+  { code: 'VN', currency: 'VND', name: 'Vietnam', labelKey: 'countries.vn', flag: '/images/flags/vn.png' },
+  { code: 'NP', name: 'Nepal', currency: 'NPR', labelKey: 'countries.np', flag: '/images/flags/np.png' },
+  { code: 'PH', currency: 'PHP', name: 'Philippines', labelKey: 'countries.ph', flag: '/images/flags/ph.png' },
+  { code: 'KH', currency: 'KHR', name: 'Cambodia', labelKey: 'countries.kh', flag: '/images/flags/kh.png' },
+  { code: 'MM', currency: 'MMK', name: 'Myanmar', labelKey: 'countries.mm', flag: '/images/flags/mm.png' },
+  { code: 'TH', currency: 'THB', name: 'Thailand', labelKey: 'countries.th', flag: '/images/flags/th.png' },
+  { code: 'UZ', currency: 'UZS', name: 'Uzbekistan', labelKey: 'countries.uz', flag: '/images/flags/uz.png' },
+  { code: 'ID', currency: 'IDR', name: 'Indonesia', labelKey: 'countries.id', flag: '/images/flags/id.png' },
+  { code: 'LK', currency: 'LKR', name: 'SriLanka', labelKey: 'countries.lk', flag: '/images/flags/lk.png' },
+  { code: 'BD', currency: 'BDT', name: 'Bangladesh', labelKey: 'countries.bd', flag: '/images/flags/bd.png' },
+  { code: 'US', currency: 'USD', name: 'United States', labelKey: 'countries.us', flag: '/images/flags/us.png' },
+  { code: 'CA', currency: 'CAD', name: 'Canada', labelKey: 'countries.ca', flag: '/images/flags/ca.png' },
+  { code: 'SG', currency: 'SGD', name: 'Singapore', labelKey: 'countries.sg', flag: '/images/flags/sg.png' },
+  { code: 'CN', currency: 'CNY', name: 'China', labelKey: 'countries.cn', flag: '/images/flags/cn.png' },
+  { code: 'MY', currency: 'MYR', name: 'Malaysia', labelKey: 'countries.my', flag: '/images/flags/my.png' },
+  { code: 'JP', currency: 'JPY', name: 'Japan', labelKey: 'countries.jp', flag: '/images/flags/jp.png' },
+  { code: 'HK', currency: 'HKD', name: 'Hong Kong', labelKey: 'countries.hk', flag: '/images/flags/hk.png' },
+  { code: 'GB', currency: 'GBP', name: 'United Kingdom', labelKey: 'countries.gb', flag: '/images/flags/gb.png' },
+  { code: 'MN', currency: 'MNT', name: 'Mongolia', labelKey: 'countries.mn', flag: '/images/flags/mn.png' }
 ];
 
 const FLAG_ASSETS = Array.from(new Set(COUNTRIES.map((country) => country.flag)));
@@ -189,7 +189,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white p-2 shadow-md">
                 <img
                   src={PROVIDER_LOGO_MAP[provider.provider]}
-                  alt={`${provider.provider} logo`}
+                  alt={t('provider.logo_alt', { provider: displayName })}
                   className="w-full h-full object-contain"
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -210,7 +210,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
                   }`}
                 >
                   {index + 1}
-                  {t('provider.rank_suffix', '위')}
+                  {t('provider.rank_suffix')}
                 </span>
               </div>
               {isBest && (
@@ -258,7 +258,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
             </div>
 
             <div className="text-base sm:text-lg font-bold text-gray-800">
-              1 {provider.currency} = {formattedRate} KRW
+              {t('provider.exchange_rate_main', { currency: provider.currency, value: formattedRate })}
             </div>
 
             <div className="text-[10px] sm:text-xs text-gray-400 font-medium">
@@ -271,7 +271,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
           <div className="rounded-xl bg-gray-100 px-4 py-3">
             <div className="text-xs font-semibold text-gray-500 mb-1">{t('provider.fee')}</div>
             <div className="text-base sm:text-lg font-bold text-gray-800">{formattedFeeInKRW}</div>
-            <div className="text-[10px] sm:text-xs text-gray-400 font-medium">KRW</div>
+            <div className="text-[10px] sm:text-xs text-gray-400 font-medium">{t('currency.krw_code')}</div>
           </div>
         </div>
 
@@ -340,7 +340,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
         });
 
         if (!response.ok) {
-          throw new Error(`API Error: ${response.status}`);
+          throw new Error(String(response.status));
         }
 
         const data = await response.json();
@@ -444,7 +444,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight break-words">
           {t('results.title', {
             amount: formattedAmount,
-            country: queryParams.receive_country
+            country: queryParams.receive_country_label || queryParams.receive_country
           })}
         </h2>
         {snapshotTime && (
@@ -458,12 +458,11 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
         {savings > 0 && (
           <div className="mt-2 sm:mt-4 inline-flex w-full sm:w-auto justify-center bg-gradient-to-r from-accent-50 to-accent-100 border border-accent-300 rounded-xl px-4 sm:px-6 py-3 sm:py-4 shadow-toss-sm">
             <p className="text-accent-700 text-sm sm:text-base font-bold leading-snug">
-              {t('results.savings_prefix', '가장 저렴하게 최대')}{' '}
+              {t('results.savings_prefix')}{' '}
               <span className="text-xl sm:text-2xl font-bold text-accent-600">
                 {savings.toLocaleString()}
               </span>{' '}
-              {queryParams.receive_currency}{' '}
-              {t('results.savings_suffix', '더 보낼 수 있어요!')}
+              {t('results.savings_suffix', { currency: queryParams.receive_currency })}
             </p>
           </div>
         )}
@@ -516,7 +515,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
               <span className="text-xl sm:text-2xl font-bold text-blue-600">
                 {results.length}
               </span>{' '}
-              {t('results.count_suffix', '개 업체 비교 결과')}
+              {t('results.count_suffix')}
             </p>
           </div>
           <div className="space-y-6 sm:space-y-8">
@@ -625,6 +624,7 @@ export default function HomePage() {
 
       setQueryParams({
         receive_country: selectedCountry.name,
+        receive_country_label: selectedCountry.labelKey ? t(selectedCountry.labelKey) : selectedCountry.name,
         receive_currency: selectedCountry.currency
       });
       setShowResults(true);
@@ -776,7 +776,7 @@ export default function HomePage() {
                           type="button"
                           onClick={() => setShowDropdown(!showDropdown)}
                           className="w-full h-16 px-6 bg-white rounded-2xl border border-[#e5e8eb] hover:border-brand-300 hover:shadow-lg transition-all duration-300 flex items-center justify-between group outline-none focus:ring-4 focus:ring-brand-100/50"
-                          aria-label={t('form.aria_select_country', 'Select country')}
+                          aria-label={t('form.aria_select_country')}
                           aria-expanded={showDropdown}
                         >
                           <div className="flex items-center gap-4">
@@ -790,7 +790,7 @@ export default function HomePage() {
                             </div>
                             <div className="text-left">
                               <span className="block text-lg font-bold text-[#191f28] leading-tight group-hover:text-brand-600 transition-colors">
-                                {selectedCountry.name}
+                                {selectedCountry.labelKey ? t(selectedCountry.labelKey) : selectedCountry.name}
                               </span>
                               <span className="text-sm font-medium text-[#8b95a1] group-hover:text-brand-400 transition-colors">
                                 {selectedCountry.currency}
@@ -838,7 +838,7 @@ export default function HomePage() {
                                         : 'text-[#191f28] group-hover:text-brand-600'
                                     }`}
                                   >
-                                    {country.name}
+                                    {country.labelKey ? t(country.labelKey) : country.name}
                                   </span>
                                 </div>
                                 <span
@@ -873,9 +873,9 @@ export default function HomePage() {
                           onChange={handleAmountChange}
                           placeholder={t('form.placeholder_amount')}
                           className="flex-1 bg-transparent text-xl sm:text-2xl font-bold text-gray-900 text-right focus:outline-none placeholder-gray-400 border-0"
-                          aria-label={t('form.aria_amount_label', 'Amount to send in KRW')}
+                          aria-label={t('form.aria_amount_label')}
                         />
-                        <span className="text-lg sm:text-xl font-bold text-gray-500">KRW</span>
+                        <span className="text-lg sm:text-xl font-bold text-gray-500">{t('currency.krw_code')}</span>
                       </div>
                       <p className="mt-2 text-sm text-gray-500 font-medium ml-1">
                         {t('form.validation_minmax')}

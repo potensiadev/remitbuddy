@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'next-i18next';
 
 /**
  * Toss-style Navigation Component
@@ -6,6 +7,7 @@ import React, { useState, useEffect } from 'react';
  * Desktop: Horizontal navigation bar
  */
 const Navigation = () => {
+  const { t } = useTranslation('common');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -32,22 +34,13 @@ const Navigation = () => {
 
   const menuItems = {
     service: {
-      title: '서비스',
+      title: t('nav.service.title'),
       links: [
-        { label: '서비스 소개', href: '#about' },
-        { label: '이용 방법', href: '#how-it-works' },
-       // { label: '블로그', href: '#blog' },
-        { label: 'FAQ', href: '#faq' },
+        { label: t('nav.service.about'), href: '#about' },
+        { label: t('nav.service.how'), href: '#how-it-works' },
+        { label: t('nav.service.faq'), href: '#faq' },
       ],
     }
-    // contact: {
-    //    title: '문의',
-    //    links: [
-    //      { label: '사업제휴', href: '#partnership' },
-    //      { label: '고객센터', href: '#support' },
-    // //    // { label: '광고 문의', href: '#advertising' },
-    //    ],
-    //  },
   };
 
   const handleLinkClick = (href) => {
@@ -73,7 +66,7 @@ const Navigation = () => {
           <div className="flex-shrink-0">
             <a href="/" className="flex items-center">
               <span className="text-2xl md:text-3xl font-bold text-gray-900 hover:text-brand-600 transition-colors duration-200">
-                RemitBuddy
+                {t('brand.name')}
               </span>
             </a>
           </div>
@@ -111,7 +104,7 @@ const Navigation = () => {
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="lg:hidden relative w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
-            aria-label="메뉴 열기"
+            aria-label={t('nav.menu.open')}
           >
             <div className="w-5 h-5 flex flex-col items-center justify-center">
               <span
@@ -158,11 +151,11 @@ const Navigation = () => {
         >
           {/* Menu Header */}
           <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
-            <span className="text-xl font-bold text-gray-900">메뉴</span>
+            <span className="text-xl font-bold text-gray-900">{t('nav.menu.label')}</span>
             <button
               onClick={() => setIsMenuOpen(false)}
               className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center"
-              aria-label="메뉴 닫기"
+              aria-label={t('nav.menu.close')}
             >
               <svg
                 className="w-5 h-5 text-gray-700"
@@ -215,12 +208,6 @@ const Navigation = () => {
               </div>
             ))}
 
-            {/* Language Selector in Mobile Menu */}
-            {/* <div className="px-6 py-6 mt-4">
-              <button className="w-full px-4 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 transition-all duration-200 text-sm font-semibold">
-                한국어
-              </button>
-            </div> */}
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ const Select = ({
   value,
   onChange,
   options = [],
-  placeholder = 'Select an option',
+  placeholder = '',
   error,
   helperText,
   disabled = false,

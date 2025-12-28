@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
 
 export default function HeroSection() {
+  const { t } = useTranslation('common');
   const [amount, setAmount] = useState<string>('');
   const [error, setError] = useState<string>('');
 
@@ -25,9 +27,9 @@ export default function HeroSection() {
     const numValue = parseInt(value, 10);
 
     if (numValue < MIN_AMOUNT) {
-      setError('송금 금액은 최소 10,000원부터 가능해요');
+      setError(t('heroSection.errors.min'));
     } else if (numValue > MAX_AMOUNT) {
-      setError('송금 금액은 최대 5,000,000원까지 입력할 수 있어요');
+      setError(t('heroSection.errors.max'));
     } else {
       setError('');
     }
@@ -35,7 +37,7 @@ export default function HeroSection() {
 
   const handleCompare = () => {
     if (amount === '') {
-      setError('송금할 금액을 입력해주세요');
+      setError(t('heroSection.errors.empty'));
       return;
     }
 
@@ -55,15 +57,15 @@ export default function HeroSection() {
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="flex items-center">
-              <Link href="/" className="text-xl md:text-2xl font-bold text-blue-600">RemitBuddy</Link>
+              <Link href="/" className="text-xl md:text-2xl font-bold text-blue-600">{t('brand.name')}</Link>
             </div>
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">서비스 소개</Link>
-              <Link href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition-colors">이용방법</Link>
-              <Link href="#faq" className="text-gray-700 hover:text-blue-600 transition-colors">FAQ</Link>
+              <Link href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">{t('nav.service.about')}</Link>
+              <Link href="#how-it-works" className="text-gray-700 hover:text-blue-600 transition-colors">{t('nav.service.how')}</Link>
+              <Link href="#faq" className="text-gray-700 hover:text-blue-600 transition-colors">{t('nav.service.faq')}</Link>
             </nav>
             <div className="flex items-center space-x-4">
-              <button className="px-4 py-2 md:px-6 md:py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm md:text-base">시작하기</button>
+              <button className="px-4 py-2 md:px-6 md:py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-sm md:text-base">{t('cta.start')}</button>
             </div>
           </div>
         </div>
@@ -80,13 +82,13 @@ export default function HeroSection() {
           {/* Hero Title & Subtitle */}
           <div className="text-center mb-12 md:mb-16 w-full max-w-3xl mx-auto px-2 sm:px-4">
             <div className="inline-flex items-center px-4 py-2 bg-blue-50 rounded-full mb-6 max-w-full">
-              <span className="text-sm md:text-base text-blue-700 font-medium">안전하고 투명한 비교 서비스</span>
+              <span className="text-sm md:text-base text-blue-700 font-medium">{t('heroSection.badge')}</span>
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
-              해외송금 더 똑똑하게
+              {t('hero.title_line1')} {t('hero.title_line2')}
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed px-4">
-              8개의 해외송금 업체의 환율과 수수료를 단 3초만에 비교하고 최대 OO만원 절약하세요
+              {t('heroSection.subtitle')}
             </p>
           </div>
 
@@ -96,19 +98,19 @@ export default function HeroSection() {
               <svg className="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-sm md:text-base text-gray-700 font-medium">실시간 환율 정보</span>
+              <span className="text-sm md:text-base text-gray-700 font-medium">{t('hero.trust_1')}</span>
             </div>
             <div className="flex w-full items-center justify-start sm:justify-center space-x-3 p-4 bg-white rounded-lg shadow-sm">
               <svg className="w-6 h-6 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-sm md:text-base text-gray-700 font-medium">숨은 수수료 없음</span>
+              <span className="text-sm md:text-base text-gray-700 font-medium">{t('hero.trust_2')}</span>
             </div>
             <div className="flex w-full items-center justify-start sm:justify-center space-x-3 p-4 bg-white rounded-lg shadow-sm">
               <svg className="w-6 h-6 text-purple-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-sm md:text-base text-gray-700 font-medium">100% 무료 비교</span>
+              <span className="text-sm md:text-base text-gray-700 font-medium">{t('hero.trust_3')}</span>
             </div>
           </div>
 
@@ -117,15 +119,15 @@ export default function HeroSection() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 w-full">
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">10+</div>
-                <div className="text-sm md:text-base text-gray-600">송금업체</div>
+                <div className="text-sm md:text-base text-gray-600">{t('hero.stats_companies')}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">10</div>
-                <div className="text-sm md:text-base text-gray-600">개국 송금 가능</div>
+                <div className="text-sm md:text-base text-gray-600">{t('hero.stats_countries')}</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-green-600 mb-2">3초</div>
-                <div className="text-sm md:text-base text-gray-600">비교 완료</div>
+                <div className="text-3xl md:text-4xl font-bold text-green-600 mb-2">{t('heroSection.stats_seconds_value')}</div>
+                <div className="text-sm md:text-base text-gray-600">{t('hero.stats_seconds')}</div>
               </div>
             </div>
 
@@ -134,7 +136,7 @@ export default function HeroSection() {
               {/* Amount Input Field */}
               <div className="w-full max-w-xl">
                 <label htmlFor="amount" className="block text-sm font-semibold text-gray-700 mb-2.5 ml-1">
-                  보내는 금액
+                  {t('form.label_amount')}
                 </label>
                 <div className="relative">
                   <input
@@ -142,7 +144,7 @@ export default function HeroSection() {
                     id="amount"
                     value={formatNumber(amount)}
                     onChange={handleAmountChange}
-                    placeholder="10,000 ~ 5,000,000"
+                    placeholder={t('heroSection.amount_placeholder')}
                     className={`w-full h-16 sm:h-[4.5rem] px-5 pr-16 text-xl sm:text-2xl font-bold rounded-2xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                       error
                         ? 'border-2 border-red-300 focus:border-red-400 focus:ring-red-200 bg-red-50/50 text-red-900 placeholder-red-300'
@@ -152,7 +154,7 @@ export default function HeroSection() {
                   <span className={`absolute right-5 top-1/2 -translate-y-1/2 text-xl sm:text-2xl font-bold transition-colors ${
                     error ? 'text-red-400' : 'text-gray-400'
                   }`}>
-                    원
+                    {t('currency.krw_symbol')}
                   </span>
                 </div>
 
@@ -182,7 +184,7 @@ export default function HeroSection() {
                     <svg className="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
-                    <span>최소 10,000원부터 최대 5,000,000원까지 비교 가능해요</span>
+                    <span>{t('heroSection.helper_text')}</span>
                   </p>
                 )}
               </div>
@@ -198,7 +200,7 @@ export default function HeroSection() {
                       : 'text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98] focus:ring-blue-300'
                   }`}
                 >
-                  <span className="whitespace-nowrap">최저 환율 비교하기</span>
+                  <span className="whitespace-nowrap">{t('form.submit')}</span>
                   <span className={`inline-flex items-center justify-center w-9 h-9 rounded-full transition-all ${
                     error && amount !== '' ? 'bg-gray-400/30' : 'bg-white/20'
                   }`}>
@@ -219,7 +221,7 @@ export default function HeroSection() {
                 </button>
               </div>
 
-              <p className="text-xs md:text-sm text-gray-500 text-center">비교는 무료이며 개인정보를 요구하지 않아요</p>
+              <p className="text-xs md:text-sm text-gray-500 text-center">{t('form.disclaimer')}</p>
             </div>
           </div>
         </div>

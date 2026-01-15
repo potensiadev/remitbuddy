@@ -25,12 +25,6 @@ const Footer = () => {
         { label: t('footer.contact_support'), value: 'support@remitbuddy.com' },
       ],
     }
-    // customerService: {
-    //   title: '고객센터',
-    //   items: [
-    //     { label: '이메일', value: 'support@remitbuddy.com' },
-    //   ],
-    // },
   };
 
   return (
@@ -85,40 +79,17 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Customer Service Section */}
-          {/* <div>
-            <h3 className="text-gray-900 font-bold text-sm mb-4">
-              {footerSections.customerService.title}
-            </h3>
-            <ul className="space-y-3 list-none">
-              {footerSections.customerService.items.map((item, index) => (
-                <li key={index}>
-                  <div className="text-gray-600 text-sm">
-                    <span className="block font-medium text-gray-700">
-                      {item.label}
-                    </span>
-                    <a
-                      href={`mailto:${item.value}`}
-                      className="hover:text-brand-600 transition-colors duration-150"
-                    >
-                      {item.value}
-                    </a>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div> */}
         </div>
 
-      {/* Brand and Description */}
-      <div className="mb-8">
-        <div className="mb-4">
-          <span className="text-2xl font-bold text-gray-900">{t('footer.title')}</span>
+        {/* Brand and Description */}
+        <div className="mb-8">
+          <div className="mb-4">
+            <span className="text-2xl font-bold text-gray-900">{t('footer.title')}</span>
+          </div>
+          <p className="text-gray-600 text-sm leading-relaxed max-w-3xl">
+            {t('footer.description')}
+          </p>
         </div>
-        <p className="text-gray-600 text-sm leading-relaxed max-w-3xl">
-          {t('footer.description')}
-        </p>
-      </div>
 
         {/* Divider */}
         <div className="border-t border-gray-200 my-8"></div>
@@ -138,15 +109,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Language Selector */}
-          {/* <div className="flex items-center gap-2">
-            <button
-              className="px-4 py-2 rounded-lg bg-white border border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-900 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow"
-              aria-label="Change language"
-            >
-              한국어
-            </button>
-          </div> */}
         </div>
       </div>
 

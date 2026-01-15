@@ -38,18 +38,9 @@ const Navigation = () => {
       links: [
         { label: t('nav.service_intro'), href: '#hero' },
         { label: t('nav.service_how'), href: '#how-it-works' },
-       // { label: '블로그', href: '#blog' },
         { label: t('nav.service_faq'), href: '#faq' },
       ],
     }
-    // contact: {
-    //    title: '문의',
-    //    links: [
-    //      { label: '사업제휴', href: '#partnership' },
-    //      { label: '고객센터', href: '#support' },
-    // //    // { label: '광고 문의', href: '#advertising' },
-    //    ],
-    //  },
   };
 
   const handleLinkClick = (href) => {
@@ -217,12 +208,6 @@ const Navigation = () => {
               </div>
             ))}
 
-            {/* Language Selector in Mobile Menu */}
-            {/* <div className="px-6 py-6 mt-4">
-              <button className="w-full px-4 py-3 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 transition-all duration-200 text-sm font-semibold">
-                한국어
-              </button>
-            </div> */}
           </div>
         </div>
       </div>

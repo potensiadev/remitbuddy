@@ -1,21 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 // API Configuration - CRITICAL: DO NOT REMOVE
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://remitbuddy.up.railway.app';
 
 // Country data
 const COUNTRIES = [
-    { code: "VN", currency: "VND", name: "Vietnam", flag: "/images/flags/vn.png" },
-    { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' },
-    { code: "PH", currency: "PHP", name: "Philippines", flag: "/images/flags/ph.png" },
-    { code: "KH", currency: "KHR", name: "Cambodia", flag: "/images/flags/kh.png" },
-    { code: "MM", currency: "MMK", name: "Myanmar", flag: "/images/flags/mm.png" },
-    { code: "TH", currency: "THB", name: "Thailand", flag: "/images/flags/th.png" },
-    { code: "UZ", currency: "UZS", name: "Uzbekistan", flag: "/images/flags/uz.png" },
-    { code: "ID", currency: "IDR", name: "Indonesia", flag: "/images/flags/id.png" },
-    { code: "LK", currency: "LKR", name: "SriLanka", flag: "/images/flags/lk.png" },
-    { code: "BD", currency: "BDT", name: "Bangladesh", flag: "/images/flags/bd.png" },
+    { code: 'VN', currency: 'VND', name: 'Vietnam', labelKey: 'countries.vn', flag: '/images/flags/vn.png' },
+    { code: 'NP', name: 'Nepal', currency: 'NPR', labelKey: 'countries.np', flag: '/images/flags/np.png' },
+    { code: 'PH', currency: 'PHP', name: 'Philippines', labelKey: 'countries.ph', flag: '/images/flags/ph.png' },
+    { code: 'KH', currency: 'KHR', name: 'Cambodia', labelKey: 'countries.kh', flag: '/images/flags/kh.png' },
+    { code: 'MM', currency: 'MMK', name: 'Myanmar', labelKey: 'countries.mm', flag: '/images/flags/mm.png' },
+    { code: 'TH', currency: 'THB', name: 'Thailand', labelKey: 'countries.th', flag: '/images/flags/th.png' },
+    { code: 'UZ', currency: 'UZS', name: 'Uzbekistan', labelKey: 'countries.uz', flag: '/images/flags/uz.png' },
+    { code: 'ID', currency: 'IDR', name: 'Indonesia', labelKey: 'countries.id', flag: '/images/flags/id.png' },
+    { code: 'LK', currency: 'LKR', name: 'SriLanka', labelKey: 'countries.lk', flag: '/images/flags/lk.png' },
+    { code: 'BD', currency: 'BDT', name: 'Bangladesh', labelKey: 'countries.bd', flag: '/images/flags/bd.png' },
 ];
 
 // Provider logo mapping
@@ -50,6 +52,7 @@ const SparklesIcon = () => (
 
 // Provider Card Component - Toss Style Enhanced
 const ProviderCard = ({ provider, isBest, rank }) => {
+    const { t } = useTranslation('common');
     const displayName = provider.provider === 'JP Remit' ? 'JRF' :
                        provider.provider === 'The Moin' ? 'Moin' : provider.provider;
 
@@ -76,7 +79,7 @@ const ProviderCard = ({ provider, isBest, rank }) => {
                         {PROVIDER_LOGO_MAP[provider.provider] ? (
                             <img
                                 src={PROVIDER_LOGO_MAP[provider.provider]}
-                                alt={`${provider.provider} logo`}
+                                alt={t('provider.logo_alt', { provider: displayName })}
                                 className="w-16 h-16 rounded-2xl object-contain bg-white shadow-sm"
                                 onError={(e) => { e.target.style.display = 'none'; }}
                             />
@@ -94,7 +97,7 @@ const ProviderCard = ({ provider, isBest, rank }) => {
                     <div>
                         <div className="text-2xl font-bold text-gray-900">{displayName}</div>
                         {isBest && (
-                            <div className="text-blue-600 text-sm font-semibold mt-1">가장 많이 받아요</div>
+                            <div className="text-blue-600 text-sm font-semibold mt-1">{t('redesign.provider.best_badge')}</div>
                         )}
                     </div>
                 </div>
@@ -104,7 +107,7 @@ const ProviderCard = ({ provider, isBest, rank }) => {
             </div>
 
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 mb-6">
-                <div className="text-gray-600 text-sm mb-2 font-semibold">받는 금액</div>
+                <div className="text-gray-600 text-sm mb-2 font-semibold">{t('redesign.provider.amount_received')}</div>
                 <div className="text-5xl font-bold text-gray-900">
                     {Math.round(provider.recipient_gets).toLocaleString('en-US')}
                 </div>
@@ -113,24 +116,26 @@ const ProviderCard = ({ provider, isBest, rank }) => {
 
             <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-50 rounded-xl p-4">
-                    <div className="text-xs text-gray-500 mb-1 font-semibold">환율</div>
+                    <div className="text-xs text-gray-500 mb-1 font-semibold">{t('provider.exchange_rate')}</div>
                     <div className="text-lg font-bold text-gray-900">
                         {(1 / provider.exchange_rate).toFixed(2)}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">KRW per {provider.currency}</div>
+                    <div className="text-xs text-gray-500 mt-1">
+                        {t('redesign.provider.exchange_rate_unit', { currency: provider.currency })}
+                    </div>
                 </div>
                 <div className="bg-gray-50 rounded-xl p-4">
-                    <div className="text-xs text-gray-500 mb-1 font-semibold">수수료</div>
+                    <div className="text-xs text-gray-500 mb-1 font-semibold">{t('provider.fee')}</div>
                     <div className="text-lg font-bold text-gray-900">
                         {feeInKRW}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">KRW</div>
+                    <div className="text-xs text-gray-500 mt-1">{t('currency.krw_code')}</div>
                 </div>
             </div>
 
             {isBest && (
                 <div className="mt-6 bg-blue-500 text-white text-center py-3 rounded-xl font-bold">
-                    지금 바로 송금하기 →
+                    {t('redesign.provider.cta')}
                 </div>
             )}
         </a>
@@ -139,6 +144,7 @@ const ProviderCard = ({ provider, isBest, rank }) => {
 
 // Comparison Results Component - CRITICAL: Maintains API integration
 function ComparisonResults({ queryParams, amount, forceRefresh }) {
+    const { t } = useTranslation('common');
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -172,7 +178,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh }) {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`API Error: ${response.status}`);
+                    throw new Error(String(response.status));
                 }
 
                 const data = await response.json();
@@ -187,10 +193,10 @@ function ComparisonResults({ queryParams, amount, forceRefresh }) {
                     const minutes = String(now.getMinutes()).padStart(2, '0');
                     setSnapshotTime(`${year}-${month}-${day} ${hours}:${minutes}`);
                 } else {
-                    setError('환율 정보를 불러올 수 없습니다');
+                    setError(t('redesign.errors.no_rates'));
                 }
             } catch (err) {
-                setError(`오류가 발생했습니다: ${err.message}`);
+                setError(t('redesign.errors.api', { message: err.message }));
             } finally {
                 setIsLoading(false);
             }
@@ -215,27 +221,34 @@ function ComparisonResults({ queryParams, amount, forceRefresh }) {
         <div className="max-w-5xl mx-auto">
             <div className="mb-12 text-center">
                 <div className="inline-block bg-blue-50 border-2 border-blue-200 rounded-full px-6 py-2 mb-4">
-                    <span className="text-blue-600 font-bold">{results.length}개 업체 비교 완료</span>
+                    <span className="text-blue-600 font-bold">
+                        {t('redesign.results.count_badge', { count: results.length })}
+                    </span>
                 </div>
                 <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
                     {parseInt(amount).toLocaleString()}
-                    <span className="text-3xl text-gray-500 ml-2">KRW</span>
+                    <span className="text-3xl text-gray-500 ml-2">{t('currency.krw_code')}</span>
                 </h2>
                 <div className="text-2xl text-gray-600 mb-2">
-                    → {queryParams.receive_country} ({queryParams.receive_currency})
+                    {t('redesign.results.destination', {
+                        country: queryParams.receive_country_label || queryParams.receive_country,
+                        currency: queryParams.receive_currency
+                    })}
                 </div>
                 {snapshotTime && (
-                    <p className="text-gray-400 text-sm">업데이트: {snapshotTime}</p>
+                    <p className="text-gray-400 text-sm">
+                        {t('redesign.results.snapshot', { time: snapshotTime })}
+                    </p>
                 )}
 
                 {savings && !isLoading && (
                     <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-3xl p-6 max-w-md mx-auto">
-                        <div className="text-green-700 font-bold mb-2">최고 vs 최저 차이</div>
+                        <div className="text-green-700 font-bold mb-2">{t('redesign.results.savings_title')}</div>
                         <div className="text-4xl font-bold text-green-600">
                             {savings.difference.toLocaleString()} {queryParams.receive_currency}
                         </div>
                         <div className="text-green-700 mt-2">
-                            약 {savings.percentSaved}% 더 받을 수 있어요!
+                            {t('redesign.results.savings_sub', { percent: savings.percentSaved })}
                         </div>
                     </div>
                 )}
@@ -244,20 +257,20 @@ function ComparisonResults({ queryParams, amount, forceRefresh }) {
             {isLoading && (
                 <div className="text-center py-20">
                     <div className="inline-block w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-6"></div>
-                    <p className="text-gray-600 text-xl font-semibold">최고의 환율을 찾는 중...</p>
-                    <p className="text-gray-400 mt-2">잠시만 기다려주세요</p>
+                    <p className="text-gray-600 text-xl font-semibold">{t('redesign.results.loading_title')}</p>
+                    <p className="text-gray-400 mt-2">{t('redesign.results.loading_sub')}</p>
                 </div>
             )}
 
             {error && (
                 <div className="bg-gradient-to-br from-red-50 to-pink-50 border-2 border-red-200 rounded-3xl p-12 text-center">
-                    <div className="text-6xl mb-4">😕</div>
+                    <div className="text-6xl mb-4">{t('redesign.results.error_icon')}</div>
                     <p className="text-red-600 text-xl font-bold mb-6">{error}</p>
                     <button
                         onClick={() => window.location.reload()}
                         className="bg-red-500 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-red-600 transition-colors shadow-lg"
                     >
-                        다시 시도하기
+                        {t('results.retry')}
                     </button>
                 </div>
             )}
@@ -280,6 +293,7 @@ function ComparisonResults({ queryParams, amount, forceRefresh }) {
 
 // Main Page Component
 export default function RedesignPage() {
+    const { t } = useTranslation('common');
     const [amount, setAmount] = useState("1000000");
     const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -310,6 +324,7 @@ export default function RedesignPage() {
         if (selectedCountry && amount) {
             setQueryParams({
                 receive_country: selectedCountry.name,
+                receive_country_label: selectedCountry.labelKey ? t(selectedCountry.labelKey) : selectedCountry.name,
                 receive_currency: selectedCountry.currency
             });
             setShowResults(true);
@@ -320,8 +335,8 @@ export default function RedesignPage() {
     return (
         <>
             <Head>
-                <title>해외송금 비교 (개선판) - RemitBuddy</title>
-                <meta name="description" content="한국 최저 수수료 해외송금 비교 플랫폼 - Toss 스타일" />
+                <title>{t('redesign.seo.title')}</title>
+                <meta name="description" content={t('redesign.seo.description')} />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
             </Head>
 
@@ -330,13 +345,13 @@ export default function RedesignPage() {
                 <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-50">
                     <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <img src="/logo.svg" alt="RemitBuddy" className="h-12 w-12" />
+                            <img src="/logo.svg" alt={t('brand.name')} className="h-12 w-12" />
                             <span className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                RemitBuddy
+                                {t('brand.name')}
                             </span>
                         </div>
                         <div className="hidden md:flex items-center gap-6">
-                            <span className="text-gray-600 font-medium">간편하고 빠른 환율 비교</span>
+                            <span className="text-gray-600 font-medium">{t('redesign.header.tagline')}</span>
                         </div>
                     </div>
                 </header>
@@ -347,16 +362,16 @@ export default function RedesignPage() {
                     <div className="max-w-7xl mx-auto px-6 relative z-10">
                         <div className="text-center mb-16">
                             <div className="inline-block bg-blue-100 border-2 border-blue-300 rounded-full px-6 py-2 mb-6">
-                                <span className="text-blue-600 font-bold text-sm">18개국 • 실시간 환율 비교</span>
+                                <span className="text-blue-600 font-bold text-sm">{t('redesign.hero.badge')}</span>
                             </div>
                             <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-8 leading-tight">
-                                해외송금,<br />
+                                {t('redesign.hero.title_line1')}<br />
                                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                    최고가로
+                                    {t('redesign.hero.title_line2')}
                                 </span>
                             </h1>
                             <p className="text-2xl md:text-3xl text-gray-600 max-w-3xl mx-auto">
-                                3초 만에 최고의 환율을 찾아드려요
+                                {t('redesign.hero.subtitle')}
                             </p>
                         </div>
 
@@ -366,7 +381,7 @@ export default function RedesignPage() {
                                 {/* Country Selector */}
                                 <div>
                                     <label className="block text-base font-bold text-gray-700 mb-4">
-                                        받는 나라
+                                        {t('form.label_country')}
                                     </label>
                                     <div ref={dropdownRef} className="relative">
                                         <button
@@ -377,7 +392,7 @@ export default function RedesignPage() {
                                             <div className="flex items-center gap-4">
                                                 <img src={selectedCountry.flag} alt="" className="w-10 h-10 rounded-full shadow-md" />
                                                 <span className="text-xl font-bold text-gray-900">
-                                                    {selectedCountry.name}
+                                                    {selectedCountry.labelKey ? t(selectedCountry.labelKey) : selectedCountry.name}
                                                 </span>
                                             </div>
                                             <ChevronDownIcon />
@@ -396,7 +411,7 @@ export default function RedesignPage() {
                                                         className="w-full px-6 py-5 flex items-center justify-between hover:bg-blue-50 transition-colors border-b border-gray-100 last:border-b-0"
                                                     >
                                                         <span className="text-lg font-bold text-gray-900">
-                                                            {country.name} ({country.currency})
+                                                            {country.labelKey ? t(country.labelKey) : country.name} ({country.currency})
                                                         </span>
                                                         <img src={country.flag} alt="" className="w-10 h-10 rounded-full shadow-md" />
                                                     </button>
@@ -409,17 +424,17 @@ export default function RedesignPage() {
                                 {/* Amount Input */}
                                 <div>
                                     <label className="block text-base font-bold text-gray-700 mb-4">
-                                        보내는 금액
+                                        {t('form.label_amount')}
                                     </label>
                                     <div className="relative h-20 bg-gray-50 rounded-2xl border-3 border-gray-300 focus-within:border-blue-500 transition-all px-6 flex items-center shadow-sm focus-within:shadow-md">
                                         <input
                                             type="text"
                                             value={amount ? parseInt(amount).toLocaleString('en-US') : ""}
                                             onChange={handleAmountChange}
-                                            placeholder="1,000,000"
+                                            placeholder={t('redesign.form.placeholder_amount')}
                                             className="w-full bg-transparent text-3xl font-bold text-gray-900 text-right focus:outline-none pr-24"
                                         />
-                                        <span className="absolute right-6 text-2xl font-bold text-gray-500">KRW</span>
+                                        <span className="absolute right-6 text-2xl font-bold text-gray-500">{t('currency.krw_code')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -429,26 +444,26 @@ export default function RedesignPage() {
                                 type="submit"
                                 className="w-full h-20 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-2xl font-bold rounded-2xl transition-all shadow-xl hover:shadow-2xl hover:scale-[1.02]"
                             >
-                                최고 환율 찾기 →
+                                {t('redesign.form.submit')}
                             </button>
                         </form>
 
                         {/* Features */}
                         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                             <div className="text-center">
-                                <div className="text-4xl mb-3">⚡</div>
-                                <div className="font-bold text-gray-900">3초 비교</div>
-                                <div className="text-sm text-gray-500">빠른 실시간 검색</div>
+                                <div className="text-4xl mb-3">{t('redesign.features.f1_icon')}</div>
+                                <div className="font-bold text-gray-900">{t('redesign.features.f1_title')}</div>
+                                <div className="text-sm text-gray-500">{t('redesign.features.f1_desc')}</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-4xl mb-3">💰</div>
-                                <div className="font-bold text-gray-900">최대 5% 절약</div>
-                                <div className="text-sm text-gray-500">가장 좋은 환율</div>
+                                <div className="text-4xl mb-3">{t('redesign.features.f2_icon')}</div>
+                                <div className="font-bold text-gray-900">{t('redesign.features.f2_title')}</div>
+                                <div className="text-sm text-gray-500">{t('redesign.features.f2_desc')}</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-4xl mb-3">🌏</div>
-                                <div className="font-bold text-gray-900">18개국 지원</div>
-                                <div className="text-sm text-gray-500">아시아 주요 국가</div>
+                                <div className="text-4xl mb-3">{t('redesign.features.f3_icon')}</div>
+                                <div className="font-bold text-gray-900">{t('redesign.features.f3_title')}</div>
+                                <div className="text-sm text-gray-500">{t('redesign.features.f3_desc')}</div>
                             </div>
                         </div>
                     </div>
@@ -473,30 +488,30 @@ export default function RedesignPage() {
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
                             <div className="md:col-span-2">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <img src="/logo.svg" alt="RemitBuddy" className="h-10 w-10" />
-                                    <span className="text-2xl font-bold">RemitBuddy</span>
+                                    <img src="/logo.svg" alt={t('brand.name')} className="h-10 w-10" />
+                                    <span className="text-2xl font-bold">{t('brand.name')}</span>
                                 </div>
                                 <p className="text-gray-400 text-base">
-                                    해외송금을 더 쉽고 저렴하게 만드는 비교 플랫폼
+                                    {t('redesign.footer.description')}
                                 </p>
                             </div>
                             <div>
-                                <h3 className="font-bold text-lg mb-4">서비스</h3>
+                                <h3 className="font-bold text-lg mb-4">{t('redesign.footer.service_title')}</h3>
                                 <ul className="space-y-3 text-gray-400">
-                                    <li className="hover:text-white transition-colors cursor-pointer">환율 비교</li>
-                                    <li className="hover:text-white transition-colors cursor-pointer">수수료 계산</li>
-                                    <li className="hover:text-white transition-colors cursor-pointer">송금 가이드</li>
+                                    <li className="hover:text-white transition-colors cursor-pointer">{t('redesign.footer.service_item_1')}</li>
+                                    <li className="hover:text-white transition-colors cursor-pointer">{t('redesign.footer.service_item_2')}</li>
+                                    <li className="hover:text-white transition-colors cursor-pointer">{t('redesign.footer.service_item_3')}</li>
                                 </ul>
                             </div>
                             <div>
-                                <h3 className="font-bold text-lg mb-4">법적 고지</h3>
+                                <h3 className="font-bold text-lg mb-4">{t('redesign.footer.legal_title')}</h3>
                                 <p className="text-gray-400 text-sm">
-                                    RemitBuddy는 비교 서비스로 송금업체가 아니며 고객의 자금을 취급하지 않습니다.
+                                    {t('redesign.footer.legal_desc')}
                                 </p>
                             </div>
                         </div>
                         <div className="pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
-                            © {new Date().getFullYear()} RemitBuddy. All Rights Reserved.
+                            {t('redesign.footer.copyright', { year: new Date().getFullYear() })}
                         </div>
                     </div>
                 </footer>
@@ -538,4 +553,14 @@ export default function RedesignPage() {
             `}</style>
         </>
     );
+}
+
+export async function getStaticProps({ locale }) {
+    const currentLocale = locale || 'en';
+
+    return {
+        props: {
+            ...(await serverSideTranslations(currentLocale, ['common']))
+        }
+    };
 }

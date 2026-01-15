@@ -2,8 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Toss-style Button Component
- * A highly polished button component with multiple variants and sizes
+ * RemitBuddy Button Component
+ *
+ * A premium button component with gradient backgrounds,
+ * smooth animations, and excellent accessibility.
+ *
+ * Design: Trustworthy Global Finance
  */
 const Button = ({
   children,
@@ -19,65 +23,85 @@ const Button = ({
   className = '',
   ...props
 }) => {
-  // Base styles - Toss design principles
+  // Base styles
   const baseStyles = `
     inline-flex items-center justify-center gap-2
-    font-bold rounded-2xl
-    transition-all duration-200 ease-out
-    focus:outline-none focus-visible:ring-4
-    disabled:opacity-50 disabled:cursor-not-allowed
+    font-semibold
+    rounded-xl
+    transition-all duration-200 ease-smooth
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+    disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
     active:scale-[0.98]
+    relative overflow-hidden
     ${fullWidth ? 'w-full' : ''}
   `;
 
-  // Variant styles - matching Toss color palette
+  // Variant styles with gradients and colored shadows
   const variants = {
     primary: `
-      bg-brand-500 hover:bg-brand-600 active:bg-brand-700
+      bg-gradient-to-br from-primary-500 to-primary-600
+      hover:from-primary-600 hover:to-primary-700
       text-white
-      shadow-lg hover:shadow-xl
-      focus-visible:ring-brand-200
-      transform hover:scale-[1.02]
+      shadow-primary hover:shadow-primary-lg
+      hover:-translate-y-0.5
+      focus-visible:ring-primary-500
+    `,
+    accent: `
+      bg-gradient-to-br from-accent-500 to-accent-600
+      hover:from-accent-600 hover:to-accent-700
+      text-white
+      shadow-accent hover:shadow-accent-lg
+      hover:-translate-y-0.5
+      focus-visible:ring-accent-500
     `,
     secondary: `
-      bg-gray-100 hover:bg-gray-200 active:bg-gray-300
-      text-gray-900
+      bg-neutral-100 hover:bg-neutral-200
+      text-neutral-800
       shadow-sm hover:shadow-md
-      focus-visible:ring-gray-200
-    `,
-    success: `
-      bg-accent-500 hover:bg-accent-600 active:bg-accent-700
-      text-white
-      shadow-lg hover:shadow-xl
-      focus-visible:ring-accent-200
-      transform hover:scale-[1.02]
+      focus-visible:ring-neutral-400
     `,
     outline: `
-      bg-transparent hover:bg-gray-50 active:bg-gray-100
-      text-brand-500 hover:text-brand-600
-      border-2 border-brand-500 hover:border-brand-600
-      focus-visible:ring-brand-200
+      bg-transparent hover:bg-primary-50
+      text-primary-600 hover:text-primary-700
+      border-2 border-primary-500 hover:border-primary-600
+      focus-visible:ring-primary-500
+    `,
+    'outline-accent': `
+      bg-transparent hover:bg-accent-50
+      text-accent-600 hover:text-accent-700
+      border-2 border-accent-500 hover:border-accent-600
+      focus-visible:ring-accent-500
     `,
     ghost: `
-      bg-transparent hover:bg-gray-100 active:bg-gray-200
-      text-gray-700
-      focus-visible:ring-gray-200
+      bg-transparent hover:bg-neutral-100
+      text-neutral-700 hover:text-neutral-900
+      focus-visible:ring-neutral-400
     `,
     danger: `
-      bg-error-500 hover:bg-error-600 active:bg-error-700
+      bg-gradient-to-br from-error-500 to-error-600
+      hover:from-error-600 hover:to-error-700
       text-white
-      shadow-lg hover:shadow-xl
-      focus-visible:ring-error-200
-      transform hover:scale-[1.02]
+      shadow-md hover:shadow-lg
+      hover:-translate-y-0.5
+      focus-visible:ring-error-500
+    `,
+    gold: `
+      bg-gradient-to-br from-gold-400 to-gold-500
+      hover:from-gold-500 hover:to-gold-600
+      text-white
+      shadow-gold hover:shadow-gold-sm
+      hover:-translate-y-0.5
+      focus-visible:ring-gold-500
     `,
   };
 
-  // Size styles - mobile-optimized
+  // Size styles - touch-friendly
   const sizes = {
-    sm: 'h-10 px-4 text-sm',
-    md: 'h-12 px-6 text-base',
-    lg: 'h-14 px-8 text-lg',
-    xl: 'h-16 px-10 text-xl',
+    xs: 'h-8 px-3 text-xs rounded-lg',
+    sm: 'h-9 px-4 text-sm rounded-lg',
+    md: 'h-11 px-5 text-base rounded-xl',
+    lg: 'h-13 px-6 text-lg rounded-xl',
+    xl: 'h-14 px-8 text-xl rounded-2xl',
   };
 
   // Combine all styles
@@ -88,13 +112,14 @@ const Button = ({
     ${className}
   `.trim().replace(/\s+/g, ' ');
 
-  // Loading spinner
+  // Loading spinner with smooth animation
   const LoadingSpinner = () => (
     <svg
       className="animate-spin h-5 w-5"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
+      aria-hidden="true"
     >
       <circle
         className="opacity-25"
@@ -102,10 +127,10 @@ const Button = ({
         cy="12"
         r="10"
         stroke="currentColor"
-        strokeWidth="4"
+        strokeWidth="3"
       />
       <path
-        className="opacity-75"
+        className="opacity-90"
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
       />
@@ -120,18 +145,40 @@ const Button = ({
       className={buttonClasses}
       {...props}
     >
-      {loading && <LoadingSpinner />}
-      {!loading && icon && iconPosition === 'left' && icon}
-      {children}
-      {!loading && icon && iconPosition === 'right' && icon}
+      {/* Shine effect overlay */}
+      <span
+        className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        aria-hidden="true"
+      />
+
+      {/* Content */}
+      <span className="relative inline-flex items-center gap-2">
+        {loading && <LoadingSpinner />}
+        {!loading && icon && iconPosition === 'left' && (
+          <span className="inline-flex shrink-0">{icon}</span>
+        )}
+        <span>{children}</span>
+        {!loading && icon && iconPosition === 'right' && (
+          <span className="inline-flex shrink-0">{icon}</span>
+        )}
+      </span>
     </button>
   );
 };
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
-  variant: PropTypes.oneOf(['primary', 'secondary', 'success', 'outline', 'ghost', 'danger']),
-  size: PropTypes.oneOf(['sm', 'md', 'lg', 'xl']),
+  variant: PropTypes.oneOf([
+    'primary',
+    'accent',
+    'secondary',
+    'outline',
+    'outline-accent',
+    'ghost',
+    'danger',
+    'gold',
+  ]),
+  size: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
   fullWidth: PropTypes.bool,
   disabled: PropTypes.bool,
   loading: PropTypes.bool,

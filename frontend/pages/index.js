@@ -1,91 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Footer from '../components/Footer';
 import Navigation from '../components/Navigation';
-import { Button } from '../components/ui';
+import { Button, Card, CardBadge } from '../components/ui';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { logClickedCTA } from '../utils/analytics';
+
+// Import shared constants from centralized location
 import {
-  logClickedCTA,
-  logClickedProvider,
-  logResultsImpression,
-  logResultsScroll
-} from '../utils/analytics';
-
-// API Configuration - CRITICAL: DO NOT REMOVE
-// Dynamically determine API URL based on environment
-const getApiBaseUrl = () => {
-  // 1. Check for explicit environment variable (highest priority)
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    return process.env.NEXT_PUBLIC_API_URL;
-  }
-
-  // 2. In browser, detect if running locally and construct URL
-  if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    const protocol = window.location.protocol;
-
-    // Local development: use same hostname with port 8000
-    if (
-      hostname === 'localhost' ||
-      hostname === '127.0.0.1' ||
-      hostname.startsWith('192.168.') ||
-      hostname.startsWith('10.') ||
-      hostname.startsWith('172.')
-    ) {
-      return `${protocol}//${hostname}:8000`;
-    }
-  }
-
-  // 3. Production fallback
-  return 'https://remitbuddy.up.railway.app';
-};
-
-// Country data with popular flag
-const COUNTRIES = [
-  { code: 'VN', currency: 'VND', name: 'Vietnam', flag: '/images/flags/vn.png', popular: true },
-  { code: 'PH', currency: 'PHP', name: 'Philippines', flag: '/images/flags/ph.png', popular: true },
-  { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png', popular: true },
-  { code: 'KH', currency: 'KHR', name: 'Cambodia', flag: '/images/flags/kh.png', popular: true },
-  { code: 'TH', currency: 'THB', name: 'Thailand', flag: '/images/flags/th.png', popular: true },
-  { code: 'MM', currency: 'MMK', name: 'Myanmar', flag: '/images/flags/mm.png' },
-  { code: 'UZ', currency: 'UZS', name: 'Uzbekistan', flag: '/images/flags/uz.png' },
-  { code: 'ID', currency: 'IDR', name: 'Indonesia', flag: '/images/flags/id.png' },
-  { code: 'LK', currency: 'LKR', name: 'SriLanka', flag: '/images/flags/lk.png' },
-  { code: 'BD', currency: 'BDT', name: 'Bangladesh', flag: '/images/flags/bd.png' },
-  { code: 'US', currency: 'USD', name: 'United States', flag: '/images/flags/us.png' },
-  { code: 'CA', currency: 'CAD', name: 'Canada', flag: '/images/flags/ca.png' },
-  { code: 'SG', currency: 'SGD', name: 'Singapore', flag: '/images/flags/sg.png' },
-  { code: 'CN', currency: 'CNY', name: 'China', flag: '/images/flags/cn.png' },
-  { code: 'MY', currency: 'MYR', name: 'Malaysia', flag: '/images/flags/my.png' },
-  { code: 'JP', currency: 'JPY', name: 'Japan', flag: '/images/flags/jp.png' },
-  { code: 'HK', currency: 'HKD', name: 'Hong Kong', flag: '/images/flags/hk.png' },
-  { code: 'GB', currency: 'GBP', name: 'United Kingdom', flag: '/images/flags/gb.png' },
-  { code: 'MN', currency: 'MNT', name: 'Mongolia', flag: '/images/flags/mn.png' }
-];
-
-// Separate popular and other countries for dropdown
-const POPULAR_COUNTRIES = COUNTRIES.filter(c => c.popular);
-const OTHER_COUNTRIES = COUNTRIES.filter(c => !c.popular);
-
-const FLAG_ASSETS = Array.from(new Set(COUNTRIES.map((country) => country.flag)));
-
-// Provider logo mapping
-const PROVIDER_LOGO_MAP = {
-  Hanpass: '/logos/hanpass.png',
-  GmoneyTrans: '/logos/gmoneytrans.png',
-  E9Pay: '/logos/e9pay.png',
-  Finshot: null,
-  Coinshot: '/logos/coinshot.png',
-  Cross: '/logos/cross.png',
-  'GME Remit': '/logos/gme.png',
-  JRF: '/logos/JRF.png',
-  'JP Remit': '/logos/JRF.png',
-  Wirebarley: '/logos/wirebarley.png',
-  Moin: '/logos/themoin.png',
-  'The Moin': '/logos/themoin.png',
-  Sentbe: '/logos/sentbe.png'
-};
+  COUNTRIES,
+  POPULAR_COUNTRIES,
+  OTHER_COUNTRIES,
+  FLAG_ASSETS,
+  MAX_AMOUNT,
+  getCountryByCode
+} from '../lib/constants';
 
 // Icon Components
 const ChevronDownIcon = () => (
@@ -160,7 +91,7 @@ const TrendingUpIcon = () => (
   </svg>
 );
 
-// Provider Card Component - Simplified with hero metric emphasis
+// Provider Card Component - Premium Design System
 const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, worstAmount }) => {
   const { t } = useTranslation('common');
 
@@ -175,11 +106,6 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
     maximumFractionDigits: 4
   });
 
-  // Simplified card styles - Best gets prominent styling
-  const cardStyles = isBest
-    ? 'border-2 border-blue-500 bg-gradient-to-br from-blue-50 via-white to-blue-50/50 shadow-xl ring-2 ring-blue-100'
-    : 'border border-gray-200 bg-white shadow-md hover:shadow-lg hover:border-gray-300';
-
   // Calculate comparison bar percentage (relative to best)
   const range = bestAmount - worstAmount;
   const barPercentage = range > 0
@@ -189,25 +115,30 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
   // Calculate difference from best
   const diffFromBest = bestAmount - provider.recipient_gets;
 
+  // Premium card styles using design system
+  const cardStyles = isBest
+    ? 'border-2 border-accent-400 bg-gradient-to-br from-accent-50 via-white to-accent-50/30 shadow-card-best'
+    : 'border border-neutral-200 bg-white shadow-card hover:shadow-card-hover hover:border-neutral-300 hover:-translate-y-0.5';
+
   return (
     <div
-      className={`relative block w-full rounded-2xl transition-all duration-200 overflow-hidden ${cardStyles}`}
-      style={{ animationDelay: `${index * 50}ms` }}
+      className={`relative block w-full rounded-2xl transition-all duration-300 overflow-hidden ${cardStyles} animate-fade-in-up`}
+      style={{ animationDelay: `${index * 80}ms` }}
     >
-      {/* Best Deal Banner - Only for #1 */}
+      {/* Best Deal Banner - Premium gradient */}
       {isBest && (
-        <div className="bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-2 flex items-center justify-center gap-2">
+        <div className="bg-gradient-to-r from-accent-600 via-accent-500 to-accent-600 px-4 py-2.5 flex items-center justify-center gap-2">
           <SparklesIcon />
-          <span className="text-white font-bold text-sm">{t('results.best_choice', 'Best Choice')} — {t('results.you_receive', 'Your recipient gets the most')}</span>
+          <span className="text-white font-bold text-sm tracking-wide">{t('results.best_choice', 'Best Choice')} — {t('results.you_receive', 'Your recipient gets the most')}</span>
         </div>
       )}
 
       <div className="p-5 sm:p-6">
         {/* Provider Info Row */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
             {PROVIDER_LOGO_MAP[provider.provider] ? (
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-50 border border-gray-100 p-1.5 flex items-center justify-center">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-neutral-50 border border-neutral-100 p-1.5 flex items-center justify-center shadow-sm">
                 <img
                   src={PROVIDER_LOGO_MAP[provider.provider]}
                   alt={`${provider.provider} logo`}
@@ -218,15 +149,15 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
                 />
               </div>
             ) : (
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-100 flex items-center justify-center text-base sm:text-lg font-bold text-gray-600">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-base sm:text-lg font-bold text-white shadow-primary-sm">
                 {displayName.charAt(0)}
               </div>
             )}
             <div>
-              <span className="text-base sm:text-lg font-bold text-gray-900">{displayName}</span>
+              <span className="text-base sm:text-lg font-bold text-neutral-900">{displayName}</span>
               <span
-                className={`ml-2 inline-flex items-center rounded-full text-xs font-bold px-2 py-0.5 ${
-                  isBest ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
+                className={`ml-2 inline-flex items-center rounded-full text-xs font-bold px-2.5 py-0.5 ${
+                  isBest ? 'bg-accent-100 text-accent-700' : 'bg-neutral-100 text-neutral-500'
                 }`}
               >
                 #{index + 1}
@@ -235,19 +166,21 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
           </div>
         </div>
 
-        {/* HERO METRIC - Amount Received (Large & Prominent) */}
+        {/* HERO METRIC - Amount Received */}
         <div
-          className={`rounded-xl px-5 py-5 sm:px-6 sm:py-6 mb-4 text-center ${
-            isBest ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50 border border-gray-100'
+          className={`rounded-xl px-5 py-5 sm:px-6 sm:py-6 mb-5 text-center ${
+            isBest
+              ? 'bg-gradient-to-br from-accent-50 to-accent-100/50 border border-accent-200'
+              : 'bg-neutral-50 border border-neutral-100'
           }`}
         >
-          <div className="text-xs sm:text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wide">
+          <div className="text-xs sm:text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wider">
             {t('provider.recipient_gets', 'Recipient Gets')}
           </div>
           <div className="flex items-baseline justify-center gap-2">
             <span
-              className={`text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight ${
-                isBest ? 'text-blue-600' : 'text-gray-900'
+              className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight font-money ${
+                isBest ? 'text-accent-600' : 'text-neutral-900'
               }`}
             >
               {provider.recipient_gets.toLocaleString('en-US', {
@@ -255,71 +188,78 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
                 maximumFractionDigits: 0
               })}
             </span>
-            <span className={`text-base sm:text-lg font-semibold ${isBest ? 'text-blue-400' : 'text-gray-400'}`}>
+            <span className={`text-base sm:text-lg font-bold ${isBest ? 'text-accent-400' : 'text-neutral-400'}`}>
               {provider.currency}
             </span>
           </div>
 
-          {/* Visual Comparison Bar */}
+          {/* Visual Comparison Bar - Premium gradient */}
           <div className="mt-4">
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-2.5 bg-neutral-200 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all duration-500 ${
-                  isBest ? 'bg-gradient-to-r from-blue-500 to-blue-400' : 'bg-gradient-to-r from-gray-400 to-gray-300'
+                className={`h-full rounded-full transition-all duration-700 ease-out ${
+                  isBest
+                    ? 'bg-gradient-to-r from-accent-500 via-accent-400 to-accent-500'
+                    : 'bg-gradient-to-r from-neutral-400 to-neutral-300'
                 }`}
                 style={{ width: `${barPercentage}%` }}
               />
             </div>
             {!isBest && diffFromBest > 0 && (
-              <div className="mt-2 text-xs font-medium text-red-500">
-                -{diffFromBest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} {provider.currency} vs best
+              <div className="mt-2.5 text-xs font-semibold text-error-500 flex items-center justify-center gap-1">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+                {diffFromBest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} {provider.currency} less than best
               </div>
             )}
             {isBest && (
-              <div className="mt-2 text-xs font-medium text-blue-600">
+              <div className="mt-2.5 text-xs font-bold text-accent-600 flex items-center justify-center gap-1">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
                 Best rate available
               </div>
             )}
           </div>
         </div>
 
-        {/* Secondary Info - Rate & Fee (Compact) with Trend Indicator */}
-        <div className="flex items-center justify-center gap-4 sm:gap-6 text-sm text-gray-500 mb-5">
+        {/* Secondary Info - Rate & Fee */}
+        <div className="flex items-center justify-center gap-4 sm:gap-6 text-sm text-neutral-500 mb-5 py-2">
           <div className="flex items-center gap-1.5">
             <span className="font-medium">{t('provider.exchange_rate', 'Rate')}:</span>
-            <span className="font-semibold text-gray-700">{formattedRate}</span>
-            {/* Rate trend indicator - simulated for now, can be connected to real historical data */}
+            <span className="font-bold text-neutral-700">{formattedRate}</span>
             {isBest && (
-              <span className="inline-flex items-center gap-0.5 text-xs font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+              <span className="inline-flex items-center gap-0.5 text-xs font-bold text-accent-600 bg-accent-50 px-2 py-0.5 rounded-full">
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 10l7-7m0 0l7 7m-7-7v18" />
                 </svg>
-                Good
+                Best
               </span>
             )}
           </div>
-          <div className="w-px h-4 bg-gray-200" />
+          <div className="w-px h-4 bg-neutral-200" />
           <div className="flex items-center gap-1.5">
             <span className="font-medium">{t('provider.fee', 'Fee')}:</span>
-            <span className="font-semibold text-gray-700">₩{formattedFeeInKRW}</span>
+            <span className="font-bold text-neutral-700">₩{formattedFeeInKRW}</span>
           </div>
         </div>
 
-        {/* CTA Button - Contextual */}
+        {/* CTA Button - Premium styling */}
         <a
           href={provider.link}
           target="_blank"
           rel="noopener noreferrer"
           onClick={onProviderClick}
-          className={`flex w-full items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5 ${
+          className={`flex w-full items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] ${
             isBest
-              ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200'
-              : 'bg-gray-900 text-white hover:bg-gray-800 shadow-md'
+              ? 'bg-gradient-to-r from-accent-500 to-accent-600 text-white hover:from-accent-600 hover:to-accent-700 shadow-accent hover:shadow-accent-lg'
+              : 'bg-gradient-to-r from-neutral-800 to-neutral-900 text-white hover:from-neutral-900 hover:to-black shadow-lg hover:shadow-xl'
           }`}
         >
           {t('provider.cta', 'Send with {{provider}}').replace('{{provider}}', displayName)}
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </a>
       </div>
@@ -1133,32 +1073,33 @@ const WelcomeBackBanner = ({ lastComparison, onUseLastComparison, onDismiss }) =
 // Main Page Component
 export default function HomePage() {
   const { t } = useTranslation('common');
+  const router = useRouter();
 
   const [amount, setAmount] = useState('1000000');
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-  const [queryParams, setQueryParams] = useState({});
-  const [forceRefresh, setForceRefresh] = useState(0);
-  const [apiBaseUrl, setApiBaseUrl] = useState('https://remitbuddy.up.railway.app');
-  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const [showFloatingCTA, setShowFloatingCTA] = useState(false);
-  const [showRateAlert, setShowRateAlert] = useState(true);
   const [lastComparison, setLastComparison] = useState(null);
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const [savedCorridors, setSavedCorridors] = useState([]);
-  const [resultsView, setResultsView] = useState('cards');
-  const [isCorridorSaved, setIsCorridorSaved] = useState(false);
   const dropdownRef = useRef(null);
-  const resultsRef = useRef(null);
   const heroRef = useRef(null);
 
-  // Set API URL on client side only
+  // Pre-fill form from URL query params (when returning from compare page)
   useEffect(() => {
-    const url = getApiBaseUrl();
-    console.log('[RemitBuddy] API Base URL:', url);
-    setApiBaseUrl(url);
-  }, []);
+    if (router.query.country) {
+      const country = getCountryByCode(router.query.country);
+      if (country) {
+        setSelectedCountry(country);
+      }
+    }
+    if (router.query.amount) {
+      const queryAmount = parseInt(router.query.amount, 10);
+      if (!isNaN(queryAmount) && queryAmount >= 10000 && queryAmount <= MAX_AMOUNT) {
+        setAmount(queryAmount.toString());
+      }
+    }
+  }, [router.query.country, router.query.amount]);
 
   // Load last comparison from localStorage (return visitor recognition)
   useEffect(() => {
@@ -1221,29 +1162,6 @@ export default function HomePage() {
       console.error('Failed to load saved corridors:', e);
     }
   }, []);
-
-  // Save corridor handler
-  const handleSaveCorridor = () => {
-    const newCorridor = {
-      amount: amount,
-      country: selectedCountry.name,
-      countryCode: selectedCountry.code,
-      currency: selectedCountry.currency
-    };
-
-    // Check if already saved
-    const exists = savedCorridors.some(
-      c => c.amount === newCorridor.amount && c.countryCode === newCorridor.countryCode
-    );
-
-    if (!exists) {
-      const updated = [...savedCorridors, newCorridor].slice(-5); // Keep max 5
-      setSavedCorridors(updated);
-      localStorage.setItem('savedCorridors', JSON.stringify(updated));
-      setIsCorridorSaved(true);
-      setTimeout(() => setIsCorridorSaved(false), 2000);
-    }
-  };
 
   // Remove corridor handler
   const handleRemoveCorridor = (index) => {
@@ -1346,27 +1264,12 @@ export default function HomePage() {
       saveComparison(amount, selectedCountry);
       setShowWelcomeBack(false);
 
-      setQueryParams({
-        receive_country: selectedCountry.name,
-        receive_currency: selectedCountry.currency
+      // Navigate to dedicated compare page with shareable URL
+      router.push({
+        pathname: `/compare/${selectedCountry.slug || selectedCountry.name.toLowerCase().replace(/\s+/g, '-')}`,
+        query: { amount: numericAmount.toString() }
       });
-      setShowResults(true);
-      setForceRefresh((prev) => prev + 1);
-
-      setIsAutoScrolling(true);
-
-      // Smooth scroll to results
-      setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setTimeout(() => setIsAutoScrolling(false), 600);
-      }, 100);
     }
-  };
-
-  const handleCompareAgain = () => {
-    setIsAutoScrolling(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => setIsAutoScrolling(false), 500);
   };
 
   const formattedAmount = amount ? parseInt(amount, 10).toLocaleString('en-US') : '';
@@ -1402,19 +1305,26 @@ export default function HomePage() {
         ))}
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-        {/* Navigation - Toss Style */}
+      <div className="min-h-screen bg-white">
+        {/* Navigation */}
         <Navigation />
 
-        {/* Hero Section - Toss Style */}
-        <section ref={heroRef} id="hero" className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative">
-          {/* Background decoration */}
+        {/* Hero Section - Premium Design */}
+        <section ref={heroRef} id="hero" className="relative pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-28 md:pb-20 overflow-hidden">
+          {/* Background - Sophisticated gradient mesh */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50/40" />
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float" />
+            {/* Floating orbs */}
+            <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-gradient-to-br from-primary-200/40 to-primary-100/20 rounded-full blur-3xl animate-float" />
             <div
-              className="absolute bottom-0 left-0 w-96 h-96 bg-accent-100 rounded-full blur-3xl opacity-20 animate-float"
-              style={{ animationDelay: '1s' }}
+              className="absolute -bottom-32 -left-32 w-[600px] h-[600px] bg-gradient-to-tr from-accent-200/30 to-accent-100/10 rounded-full blur-3xl animate-float"
+              style={{ animationDelay: '2s' }}
             />
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gradient-to-r from-gold-100/20 via-transparent to-gold-100/20 rounded-full blur-3xl opacity-50"
+            />
+            {/* Grid pattern overlay */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
           </div>
 
           <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8 relative z-10">
@@ -1427,81 +1337,85 @@ export default function HomePage() {
               />
             )}
 
-            <div className="grid lg:grid-cols-2 gap-10 md:gap-12 items-center">
+            <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
               {/* Left Column - Content */}
               <div className="animate-fade-in-up">
-                <div className="inline-flex items-center gap-2 bg-brand-50 text-brand-600 px-4 py-2 rounded-full text-sm font-bold mb-6 border border-brand-200 shadow-toss-sm hover:shadow-toss transition-all duration-300">
-                  <ShieldIcon />
+                {/* Trust Badge - Premium pill */}
+                <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm text-primary-600 px-4 py-2 rounded-full text-sm font-bold mb-6 border border-primary-100 shadow-sm hover:shadow-md hover:border-primary-200 transition-all duration-300 cursor-default">
+                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
                   <span>{t('hero.badge')}</span>
                 </div>
 
-                <h1 className="text-[28px] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 leading-[1.1] tracking-tighter">
-                  {t('hero.title_line1')}
-                  <br className="md:hidden" /> {t('hero.title_line2')}
+                {/* Headline - Strong typography */}
+                <h1 className="text-[28px] sm:text-4xl md:text-5xl lg:text-[3.5rem] font-black text-neutral-900 mb-5 leading-[1.1] tracking-tight">
+                  <span className="block">{t('hero.title_line1')}</span>
+                  <span className="block bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 bg-clip-text text-transparent">
+                    {t('hero.title_line2')}
+                  </span>
                 </h1>
 
-                <p className="text-[15px] sm:text-lg md:text-xl lg:text-2xl text-gray-500 mb-5 md:mb-7 leading-relaxed font-medium">
+                <p className="text-[15px] sm:text-lg md:text-xl text-neutral-600 mb-6 md:mb-8 leading-relaxed font-medium max-w-xl">
                   {t('hero.subtitle')}
                 </p>
 
-                {/* Trust Indicators */}
-                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 md:gap-6 mb-6 md:mb-8">
-                  <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                    <div className="text-brand-600 flex-shrink-0">
-                      <CheckCircleIcon />
+                {/* Trust Indicators - Clean chips */}
+                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4 mb-8 md:mb-10">
+                  {[
+                    { text: t('hero.trust_1'), delay: '0.1s' },
+                    { text: t('hero.trust_2'), delay: '0.2s' },
+                    { text: t('hero.trust_3'), delay: '0.3s' },
+                  ].map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center gap-2 animate-fade-in-up"
+                      style={{ animationDelay: item.delay }}
+                    >
+                      <div className="w-5 h-5 rounded-full bg-accent-100 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3 h-3 text-accent-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <span className="text-neutral-700 font-semibold text-sm md:text-base">
+                        {item.text}
+                      </span>
                     </div>
-                    <span className="text-gray-700 font-semibold text-sm md:text-base">
-                      {t('hero.trust_1')}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                    <div className="text-brand-600 flex-shrink-0">
-                      <CheckCircleIcon />
-                    </div>
-                    <span className="text-gray-700 font-semibold text-sm md:text-base">
-                      {t('hero.trust_2')}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                    <div className="text-brand-600 flex-shrink-0">
-                      <CheckCircleIcon />
-                    </div>
-                    <span className="text-gray-700 font-semibold text-sm md:text-base">
-                      {t('hero.trust_3')}
-                    </span>
-                  </div>
+                  ))}
                 </div>
 
-                {/* Social Proof Stats - Toss Style */}
+                {/* Social Proof Stats - Premium glass card */}
                 <div
-                  className="bg-white rounded-xl p-6 sm:p-8 shadow-toss border border-gray-100 w-full sm:w-auto sm:inline-block max-w-2xl hover:shadow-toss-lg transition-all duration-300 animate-fade-in-up"
+                  className="bg-white/70 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-lg border border-white/50 w-full sm:w-auto sm:inline-block max-w-2xl hover:shadow-xl transition-all duration-300 animate-fade-in-up"
                   style={{ animationDelay: '0.4s' }}
                 >
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
                     <div className="text-center">
-                      <div className="text-2xl sm:text-3xl font-bold text-brand-500">8</div>
-                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
+                      <div className="text-2xl sm:text-3xl font-black text-primary-600 mb-1">8</div>
+                      <div className="text-xs sm:text-sm text-neutral-500 font-medium">
                         {t('hero.stats_companies')}
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl sm:text-3xl font-bold text-brand-600">18</div>
-                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
+                      <div className="text-2xl sm:text-3xl font-black text-primary-500 mb-1">18</div>
+                      <div className="text-xs sm:text-sm text-neutral-500 font-medium">
                         {t('hero.stats_countries')}
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-brand-500 font-bold">
+                      <div className="text-primary-600 font-black mb-1">
                         <span className="text-2xl sm:text-3xl">3</span>
-                        <span className="text-xs sm:text-sm ml-1">{t('hero.stats_seconds')}</span>
+                        <span className="text-sm ml-0.5">{t('hero.stats_seconds')}</span>
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
+                      <div className="text-xs sm:text-sm text-neutral-500 font-medium">
                         {t('hero.stats_seconds_label')}
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl sm:text-3xl font-bold text-accent-500">₩32K</div>
-                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
+                      <div className="text-2xl sm:text-3xl font-black text-accent-500 mb-1">₩32K</div>
+                      <div className="text-xs sm:text-sm text-neutral-500 font-medium">
                         {t('hero.stats_savings', 'avg. saved')}
                       </div>
                     </div>
@@ -1509,9 +1423,9 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Right Column - Form - Toss Style */}
+              {/* Right Column - Form - Premium Glass Card */}
               <div
-                className="animate-fade-in-up w-full sm:max-w-xl lg:max-w-2xl"
+                className="animate-fade-in-up w-full sm:max-w-xl lg:max-w-none"
                 style={{ animationDelay: '0.2s' }}
               >
                 {/* Saved Corridors */}
@@ -1525,11 +1439,15 @@ export default function HomePage() {
 
                 <form
                   onSubmit={handleSubmit}
-                  className="w-full bg-white rounded-xl border border-gray-100 p-6 sm:p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300"
+                  className="w-full bg-white/90 backdrop-blur-xl rounded-2xl border border-white/60 p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
                 >
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+                  {/* Subtle gradient accent */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 via-accent-500 to-primary-500" />
+
+                  <h2 className="text-xl sm:text-2xl font-black text-neutral-900 mb-2">
                     {t('form.title')}
                   </h2>
+                  <p className="text-sm text-neutral-500 mb-6">Compare rates from 8+ providers instantly</p>
 
                   <div className="space-y-5 sm:space-y-6">
                     {/* Country Selector - Premium Dropdown */}
@@ -1807,53 +1725,64 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Features Section - Toss Style */}
-        <section id="features" className="py-20 bg-gradient-to-br from-gray-50 to-brand-50/30">
-          <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+        {/* Features Section - Premium Design */}
+        <section id="features" className="py-20 md:py-24 bg-gradient-to-br from-neutral-50 via-white to-primary-50/30 relative overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.01)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none" />
+
+          <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8 relative">
+            <div className="text-center mb-14 md:mb-16">
+              <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
+                <SparklesIcon />
+                <span>Why RemitBuddy</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-neutral-900 mb-4 tracking-tight">
                 {t('features.title')}
               </h2>
-              <p className="text-xl text-gray-600 font-medium">{t('features.subtitle')}</p>
+              <p className="text-lg md:text-xl text-neutral-600 font-medium max-w-2xl mx-auto">{t('features.subtitle')}</p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white rounded-xl p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300 hover:-translate-y-1 group">
-                <div className="w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+              {/* Feature 1 */}
+              <div className="bg-white rounded-2xl p-7 sm:p-8 shadow-card hover:shadow-card-hover border border-neutral-100 hover:border-primary-200 transition-all duration-300 hover:-translate-y-1 group">
+                <div className="w-14 h-14 bg-gradient-to-br from-primary-100 to-primary-50 rounded-xl flex items-center justify-center text-primary-600 mb-6 group-hover:scale-110 group-hover:shadow-primary-sm transition-all duration-300">
                   <TrendingUpIcon />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t('features.f1_title')}</h3>
-                <p className="text-gray-600 font-medium leading-relaxed">
+                <h3 className="text-lg font-bold text-neutral-900 mb-3">{t('features.f1_title')}</h3>
+                <p className="text-neutral-600 leading-relaxed">
                   {t('features.f1_desc')}
                 </p>
               </div>
 
-              <div className="bg-white rounded-xl p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300 hover:-translate-y-1 group">
-                <div className="w-14 h-14 bg-brand-50 rounded-xl flex items-center justify-center text-brand-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+              {/* Feature 2 */}
+              <div className="bg-white rounded-2xl p-7 sm:p-8 shadow-card hover:shadow-card-hover border border-neutral-100 hover:border-primary-200 transition-all duration-300 hover:-translate-y-1 group">
+                <div className="w-14 h-14 bg-gradient-to-br from-primary-100 to-primary-50 rounded-xl flex items-center justify-center text-primary-600 mb-6 group-hover:scale-110 group-hover:shadow-primary-sm transition-all duration-300">
                   <ShieldIcon />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t('features.f2_title')}</h3>
-                <p className="text-gray-600 font-medium leading-relaxed">
+                <h3 className="text-lg font-bold text-neutral-900 mb-3">{t('features.f2_title')}</h3>
+                <p className="text-neutral-600 leading-relaxed">
                   {t('features.f2_desc')}
                 </p>
               </div>
 
-              <div className="bg-white rounded-xl p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300 hover:-translate-y-1 group">
-                <div className="w-14 h-14 bg-accent-50 rounded-xl flex items-center justify-center text-accent-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+              {/* Feature 3 */}
+              <div className="bg-white rounded-2xl p-7 sm:p-8 shadow-card hover:shadow-card-hover border border-neutral-100 hover:border-accent-200 transition-all duration-300 hover:-translate-y-1 group">
+                <div className="w-14 h-14 bg-gradient-to-br from-accent-100 to-accent-50 rounded-xl flex items-center justify-center text-accent-600 mb-6 group-hover:scale-110 group-hover:shadow-accent-sm transition-all duration-300">
                   <GlobeIcon />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t('features.f3_title')}</h3>
-                <p className="text-gray-600 font-medium leading-relaxed">
+                <h3 className="text-lg font-bold text-neutral-900 mb-3">{t('features.f3_title')}</h3>
+                <p className="text-neutral-600 leading-relaxed">
                   {t('features.f3_desc')}
                 </p>
               </div>
 
-              <div className="bg-white rounded-xl p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300 hover:-translate-y-1 group">
-                <div className="w-14 h-14 bg-accent-50 rounded-xl flex items-center justify-center text-accent-600 mb-6 group-hover:scale-110 transition-transform duration-300">
+              {/* Feature 4 */}
+              <div className="bg-white rounded-2xl p-7 sm:p-8 shadow-card hover:shadow-card-hover border border-neutral-100 hover:border-accent-200 transition-all duration-300 hover:-translate-y-1 group">
+                <div className="w-14 h-14 bg-gradient-to-br from-accent-100 to-accent-50 rounded-xl flex items-center justify-center text-accent-600 mb-6 group-hover:scale-110 group-hover:shadow-accent-sm transition-all duration-300">
                   <CurrencyIcon />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{t('features.f4_title')}</h3>
-                <p className="text-gray-600 font-medium leading-relaxed">
+                <h3 className="text-lg font-bold text-neutral-900 mb-3">{t('features.f4_title')}</h3>
+                <p className="text-neutral-600 leading-relaxed">
                   {t('features.f4_desc')}
                 </p>
               </div>
@@ -1861,79 +1790,55 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* How It Works Section - Toss Style */}
-        <section id="how-it-works" className="py-20 bg-white">
+        {/* How It Works Section - Premium Design */}
+        <section id="how-it-works" className="py-20 md:py-24 bg-white relative">
           <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
+            <div className="text-center mb-14 md:mb-16">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-neutral-900 mb-4 tracking-tight">
                 {t('how.title')}
               </h2>
-              <p className="text-xl text-gray-600 font-medium">{t('how.subtitle')}</p>
+              <p className="text-lg md:text-xl text-neutral-600 font-medium">{t('how.subtitle')}</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center group">
-                <div className="w-20 h-20 bg-brand-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
+            <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">
+              {/* Connection line */}
+              <div className="hidden md:block absolute top-10 left-[20%] right-[20%] h-0.5 bg-gradient-to-r from-primary-200 via-primary-300 to-accent-300" />
+
+              {/* Step 1 */}
+              <div className="text-center group relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-primary group-hover:shadow-primary-lg transition-all duration-300 group-hover:scale-110 relative z-10">
                   1
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('how.s1_title')}</h3>
-                <p className="text-gray-600 leading-relaxed font-medium">
+                <h3 className="text-xl font-bold text-neutral-900 mb-3">{t('how.s1_title')}</h3>
+                <p className="text-neutral-600 leading-relaxed max-w-xs mx-auto">
                   {t('how.s1_desc')}
                 </p>
               </div>
 
-              <div className="text-center group">
-                <div className="w-20 h-20 bg-brand-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
+              {/* Step 2 */}
+              <div className="text-center group relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-primary group-hover:shadow-primary-lg transition-all duration-300 group-hover:scale-110 relative z-10">
                   2
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('how.s2_title')}</h3>
-                <p className="text-gray-600 leading-relaxed font-medium">
+                <h3 className="text-xl font-bold text-neutral-900 mb-3">{t('how.s2_title')}</h3>
+                <p className="text-neutral-600 leading-relaxed max-w-xs mx-auto">
                   {t('how.s2_desc')}
                 </p>
               </div>
 
-              <div className="text-center group">
-                <div className="w-20 h-20 bg-accent-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-toss group-hover:shadow-toss-lg transition-all duration-300 group-hover:scale-110">
+              {/* Step 3 */}
+              <div className="text-center group relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-accent-500 to-accent-600 rounded-2xl flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-accent group-hover:shadow-accent-lg transition-all duration-300 group-hover:scale-110 relative z-10">
                   3
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('how.s3_title')}</h3>
-                <p className="text-gray-600 leading-relaxed font-medium">
+                <h3 className="text-xl font-bold text-neutral-900 mb-3">{t('how.s3_title')}</h3>
+                <p className="text-neutral-600 leading-relaxed max-w-xs mx-auto">
                   {t('how.s3_desc')}
                 </p>
               </div>
             </div>
           </div>
         </section>
-
-        {/* Results Section */}
-        {showResults && (
-          <section ref={resultsRef} className="bg-white py-20">
-              <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
-              <ComparisonResults
-                queryParams={queryParams}
-                amount={amount}
-                forceRefresh={forceRefresh}
-                onCompareAgain={handleCompareAgain}
-                apiBaseUrl={apiBaseUrl}
-                isAutoScrolling={isAutoScrolling}
-                view={resultsView}
-                onViewChange={setResultsView}
-                onSaveCorridor={handleSaveCorridor}
-                isCorridorSaved={isCorridorSaved}
-              />
-
-              {/* Rate Alert Card - Show after results */}
-              {showRateAlert && (
-                <div className="mt-10 max-w-2xl mx-auto">
-                  <RateAlertCard
-                    country={queryParams.receive_country}
-                    onClose={() => setShowRateAlert(false)}
-                  />
-                </div>
-              )}
-            </div>
-          </section>
-        )}
 
         {/* Educational Content Section */}
         <section className="py-16 sm:py-20 bg-gradient-to-br from-gray-50 to-blue-50/30">
@@ -2065,21 +1970,21 @@ export default function HomePage() {
         <Footer />
       </div>
 
-      {/* Floating CTA for Mobile - Shows when scrolled past hero */}
+      {/* Floating CTA for Mobile - Premium glass design */}
       <div
         className={`fixed bottom-0 left-0 right-0 z-40 lg:hidden transition-all duration-300 transform ${
           showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
         }`}
       >
-        <div className="bg-white/95 backdrop-blur-lg border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] safe-px py-3">
+        <div className="bg-white/90 backdrop-blur-xl border-t border-neutral-200/50 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] safe-px py-3 safe-bottom">
           <button
             onClick={() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-base rounded-xl shadow-lg shadow-blue-200 transition-all duration-200 active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold text-base rounded-xl shadow-primary hover:shadow-primary-lg transition-all duration-200 active:scale-[0.98]"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
             </svg>
             {t('form.submit', 'Show Me the Best Rates')}
           </button>

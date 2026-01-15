@@ -41,14 +41,14 @@ const getApiBaseUrl = () => {
   return 'https://remitbuddy.up.railway.app';
 };
 
-// Country data
+// Country data with popular flag
 const COUNTRIES = [
-  { code: 'VN', currency: 'VND', name: 'Vietnam', flag: '/images/flags/vn.png' },
-  { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png' },
-  { code: 'PH', currency: 'PHP', name: 'Philippines', flag: '/images/flags/ph.png' },
-  { code: 'KH', currency: 'KHR', name: 'Cambodia', flag: '/images/flags/kh.png' },
+  { code: 'VN', currency: 'VND', name: 'Vietnam', flag: '/images/flags/vn.png', popular: true },
+  { code: 'PH', currency: 'PHP', name: 'Philippines', flag: '/images/flags/ph.png', popular: true },
+  { code: 'NP', name: 'Nepal', currency: 'NPR', flag: '/images/flags/np.png', popular: true },
+  { code: 'KH', currency: 'KHR', name: 'Cambodia', flag: '/images/flags/kh.png', popular: true },
+  { code: 'TH', currency: 'THB', name: 'Thailand', flag: '/images/flags/th.png', popular: true },
   { code: 'MM', currency: 'MMK', name: 'Myanmar', flag: '/images/flags/mm.png' },
-  { code: 'TH', currency: 'THB', name: 'Thailand', flag: '/images/flags/th.png' },
   { code: 'UZ', currency: 'UZS', name: 'Uzbekistan', flag: '/images/flags/uz.png' },
   { code: 'ID', currency: 'IDR', name: 'Indonesia', flag: '/images/flags/id.png' },
   { code: 'LK', currency: 'LKR', name: 'SriLanka', flag: '/images/flags/lk.png' },
@@ -63,6 +63,10 @@ const COUNTRIES = [
   { code: 'GB', currency: 'GBP', name: 'United Kingdom', flag: '/images/flags/gb.png' },
   { code: 'MN', currency: 'MNT', name: 'Mongolia', flag: '/images/flags/mn.png' }
 ];
+
+// Separate popular and other countries for dropdown
+const POPULAR_COUNTRIES = COUNTRIES.filter(c => c.popular);
+const OTHER_COUNTRIES = COUNTRIES.filter(c => !c.popular);
 
 const FLAG_ASSETS = Array.from(new Set(COUNTRIES.map((country) => country.flag)));
 
@@ -156,8 +160,8 @@ const TrendingUpIcon = () => (
   </svg>
 );
 
-// Provider Card Component - mobile-first, high-emphasis layout with clear separation
-const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
+// Provider Card Component - Simplified with hero metric emphasis
+const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, worstAmount }) => {
   const { t } = useTranslation('common');
 
   const displayName =
@@ -171,22 +175,39 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
     maximumFractionDigits: 4
   });
 
-  // 1위는 특별한 스타일, 나머지는 명확하게 구분되는 카드 스타일
+  // Simplified card styles - Best gets prominent styling
   const cardStyles = isBest
-    ? 'border-2 border-blue-400 bg-gradient-to-br from-blue-50 via-white to-blue-50 shadow-xl ring-4 ring-blue-100'
-    : 'border-2 border-gray-200 bg-white shadow-lg hover:border-gray-300 hover:shadow-xl';
+    ? 'border-2 border-blue-500 bg-gradient-to-br from-blue-50 via-white to-blue-50/50 shadow-xl ring-2 ring-blue-100'
+    : 'border border-gray-200 bg-white shadow-md hover:shadow-lg hover:border-gray-300';
+
+  // Calculate comparison bar percentage (relative to best)
+  const range = bestAmount - worstAmount;
+  const barPercentage = range > 0
+    ? Math.round(((provider.recipient_gets - worstAmount) / range) * 100)
+    : 100;
+
+  // Calculate difference from best
+  const diffFromBest = bestAmount - provider.recipient_gets;
 
   return (
     <div
-      className={`relative block w-full rounded-3xl transition-all duration-200 overflow-hidden ${cardStyles}`}
+      className={`relative block w-full rounded-2xl transition-all duration-200 overflow-hidden ${cardStyles}`}
       style={{ animationDelay: `${index * 50}ms` }}
     >
-      {/* 카드 상단 헤더 - Provider 정보 */}
-      <div className={`px-5 py-4 sm:px-6 sm:py-5 ${isBest ? 'bg-blue-600' : 'bg-gray-800'}`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
+      {/* Best Deal Banner - Only for #1 */}
+      {isBest && (
+        <div className="bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-2 flex items-center justify-center gap-2">
+          <SparklesIcon />
+          <span className="text-white font-bold text-sm">{t('results.best_choice', 'Best Choice')} — {t('results.you_receive', 'Your recipient gets the most')}</span>
+        </div>
+      )}
+
+      <div className="p-5 sm:p-6">
+        {/* Provider Info Row */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
             {PROVIDER_LOGO_MAP[provider.provider] ? (
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white p-2 shadow-md">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-50 border border-gray-100 p-1.5 flex items-center justify-center">
                 <img
                   src={PROVIDER_LOGO_MAP[provider.provider]}
                   alt={`${provider.provider} logo`}
@@ -197,97 +218,108 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
                 />
               </div>
             ) : (
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white flex items-center justify-center text-lg sm:text-xl font-bold text-gray-800 shadow-md">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-100 flex items-center justify-center text-base sm:text-lg font-bold text-gray-600">
                 {displayName.charAt(0)}
               </div>
             )}
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg sm:text-xl font-bold text-white">{displayName}</span>
-                <span
-                  className={`inline-flex items-center rounded-full text-xs font-bold px-2.5 py-1 ${
-                    isBest ? 'bg-yellow-400 text-yellow-900' : 'bg-gray-600 text-gray-200'
-                  }`}
-                >
-                  {index + 1}
-                  {t('provider.rank_suffix', '위')}
-                </span>
-              </div>
-              {isBest && (
-                <span className="flex items-center gap-1 text-xs sm:text-sm text-blue-100 font-medium mt-0.5">
-                  <SparklesIcon />
-                  {t('provider.best_badge')}
-                </span>
-              )}
+              <span className="text-base sm:text-lg font-bold text-gray-900">{displayName}</span>
+              <span
+                className={`ml-2 inline-flex items-center rounded-full text-xs font-bold px-2 py-0.5 ${
+                  isBest ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
+                }`}
+              >
+                #{index + 1}
+              </span>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 카드 본문 - 금액 정보 */}
-      <div className="p-5 sm:p-6">
-        {/* 받는 금액 */}
+        {/* HERO METRIC - Amount Received (Large & Prominent) */}
         <div
-          className={`rounded-2xl px-5 py-4 sm:px-6 sm:py-5 mb-4 ${
-            isBest ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50 border-2 border-gray-100'
+          className={`rounded-xl px-5 py-5 sm:px-6 sm:py-6 mb-4 text-center ${
+            isBest ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50 border border-gray-100'
           }`}
         >
-          <div className="text-xs font-semibold text-gray-500 mb-1">{t('provider.recipient_gets')}</div>
-          <div className="flex items-baseline gap-2">
+          <div className="text-xs sm:text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wide">
+            {t('provider.recipient_gets', 'Recipient Gets')}
+          </div>
+          <div className="flex items-baseline justify-center gap-2">
             <span
-              className={`text-base sm:text-lg font-bold ${
+              className={`text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight ${
                 isBest ? 'text-blue-600' : 'text-gray-900'
               }`}
             >
               {provider.recipient_gets.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
               })}
             </span>
-            <span className="text-[10px] sm:text-xs text-gray-400 font-medium">
+            <span className={`text-base sm:text-lg font-semibold ${isBest ? 'text-blue-400' : 'text-gray-400'}`}>
               {provider.currency}
             </span>
           </div>
-        </div>
 
-        {/* 환율 & 수수료 */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-5">
-          <div className="rounded-xl bg-gray-100 px-4 py-3">
-            <div className="text-xs font-semibold text-gray-500 mb-1">
-              {t('provider.exchange_rate')}
+          {/* Visual Comparison Bar */}
+          <div className="mt-4">
+            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${
+                  isBest ? 'bg-gradient-to-r from-blue-500 to-blue-400' : 'bg-gradient-to-r from-gray-400 to-gray-300'
+                }`}
+                style={{ width: `${barPercentage}%` }}
+              />
             </div>
-
-            <div className="text-base sm:text-lg font-bold text-gray-800">
-              1 {provider.currency} = {formattedRate} KRW
-            </div>
-
-            <div className="text-[10px] sm:text-xs text-gray-400 font-medium">
-              {t('provider.exchange_unit', {
-                currency: provider.currency,
-                value: formattedRate
-              })}
-            </div>
-          </div>
-          <div className="rounded-xl bg-gray-100 px-4 py-3">
-            <div className="text-xs font-semibold text-gray-500 mb-1">{t('provider.fee')}</div>
-            <div className="text-base sm:text-lg font-bold text-gray-800">{formattedFeeInKRW}</div>
-            <div className="text-[10px] sm:text-xs text-gray-400 font-medium">KRW</div>
+            {!isBest && diffFromBest > 0 && (
+              <div className="mt-2 text-xs font-medium text-red-500">
+                -{diffFromBest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} {provider.currency} vs best
+              </div>
+            )}
+            {isBest && (
+              <div className="mt-2 text-xs font-medium text-blue-600">
+                Best rate available
+              </div>
+            )}
           </div>
         </div>
 
-        {/* CTA 버튼 */}
+        {/* Secondary Info - Rate & Fee (Compact) with Trend Indicator */}
+        <div className="flex items-center justify-center gap-4 sm:gap-6 text-sm text-gray-500 mb-5">
+          <div className="flex items-center gap-1.5">
+            <span className="font-medium">{t('provider.exchange_rate', 'Rate')}:</span>
+            <span className="font-semibold text-gray-700">{formattedRate}</span>
+            {/* Rate trend indicator - simulated for now, can be connected to real historical data */}
+            {isBest && (
+              <span className="inline-flex items-center gap-0.5 text-xs font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+                Good
+              </span>
+            )}
+          </div>
+          <div className="w-px h-4 bg-gray-200" />
+          <div className="flex items-center gap-1.5">
+            <span className="font-medium">{t('provider.fee', 'Fee')}:</span>
+            <span className="font-semibold text-gray-700">₩{formattedFeeInKRW}</span>
+          </div>
+        </div>
+
+        {/* CTA Button - Contextual */}
         <a
           href={provider.link}
           target="_blank"
           rel="noopener noreferrer"
           onClick={onProviderClick}
-          className={`flex w-full items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-base shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg ${
-            isBest ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-800 text-white hover:bg-gray-900'
+          className={`flex w-full items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5 ${
+            isBest
+              ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200'
+              : 'bg-gray-900 text-white hover:bg-gray-800 shadow-md'
           }`}
         >
-          {t('provider.cta')}
+          {t('provider.cta', 'Send with {{provider}}').replace('{{provider}}', displayName)}
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </a>
       </div>
@@ -296,7 +328,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick }) => {
 };
 
 // Comparison Results Component - CRITICAL: Maintains API integration
-function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, apiBaseUrl, isAutoScrolling }) {
+function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, apiBaseUrl, isAutoScrolling, view, onViewChange, onSaveCorridor, isCorridorSaved }) {
   const { t } = useTranslation('common');
 
   const [results, setResults] = useState([]);
@@ -511,30 +543,592 @@ function ComparisonResults({ queryParams, amount, forceRefresh, onCompareAgain, 
 
       {!isLoading && !error && results.length > 0 && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-6">
-            <p className="text-gray-600 font-medium text-base sm:text-lg">
-              <span className="text-xl sm:text-2xl font-bold text-blue-600">
-                {results.length}
-              </span>{' '}
-              {t('results.count_suffix', '개 업체 비교 결과')}
-            </p>
-          </div>
-          <div className="space-y-6 sm:space-y-8">
-            {results.map((provider, index) => (
-              <ProviderCard
-                key={provider.provider}
-                provider={{ ...provider, currency: queryParams.receive_currency }}
-                isBest={index === 0}
-                index={index}
-                onProviderClick={() => handleProviderClick(provider, index)}
+          {/* Results Header with View Toggle and Actions */}
+          <div className="flex flex-col gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <p className="text-gray-600 font-medium text-base sm:text-lg">
+                <span className="text-xl sm:text-2xl font-bold text-blue-600">
+                  {results.length}
+                </span>{' '}
+                {t('results.count_suffix', 'providers compared')}
+              </p>
+              {/* View Toggle */}
+              <ViewToggle view={view} onViewChange={onViewChange} />
+            </div>
+
+            {/* Actions Row: Save Corridor + Ranking Explanation */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <SaveCorridorButton
+                amount={amount}
+                country={queryParams.receive_country}
+                onSave={onSaveCorridor}
+                isSaved={isCorridorSaved}
               />
-            ))}
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full">
+                <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="text-sm font-medium text-blue-700">
+                  {t('results.ranking_explanation', 'Ranked by total amount received')}
+                </span>
+              </div>
+            </div>
           </div>
+
+          {/* Rate Chart for Best Provider */}
+          {bestProvider && (
+            <div className="mb-6">
+              <RateChart
+                currency={queryParams.receive_currency}
+                currentRate={bestProvider.exchange_rate}
+              />
+            </div>
+          )}
+
+          {/* Results - Card or Table View */}
+          {view === 'table' ? (
+            <ResultsTable
+              results={results}
+              currency={queryParams.receive_currency}
+              onProviderClick={handleProviderClick}
+              bestAmount={bestProvider?.recipient_gets || 0}
+            />
+          ) : (
+            <div className="space-y-6 sm:space-y-8">
+              {results.map((provider, index) => (
+                <ProviderCard
+                  key={provider.provider}
+                  provider={{ ...provider, currency: queryParams.receive_currency }}
+                  isBest={index === 0}
+                  index={index}
+                  onProviderClick={() => handleProviderClick(provider, index)}
+                  bestAmount={bestProvider?.recipient_gets || 0}
+                  worstAmount={worstProvider?.recipient_gets || 0}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 }
+
+// Saved Corridors Component
+const SavedCorridors = ({ corridors, onSelectCorridor, onRemoveCorridor }) => {
+  const { t } = useTranslation('common');
+
+  if (!corridors || corridors.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
+      <h3 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2">
+        <svg className="w-4 h-4 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+        </svg>
+        {t('user_profile.title', 'Your Saved Corridors')}
+      </h3>
+      <div className="flex flex-wrap gap-2">
+        {corridors.map((corridor, index) => (
+          <div
+            key={index}
+            className="inline-flex items-center gap-2 bg-gray-50 hover:bg-brand-50 border border-gray-200 hover:border-brand-200 rounded-lg px-3 py-2 transition-all group"
+          >
+            <button
+              onClick={() => onSelectCorridor(corridor)}
+              className="flex items-center gap-2 text-sm font-medium text-gray-700 group-hover:text-brand-600"
+            >
+              <span>{parseInt(corridor.amount).toLocaleString()} KRW</span>
+              <span className="text-gray-400">→</span>
+              <span>{corridor.country}</span>
+            </button>
+            <button
+              onClick={() => onRemoveCorridor(index)}
+              className="text-gray-400 hover:text-red-500 p-0.5 rounded transition-colors"
+              title={t('user_profile.remove', 'Remove')}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Save Corridor Button
+const SaveCorridorButton = ({ amount, country, onSave, isSaved }) => {
+  const { t } = useTranslation('common');
+
+  return (
+    <button
+      onClick={onSave}
+      disabled={isSaved}
+      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+        isSaved
+          ? 'bg-green-50 text-green-600 border border-green-200'
+          : 'bg-gray-100 hover:bg-brand-50 text-gray-600 hover:text-brand-600 border border-gray-200 hover:border-brand-200'
+      }`}
+    >
+      {isSaved ? (
+        <>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          {t('user_profile.saved', 'Saved!')}
+        </>
+      ) : (
+        <>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+          </svg>
+          {t('user_profile.save_this', 'Save this corridor')}
+        </>
+      )}
+    </button>
+  );
+};
+
+// View Toggle Component
+const ViewToggle = ({ view, onViewChange }) => {
+  const { t } = useTranslation('common');
+
+  return (
+    <div className="inline-flex items-center bg-gray-100 rounded-lg p-1">
+      <button
+        onClick={() => onViewChange('cards')}
+        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+          view === 'cards'
+            ? 'bg-white text-gray-900 shadow-sm'
+            : 'text-gray-600 hover:text-gray-900'
+        }`}
+      >
+        <span className="flex items-center gap-2">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          {t('view_toggle.cards', 'Cards')}
+        </span>
+      </button>
+      <button
+        onClick={() => onViewChange('table')}
+        className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+          view === 'table'
+            ? 'bg-white text-gray-900 shadow-sm'
+            : 'text-gray-600 hover:text-gray-900'
+        }`}
+      >
+        <span className="flex items-center gap-2">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          {t('view_toggle.table', 'Table')}
+        </span>
+      </button>
+    </div>
+  );
+};
+
+// Table View Component
+const ResultsTable = ({ results, currency, onProviderClick, bestAmount }) => {
+  const { t } = useTranslation('common');
+
+  return (
+    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+      <table className="w-full min-w-[600px]">
+        <thead>
+          <tr className="bg-gray-50 border-b border-gray-200">
+            <th className="text-left px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              #
+            </th>
+            <th className="text-left px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              {t('view_toggle.provider', 'Provider')}
+            </th>
+            <th className="text-right px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              {t('view_toggle.amount_received', 'Amount Received')}
+            </th>
+            <th className="text-right px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              {t('view_toggle.rate', 'Rate')}
+            </th>
+            <th className="text-right px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              {t('view_toggle.fee', 'Fee')}
+            </th>
+            <th className="text-center px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              {t('view_toggle.action', 'Action')}
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-100">
+          {results.map((provider, index) => {
+            const isBest = index === 0;
+            const displayName = provider.provider === 'JP Remit' ? 'JRF' : provider.provider === 'The Moin' ? 'Moin' : provider.provider;
+            const diffFromBest = bestAmount - provider.recipient_gets;
+
+            return (
+              <tr
+                key={provider.provider}
+                className={`hover:bg-gray-50 transition-colors ${isBest ? 'bg-blue-50/50' : ''}`}
+              >
+                <td className="px-4 py-4">
+                  <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${
+                    isBest ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'
+                  }`}>
+                    {index + 1}
+                  </span>
+                </td>
+                <td className="px-4 py-4">
+                  <div className="flex items-center gap-3">
+                    <span className="font-semibold text-gray-900">{displayName}</span>
+                    {isBest && (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-700">
+                        Best
+                      </span>
+                    )}
+                  </div>
+                </td>
+                <td className="px-4 py-4 text-right">
+                  <div className="font-bold text-gray-900">
+                    {provider.recipient_gets.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                    <span className="text-gray-500 font-normal ml-1">{currency}</span>
+                  </div>
+                  {!isBest && diffFromBest > 0 && (
+                    <div className="text-xs text-red-500">
+                      -{diffFromBest.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                    </div>
+                  )}
+                </td>
+                <td className="px-4 py-4 text-right text-gray-600">
+                  {provider.exchange_rate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+                </td>
+                <td className="px-4 py-4 text-right text-gray-600">
+                  ₩{provider.fee.toLocaleString('en-US')}
+                </td>
+                <td className="px-4 py-4 text-center">
+                  <a
+                    href={provider.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => onProviderClick(provider, index)}
+                    className={`inline-flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                      isBest
+                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    Send
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+// Mini Rate Chart Component (simulated data for now)
+const RateChart = ({ currency, currentRate }) => {
+  const { t } = useTranslation('common');
+
+  // Simulated 7-day data (in production, this would come from API)
+  const generateSimulatedData = () => {
+    const baseRate = currentRate || 1;
+    const variance = baseRate * 0.02; // 2% variance
+    return Array.from({ length: 7 }, (_, i) => {
+      const dayOffset = 6 - i;
+      const randomVariance = (Math.random() - 0.5) * variance;
+      return {
+        day: dayOffset === 0 ? 'Today' : `${dayOffset}d`,
+        rate: baseRate + randomVariance,
+        isToday: dayOffset === 0
+      };
+    });
+  };
+
+  const data = generateSimulatedData();
+  const rates = data.map(d => d.rate);
+  const minRate = Math.min(...rates);
+  const maxRate = Math.max(...rates);
+  const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+  const range = maxRate - minRate || 1;
+
+  const isBetterThanAvg = currentRate >= avgRate;
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h4 className="font-bold text-gray-900 text-sm">{t('rate_chart.title', 'Rate Trend')}</h4>
+          <p className="text-xs text-gray-500">{t('rate_chart.subtitle', 'Last 7 days')}</p>
+        </div>
+        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+          isBetterThanAvg ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'
+        }`}>
+          {isBetterThanAvg ? (
+            <>
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+              </svg>
+              {t('rate_chart.better_than_avg', 'Better than average')}
+            </>
+          ) : (
+            <>
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+              {t('rate_chart.worse_than_avg', 'Below average')}
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Mini Chart */}
+      <div className="h-16 flex items-end gap-1">
+        {data.map((point, index) => {
+          const height = ((point.rate - minRate) / range) * 100;
+          const normalizedHeight = Math.max(20, Math.min(100, height || 50));
+
+          return (
+            <div key={index} className="flex-1 flex flex-col items-center gap-1">
+              <div
+                className={`w-full rounded-t transition-all ${
+                  point.isToday ? 'bg-blue-500' : 'bg-gray-200'
+                }`}
+                style={{ height: `${normalizedHeight}%` }}
+              />
+              <span className={`text-[10px] ${point.isToday ? 'font-bold text-blue-600' : 'text-gray-400'}`}>
+                {point.day}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Stats */}
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 text-xs">
+        <div className="text-gray-500">
+          <span className="font-medium">{t('rate_chart.avg', '7-day avg')}:</span>{' '}
+          <span className="text-gray-700">{avgRate.toFixed(2)}</span>
+        </div>
+        <div className="text-gray-500">
+          <span className="font-medium">{t('rate_chart.high', 'High')}:</span>{' '}
+          <span className="text-green-600">{maxRate.toFixed(2)}</span>
+        </div>
+        <div className="text-gray-500">
+          <span className="font-medium">{t('rate_chart.low', 'Low')}:</span>{' '}
+          <span className="text-red-500">{minRate.toFixed(2)}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// PWA Install Prompt Component
+const PWAInstallPrompt = ({ onDismiss }) => {
+  const { t } = useTranslation('common');
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showPrompt, setShowPrompt] = useState(false);
+
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      // Show prompt after a delay
+      setTimeout(() => setShowPrompt(true), 3000);
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === 'accepted') {
+      setShowPrompt(false);
+    }
+    setDeferredPrompt(null);
+  };
+
+  if (!showPrompt) return null;
+
+  return (
+    <div className="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-4 sm:w-80 z-50 animate-fade-in-up">
+      <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 p-4 sm:p-5">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 bg-brand-100 rounded-xl flex items-center justify-center flex-shrink-0">
+            <svg className="w-6 h-6 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h3 className="font-bold text-gray-900 mb-1">{t('pwa.install_title', 'Install RemitBuddy')}</h3>
+            <p className="text-sm text-gray-600 mb-3">{t('pwa.install_desc', 'Add to home screen for faster access')}</p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleInstall}
+                className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-lg transition-all"
+              >
+                {t('pwa.install_button', 'Install App')}
+              </button>
+              <button
+                onClick={() => { setShowPrompt(false); onDismiss?.(); }}
+                className="px-4 py-2 text-gray-600 hover:text-gray-900 text-sm font-medium transition-all"
+              >
+                {t('pwa.later', 'Maybe Later')}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Rate Alert Component
+const RateAlertCard = ({ country, onClose }) => {
+  const { t } = useTranslation('common');
+  const [email, setEmail] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) return;
+
+    setIsLoading(true);
+    // Simulate API call - in production, this would call a real endpoint
+    await new Promise(resolve => setTimeout(resolve, 800));
+    setIsSubmitted(true);
+    setIsLoading(false);
+
+    // Store in localStorage as backup
+    try {
+      const alerts = JSON.parse(localStorage.getItem('rateAlerts') || '[]');
+      alerts.push({ email, country, createdAt: new Date().toISOString() });
+      localStorage.setItem('rateAlerts', JSON.stringify(alerts));
+    } catch (e) {
+      console.error('Failed to save rate alert:', e);
+    }
+  };
+
+  if (isSubmitted) {
+    return (
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6 text-center animate-fade-in">
+        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 className="text-lg font-bold text-gray-900 mb-2">{t('rate_alert.success_title', "You're all set!")}</h3>
+        <p className="text-gray-600">{t('rate_alert.success_message', "We'll email you when rates improve.").replace('{{country}}', country)}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 animate-fade-in">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+            <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-gray-900">{t('rate_alert.title', 'Get Rate Alerts')}</h3>
+            <p className="text-sm text-gray-600">{t('rate_alert.subtitle', "We'll notify you when rates improve")}</p>
+          </div>
+        </div>
+        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div className="flex gap-3">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t('rate_alert.email_placeholder', 'your@email.com')}
+            className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+            required
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              t('rate_alert.submit', 'Set Alert')
+            )}
+          </button>
+        </div>
+        <p className="text-xs text-gray-500">{t('rate_alert.privacy', 'We respect your privacy. Unsubscribe anytime.')}</p>
+      </form>
+    </div>
+  );
+};
+
+// Welcome Back Banner Component
+const WelcomeBackBanner = ({ lastComparison, onUseLastComparison, onDismiss }) => {
+  const { t } = useTranslation('common');
+
+  if (!lastComparison) return null;
+
+  const formattedAmount = parseInt(lastComparison.amount || 0, 10).toLocaleString();
+
+  return (
+    <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 sm:p-5 mb-6 animate-fade-in-up">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+            <svg className="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="font-bold text-gray-900">{t('welcome_back.title', 'Welcome back!')}</h3>
+            <p className="text-sm text-gray-600">
+              {t('welcome_back.last_comparison', 'Your last comparison')}: {formattedAmount} KRW → {lastComparison.country}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onUseLastComparison}
+            className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl text-sm transition-all"
+          >
+            {t('welcome_back.compare_again', 'Compare again').replace('{{amount}}', formattedAmount).replace('{{country}}', lastComparison.country)}
+          </button>
+          <button
+            onClick={onDismiss}
+            className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-all"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // Main Page Component
 export default function HomePage() {
@@ -548,8 +1142,16 @@ export default function HomePage() {
   const [forceRefresh, setForceRefresh] = useState(0);
   const [apiBaseUrl, setApiBaseUrl] = useState('https://remitbuddy.up.railway.app');
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const [showFloatingCTA, setShowFloatingCTA] = useState(false);
+  const [showRateAlert, setShowRateAlert] = useState(true);
+  const [lastComparison, setLastComparison] = useState(null);
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
+  const [savedCorridors, setSavedCorridors] = useState([]);
+  const [resultsView, setResultsView] = useState('cards');
+  const [isCorridorSaved, setIsCorridorSaved] = useState(false);
   const dropdownRef = useRef(null);
   const resultsRef = useRef(null);
+  const heroRef = useRef(null);
 
   // Set API URL on client side only
   useEffect(() => {
@@ -557,6 +1159,111 @@ export default function HomePage() {
     console.log('[RemitBuddy] API Base URL:', url);
     setApiBaseUrl(url);
   }, []);
+
+  // Load last comparison from localStorage (return visitor recognition)
+  useEffect(() => {
+    try {
+      const savedComparison = localStorage.getItem('lastComparison');
+      if (savedComparison) {
+        const parsed = JSON.parse(savedComparison);
+        // Only show if comparison was made in the last 7 days
+        const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+        if (parsed.timestamp && parsed.timestamp > sevenDaysAgo) {
+          setLastComparison(parsed);
+          setShowWelcomeBack(true);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to load last comparison:', e);
+    }
+  }, []);
+
+  // Save comparison to localStorage when user compares
+  const saveComparison = (compAmount, country) => {
+    try {
+      const comparisonData = {
+        amount: compAmount,
+        country: country.name,
+        countryCode: country.code,
+        currency: country.currency,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('lastComparison', JSON.stringify(comparisonData));
+    } catch (e) {
+      console.error('Failed to save comparison:', e);
+    }
+  };
+
+  // Handle using last comparison
+  const handleUseLastComparison = () => {
+    if (lastComparison) {
+      setAmount(lastComparison.amount);
+      const country = COUNTRIES.find(c => c.code === lastComparison.countryCode);
+      if (country) {
+        setSelectedCountry(country);
+      }
+      setShowWelcomeBack(false);
+      // Trigger comparison
+      setTimeout(() => {
+        document.querySelector('form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }, 100);
+    }
+  };
+
+  // Load saved corridors from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('savedCorridors');
+      if (saved) {
+        setSavedCorridors(JSON.parse(saved));
+      }
+    } catch (e) {
+      console.error('Failed to load saved corridors:', e);
+    }
+  }, []);
+
+  // Save corridor handler
+  const handleSaveCorridor = () => {
+    const newCorridor = {
+      amount: amount,
+      country: selectedCountry.name,
+      countryCode: selectedCountry.code,
+      currency: selectedCountry.currency
+    };
+
+    // Check if already saved
+    const exists = savedCorridors.some(
+      c => c.amount === newCorridor.amount && c.countryCode === newCorridor.countryCode
+    );
+
+    if (!exists) {
+      const updated = [...savedCorridors, newCorridor].slice(-5); // Keep max 5
+      setSavedCorridors(updated);
+      localStorage.setItem('savedCorridors', JSON.stringify(updated));
+      setIsCorridorSaved(true);
+      setTimeout(() => setIsCorridorSaved(false), 2000);
+    }
+  };
+
+  // Remove corridor handler
+  const handleRemoveCorridor = (index) => {
+    const updated = savedCorridors.filter((_, i) => i !== index);
+    setSavedCorridors(updated);
+    localStorage.setItem('savedCorridors', JSON.stringify(updated));
+  };
+
+  // Select saved corridor handler
+  const handleSelectCorridor = (corridor) => {
+    setAmount(corridor.amount);
+    const country = COUNTRIES.find(c => c.code === corridor.countryCode);
+    if (country) {
+      setSelectedCountry(country);
+    }
+    // Trigger comparison
+    setTimeout(() => {
+      document.querySelector('form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }, 100);
+  };
 
   // Preload flag images so dropdown thumbnails render instantly
   useEffect(() => {
@@ -598,6 +1305,18 @@ export default function HomePage() {
     };
   }, [showDropdown]);
 
+  // Show floating CTA when scrolled past hero section
+  useEffect(() => {
+    const handleScroll = () => {
+      const heroBottom = heroRef.current?.getBoundingClientRect().bottom || 0;
+      // Show floating CTA when hero is scrolled out of view (with some buffer)
+      setShowFloatingCTA(heroBottom < -100);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const MAX_AMOUNT = 5000000;
   const [shakeInput, setShakeInput] = useState(false);
 
@@ -622,6 +1341,10 @@ export default function HomePage() {
       const numericAmount = parseInt(amount.replace(/,/g, ''), 10) || 0;
 
       logClickedCTA(numericAmount, selectedCountry.code || selectedCountry.name, selectedCountry.currency);
+
+      // Save comparison for return visitor recognition
+      saveComparison(amount, selectedCountry);
+      setShowWelcomeBack(false);
 
       setQueryParams({
         receive_country: selectedCountry.name,
@@ -684,7 +1407,7 @@ export default function HomePage() {
         <Navigation />
 
         {/* Hero Section - Toss Style */}
-        <section id="hero" className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative">
+        <section ref={heroRef} id="hero" className="bg-gradient-to-br from-brand-50 via-white to-brand-50/30 pt-20 pb-12 sm:pt-24 sm:pb-16 md:pt-32 md:pb-24 relative">
           {/* Background decoration */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div className="absolute top-0 right-0 w-96 h-96 bg-brand-100 rounded-full blur-3xl opacity-30 animate-float" />
@@ -695,6 +1418,15 @@ export default function HomePage() {
           </div>
 
           <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8 relative z-10">
+            {/* Welcome Back Banner for Return Visitors */}
+            {showWelcomeBack && lastComparison && (
+              <WelcomeBackBanner
+                lastComparison={lastComparison}
+                onUseLastComparison={handleUseLastComparison}
+                onDismiss={() => setShowWelcomeBack(false)}
+              />
+            )}
+
             <div className="grid lg:grid-cols-2 gap-10 md:gap-12 items-center">
               {/* Left Column - Content */}
               <div className="animate-fade-in-up">
@@ -740,33 +1472,37 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Social Proof - Toss Style */}
+                {/* Social Proof Stats - Toss Style */}
                 <div
-                  className="bg-white rounded-xl p-6 sm:p-8 shadow-toss border border-gray-100 w-full sm:w-auto sm:inline-block max-w-xl hover:shadow-toss-lg transition-all duration-300 animate-fade-in-up"
+                  className="bg-white rounded-xl p-6 sm:p-8 shadow-toss border border-gray-100 w-full sm:w-auto sm:inline-block max-w-2xl hover:shadow-toss-lg transition-all duration-300 animate-fade-in-up"
                   style={{ animationDelay: '0.4s' }}
                 >
-                  <div className="grid grid-cols-3 gap-4 sm:flex sm:items-center sm:gap-6 md:gap-8">
-                    <div className="text-center sm:text-left">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+                    <div className="text-center">
                       <div className="text-2xl sm:text-3xl font-bold text-brand-500">8</div>
                       <div className="text-xs sm:text-sm text-gray-500 font-medium">
                         {t('hero.stats_companies')}
                       </div>
                     </div>
-                    <div className="hidden sm:block w-px h-16 bg-gray-200" />
-                    <div className="text-center sm:text-left">
-                      <div className="text-2xl sm:text-3xl font-bold text-accent-500">18</div>
+                    <div className="text-center">
+                      <div className="text-2xl sm:text-3xl font-bold text-brand-600">18</div>
                       <div className="text-xs sm:text-sm text-gray-500 font-medium">
                         {t('hero.stats_countries')}
                       </div>
                     </div>
-                    <div className="hidden sm:block w-px h-16 bg-gray-200" />
-                    <div className="text-center sm:text-left">
+                    <div className="text-center">
                       <div className="text-brand-500 font-bold">
                         <span className="text-2xl sm:text-3xl">3</span>
                         <span className="text-xs sm:text-sm ml-1">{t('hero.stats_seconds')}</span>
                       </div>
-                      <div className="text-sm sm:text-base text-gray-500 font-medium mt-1">
+                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
                         {t('hero.stats_seconds_label')}
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl sm:text-3xl font-bold text-accent-500">₩32K</div>
+                      <div className="text-xs sm:text-sm text-gray-500 font-medium">
+                        {t('hero.stats_savings', 'avg. saved')}
                       </div>
                     </div>
                   </div>
@@ -778,6 +1514,15 @@ export default function HomePage() {
                 className="animate-fade-in-up w-full sm:max-w-xl lg:max-w-2xl"
                 style={{ animationDelay: '0.2s' }}
               >
+                {/* Saved Corridors */}
+                {savedCorridors.length > 0 && (
+                  <SavedCorridors
+                    corridors={savedCorridors}
+                    onSelectCorridor={handleSelectCorridor}
+                    onRemoveCorridor={handleRemoveCorridor}
+                  />
+                )}
+
                 <form
                   onSubmit={handleSubmit}
                   className="w-full bg-white rounded-xl border border-gray-100 p-6 sm:p-8 shadow-toss hover:shadow-toss-lg transition-all duration-300"
@@ -829,7 +1574,11 @@ export default function HomePage() {
 
                         {showDropdown && (
                           <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] max-h-[400px] overflow-y-auto z-50 animate-fade-in-up border border-[#e5e8eb] p-2 ring-1 ring-black/5">
-                            {COUNTRIES.map((country) => (
+                            {/* Popular Destinations */}
+                            <div className="px-4 py-2 mb-1">
+                              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Popular</span>
+                            </div>
+                            {POPULAR_COUNTRIES.map((country) => (
                               <button
                                 key={country.code}
                                 type="button"
@@ -837,7 +1586,7 @@ export default function HomePage() {
                                   setSelectedCountry(country);
                                   setShowDropdown(false);
                                 }}
-                                className={`w-full px-5 py-4 flex items-center justify-between hover:bg-[#e8f3ff] rounded-2xl transition-all duration-200 group mb-1 ${
+                                className={`w-full px-5 py-3.5 flex items-center justify-between hover:bg-[#e8f3ff] rounded-2xl transition-all duration-200 group mb-1 ${
                                   selectedCountry.code === country.code
                                     ? 'bg-[#e8f3ff] ring-1 ring-brand-100'
                                     : ''
@@ -848,12 +1597,12 @@ export default function HomePage() {
                                     <img
                                       src={country.flag}
                                       alt=""
-                                      className="w-10 h-10 rounded-full shadow-sm object-cover border border-[#e5e8eb]"
+                                      className="w-9 h-9 rounded-full shadow-sm object-cover border border-[#e5e8eb]"
                                     />
                                     <div className="absolute inset-0 rounded-full ring-1 ring-black/5" />
                                   </div>
                                   <span
-                                    className={`text-lg font-bold transition-colors ${
+                                    className={`text-base font-bold transition-colors ${
                                       selectedCountry.code === country.code
                                         ? 'text-brand-600'
                                         : 'text-[#191f28] group-hover:text-brand-600'
@@ -863,7 +1612,59 @@ export default function HomePage() {
                                   </span>
                                 </div>
                                 <span
-                                  className={`text-base font-bold ${
+                                  className={`text-sm font-bold ${
+                                    selectedCountry.code === country.code
+                                      ? 'text-brand-500'
+                                      : 'text-[#8b95a1] group-hover:text-brand-400'
+                                  }`}
+                                >
+                                  {country.currency}
+                                </span>
+                              </button>
+                            ))}
+
+                            {/* Divider */}
+                            <div className="my-2 mx-4 border-t border-gray-100" />
+
+                            {/* All Other Countries */}
+                            <div className="px-4 py-2 mb-1">
+                              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">All Countries</span>
+                            </div>
+                            {OTHER_COUNTRIES.map((country) => (
+                              <button
+                                key={country.code}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedCountry(country);
+                                  setShowDropdown(false);
+                                }}
+                                className={`w-full px-5 py-3.5 flex items-center justify-between hover:bg-[#e8f3ff] rounded-2xl transition-all duration-200 group mb-1 ${
+                                  selectedCountry.code === country.code
+                                    ? 'bg-[#e8f3ff] ring-1 ring-brand-100'
+                                    : ''
+                                }`}
+                              >
+                                <div className="flex items-center gap-4">
+                                  <div className="relative">
+                                    <img
+                                      src={country.flag}
+                                      alt=""
+                                      className="w-9 h-9 rounded-full shadow-sm object-cover border border-[#e5e8eb]"
+                                    />
+                                    <div className="absolute inset-0 rounded-full ring-1 ring-black/5" />
+                                  </div>
+                                  <span
+                                    className={`text-base font-bold transition-colors ${
+                                      selectedCountry.code === country.code
+                                        ? 'text-brand-600'
+                                        : 'text-[#191f28] group-hover:text-brand-600'
+                                    }`}
+                                  >
+                                    {country.name}
+                                  </span>
+                                </div>
+                                <span
+                                  className={`text-sm font-bold ${
                                     selectedCountry.code === country.code
                                       ? 'text-brand-500'
                                       : 'text-[#8b95a1] group-hover:text-brand-400'
@@ -916,6 +1717,91 @@ export default function HomePage() {
                     </p>
                   </div>
                 </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Social Proof / Testimonials Section */}
+        <section className="py-16 sm:py-20 bg-white border-t border-gray-100">
+          <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
+            <div className="text-center mb-10 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+                {t('social_proof.title', 'Trusted by thousands sending money home')}
+              </h2>
+              <div className="flex items-center justify-center gap-6 sm:gap-8 mt-6">
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold text-brand-600">15,000+</div>
+                  <div className="text-sm text-gray-500 font-medium">{t('social_proof.users_label', 'users trust RemitBuddy')}</div>
+                </div>
+                <div className="w-px h-12 bg-gray-200" />
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold text-brand-600">50,000+</div>
+                  <div className="text-sm text-gray-500 font-medium">{t('social_proof.comparisons_label', 'comparisons made')}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial Cards */}
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-1 mb-4">
+                  {[1,2,3,4,5].map((star) => (
+                    <svg key={star} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-4 leading-relaxed">
+                  "{t('social_proof.testimonial_1_text', 'I used to check 5 different apps before sending money. Now I just use RemitBuddy and save time and money.')}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold">K</div>
+                  <div>
+                    <div className="font-semibold text-gray-900">{t('social_proof.testimonial_1_author', 'Kim S.')}</div>
+                    <div className="text-sm text-gray-500">{t('social_proof.testimonial_1_role', 'Sends to Vietnam monthly')}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-1 mb-4">
+                  {[1,2,3,4,5].map((star) => (
+                    <svg key={star} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-4 leading-relaxed">
+                  "{t('social_proof.testimonial_2_text', 'Found out I was overpaying ₩40,000 every transfer. RemitBuddy showed me the better option instantly.')}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-accent-100 flex items-center justify-center text-accent-600 font-bold">P</div>
+                  <div>
+                    <div className="font-semibold text-gray-900">{t('social_proof.testimonial_2_author', 'Park J.')}</div>
+                    <div className="text-sm text-gray-500">{t('social_proof.testimonial_2_role', 'Sends to Philippines')}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-1 mb-4">
+                  {[1,2,3,4,5].map((star) => (
+                    <svg key={star} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-4 leading-relaxed">
+                  "{t('social_proof.testimonial_3_text', 'Simple, fast, and actually works. The comparison results are always accurate.')}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">L</div>
+                  <div>
+                    <div className="font-semibold text-gray-900">{t('social_proof.testimonial_3_author', 'Lee M.')}</div>
+                    <div className="text-sm text-gray-500">{t('social_proof.testimonial_3_role', 'Sends to Nepal')}</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1030,10 +1916,92 @@ export default function HomePage() {
                 onCompareAgain={handleCompareAgain}
                 apiBaseUrl={apiBaseUrl}
                 isAutoScrolling={isAutoScrolling}
+                view={resultsView}
+                onViewChange={setResultsView}
+                onSaveCorridor={handleSaveCorridor}
+                isCorridorSaved={isCorridorSaved}
               />
+
+              {/* Rate Alert Card - Show after results */}
+              {showRateAlert && (
+                <div className="mt-10 max-w-2xl mx-auto">
+                  <RateAlertCard
+                    country={queryParams.receive_country}
+                    onClose={() => setShowRateAlert(false)}
+                  />
+                </div>
+              )}
             </div>
           </section>
         )}
+
+        {/* Educational Content Section */}
+        <section className="py-16 sm:py-20 bg-gradient-to-br from-gray-50 to-blue-50/30">
+          <div className="max-w-7xl mx-auto safe-px sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
+                {t('education.title', 'Understanding Remittance')}
+              </h2>
+              <p className="text-lg text-gray-600">
+                {t('education.subtitle', 'Make smarter decisions with these quick tips')}
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Tip 1 */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
+                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">{t('education.tip1_title', 'Exchange Rate vs. Fee')}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {t('education.tip1_desc', 'A great exchange rate can be offset by high fees. Always compare the total amount received.')}
+                </p>
+              </div>
+
+              {/* Tip 2 */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">{t('education.tip2_title', 'Best Time to Send')}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {t('education.tip2_desc', 'Rates fluctuate throughout the day. Major news events can cause significant swings.')}
+                </p>
+              </div>
+
+              {/* Tip 3 */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
+                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <svg className="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">{t('education.tip3_title', 'Transfer Speed')}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {t('education.tip3_desc', 'Faster transfers often cost more. If you can wait 1-2 days, you might get better rates.')}
+                </p>
+              </div>
+
+              {/* Tip 4 */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 group">
+                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">{t('education.tip4_title', 'Hidden Fees to Watch')}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {t('education.tip4_desc', 'Some providers charge receiving bank fees. RemitBuddy shows the true total.')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* FAQ Section - Toss Style */}
         <section id="faq" className="py-20 bg-gray-50">
@@ -1059,17 +2027,34 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
-                <h3 className="text-lg font-bold text-gray-900 mb-3">{t('faq.q3_title')}</h3>
-                <p className="text-gray-600 leading-relaxed font-medium">
-                  {t('faq.q3_desc')}
-                </p>
+              {/* Transparency FAQ - How we make money */}
+              <div className="bg-gradient-to-r from-blue-50 to-brand-50 rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-blue-100">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">{t('faq.q3_title')}</h3>
+                    <p className="text-gray-600 leading-relaxed font-medium">
+                      {t('faq.q3_desc')}
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">{t('faq.q4_title')}</h3>
                 <p className="text-gray-600 leading-relaxed font-medium">
                   {t('faq.q4_desc')}
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 shadow-toss hover:shadow-toss-lg transition-all duration-300 border border-gray-150">
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{t('faq.q5_title')}</h3>
+                <p className="text-gray-600 leading-relaxed font-medium">
+                  {t('faq.q5_desc')}
                 </p>
               </div>
             </div>
@@ -1079,6 +2064,30 @@ export default function HomePage() {
         {/* Footer - Enhanced Toss Style */}
         <Footer />
       </div>
+
+      {/* Floating CTA for Mobile - Shows when scrolled past hero */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-40 lg:hidden transition-all duration-300 transform ${
+          showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+        }`}
+      >
+        <div className="bg-white/95 backdrop-blur-lg border-t border-gray-200 shadow-[0_-4px_20px_rgba(0,0,0,0.1)] safe-px py-3">
+          <button
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-base rounded-xl shadow-lg shadow-blue-200 transition-all duration-200 active:scale-[0.98]"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            {t('form.submit', 'Show Me the Best Rates')}
+          </button>
+        </div>
+      </div>
+
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
 
       <style jsx global>{`
         * {

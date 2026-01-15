@@ -13,6 +13,7 @@ import ViewToggle from './ViewToggle';
 import SaveCorridorButton from './SaveCorridorButton';
 import ShareButton from './ShareButton';
 import ResultsSkeleton from './ResultsSkeleton';
+import { ClockIcon } from '../icons';
 
 /**
  * ComparisonResults Component

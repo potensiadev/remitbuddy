@@ -35,7 +35,6 @@ export default function ComparePage({ countryData, initialAmount, seoData }) {
   const router = useRouter();
 
   const [amount, setAmount] = useState(initialAmount);
-  const [resultsView, setResultsView] = useState('cards');
   const [savedCorridors, setSavedCorridors] = useState([]);
   const [isCorridorSaved, setIsCorridorSaved] = useState(false);
   const [apiBaseUrl, setApiBaseUrl] = useState('https://remitbuddy.up.railway.app');
@@ -118,9 +117,6 @@ export default function ComparePage({ countryData, initialAmount, seoData }) {
     receive_currency: countryData.currency
   };
 
-  // Quick amount options
-  const quickAmounts = ['500000', '1000000', '2000000', '3000000'];
-
   return (
     <>
       <Head>
@@ -193,69 +189,27 @@ export default function ComparePage({ countryData, initialAmount, seoData }) {
           </div>
         </div>
 
-        {/* Quick Amount Adjuster - Premium Sticky Header */}
+        {/* Sticky Header with Country Info */}
         <div className="bg-white border-b border-neutral-100 sticky top-0 z-30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              {/* Country Info */}
-              <div className="flex items-center gap-3">
-                <div className="relative group">
-                  <img
-                    src={countryData.flag}
-                    alt={countryData.name}
-                    className="
-                      w-11 h-11 sm:w-12 sm:h-12
-                      rounded-xl object-cover
-                      border-2 border-neutral-100
-                      shadow-sm
-                      transition-transform duration-200
-                      group-hover:scale-105
-                    "
-                  />
-                  <span className="
-                    absolute -bottom-1 -right-1
-                    px-1.5 py-0.5
-                    bg-primary-600 text-white
-                    text-[10px] font-bold
-                    rounded-md shadow-sm
-                  ">
-                    {countryData.currency}
-                  </span>
-                </div>
-                <div>
-                  <h1 className="text-lg sm:text-xl font-bold text-neutral-900 tracking-tight">
-                    {seoData.countryNameKo || countryData.name} {t('compare.title_suffix', '송금 비교')}
-                  </h1>
-                  <p className="text-sm text-neutral-500 font-medium">
-                    {t('compare.subtitle', '8개 송금사 실시간 비교')}
-                  </p>
-                </div>
-              </div>
-
-              {/* Amount Quick Select - Premium Pill Buttons */}
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-sm text-neutral-600 font-medium mr-1 hidden sm:inline">
-                  {t('compare.amount_label', '송금액')}:
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <img
+                  src={countryData.flag}
+                  alt={countryData.name}
+                  className="w-10 h-10 rounded-lg object-cover border border-neutral-200"
+                />
+                <span className="absolute -bottom-1 -right-1 px-1.5 py-0.5 bg-neutral-800 text-white text-[9px] font-bold rounded">
+                  {countryData.currency}
                 </span>
-                {quickAmounts.map((quickAmount) => (
-                  <button
-                    key={quickAmount}
-                    onClick={() => handleAmountChange(quickAmount)}
-                    className={`
-                      px-3 py-1.5 sm:px-4 sm:py-2
-                      rounded-xl text-sm font-semibold
-                      transition-all duration-200
-                      hover:-translate-y-0.5
-                      active:scale-95
-                      ${amount === quickAmount
-                        ? 'bg-primary-600 text-white shadow-primary'
-                        : 'bg-neutral-100 text-neutral-700 hover:bg-primary-50 hover:text-primary-600'
-                      }
-                    `}
-                  >
-                    ₩{parseInt(quickAmount).toLocaleString()}
-                  </button>
-                ))}
+              </div>
+              <div>
+                <h1 className="text-base sm:text-lg font-bold text-neutral-900">
+                  {countryData.name} {t('compare.title_suffix', 'Remittance Comparison')}
+                </h1>
+                <p className="text-xs text-neutral-500 font-medium">
+                  Transfer ₩{parseInt(amount).toLocaleString()}
+                </p>
               </div>
             </div>
           </div>
@@ -271,8 +225,6 @@ export default function ComparePage({ countryData, initialAmount, seoData }) {
               onCompareAgain={handleCompareAgain}
               apiBaseUrl={apiBaseUrl}
               isAutoScrolling={false}
-              view={resultsView}
-              onViewChange={setResultsView}
               onSaveCorridor={handleSaveCorridor}
               isCorridorSaved={isCorridorSaved}
               countryData={countryData}
@@ -284,7 +236,7 @@ export default function ComparePage({ countryData, initialAmount, seoData }) {
         <section className="py-10 sm:py-12 bg-neutral-50 border-t border-neutral-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-xl font-bold text-neutral-900 mb-6 tracking-tight">
-              {t('compare.other_countries', '다른 국가로 송금 비교하기')}
+              {t('compare.other_countries', 'Compare Remittance to Other Countries')}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
               {COUNTRIES.filter(c => c.code !== countryData.code).slice(0, 6).map((country, index) => (
@@ -343,7 +295,7 @@ export default function ComparePage({ countryData, initialAmount, seoData }) {
                   hover:-translate-y-0.5
                 "
               >
-                {t('compare.view_all_countries', '모든 국가 보기')}
+                {t('compare.view_all_countries', 'View All Countries')}
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
@@ -385,14 +337,14 @@ export async function getServerSideProps({ params, query, locale }) {
   }
 
   // Generate SEO metadata
-  const seoData = generateComparisonSEO(countryData, validAmount, locale || 'ko');
+  const seoData = generateComparisonSEO(countryData, validAmount);
 
   return {
     props: {
       countryData,
       initialAmount: validAmount.toString(),
       seoData,
-      ...(await serverSideTranslations(locale || 'ko', ['common']))
+      ...(await serverSideTranslations('en', ['common']))
     }
   };
 }

@@ -1,27 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
-import {
-  logClickedProvider,
-  logResultsImpression,
-  logResultsScroll
-} from '../../utils/analytics';
-
+import { logClickedProvider, logResultsImpression, logResultsScroll } from '../../utils/analytics';
+import { ClockIcon } from './Icons';
 import ProviderCard from './ProviderCard';
-import ResultsTable from './ResultsTable';
+import { SavedCorridors, SaveCorridorButton } from './SavedCorridors';
+import { ViewToggle, ResultsTable } from './ResultsTable';
 import RateChart from './RateChart';
-import ViewToggle from './ViewToggle';
-import SaveCorridorButton from './SaveCorridorButton';
-import ShareButton from './ShareButton';
-import ResultsSkeleton from './ResultsSkeleton';
-import { ClockIcon } from '../icons';
 
-/**
- * ComparisonResults Component
- *
- * Main comparison results display with API integration
- * Supports both card and table view modes
- */
-function ComparisonResults({
+export default function ComparisonResults({
   queryParams,
   amount,
   forceRefresh,
@@ -31,8 +17,7 @@ function ComparisonResults({
   view,
   onViewChange,
   onSaveCorridor,
-  isCorridorSaved,
-  countryData // New: passed from compare page for sharing
+  isCorridorSaved
 }) {
   const { t } = useTranslation('common');
 
@@ -175,7 +160,6 @@ function ComparisonResults({
 
   return (
     <div ref={resultsContainerRef} className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-      {/* Header Section */}
       <div className="mb-6 sm:mb-8 text-center space-y-3 sm:space-y-4">
         <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight break-words">
           {t('results.title', {
@@ -194,50 +178,40 @@ function ComparisonResults({
         {savings > 0 && (
           <div className="mt-2 sm:mt-4 inline-flex w-full sm:w-auto justify-center bg-gradient-to-r from-accent-50 to-accent-100 border border-accent-300 rounded-xl px-4 sm:px-6 py-3 sm:py-4 shadow-toss-sm">
             <p className="text-accent-700 text-sm sm:text-base font-bold leading-snug">
-              {t('results.savings_prefix', '가장 저렴하게 최대')}{' '}
+              {t('results.savings_prefix', 'Save up to')}{' '}
               <span className="text-xl sm:text-2xl font-bold text-accent-600">
                 {savings.toLocaleString()}
               </span>{' '}
               {queryParams.receive_currency}{' '}
-              {t('results.savings_suffix', '더 보낼 수 있어요!')}
+              {t('results.savings_suffix', 'more by choosing the best rate!')}
             </p>
           </div>
         )}
-
-        {/* Action Buttons Row */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
-          <button
-            onClick={onCompareAgain}
-            className="w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 bg-brand-50 hover:bg-brand-100 text-brand-600 rounded-2xl text-base sm:text-lg font-bold transition-all duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-95"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            {t('results.compare_again')}
-          </button>
-
-          {/* Share Button */}
-          {countryData && (
-            <ShareButton
-              country={countryData.name}
-              amount={amount}
-              currency={queryParams.receive_currency}
-              savings={savings}
-            />
-          )}
-        </div>
+        <button
+          onClick={onCompareAgain}
+          className="w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 bg-brand-50 hover:bg-brand-100 text-brand-600 rounded-2xl text-base sm:text-lg font-bold transition-all duration-200 flex items-center justify-center gap-2 mx-auto shadow-sm hover:shadow-md active:scale-95"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          {t('results.compare_again')}
+        </button>
       </div>
 
-      {/* Loading State - Using ResultsSkeleton */}
       {isLoading && (
-        <ResultsSkeleton
-          count={4}
-          view={view}
-          showHeader={false}
-        />
+        <div className="text-center py-12 sm:py-16 w-full px-4 sm:px-6">
+          <div className="inline-block relative mb-6">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 border-4 border-brand-200 border-t-brand-500 rounded-full animate-spin"></div>
+          </div>
+          <p className="text-gray-900 text-base sm:text-lg font-bold mb-2">
+            {t('results.loading_title')}
+          </p>
+          <p className="text-gray-600 text-sm font-medium">
+            {t('results.loading_sub')}
+          </p>
+        </div>
       )}
 
-      {/* Error State */}
       {error && (
         <div className="bg-gradient-to-br from-red-50 to-pink-50 border-2 border-red-200 rounded-3xl p-6 sm:p-8 text-center w-full">
           <div className="text-4xl sm:text-5xl mb-4">😔</div>
@@ -255,10 +229,8 @@ function ComparisonResults({
         </div>
       )}
 
-      {/* Results */}
       {!isLoading && !error && results.length > 0 && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-          {/* Results Header with View Toggle and Actions */}
           <div className="flex flex-col gap-4 mb-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <p className="text-gray-600 font-medium text-base sm:text-lg">
@@ -270,7 +242,6 @@ function ComparisonResults({
               <ViewToggle view={view} onViewChange={onViewChange} />
             </div>
 
-            {/* Actions Row */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <SaveCorridorButton
                 amount={amount}
@@ -289,7 +260,6 @@ function ComparisonResults({
             </div>
           </div>
 
-          {/* Rate Chart */}
           {bestProvider && (
             <div className="mb-6">
               <RateChart
@@ -299,7 +269,6 @@ function ComparisonResults({
             </div>
           )}
 
-          {/* Results - Card or Table View */}
           {view === 'table' ? (
             <ResultsTable
               results={results}
@@ -327,5 +296,3 @@ function ComparisonResults({
     </div>
   );
 }
-
-export default ComparisonResults;

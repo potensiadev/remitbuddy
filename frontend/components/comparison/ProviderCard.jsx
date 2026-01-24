@@ -1,33 +1,14 @@
+import React from 'react';
 import { useTranslation } from 'next-i18next';
-import { PROVIDER_LOGO_MAP, normalizeProviderName } from '../../lib/constants';
-import Badge, { BestRateBadge, FastBadge } from '../ui/Badge';
+import { PROVIDER_LOGO_MAP } from '../../lib/constants';
+import { SparklesIcon } from './Icons';
 
-const SparklesIcon = ({ className = "w-5 h-5" }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-    />
-  </svg>
-);
-
-const ClockIcon = ({ className = "w-4 h-4" }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-
-/**
- * ProviderCard Component - Premium Design System
- *
- * Displays individual remittance provider comparison card
- */
 const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, worstAmount }) => {
   const { t } = useTranslation('common');
 
-  const displayName = normalizeProviderName(provider.provider);
+  const displayName =
+    provider.provider === 'JP Remit' ? 'JRF' : provider.provider === 'The Moin' ? 'Moin' : provider.provider;
+
   const formattedFeeInKRW = provider.fee.toLocaleString('en-US');
 
   const rateValue = provider.exchange_rate;
@@ -86,9 +67,8 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
             <div>
               <span className="text-base sm:text-lg font-bold text-neutral-900">{displayName}</span>
               <span
-                className={`ml-2 inline-flex items-center rounded-full text-xs font-bold px-2.5 py-0.5 ${
-                  isBest ? 'bg-accent-100 text-accent-700' : 'bg-neutral-100 text-neutral-500'
-                }`}
+                className={`ml-2 inline-flex items-center rounded-full text-xs font-bold px-2.5 py-0.5 ${isBest ? 'bg-accent-100 text-accent-700' : 'bg-neutral-100 text-neutral-500'
+                  }`}
               >
                 #{index + 1}
               </span>
@@ -98,20 +78,18 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
 
         {/* HERO METRIC - Amount Received */}
         <div
-          className={`rounded-xl px-5 py-5 sm:px-6 sm:py-6 mb-5 text-center ${
-            isBest
+          className={`rounded-xl px-5 py-5 sm:px-6 sm:py-6 mb-5 text-center ${isBest
               ? 'bg-gradient-to-br from-accent-50 to-accent-100/50 border border-accent-200'
               : 'bg-neutral-50 border border-neutral-100'
-          }`}
+            }`}
         >
           <div className="text-xs sm:text-sm font-bold text-neutral-500 mb-2 uppercase tracking-wider">
             {t('provider.recipient_gets', 'Recipient Gets')}
           </div>
           <div className="flex items-baseline justify-center gap-2">
             <span
-              className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight font-money ${
-                isBest ? 'text-accent-600' : 'text-neutral-900'
-              }`}
+              className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight font-money ${isBest ? 'text-accent-600' : 'text-neutral-900'
+                }`}
             >
               {provider.recipient_gets.toLocaleString('en-US', {
                 minimumFractionDigits: 0,
@@ -127,11 +105,10 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
           <div className="mt-4">
             <div className="h-2.5 bg-neutral-200 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all duration-700 ease-out ${
-                  isBest
+                className={`h-full rounded-full transition-all duration-700 ease-out ${isBest
                     ? 'bg-gradient-to-r from-accent-500 via-accent-400 to-accent-500'
                     : 'bg-gradient-to-r from-neutral-400 to-neutral-300'
-                }`}
+                  }`}
                 style={{ width: `${barPercentage}%` }}
               />
             </div>
@@ -154,40 +131,24 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
           </div>
         </div>
 
-        {/* Secondary Info - Rate, Fee & Delivery Time */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-sm text-neutral-500 mb-5 py-3 px-2 bg-neutral-50/50 rounded-xl">
-          {/* Exchange Rate */}
+        {/* Secondary Info - Rate & Fee */}
+        <div className="flex items-center justify-center gap-4 sm:gap-6 text-sm text-neutral-500 mb-5 py-2">
           <div className="flex items-center gap-1.5">
-            <span className="font-medium text-xs sm:text-sm">{t('provider.exchange_rate', 'Rate')}:</span>
+            <span className="font-medium">{t('provider.exchange_rate', 'Rate')}:</span>
             <span className="font-bold text-neutral-700">{formattedRate}</span>
             {isBest && (
-              <Badge variant="success" size="sm">Best</Badge>
+              <span className="inline-flex items-center gap-0.5 text-xs font-bold text-accent-600 bg-accent-50 px-2 py-0.5 rounded-full">
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+                Best
+              </span>
             )}
           </div>
-
-          <div className="hidden sm:block w-px h-4 bg-neutral-200" />
-
-          {/* Fee */}
+          <div className="w-px h-4 bg-neutral-200" />
           <div className="flex items-center gap-1.5">
-            <span className="font-medium text-xs sm:text-sm">{t('provider.fee', 'Fee')}:</span>
+            <span className="font-medium">{t('provider.fee', 'Fee')}:</span>
             <span className="font-bold text-neutral-700">₩{formattedFeeInKRW}</span>
-            {provider.fee === 0 && (
-              <Badge variant="success" size="sm">Free</Badge>
-            )}
-          </div>
-
-          <div className="hidden sm:block w-px h-4 bg-neutral-200" />
-
-          {/* Delivery Time */}
-          <div className="flex items-center gap-1.5">
-            <ClockIcon className="w-3.5 h-3.5 text-neutral-400" />
-            <span className="font-medium text-xs sm:text-sm">{t('provider.delivery', 'Time')}:</span>
-            <span className="font-bold text-neutral-700">
-              {provider.delivery_time || (provider.provider?.toLowerCase().includes('wise') ? '~1min' : '~30min')}
-            </span>
-            {(provider.delivery_time === 'instant' || provider.provider?.toLowerCase().includes('wise')) && (
-              <FastBadge />
-            )}
           </div>
         </div>
 
@@ -197,11 +158,10 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
           target="_blank"
           rel="noopener noreferrer"
           onClick={onProviderClick}
-          className={`flex w-full items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] ${
-            isBest
+          className={`flex w-full items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-xl font-bold text-base transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98] ${isBest
               ? 'bg-gradient-to-r from-accent-500 to-accent-600 text-white hover:from-accent-600 hover:to-accent-700 shadow-accent hover:shadow-accent-lg'
               : 'bg-gradient-to-r from-neutral-800 to-neutral-900 text-white hover:from-neutral-900 hover:to-black shadow-lg hover:shadow-xl'
-          }`}
+            }`}
         >
           {t('provider.cta', 'Send with {{provider}}').replace('{{provider}}', displayName)}
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

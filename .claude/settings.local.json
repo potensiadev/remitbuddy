@@ -48,7 +48,17 @@
       "Bash(pnpm dev)",
       "Skill(artifacts-builder)",
       "Bash(do python -c \"import json; json.load\\(open\\(''$f'', encoding=''utf-8''\\)\\)\")",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Skill(example-skills:frontend-design)",
+      "Bash(cd:*)",
+      "Bash(dir:*)",
+      "Bash(timeout /t 10 /nobreak)",
+      "Bash(ping:*)",
+      "Bash(powershell -Command \"Remove-Item -Recurse -Force ''D:\\\\remitbuddy\\\\frontend\\\\.next'' -ErrorAction SilentlyContinue; cd ''D:\\\\remitbuddy\\\\frontend''; npm run dev\")",
+      "Bash(powershell -Command \"cd D:\\\\remitbuddy\\\\frontend; npm run build\")",
+      "Bash(powershell -Command:*)",
+      "Bash(cat:*)",
+      "Bash(more:*)"
     ],
     "deny": []
   }

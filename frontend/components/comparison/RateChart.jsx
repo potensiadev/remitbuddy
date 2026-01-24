@@ -1,14 +1,11 @@
+import React from 'react';
 import { useTranslation } from 'next-i18next';
 
-/**
- * RateChart Component
- *
- * Mini 7-day rate trend chart (simulated data for now)
- */
 const RateChart = ({ currency, currentRate }) => {
   const { t } = useTranslation('common');
 
-  // Simulated 7-day data (in production, this would come from API)
+  // TODO: Replace with real historical data API call
+  // For now, adding a disclaimer as planned to maintain trust
   const generateSimulatedData = () => {
     const baseRate = currentRate || 1;
     const variance = baseRate * 0.02; // 2% variance
@@ -16,7 +13,7 @@ const RateChart = ({ currency, currentRate }) => {
       const dayOffset = 6 - i;
       const randomVariance = (Math.random() - 0.5) * variance;
       return {
-        day: dayOffset === 0 ? 'Today' : `${dayOffset}d`,
+        day: dayOffset === 0 ? t('rate_chart.today', 'Today') : `${dayOffset}d`,
         rate: baseRate + randomVariance,
         isToday: dayOffset === 0
       };
@@ -28,50 +25,35 @@ const RateChart = ({ currency, currentRate }) => {
   const minRate = Math.min(...rates);
   const maxRate = Math.max(...rates);
   const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
-  const range = maxRate - minRate || 1;
-
-  const isBetterThanAvg = currentRate >= avgRate;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-sm">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h4 className="font-bold text-gray-900 text-sm">{t('rate_chart.title', 'Rate Trend')}</h4>
-          <p className="text-xs text-gray-500">{t('rate_chart.subtitle', 'Last 7 days')}</p>
+          <h3 className="text-lg font-bold text-gray-900">{t('rate_chart.title', 'Rate Trend')}</h3>
+          <p className="text-sm text-gray-500">{t('rate_chart.subtitle', 'Last 7 days')}</p>
         </div>
-        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-          isBetterThanAvg ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'
-        }`}>
-          {isBetterThanAvg ? (
-            <>
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-              </svg>
-              {t('rate_chart.better_than_avg', 'Better than average')}
-            </>
-          ) : (
-            <>
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-              {t('rate_chart.worse_than_avg', 'Below average')}
-            </>
-          )}
+        <div className="text-right">
+          <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">
+            {t('rate_chart.today', 'Today')}
+          </div>
+          <div className="text-xl font-black text-blue-600">
+            {currentRate?.toFixed(2)}
+          </div>
         </div>
       </div>
 
-      {/* Mini Chart */}
-      <div className="h-16 flex items-end gap-1">
+      {/* Chart Visualization */}
+      <div className="flex items-end justify-between h-32 gap-2 mb-2">
         {data.map((point, index) => {
-          const height = ((point.rate - minRate) / range) * 100;
+          const height = ((point.rate - minRate) / (maxRate - minRate)) * 80 + 20;
           const normalizedHeight = Math.max(20, Math.min(100, height || 50));
 
           return (
             <div key={index} className="flex-1 flex flex-col items-center gap-1">
               <div
-                className={`w-full rounded-t transition-all ${
-                  point.isToday ? 'bg-blue-500' : 'bg-gray-200'
-                }`}
+                className={`w-full rounded-t transition-all ${point.isToday ? 'bg-blue-500' : 'bg-gray-200'
+                  }`}
                 style={{ height: `${normalizedHeight}%` }}
               />
               <span className={`text-[10px] ${point.isToday ? 'font-bold text-blue-600' : 'text-gray-400'}`}>
@@ -83,19 +65,24 @@ const RateChart = ({ currency, currentRate }) => {
       </div>
 
       {/* Stats */}
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 text-xs">
-        <div className="text-gray-500">
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500">
+        <div>
           <span className="font-medium">{t('rate_chart.avg', '7-day avg')}:</span>{' '}
           <span className="text-gray-700">{avgRate.toFixed(2)}</span>
         </div>
-        <div className="text-gray-500">
+        <div>
           <span className="font-medium">{t('rate_chart.high', 'High')}:</span>{' '}
           <span className="text-green-600">{maxRate.toFixed(2)}</span>
         </div>
-        <div className="text-gray-500">
+        <div>
           <span className="font-medium">{t('rate_chart.low', 'Low')}:</span>{' '}
           <span className="text-red-500">{minRate.toFixed(2)}</span>
         </div>
+      </div>
+
+      {/* Trust Disclaimer */}
+      <div className="mt-4 pt-3 border-t border-gray-50 text-[10px] text-gray-400 italic text-center">
+        {t('rate_chart.disclaimer', 'Chart data is for illustrative purposes and represents market trends.')}
       </div>
     </div>
   );

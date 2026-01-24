@@ -5,18 +5,7 @@ import { useTranslation } from 'next-i18next';
 /**
  * ShareButton Component
  *
- * Enhanced share functionality with multiple methods:
- * - Clipboard copy with toast notification
- * - Native share API (mobile)
- * - Kakao Talk (Korean market essential)
- *
- * @param {string} url - Share URL (optional, defaults to current URL)
- * @param {string} title - Share title
- * @param {string} description - Share description
- * @param {string} country - Country name (legacy prop)
- * @param {number} amount - Amount (legacy prop)
- * @param {string} currency - Currency code (legacy prop)
- * @param {number} savings - Savings amount (legacy prop)
+ * Share functionality with clipboard copy and native share API
  */
 const ShareButton = ({
   url,
@@ -26,7 +15,7 @@ const ShareButton = ({
   amount,
   currency,
   savings,
-  variant = 'default', // default, compact, minimal
+  variant = 'default',
   className = '',
 }) => {
   const { t } = useTranslation('common');
@@ -35,7 +24,7 @@ const ShareButton = ({
   const [showToast, setShowToast] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Generate share URL (support both new and legacy props)
+  // Generate share URL
   const shareUrl = url || (typeof window !== 'undefined'
     ? country
       ? `${window.location.origin}/compare/${country.toLowerCase()}?amount=${amount}`
@@ -43,14 +32,14 @@ const ShareButton = ({
     : '');
 
   // Generate share title
-  const shareTitle = title || 'RemitBuddy - 송금 비교 결과';
+  const shareTitle = title || 'RemitBuddy - Comparison Results';
 
   // Generate share text/description
   const shareText = description || (savings > 0
-    ? t('share.text_with_savings', `${country}으로 ${parseInt(amount).toLocaleString()}원 송금 비교 결과! 최대 ${savings?.toLocaleString()}원 절약 가능 🎉`)
+    ? t('share.text_with_savings', `Transfer to ${country} with ${parseInt(amount).toLocaleString()} KRW! Save up to ${savings?.toLocaleString()} KRW`)
     : country
-      ? t('share.text', `${country}으로 ${parseInt(amount).toLocaleString()}원 송금 비교 결과를 확인해보세요!`)
-      : '송금 비교 결과를 확인해보세요!');
+      ? t('share.text', `Check out the transfer comparison results for ${country} with ${parseInt(amount).toLocaleString()} KRW!`)
+      : 'Check out the transfer comparison results!');
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -118,59 +107,13 @@ const ShareButton = ({
     setShowDropdown(false);
   };
 
-  // Kakao Talk share
-  const handleKakaoShare = () => {
-    if (typeof window !== 'undefined' && window.Kakao) {
-      if (!window.Kakao.isInitialized()) {
-        // Initialize with your Kakao app key (set in _app.js or env)
-        // window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_APP_KEY);
-      }
-
-      window.Kakao.Share.sendDefault({
-        objectType: 'feed',
-        content: {
-          title: shareTitle,
-          description: shareText,
-          imageUrl: 'https://www.remitbuddy.com/og-image.png',
-          link: {
-            mobileWebUrl: shareUrl,
-            webUrl: shareUrl
-          }
-        },
-        buttons: [
-          {
-            title: '비교 결과 보기',
-            link: {
-              mobileWebUrl: shareUrl,
-              webUrl: shareUrl
-            }
-          }
-        ]
-      });
-
-      // Analytics tracking
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'share', {
-          method: 'kakao',
-          content_type: 'comparison_result',
-          item_id: country ? `${country.toLowerCase()}_${amount}` : 'comparison'
-        });
-      }
-    } else {
-      // Fallback: open Kakao story
-      const kakaoUrl = `https://story.kakao.com/share?url=${encodeURIComponent(shareUrl)}`;
-      window.open(kakaoUrl, '_blank', 'width=600,height=400');
-    }
-    setShowDropdown(false);
-  };
-
   // Check if native share is available
   const canNativeShare = typeof navigator !== 'undefined' && navigator.share;
 
   // Button variants
   const buttonVariants = {
-    default: 'px-4 py-2.5 bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 hover:border-brand-300 shadow-sm',
-    compact: 'px-3 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700',
+    default: 'px-4 py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 border border-neutral-200',
+    compact: 'px-3 py-2.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700',
     minimal: 'px-2 py-2 hover:bg-neutral-100 text-neutral-600',
   };
 
@@ -180,7 +123,7 @@ const ShareButton = ({
       <button
         onClick={() => setShowDropdown(!showDropdown)}
         className={`inline-flex items-center gap-2 rounded-xl text-sm font-semibold transition-all ${buttonVariants[variant]}`}
-        aria-label="공유하기"
+        aria-label="Share"
         aria-expanded={showDropdown}
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,7 +131,7 @@ const ShareButton = ({
         </svg>
         {variant !== 'minimal' && (
           <>
-            <span>{t('share.button', '공유하기')}</span>
+            <span>{t('share.button', 'Share')}</span>
             <svg
               className={`w-3.5 h-3.5 transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`}
               fill="none"
@@ -204,7 +147,7 @@ const ShareButton = ({
       {/* Dropdown Menu */}
       {showDropdown && (
         <>
-          {/* Backdrop (mobile touch-friendly) */}
+          {/* Backdrop */}
           <div
             className="fixed inset-0 z-40 bg-black/5 sm:bg-transparent"
             onClick={() => setShowDropdown(false)}
@@ -213,13 +156,12 @@ const ShareButton = ({
 
           {/* Menu */}
           <div
-            className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-neutral-200 z-50 overflow-hidden animate-scale-in origin-top-right"
+            className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-neutral-200 z-50 overflow-hidden animate-scale-in origin-top-right"
             role="menu"
           >
             {/* Header */}
             <div className="px-4 py-3 bg-neutral-50 border-b border-neutral-100">
-              <p className="text-sm font-semibold text-neutral-900">공유하기</p>
-              <p className="text-xs text-neutral-500 mt-0.5 truncate">{shareUrl}</p>
+              <p className="text-sm font-semibold text-neutral-900">Share</p>
             </div>
 
             {/* Copy Link */}
@@ -228,50 +170,26 @@ const ShareButton = ({
               className="w-full px-4 py-3 flex items-center gap-3 hover:bg-neutral-50 transition-colors text-left group"
               role="menuitem"
             >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-                copied ? 'bg-success-100' : 'bg-neutral-100 group-hover:bg-neutral-200'
-              }`}>
+              <div className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${copied ? 'bg-emerald-100' : 'bg-neutral-100 group-hover:bg-neutral-200'
+                }`}>
                 {copied ? (
-                  <svg className="w-5 h-5 text-success-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 ) : (
-                  <svg className="w-5 h-5 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                   </svg>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <span className={`font-medium block ${copied ? 'text-success-600' : 'text-neutral-900'}`}>
-                  {copied ? t('share.copied', '복사됨!') : t('share.copy_link', '링크 복사')}
+                <span className={`font-medium block text-sm ${copied ? 'text-emerald-600' : 'text-neutral-900'}`}>
+                  {copied ? t('share.copied', 'Copied!') : t('share.copy_link', 'Copy Link')}
                 </span>
                 <span className="text-xs text-neutral-500">
-                  {copied ? '클립보드에 저장되었습니다' : t('share.copy_link_desc', '클립보드에 복사')}
+                  {copied ? 'Saved to clipboard' : 'Copy to clipboard'}
                 </span>
               </div>
-            </button>
-
-            {/* Divider */}
-            <div className="h-px bg-neutral-100 mx-4" />
-
-            {/* Kakao Talk */}
-            <button
-              onClick={handleKakaoShare}
-              className="w-full px-4 py-3 flex items-center gap-3 hover:bg-neutral-50 transition-colors text-left group"
-              role="menuitem"
-            >
-              <div className="w-10 h-10 rounded-xl bg-[#FEE500] flex items-center justify-center">
-                <svg className="w-5 h-5 text-[#391B1B]" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.86 5.25 4.64 6.69-.2.75-.73 2.71-.84 3.13-.13.52.19.51.4.37.17-.11 2.61-1.77 3.67-2.48.7.1 1.42.15 2.13.15 5.52 0 10-3.58 10-8 0-4.42-4.48-8-10-8z"/>
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0">
-                <span className="font-medium text-neutral-900 block">{t('share.kakao', '카카오톡 공유')}</span>
-                <span className="text-xs text-neutral-500">{t('share.kakao_desc', '친구에게 바로 전송')}</span>
-              </div>
-              <svg className="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
             </button>
 
             {/* Native Share (Mobile) */}
@@ -281,16 +199,16 @@ const ShareButton = ({
                 className="w-full px-4 py-3 flex items-center gap-3 hover:bg-neutral-50 transition-colors text-left group border-t border-neutral-100"
                 role="menuitem"
               >
-                <div className="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="w-9 h-9 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                   </svg>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="font-medium text-neutral-900 block">{t('share.native', '다른 앱으로 공유')}</span>
-                  <span className="text-xs text-neutral-500">{t('share.native_desc', '메시지, 이메일 등')}</span>
+                  <span className="font-medium text-neutral-900 block text-sm">{t('share.native', 'Share via other apps')}</span>
+                  <span className="text-xs text-neutral-500">Message, Email, etc.</span>
                 </div>
-                <svg className="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
@@ -303,10 +221,10 @@ const ShareButton = ({
       {showToast && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] animate-slide-up">
           <div className="flex items-center gap-2 px-4 py-3 bg-neutral-900 text-white rounded-xl shadow-lg">
-            <svg className="w-5 h-5 text-success-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span className="text-sm font-medium">링크가 클립보드에 복사되었습니다</span>
+            <span className="text-sm font-medium">Link copied to clipboard</span>
           </div>
         </div>
       )}

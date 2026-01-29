@@ -189,34 +189,10 @@ export default function ComparePage({ countryData, initialAmount, seoData }) {
           </div>
         </div>
 
-        {/* Sticky Header with Country Info */}
-        <div className="bg-white border-b border-neutral-100 sticky top-0 z-30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <img
-                  src={countryData.flag}
-                  alt={countryData.name}
-                  className="w-10 h-10 rounded-lg object-cover border border-neutral-200"
-                />
-                <span className="absolute -bottom-1 -right-1 px-1.5 py-0.5 bg-neutral-800 text-white text-[9px] font-bold rounded">
-                  {countryData.currency}
-                </span>
-              </div>
-              <div>
-                <h1 className="text-base sm:text-lg font-bold text-neutral-900">
-                  {countryData.name} {t('compare.title_suffix', 'Remittance Comparison')}
-                </h1>
-                <p className="text-xs text-neutral-500 font-medium">
-                  Transfer ₩{parseInt(amount).toLocaleString()}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+
 
         {/* Main Results Section */}
-        <section className="py-6 sm:py-8 lg:py-10">
+        <section className="pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ComparisonResults
               queryParams={queryParams}

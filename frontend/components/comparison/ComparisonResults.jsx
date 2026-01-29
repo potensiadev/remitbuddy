@@ -160,36 +160,57 @@ export default function ComparisonResults({
 
   return (
     <div ref={resultsContainerRef} className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-      <div className="mb-8 space-y-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
-          {t('results.title', {
-            amount: formattedAmount,
-            country: queryParams.receive_country
-          })}
-        </h2>
+      {!isLoading && !error && results.length > 0 && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <p className="text-gray-900 font-bold text-lg">
+            {results.length} Providers Found
+          </p>
 
-        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-          {snapshotTime && (
-            <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1 rounded-full">
-              <ClockIcon />
-              <span>{t('results.snapshot', { time: snapshotTime.split(' ')[1] })}</span>
-            </div>
-          )}
-          {savings > 0 && (
-            <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 font-medium">
-              <span>Save {savings.toLocaleString()} {queryParams.receive_currency}</span>
-            </div>
-          )}
+          <div className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+            {t('results.ranking_explanation', 'Ranked by Recipient Gets')}
+          </div>
+        </div>
+      )}
+
+      {/* Ultra-Compact Summary Bar */}
+      <div className="order-2 md:order-1 mb-4 md:mb-8 bg-gray-50/50 rounded-xl border border-gray-100 p-3 flex items-center justify-between gap-3">
+
+        {/* Left: Info Group */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 overflow-hidden">
+          {/* Amount Display */}
+          <div className="flex items-baseline gap-1.5 flex-shrink-0">
+            <span className="text-gray-500 text-xs font-bold uppercase tracking-wider hidden sm:block">Sending</span>
+            <span className="text-gray-900 text-lg sm:text-xl font-black">{formattedAmount}</span>
+            <span className="text-gray-500 text-xs sm:text-sm font-bold">KRW</span>
+            <span className="text-gray-400 text-xs sm:text-sm font-medium">to {queryParams.receive_country}</span>
+          </div>
+
+          {/* Mini Badges (Scrollable if needed, or hidden on very small screens) */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+            {savings > 0 && (
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-100/80 text-emerald-700 text-[10px] sm:text-xs font-bold whitespace-nowrap">
+                Save {savings.toLocaleString()} {queryParams.receive_currency}
+              </span>
+            )}
+            {snapshotTime && (
+              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-gray-400 whitespace-nowrap">
+                <ClockIcon className="w-3 h-3" />
+                {snapshotTime.split(' ')[1]}
+              </span>
+            )}
+          </div>
         </div>
 
+        {/* Right: Minimal Action Button */}
         <button
           onClick={onCompareAgain}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors -ml-3"
+          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-400 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all active:scale-95"
+          aria-label="Change Amount"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          {t('results.compare_again')}
         </button>
       </div>
 
@@ -226,17 +247,6 @@ export default function ComparisonResults({
 
       {!isLoading && !error && results.length > 0 && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-gray-100 pb-4">
-            <p className="text-gray-900 font-bold text-lg">
-              {results.length} Providers Found
-            </p>
-
-            <div className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500">
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-              {t('results.ranking_explanation', 'Ranked by Recipient Gets')}
-            </div>
-          </div>
-
           {/* RateChart removed */}
 
           {view === 'table' ? (

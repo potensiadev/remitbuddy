@@ -111,86 +111,86 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay (Full Screen Premium) */}
       <div
-        className={`lg:hidden fixed inset-0 z-50 transition-all duration-300 ${isMenuOpen
+        className={`lg:hidden fixed inset-0 z-50 transition-all duration-500 ${isMenuOpen
           ? 'opacity-100 visible'
           : 'opacity-0 invisible pointer-events-none'
           }`}
       >
-        {/* Backdrop */}
-        <div
-          className={`absolute inset-0 bg-black transition-opacity duration-300 ${isMenuOpen ? 'opacity-50' : 'opacity-0'
-            }`}
-          onClick={() => setIsMenuOpen(false)}
-        ></div>
+        {/* Immersive Background */}
+        <div className="absolute inset-0 bg-white/95 backdrop-blur-3xl" />
 
-        {/* Menu Panel */}
-        <div
-          className={`absolute top-0 right-0 bottom-0 w-full max-w-sm bg-white shadow-2xl transition-transform duration-300 transform ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-            }`}
-        >
-          {/* Menu Header */}
-          <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 safe-top">
-            <span className="text-xl font-bold text-gray-900">{t('nav.menu')}</span>
+        <div className="relative h-full flex flex-col p-6 safe-top safe-bottom">
+          {/* Header with Close Button */}
+          <div className="flex items-center justify-between mb-8">
+            <span className="text-2xl font-bold text-gray-900">{t('nav.brand')}</span>
             <button
               onClick={() => setIsMenuOpen(false)}
-              className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center"
+              className="w-12 h-12 rounded-full bg-gray-100 hover:bg-gray-200 transition-all duration-200 flex items-center justify-center focus:outline-none active:scale-95"
               aria-label={t('nav.close')}
             >
-              <svg
-                className="w-5 h-5 text-gray-700"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="w-6 h-6 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
 
-          {/* Menu Content */}
-          <div className="overflow-y-auto h-full px-6 pb-24 safe-bottom">
-            <div className="py-6 space-y-8">
-              {Object.entries(menuItems).map(([key, section]) => (
-                <div key={key}>
-                  {/* Section Title */}
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 pl-2">
-                    {section.title}
-                  </h3>
-
-                  {/* Section Links */}
-                  <div className="space-y-1">
-                    {section.links.map((link, linkIndex) => (
-                      <a
-                        key={linkIndex}
-                        href={link.href}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleLinkClick(link.href);
-                        }}
-                        className="block px-4 py-3 text-lg font-semibold text-gray-800 hover:bg-gray-50 hover:text-primary-600 rounded-xl transition-all duration-200"
-                      >
-                        {link.label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ))}
-
-              {/* Added FAQ Link specifically if it's separate, but it's in service menu already */}
-
-              <div className="pt-6 border-t border-gray-100">
-                <p className="px-2 text-xs text-gray-400 font-medium">
-                  Need help? <a href="mailto:support@remitbuddy.com" className="text-primary-600">Contact Support</a>
-                </p>
+          {/* Card-style Navigation Links */}
+          <div className="flex-1 overflow-y-auto space-y-4">
+            <a
+              href="#hero"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('#hero'); }}
+              className="flex items-start gap-4 p-5 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 active:scale-[0.98] transition-all duration-200 group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
               </div>
-            </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{t('nav.service_intro')}</h3>
+                <p className="text-sm font-medium text-gray-500">Find the best rates instantly</p>
+              </div>
+            </a>
+
+            <a
+              href="#how-it-works"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('#how-it-works'); }}
+              className="flex items-start gap-4 p-5 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 active:scale-[0.98] transition-all duration-200 group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-200">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{t('nav.service_how')}</h3>
+                <p className="text-sm font-medium text-gray-500">Simple 3-step process</p>
+              </div>
+            </a>
+
+            <a
+              href="#faq"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('#faq'); }}
+              className="flex items-start gap-4 p-5 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 active:scale-[0.98] transition-all duration-200 group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-600 group-hover:text-white transition-colors duration-200">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{t('nav.service_faq')}</h3>
+                <p className="text-sm font-medium text-gray-500">Frequently asked questions</p>
+              </div>
+            </a>
+          </div>
+
+          {/* Bottom Actions */}
+          <div className="mt-8 pt-8 border-t border-gray-100">
+            {/* You can add language switcher or other actions here later */}
+            <p className="text-center text-sm font-medium text-gray-400">© 2024 RemitBuddy</p>
           </div>
         </div>
       </div>

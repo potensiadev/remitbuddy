@@ -160,38 +160,33 @@ export default function ComparisonResults({
 
   return (
     <div ref={resultsContainerRef} className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-      <div className="mb-6 sm:mb-8 text-center space-y-3 sm:space-y-4">
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight break-words">
+      <div className="mb-8 space-y-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
           {t('results.title', {
             amount: formattedAmount,
             country: queryParams.receive_country
           })}
         </h2>
-        {snapshotTime && (
-          <p className="text-gray-600 flex items-center justify-center gap-2 text-sm sm:text-base font-medium">
-            <ClockIcon />
-            <span className="break-words">
-              {t('results.snapshot', { time: snapshotTime })}
-            </span>
-          </p>
-        )}
-        {savings > 0 && (
-          <div className="mt-2 sm:mt-4 inline-flex w-full sm:w-auto justify-center bg-gradient-to-r from-accent-50 to-accent-100 border border-accent-300 rounded-xl px-4 sm:px-6 py-3 sm:py-4 shadow-toss-sm">
-            <p className="text-accent-700 text-sm sm:text-base font-bold leading-snug">
-              {t('results.savings_prefix', 'Save up to')}{' '}
-              <span className="text-xl sm:text-2xl font-bold text-accent-600">
-                {savings.toLocaleString()}
-              </span>{' '}
-              {queryParams.receive_currency}{' '}
-              {t('results.savings_suffix', 'more by choosing the best rate!')}
-            </p>
-          </div>
-        )}
+
+        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+          {snapshotTime && (
+            <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1 rounded-full">
+              <ClockIcon />
+              <span>{t('results.snapshot', { time: snapshotTime.split(' ')[1] })}</span>
+            </div>
+          )}
+          {savings > 0 && (
+            <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-100 font-medium">
+              <span>Save {savings.toLocaleString()} {queryParams.receive_currency}</span>
+            </div>
+          )}
+        </div>
+
         <button
           onClick={onCompareAgain}
-          className="w-full sm:w-auto px-4 sm:px-8 py-3 sm:py-4 bg-brand-50 hover:bg-brand-100 text-brand-600 rounded-2xl text-base sm:text-lg font-bold transition-all duration-200 flex items-center justify-center gap-2 mx-auto shadow-sm hover:shadow-md active:scale-95"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors -ml-3"
         >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
           {t('results.compare_again')}
@@ -199,30 +194,30 @@ export default function ComparisonResults({
       </div>
 
       {isLoading && (
-        <div className="text-center py-12 sm:py-16 w-full px-4 sm:px-6">
+        <div className="text-left py-12 w-full">
           <div className="inline-block relative mb-6">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 border-4 border-brand-200 border-t-brand-500 rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
           </div>
-          <p className="text-gray-900 text-base sm:text-lg font-bold mb-2">
+          <p className="text-gray-900 text-lg font-bold mb-1">
             {t('results.loading_title')}
           </p>
-          <p className="text-gray-600 text-sm font-medium">
+          <p className="text-gray-500 text-sm">
             {t('results.loading_sub')}
           </p>
         </div>
       )}
 
       {error && (
-        <div className="bg-gradient-to-br from-red-50 to-pink-50 border-2 border-red-200 rounded-3xl p-6 sm:p-8 text-center w-full">
-          <div className="text-4xl sm:text-5xl mb-4">😔</div>
-          <p className="text-red-600 text-base sm:text-lg font-semibold mb-6 leading-snug">
+        <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-left w-full">
+          <h3 className="text-lg font-bold text-red-700 mb-2">Unavailable</h3>
+          <p className="text-red-600 text-sm mb-4">
             {error.type === 'empty'
               ? t('results.error_empty')
               : t('results.error_api', { message: error.message })}
           </p>
           <button
             onClick={() => window.location.reload()}
-            className="w-full sm:w-auto bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-bold hover:from-red-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
+            className="text-sm font-bold text-red-700 hover:text-red-800 underline"
           >
             {t('results.retry')}
           </button>
@@ -231,43 +226,18 @@ export default function ComparisonResults({
 
       {!isLoading && !error && results.length > 0 && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-          <div className="flex flex-col gap-4 mb-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <p className="text-gray-600 font-medium text-base sm:text-lg">
-                <span className="text-xl sm:text-2xl font-bold text-blue-600">
-                  {results.length}
-                </span>{' '}
-                {t('results.count_suffix', 'providers compared')}
-              </p>
-              <ViewToggle view={view} onViewChange={onViewChange} />
-            </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-gray-100 pb-4">
+            <p className="text-gray-900 font-bold text-lg">
+              {results.length} Providers Found
+            </p>
 
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <SaveCorridorButton
-                amount={amount}
-                country={queryParams.receive_country}
-                onSave={onSaveCorridor}
-                isSaved={isCorridorSaved}
-              />
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full">
-                <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="text-sm font-medium text-blue-700">
-                  {t('results.ranking_explanation', 'Ranked by total amount received')}
-                </span>
-              </div>
+            <div className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+              {t('results.ranking_explanation', 'Ranked by Recipient Gets')}
             </div>
           </div>
 
-          {bestProvider && (
-            <div className="mb-6">
-              <RateChart
-                currency={queryParams.receive_currency}
-                currentRate={bestProvider.exchange_rate}
-              />
-            </div>
-          )}
+          {/* RateChart removed */}
 
           {view === 'table' ? (
             <ResultsTable
@@ -287,6 +257,7 @@ export default function ComparisonResults({
                   onProviderClick={() => handleProviderClick(provider, index)}
                   bestAmount={bestProvider?.recipient_gets || 0}
                   worstAmount={worstProvider?.recipient_gets || 0}
+                  sendAmount={amount}
                 />
               ))}
             </div>

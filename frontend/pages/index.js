@@ -14,6 +14,7 @@ import {
   OTHER_COUNTRIES,
   FLAG_ASSETS,
   MAX_AMOUNT,
+  MIN_AMOUNT,
   getCountryByCode,
   getApiBaseUrl
 } from '../lib/constants';
@@ -125,6 +126,7 @@ export default function HomePage() {
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const [savedCorridors, setSavedCorridors] = useState([]);
   const [shakeInput, setShakeInput] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dropdownRef = useRef(null);
   const heroRef = useRef(null);
@@ -225,22 +227,38 @@ export default function HomePage() {
   }, [showDropdown]);
 
   const handleAmountChange = (e) => {
-    const value = e.target.value.replace(/,/g, '');
-    if (!isNaN(value) && value.length <= 10) {
-      const numValue = parseInt(value) || 0;
-      if (numValue > MAX_AMOUNT) {
-        setShakeInput(true);
-        setAmount(MAX_AMOUNT.toString());
-        setTimeout(() => setShakeInput(false), 500);
-      } else {
-        setAmount(value);
-      }
+    // 1. Get raw numeric value
+    const rawValue = e.target.value.replace(/,/g, '').replace(/\D/g, '');
+
+    // 2. Allow empty input
+    if (rawValue === '') {
+      setAmount('');
+      return;
     }
+
+    const numValue = parseInt(rawValue, 10);
+
+    // 3. Strict Check: If greater than MAX_AMOUNT (5,000,000)
+    if (numValue > MAX_AMOUNT) {
+      setShakeInput(true);
+      setTimeout(() => setShakeInput(false), 500);
+
+      // If the user typed a massive number (pasted), clamp it.
+      if (rawValue.length > MAX_AMOUNT.toString().length + 2) {
+        setAmount(MAX_AMOUNT.toString());
+      }
+      // Otherwise, just ignore this input event (block the change)
+      return;
+    }
+
+    // 4. Update state directly
+    setAmount(rawValue);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (selectedCountry && amount) {
+      setIsLoading(true); // Start loading
       const numericAmount = parseInt(amount.replace(/,/g, ''), 10) || 0;
       logClickedCTA(numericAmount, selectedCountry.code || selectedCountry.name, selectedCountry.currency);
       saveComparison(amount, selectedCountry);
@@ -249,6 +267,7 @@ export default function HomePage() {
         pathname: `/compare/${selectedCountry.slug || selectedCountry.name.toLowerCase().replace(/\s+/g, '-')}`,
         query: { amount: numericAmount.toString() }
       });
+      // Note: We don't set isLoading(false) because the page will navigate away.
     }
   };
 
@@ -271,52 +290,46 @@ export default function HomePage() {
         <Navigation />
 
         {/* Hero Section */}
-        <section ref={heroRef} id="hero" className="relative pt-36 sm:pt-40 lg:pt-48 pb-16 md:pb-24 overflow-visible">
+        <section ref={heroRef} id="hero" className="relative pt-24 sm:pt-32 lg:pt-48 pb-12 md:pb-24 overflow-visible">
           <div className="absolute inset-0 bg-gradient-to-br from-primary-50/80 via-white to-accent-50/30" />
           <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
-            {showWelcomeBack && lastComparison && (
-              <WelcomeBackBanner
-                lastComparison={lastComparison}
-                onUseLastComparison={handleUseLastComparison}
-                onDismiss={() => setShowWelcomeBack(false)}
-              />
-            )}
 
-            <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
+
+            <div className="grid lg:grid-cols-2 gap-6 lg:gap-16 items-center">
               {/* Left Column */}
-              <div className="animate-fade-in-up">
-                <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm text-primary-700 px-4 py-2 rounded-full text-xs sm:text-sm font-bold mb-10 border border-primary-100 shadow-sm">
+              <div className="animate-fade-in-up text-center lg:text-left">
+                <div className="hidden sm:inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm text-primary-700 px-3 py-1.5 rounded-full text-xs font-bold mb-4 border border-primary-100 shadow-sm">
                   <span>{t('hero.badge')}</span>
                 </div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-neutral-900 mb-8 leading-[1.1] tracking-tight">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-neutral-900 mb-4 lg:mb-6 leading-tight tracking-tight">
                   <span className="block mb-1">{t('hero.title_line1')}</span>
-                  <span className="block bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 bg-clip-text text-transparent pb-3">
+                  <span className="block bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 bg-clip-text text-transparent pb-1 lg:pb-3">
                     {t('hero.title_line2')}
                   </span>
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-neutral-600 mb-10 leading-relaxed font-medium max-w-xl">
+                <p className="text-sm sm:text-lg md:text-xl text-neutral-600 mb-6 lg:mb-8 leading-relaxed font-medium max-w-xl mx-auto lg:mx-0">
                   {t('hero.subtitle')}
                 </p>
 
                 {/* Social Proof Stats */}
-                <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-4 sm:p-6 shadow-lg border border-white/60 w-full sm:w-auto sm:inline-block max-w-2xl ring-1 ring-gray-100">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
+                <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-3 lg:p-4 shadow-lg border border-white/60 w-full ring-1 ring-gray-100 mb-2 lg:mb-0">
+                  <div className="grid grid-cols-4 gap-2 sm:gap-8 divide-x divide-gray-200/50">
                     {[
                       { val: '8', label: t('hero.stats_companies') },
                       { val: '18', label: t('hero.stats_countries') },
                       { val: '3s', label: t('hero.stats_seconds_label') },
                       { val: '₩32K', label: t('hero.stats_savings') }
                     ].map((stat, i) => (
-                      <div key={i} className="text-center">
-                        <div className="text-xl sm:text-2xl md:text-3xl font-black text-primary-600 mb-1 leading-none">{stat.val}</div>
-                        <div className="text-[9px] sm:text-xs md:text-sm text-neutral-500 font-bold uppercase tracking-widest">{stat.label}</div>
+                      <div key={i} className="text-center px-1">
+                        <div className="text-lg sm:text-2xl md:text-3xl font-black text-primary-600 mb-0.5 lg:mb-1 leading-none">{stat.val}</div>
+                        <div className="text-[10px] sm:text-xs md:text-sm text-neutral-500 font-bold uppercase tracking-wider truncate">{stat.label}</div>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              <div className="animate-fade-in-up w-[91%] sm:w-full max-w-lg lg:max-w-none mx-auto lg:mx-0 relative shadow-buffer mt-8 lg:mt-0">
+              <div className="animate-fade-in-up w-full max-w-lg lg:max-w-none mx-auto relative shadow-buffer mt-6 lg:mt-0 px-4 sm:px-0">
                 <div className="absolute -inset-8 bg-primary-100/10 blur-3xl -z-10 rounded-full" />
 
                 {savedCorridors.length > 0 && (
@@ -327,18 +340,18 @@ export default function HomePage() {
                   />
                 )}
 
-                <form onSubmit={handleSubmit} className="w-full bg-white/90 backdrop-blur-xl rounded-3xl border border-white/60 p-5 sm:p-8 shadow-2xl">
-                  <h2 className="text-xl sm:text-2xl font-black text-neutral-900 mb-2">{t('form.title')}</h2>
+                <form onSubmit={handleSubmit} className="w-full bg-white/90 backdrop-blur-xl rounded-3xl border border-white/60 p-4 sm:p-8 shadow-2xl">
+                  <h2 className="text-lg sm:text-2xl font-black text-neutral-900 mb-2">{t('form.title')}</h2>
 
-                  <div className="space-y-5 sm:space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     {/* Country Selector */}
                     <div className="relative z-20">
-                      <label className="block text-sm font-bold text-[#4e5968] mb-2 ml-1">{t('form.label_country')}</label>
+                      <label className="block text-xs sm:text-sm font-bold text-[#4e5968] mb-1.5 ml-1">{t('form.label_country')}</label>
                       <div ref={dropdownRef} className="relative">
                         <button
                           type="button"
                           onClick={() => setShowDropdown(!showDropdown)}
-                          className="w-full h-16 px-6 bg-white rounded-2xl border border-[#e5e8eb] flex items-center justify-between outline-none"
+                          className="w-full h-14 sm:h-16 px-4 sm:px-6 bg-white rounded-2xl border border-[#e5e8eb] flex items-center justify-between outline-none"
                         >
                           <div className="flex items-center gap-4">
                             <img src={selectedCountry.flag} alt="" className="w-10 h-10 rounded-full object-cover border border-[#e5e8eb]" />
@@ -351,26 +364,74 @@ export default function HomePage() {
                         </button>
 
                         {showDropdown && (
-                          <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-3xl shadow-2xl max-h-[400px] overflow-y-auto z-50 p-2 border border-gray-100">
-                            {[POPULAR_COUNTRIES, OTHER_COUNTRIES].map((group, gi) => (
-                              <React.Fragment key={gi}>
-                                <div className="px-4 py-2"><span className="text-xs font-bold text-gray-400 uppercase">{gi === 0 ? 'Popular' : 'All'}</span></div>
-                                {group.map((c) => (
-                                  <button
-                                    key={c.code}
-                                    type="button"
-                                    onClick={() => { setSelectedCountry(c); setShowDropdown(false); }}
-                                    className={`w-full px-5 py-3.5 flex items-center justify-between hover:bg-blue-50 rounded-2xl transition-all ${selectedCountry.code === c.code ? 'bg-blue-50' : ''}`}
-                                  >
-                                    <div className="flex items-center gap-4">
-                                      <img src={c.flag} alt="" className="w-9 h-9 rounded-full border border-gray-100" />
-                                      <span className="text-base font-bold">{c.name}</span>
-                                    </div>
-                                    <span className="text-sm font-bold text-gray-500">{c.currency}</span>
-                                  </button>
-                                ))}
-                              </React.Fragment>
-                            ))}
+                          <div className="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] overflow-hidden z-30 border border-gray-100 ring-1 ring-black/5 animate-fade-in-up origin-top">
+                            <div className="max-h-[320px] overflow-y-auto custom-scrollbar p-2">
+                              {/* Popular Countries Group */}
+                              <div className="px-3 py-2 text-[11px] font-bold text-gray-400 tracking-wider uppercase border-b border-gray-100/50 mb-1">
+                                {t('form.popular', 'Popular')}
+                              </div>
+                              {POPULAR_COUNTRIES.map((country) => (
+                                <button
+                                  key={country.code}
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedCountry(country);
+                                    setShowDropdown(false);
+                                  }}
+                                  className={`w-full flex items-center justify-between px-3 py-3 border-b border-gray-50 last:border-0 transition-colors duration-150 group cursor-pointer hover:bg-blue-50 ${selectedCountry.code === country.code
+                                    ? 'bg-blue-50 text-blue-700'
+                                    : 'bg-transparent text-gray-700'
+                                    }`}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <img
+                                      src={country.flag}
+                                      alt={country.name}
+                                      className="w-8 h-8 rounded-full object-cover shadow-sm ring-1 ring-gray-100 group-hover:scale-105 transition-transform duration-200"
+                                    />
+                                    <span className={`text-base ${selectedCountry.code === country.code ? 'font-bold' : 'font-semibold text-gray-900 group-hover:text-blue-700'}`}>
+                                      {country.name}
+                                    </span>
+                                  </div>
+                                  <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border transition-colors ${selectedCountry.code === country.code ? 'bg-blue-100 border-blue-200 text-blue-600' : 'bg-white border-gray-100 text-gray-400 group-hover:border-blue-200 group-hover:bg-white group-hover:text-blue-600'}`}>
+                                    {country.currency}
+                                  </span>
+                                </button>
+                              ))}
+
+                              {/* All Countries Group */}
+                              <div className="px-3 py-2 text-[11px] font-bold text-gray-400 tracking-wider uppercase bg-gray-50/30 mt-2 mb-1 rounded-lg">
+                                {t('form.all_countries', 'All Countries')}
+                              </div>
+                              {OTHER_COUNTRIES.map((country) => (
+                                <button
+                                  key={country.code}
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedCountry(country);
+                                    setShowDropdown(false);
+                                  }}
+                                  className={`w-full flex items-center justify-between px-3 py-3 border-b border-gray-50 last:border-0 transition-colors duration-150 group cursor-pointer hover:bg-blue-50 ${selectedCountry.code === country.code
+                                    ? 'bg-blue-50 text-blue-700'
+                                    : 'bg-transparent text-gray-700'
+                                    }`}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <img
+                                      src={country.flag}
+                                      alt={country.name}
+                                      className="w-8 h-8 rounded-full object-cover shadow-sm ring-1 ring-gray-100 group-hover:scale-105 transition-transform duration-200"
+                                    />
+                                    <span className={`text-base ${selectedCountry.code === country.code ? 'font-bold' : 'font-semibold text-gray-900 group-hover:text-blue-700'}`}>
+                                      {country.name}
+                                    </span>
+                                  </div>
+                                  <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border transition-colors ${selectedCountry.code === country.code ? 'bg-blue-100 border-blue-200 text-blue-600' : 'bg-white border-gray-100 text-gray-400 group-hover:border-blue-200 group-hover:bg-white group-hover:text-blue-600'}`}>
+                                    {country.currency}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -378,20 +439,28 @@ export default function HomePage() {
 
                     {/* Amount Input */}
                     <div>
-                      <label className="block text-base font-bold text-gray-600 mb-3 ml-1">{t('form.label_amount')}</label>
-                      <div className={`relative h-14 bg-[#f2f4f6] rounded-xl flex items-center px-5 gap-2 ${shakeInput ? 'animate-shake' : ''}`}>
+                      <label className="block text-xs sm:text-sm font-bold text-[#4e5968] mb-1.5 ml-1">{t('form.label_amount')}</label>
+                      <div className="relative">
                         <input
                           type="text"
-                          value={formattedAmount}
+                          inputMode="numeric"
+                          value={amount ? parseInt(amount).toLocaleString() : ''}
                           onChange={handleAmountChange}
-                          className="flex-1 bg-transparent text-xl font-bold text-gray-900 text-right focus:outline-none"
+                          placeholder="1,000,000"
+                          className={`w-full h-14 sm:h-16 pl-6 pr-16 bg-[#f2f4f6] rounded-2xl text-lg sm:text-xl font-bold text-[#1b1e26] placeholder-gray-400 outline-none transition-all duration-200 ${shakeInput ? 'ring-2 ring-red-400 bg-red-50' : 'focus:bg-white focus:ring-2 focus:ring-primary-500'}`}
                         />
-                        <span className="text-lg font-bold text-gray-500">KRW</span>
+                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-bold text-[#8b95a1]">KRW</span>
                       </div>
-                      <p className="mt-3 text-sm text-gray-500 font-medium ml-1">{t('form.validation_minmax')}</p>
+                      <div className="mt-2 ml-1 text-xs font-medium text-[#8b95a1]">
+                        ₩{MIN_AMOUNT.toLocaleString()} — ₩{MAX_AMOUNT.toLocaleString()}
+                      </div>
                     </div>
 
-                    <button type="submit" className="w-full h-14 bg-brand-600 hover:bg-brand-700 text-white font-bold text-lg rounded-xl shadow-lg transition-all active:scale-[0.98]">
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full h-14 sm:h-16 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white rounded-2xl text-base sm:text-lg font-bold transition-all duration-200 shadow-lg shadow-primary-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
                       {t('form.submit')}
                     </button>
                   </div>

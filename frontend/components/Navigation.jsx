@@ -47,10 +47,17 @@ const Navigation = () => {
 
   const handleLinkClick = (href) => {
     setIsMenuOpen(false);
-    // Smooth scroll to section
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+
+    // If we're already on the home page, just scroll
+    if (window.location.pathname === '/') {
+      const element = document.querySelector(href.replace('/', ''));
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // If we're on a subpage, let the link's default behavior (navigation) take over
+      // Or manually route
+      window.location.href = href;
     }
   };
 
@@ -74,13 +81,13 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-6">
-            <Link href="#hero" className="px-4 py-2 text-gray-700 font-semibold hover:text-brand-600 transition-colors duration-200 rounded-lg hover:bg-gray-50 uppercase text-xs tracking-wider">
+            <Link href="/#hero" className="px-4 py-2 text-gray-700 font-semibold hover:text-brand-600 transition-colors duration-200 rounded-lg hover:bg-gray-50 uppercase text-xs tracking-wider">
               {t('nav.service_intro')}
             </Link>
-            <Link href="#how-it-works" className="px-4 py-2 text-gray-700 font-semibold hover:text-brand-600 transition-colors duration-200 rounded-lg hover:bg-gray-50 uppercase text-xs tracking-wider">
+            <Link href="/#how-it-works" className="px-4 py-2 text-gray-700 font-semibold hover:text-brand-600 transition-colors duration-200 rounded-lg hover:bg-gray-50 uppercase text-xs tracking-wider">
               {t('nav.service_how')}
             </Link>
-            <Link href="#faq" className="px-4 py-2 text-gray-700 font-semibold hover:text-brand-600 transition-colors duration-200 rounded-lg hover:bg-gray-50 uppercase text-xs tracking-wider">
+            <Link href="/#faq" className="px-4 py-2 text-gray-700 font-semibold hover:text-brand-600 transition-colors duration-200 rounded-lg hover:bg-gray-50 uppercase text-xs tracking-wider">
               {t('nav.service_faq')}
             </Link>
           </div>
@@ -139,8 +146,8 @@ const Navigation = () => {
           {/* Card-style Navigation Links */}
           <div className="flex-1 overflow-y-auto space-y-4">
             <a
-              href="#hero"
-              onClick={(e) => { e.preventDefault(); handleLinkClick('#hero'); }}
+              href="/#hero"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('/#hero'); }}
               className="flex items-start gap-4 p-5 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 active:scale-[0.98] transition-all duration-200 group"
             >
               <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
@@ -155,8 +162,8 @@ const Navigation = () => {
             </a>
 
             <a
-              href="#how-it-works"
-              onClick={(e) => { e.preventDefault(); handleLinkClick('#how-it-works'); }}
+              href="/#how-it-works"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('/#how-it-works'); }}
               className="flex items-start gap-4 p-5 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 active:scale-[0.98] transition-all duration-200 group"
             >
               <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-200">
@@ -171,8 +178,8 @@ const Navigation = () => {
             </a>
 
             <a
-              href="#faq"
-              onClick={(e) => { e.preventDefault(); handleLinkClick('#faq'); }}
+              href="/#faq"
+              onClick={(e) => { e.preventDefault(); handleLinkClick('/#faq'); }}
               className="flex items-start gap-4 p-5 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 active:scale-[0.98] transition-all duration-200 group"
             >
               <div className="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-600 group-hover:text-white transition-colors duration-200">

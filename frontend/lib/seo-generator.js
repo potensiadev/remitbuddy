@@ -183,7 +183,7 @@ function generateOpenGraph({ pageType, country, amount, locale, currency }) {
     return {
         title: generateTitle({ pageType, country, amount, locale, currency }),
         description: generateDescription({ pageType, country, amount, locale, currency }),
-        image: `https://www.remitbuddy.com/og/${pageType}-${country?.slug || 'default'}.png`,
+        image: `https://www.remitbuddy.com/og-image.png`,
         url: generateCanonicalUrl({ pageType, country, amount }),
         type: 'website',
         siteName: 'RemitBuddy',

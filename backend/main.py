@@ -11,6 +11,7 @@ import re
 import logging
 import os
 from typing import Optional, Dict, List
+import redis.asyncio as redis
 from cachetools import TTLCache
 from proxy_manager import proxy_manager, ProxySession
 from proxy_config import proxy_config_manager
@@ -85,10 +86,23 @@ logger.info(f"[CORS] Allowed origins: {allowed_origins}")
 # --- Configuration ---
 RATE_LIMIT = 15
 RATE_LIMIT_WINDOW = 60
-request_timestamps = {}
+request_timestamps = {} # Fallback for local/memory
 # Reduced TTL to 60 seconds for fresher data with more cache slots
 cache = TTLCache(maxsize=2048, ttl=60)
 PROXIES = []
+
+# Redis Configuration
+REDIS_URL = os.getenv("REDIS_URL")
+redis_client = None
+
+if REDIS_URL:
+    try:
+        redis_client = redis.from_url(REDIS_URL, encoding="utf-8", decode_responses=True)
+        logger.info(f"Connected to Redis at {REDIS_URL.split('@')[-1]}") # Log safe URL
+    except Exception as e:
+        logger.error(f"Failed to connect to Redis: {e}. Falling back to in-memory rate limiting.")
+else:
+    logger.info("REDIS_URL not set. Using in-memory rate limiting.")
 
 # --- Hanpass IP Blocking Detection ---
 class HanpassConnectionTracker:
@@ -319,11 +333,33 @@ SBICOSMONEY_CURRENCIES = {
 def get_random_proxy():
     return random.choice(PROXIES) if PROXIES else None
 
-def check_rate_limit(client_ip: str):
+async def check_rate_limit(client_ip: str):
+    # Redis-based Rate Limiting
+    if redis_client:
+        try:
+            key = f"rate_limit:{client_ip}"
+            # Increment the counter
+            current_count = await redis_client.incr(key)
+            
+            # If it's the first request (count is 1), set expiration
+            if current_count == 1:
+                await redis_client.expire(key, RATE_LIMIT_WINDOW)
+            
+            if current_count > RATE_LIMIT:
+                logger.warning(f"Rate limit exceeded for {client_ip} (Redis)")
+                raise HTTPException(status_code=429, detail="Too many requests.")
+            return # Allowed
+            
+        except redis.RedisError as e:
+            logger.error(f"Redis error during rate limit check: {e}. Falling back to memory.")
+            # Fall through to in-memory check on Redis error
+    
+    # In-Memory Fallback
     current_time = time.time()
     timestamps = request_timestamps.get(client_ip, [])
     valid_timestamps = [ts for ts in timestamps if current_time - ts < RATE_LIMIT_WINDOW]
     if len(valid_timestamps) >= RATE_LIMIT:
+        logger.warning(f"Rate limit exceeded for {client_ip} (Memory)")
         raise HTTPException(status_code=429, detail="Too many requests.")
     valid_timestamps.append(current_time)
     request_timestamps[client_ip] = valid_timestamps
@@ -1257,7 +1293,7 @@ def read_root():
 @app.get("/api/getRemittanceQuote")
 async def get_remittance_quote(request: Request, receive_country: str = Query(...), receive_currency: str = Query(...), send_amount: int = Query(...)):
     client_ip = request.client.host
-    check_rate_limit(client_ip)
+    await check_rate_limit(client_ip)
     
     country_lower = receive_country.lower()
     currency_upper = receive_currency.upper()

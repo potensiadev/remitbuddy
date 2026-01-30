@@ -2,12 +2,19 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 class MyDocument extends Document {
+  static async getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx)
+    // Retrieve nonce from the request headers (set by middleware)
+    const nonce = ctx.req?.headers?.['x-nonce']
+    return { ...initialProps, nonce }
+  }
+
   render() {
-    const { locale } = this.props;
+    const { locale, nonce } = this.props;
 
     return (
       <Html lang={locale || 'en'}>
-        <Head>
+        <Head nonce={nonce}>
           <meta charSet="utf-8" />
           <meta
             name="viewport"
@@ -65,7 +72,7 @@ class MyDocument extends Document {
 
         <body>
           <Main />
-          <NextScript />
+          <NextScript nonce={nonce} />
         </body>
       </Html>
     );

@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 import Navigation from '../components/Navigation';
 import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { logClickedCTA } from '../utils/analytics';
+import { trackEvent, ANALYTICS_EVENTS } from '../utils/analytics';
 
 // Import shared constants
 import {
@@ -260,7 +260,14 @@ export default function HomePage() {
     if (selectedCountry && amount) {
       setIsLoading(true); // Start loading
       const numericAmount = parseInt(amount.replace(/,/g, ''), 10) || 0;
-      logClickedCTA(numericAmount, selectedCountry.code || selectedCountry.name, selectedCountry.currency);
+
+      // Track Lead Gen Event
+      trackEvent(ANALYTICS_EVENTS.SEARCH_RATES, {
+        corridor: `KRW-${selectedCountry.currency}`,
+        amount: numericAmount,
+        target_country: selectedCountry.code
+      });
+
       saveComparison(amount, selectedCountry);
       setShowWelcomeBack(false);
       router.push({

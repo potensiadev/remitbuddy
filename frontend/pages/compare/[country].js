@@ -11,12 +11,14 @@ import { ComparisonResults } from '../../components/comparison';
 import {
   COUNTRIES,
   getCountryBySlug,
+  getCountryBySlug,
   getApiBaseUrl,
   DEFAULT_AMOUNT,
   MIN_AMOUNT,
   MAX_AMOUNT
 } from '../../lib/constants';
 import { generateComparisonSEO } from '../../lib/seo';
+import { trackEvent, ANALYTICS_EVENTS } from '../../utils/analytics';
 
 /**
  * Compare Page - /compare/[country]

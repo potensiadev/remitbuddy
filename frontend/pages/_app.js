@@ -1,59 +1,38 @@
-// File location: /frontend/pages/_app.js
+import { GoogleAnalytics } from "nextjs-google-analytics";
 import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Script from 'next/script';
 import '../styles/globals.css';
+import { initRetentionTracking } from '../utils/analytics';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+  // Use the ID from env or fallback (User should update this)
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-Z0SHT6SKJ3';
 
-  // Unregister Service Worker (PWA disabled) and clear caches
   useEffect(() => {
+    // Initialize retention tracking (counts visits, cohorts)
+    initRetentionTracking();
+
     if ('serviceWorker' in navigator) {
-      // Unregister all service workers
       navigator.serviceWorker.getRegistrations().then((registrations) => {
-        registrations.forEach((registration) => {
-          registration.unregister();
-        });
+        registrations.forEach((registration) => registration.unregister());
       });
     }
 
-    // Clear all caches
     if ('caches' in window) {
       caches.keys().then((names) => {
-        names.forEach(name => {
-          caches.delete(name);
-        });
+        names.forEach(name => caches.delete(name));
       });
     }
   }, []);
 
   return (
     <>
-      {/* Google Analytics - Optimized loading */}
-      <Script
-        strategy="lazyOnload"
-        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
-      />
-      <Script
-        id="google-analytics"
-        strategy="lazyOnload"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);} 
-            gtag('js', new Date());
-            gtag('config', '${measurementId}', {
-              send_page_view: false,
-              page_path: window.location.pathname,
-            });
-          `,
-        }}
-      />
+      <GoogleAnalytics trackPageViews gaMeasurementId={measurementId} />
 
-      {/* Google AdSense - Optimized loading */}
+      {/* Google AdSense */}
       <Script
         strategy="lazyOnload"
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8945839011287197"

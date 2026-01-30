@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Footer from '../components/Footer';
 import Navigation from '../components/Navigation';
-import { useTranslation } from 'next-i18next';
+import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { logClickedCTA } from '../utils/analytics';
 
@@ -319,7 +319,7 @@ export default function HomePage() {
         <Navigation />
 
         {/* Hero Section */}
-        <section ref={heroRef} id="hero" className="relative pt-24 sm:pt-32 lg:pt-48 pb-12 md:pb-24 overflow-visible">
+        <section ref={heroRef} id="hero" className="relative pt-24 sm:pt-32 lg:pt-32 pb-12 md:pb-24 overflow-visible">
           <div className="absolute inset-0 bg-gradient-to-br from-primary-50/80 via-white to-accent-50/30" />
           <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
 
@@ -337,7 +337,9 @@ export default function HomePage() {
                   </span>
                 </h1>
                 <p className="text-sm sm:text-lg md:text-xl text-neutral-600 mb-6 lg:mb-8 leading-relaxed font-medium max-w-xl mx-auto lg:mx-0">
-                  {t('hero.subtitle')}
+                  {t('Compare 8 providers in 3 seconds.')}
+                  <br className="block" />
+                  {t('Users save an average of ₩32,000 per transfer.')}
                 </p>
 
                 {/* Social Proof Stats */}

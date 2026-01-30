@@ -281,6 +281,9 @@ export default function HomePage() {
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="keywords" content={t('seo.keywords')} />
 
+        {/* Verification Tags */}
+        <meta name="msvalidate.01" content="494B757ACE3C4582ECB2450FC6CEB3D4" />
+
         {/* Open Graph Meta Tags */}
         <meta property="og:title" content={t('seo.title')} />
         <meta property="og:description" content={t('seo.description')} />
@@ -330,7 +333,7 @@ export default function HomePage() {
                 <div className="hidden sm:inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm text-primary-700 px-3 py-1.5 rounded-full text-xs font-bold mb-4 border border-primary-100 shadow-sm">
                   <span>{t('hero.badge')}</span>
                 </div>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-neutral-900 mb-4 lg:mb-6 leading-tight tracking-tight">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-neutral-900 mb-1 leading-tight tracking-tight">
                   <span className="block mb-1">{t('hero.title_line1')}</span>
                   <span className="block bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 bg-clip-text text-transparent pb-1 lg:pb-3">
                     {t('hero.title_line2')}
@@ -343,7 +346,7 @@ export default function HomePage() {
                 </p>
 
                 {/* Social Proof Stats */}
-                <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-3 lg:p-4 shadow-lg border border-white/60 w-full ring-1 ring-gray-100 mb-2 lg:mb-0">
+                <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-3 lg:p-4 shadow-lg border border-white/60 w-fit mx-auto lg:mx-0 ring-1 ring-gray-100 mb-2 lg:mb-0">
                   <div className="grid grid-cols-4 gap-2 sm:gap-8 divide-x divide-gray-200/50">
                     {[
                       { val: '8', label: t('hero.stats_companies') },

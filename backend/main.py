@@ -28,24 +28,50 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# --- Security Middleware (Block Admin/Debug in Prod) ---
+@app.middleware("http")
+async def security_middleware(request: Request, call_next):
+    # Block /admin and /debug endpoints in production
+    if os.getenv("ENV", "").lower() == "production":
+        path = request.url.path
+        if path.startswith("/admin") or path.startswith("/debug"):
+            # Return 404 to hide existence
+            return JSONResponse(status_code=404, content={"detail": "Not Found"})
+    
+    response = await call_next(request)
+    return response
+
 # --- CORS 설정 ---
-# 모든 환경에서 필요한 origin 허용
-allowed_origins = [
-    # Production domains
-    "https://www.remitbuddy.com",
-    "https://remitbuddy.com",
-    # Local development
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-]
+IS_PRODUCTION = os.getenv("ENV", "").lower() == "production"
+
+if IS_PRODUCTION:
+    # Production: Strict CORS, no private IPs
+    allowed_origins = [
+        "https://www.remitbuddy.com",
+        "https://remitbuddy.com"
+    ]
+    # No regex matching in prod (disable private IP access)
+    allow_origin_regex = None
+    logger.info("Production mode: Enforcing strict CORS policy")
+else:
+    # Development: Allow localhost and private IPs
+    allowed_origins = [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
+        "https://remitbuddy.com",
+        "https://www.remitbuddy.com",
+    ]
+    # Allow private IP ranges for local testing
+    allow_origin_regex = r"https?://(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}):\d+"
+    logger.info("Development mode: Allowing private IPs and localhost")
 
 # Add CORS middleware with explicit origins
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_origin_regex=r"https?://(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}):\d+",
+    allow_origin_regex=allow_origin_regex,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],

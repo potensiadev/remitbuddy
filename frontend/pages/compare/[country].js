@@ -11,7 +11,7 @@ import { ComparisonResults } from '../../components/comparison';
 import {
   COUNTRIES,
   getCountryBySlug,
-  getCountryBySlug,
+
   getApiBaseUrl,
   DEFAULT_AMOUNT,
   MIN_AMOUNT,

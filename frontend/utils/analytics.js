@@ -16,20 +16,12 @@ export const ANALYTICS_EVENTS = {
  * @param {object} params - Event parameters
  */
 export const trackEvent = (action, params = {}) => {
-  // Add retention metrics to every event if available
-  const retention = getRetentionMetrics();
-
   if (typeof window !== 'undefined' && window.gtag) {
-    gaEvent(action, {
-      ...params,
-      visit_count: retention.visitCount,
-      days_since_last: retention.daysSinceLast,
-      is_returning: retention.visitCount > 1,
-    });
+    gaEvent(action, params);
   } else {
     // Fallback or dev mode logging
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[GA4 Dev] ${action}`, { ...params, ...retention });
+      console.log(`[GA4 Dev] ${action}`, params);
     }
   }
 };

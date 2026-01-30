@@ -262,9 +262,18 @@ export default function HomePage() {
       const numericAmount = parseInt(amount.replace(/,/g, ''), 10) || 0;
 
       // Track Lead Gen Event
+      const getAmountRange = (val) => {
+        if (val < 100000) return '0-100k';
+        if (val < 500000) return '100k-500k';
+        if (val < 1000000) return '500k-1M';
+        if (val < 3000000) return '1M-3M';
+        return '3M+';
+      };
+
       trackEvent(ANALYTICS_EVENTS.SEARCH_RATES, {
         corridor: `KRW-${selectedCountry.currency}`,
         amount: numericAmount,
+        amount_range: getAmountRange(numericAmount),
         target_country: selectedCountry.code
       });
 

@@ -95,13 +95,25 @@ export default function ComparisonResults({
       ? Math.round(bestProvider.recipient_gets - worstProvider.recipient_gets)
       : 0;
 
+  const getAmountRange = (val) => {
+    const v = parseInt(val || '0', 10);
+    if (v < 100000) return '0-100k';
+    if (v < 500000) return '100k-500k';
+    if (v < 1000000) return '500k-1M';
+    if (v < 3000000) return '1M-3M';
+    return '3M+';
+  };
+
   const handleProviderClick = (provider, index) => {
+    const amountVal = parseInt(amountRef.current || '0', 10);
     trackEvent(ANALYTICS_EVENTS.CLICK_PROVIDER, {
-      provider_name: provider.provider,
-      rank_position: index + 1,
+      provider: provider.provider,
+      rank: index + 1,
       corridor: `${queryParams.receive_country}-${queryParams.receive_currency}`,
       rate_offered: provider.exchange_rate,
-      send_amount: parseInt(amountRef.current || '0', 10),
+      amount: amountVal,
+      amount_range: getAmountRange(amountVal),
+      recipient_gets: provider.recipient_gets,
       // Monetization metric: Difference from best rate
       markup_spread: bestProvider ? (bestProvider.exchange_rate - provider.exchange_rate) : 0
     });
@@ -109,10 +121,12 @@ export default function ComparisonResults({
 
   useEffect(() => {
     if (!isLoading && !error && results.length > 0 && !hasLoggedImpression) {
+      const amountVal = parseInt(amountRef.current || '0', 10);
       trackEvent(ANALYTICS_EVENTS.VIEW_RESULTS, {
         provider_count: results.length,
-        top_provider: bestProvider?.provider,
-        amount: parseInt(amountRef.current || '0', 10),
+        best_provider: bestProvider?.provider,
+        amount: amountVal,
+        amount_range: getAmountRange(amountVal),
         corridor: `${queryParams.receive_country}-${queryParams.receive_currency}`
       });
       setHasLoggedImpression(true);

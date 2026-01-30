@@ -11,7 +11,8 @@ export function middleware(req) {
     (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
   );
 
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  // Use standard crypto.randomUUID() which is supported in Edge Runtime
+  const nonce = crypto.randomUUID();
 
   // CSP Config
   const isDev = process.env.NODE_ENV === 'development';

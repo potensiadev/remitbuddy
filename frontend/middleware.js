@@ -1,23 +1,22 @@
 import { NextResponse } from 'next/server';
 
-const locales = ['en', 'ko'];
-// const locales = ['en', 'ko', 'vi', 'tl', 'km', 'my', 'th', 'uz', 'id', 'si', 'ne'];
+const locales = ['en'];
 
 export function middleware(req) {
   const url = req.nextUrl;
   const pathname = url.pathname;
 
-  // locale 경로인지 확인
+  // Check if pathname starts with a locale
   const pathnameHasLocale = locales.some(
     (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
   );
 
-  // locale 경로는 그대로 유지
+  // If it has 'en' locale, keep it
   if (pathnameHasLocale) {
     return NextResponse.next();
   }
 
-  // 루트 경로만 /en으로 리다이렉트
+  // Redirect root or paths without locale to /en
   if (pathname === '/' || pathname === '') {
     url.pathname = '/en';
     return NextResponse.redirect(url);

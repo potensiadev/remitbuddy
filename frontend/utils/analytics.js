@@ -1,19 +1,19 @@
-// utils/analytics.js - 올바른 이벤트 분리 버전
+// utils/analytics.js - Correct event separation version
 
 // Session tracking
 let sessionStartTime = null;
 
-// Get or create device UUID (SSR 안전 버전)
+// Get or create device UUID (SSR safe version)
 export const getDeviceUUID = () => {
   if (typeof window === 'undefined') return '';
-  
+
   try {
     let uuid = localStorage.getItem('remitbuddy_uuid');
     if (!uuid) {
       if (crypto && crypto.randomUUID) {
         uuid = crypto.randomUUID();
       } else {
-        uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
           const r = Math.random() * 16 | 0;
           const v = c === 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
@@ -74,7 +74,7 @@ export const getSessionDuration = () => {
 export const startSession = () => {
   if (!sessionStartTime) {
     sessionStartTime = Date.now();
-    console.log('🎯 세션 시작됨:', new Date().toISOString());
+    console.log('🎯 Session started:', new Date().toISOString());
   }
 };
 
@@ -96,7 +96,7 @@ const getSessionDurationRange = (duration) => {
 // Core event logging function
 export const logEvent = async (eventType, additionalData = {}) => {
   if (typeof window === 'undefined') return;
-  
+
   try {
     const uuid = getDeviceUUID();
     const deviceCategory = getDeviceCategory();
@@ -105,7 +105,7 @@ export const logEvent = async (eventType, additionalData = {}) => {
     const lang = document.documentElement.lang || 'en';
     const country = getCountryFromLang(lang);
     const sessionDuration = getSessionDuration();
-    
+
     const gaEventData = {
       user_uuid: uuid,
       lang: lang,
@@ -115,43 +115,43 @@ export const logEvent = async (eventType, additionalData = {}) => {
       browser: browser,
       session_duration_range: getSessionDurationRange(sessionDuration),
       session_duration_seconds: sessionDuration,
-      
+
       ...(additionalData.amount && {
         amount: additionalData.amount,
         transfer_amount_value: parseInt(additionalData.amount),
         amount_range: getAmountRange(additionalData.amount)
       }),
-      
+
       ...(additionalData.transfer_currency && {
         transfer_currency: additionalData.transfer_currency
       }),
-      
+
       ...(additionalData.country && {
         receiving_country: additionalData.country,
         corridor: `KR-${additionalData.country}`
       }),
-      
+
       ...(additionalData.provider && {
         provider: additionalData.provider
       }),
-      
+
       ...Object.fromEntries(
-        Object.entries(additionalData).filter(([key]) => 
+        Object.entries(additionalData).filter(([key]) =>
           !['amount', 'transfer_currency', 'country', 'provider'].includes(key)
         )
       )
     };
 
     console.log('📊 Event logged:', eventType, gaEventData);
-    
+
     if (typeof window !== 'undefined' && window.gtag) {
-      console.log('📈 GA 이벤트 전송 중:', eventType);
+      console.log('📈 Sending GA event:', eventType);
       window.gtag('event', eventType, gaEventData);
-      console.log('✅ GA 이벤트 전송 완료:', eventType);
+      console.log('✅ GA event sent successfully:', eventType);
     } else {
-      console.error('❌ GA가 로드되지 않음');
+      console.error('❌ GA not loaded');
     }
-    
+
     // Backend logging (optional)
     try {
       await fetch('/api/log-event', {
@@ -167,17 +167,17 @@ export const logEvent = async (eventType, additionalData = {}) => {
     } catch (backendError) {
       console.warn('Backend logging failed:', backendError);
     }
-    
+
   } catch (error) {
     console.error('Failed to log event:', error);
   }
 };
 
-// 🔥 명확히 분리된 이벤트들
+// 🔥 Clearly separated events
 
-// 세션 시작 이벤트 (퍼널 분석 필요시 수동 호출)
+// Session start event (Manual call if funnel analysis is needed)
 export const logSessionStart = () => {
-  console.log('🎯 세션 시작 이벤트');
+  console.log('🎯 Session start event');
   logEvent('session_start', {
     session_start_time: new Date().toISOString(),
     is_new_session: true,
@@ -186,31 +186,31 @@ export const logSessionStart = () => {
   });
 };
 
-// 1단계: 메인 화면 보기
+// Step 1: View Main Screen
 export const logViewMain = () => {
   startSession();
-  console.log('🏠 메인 화면 보기 이벤트');
+  console.log('🏠 View main screen event');
   logEvent('view_main', {
     page_title: "RemitBuddy - Main View",
     page_location: typeof window !== 'undefined' ? window.location.href : ''
   });
 };
 
-// 2단계: 첫 번째 CTA 클릭 (환율 비교하기)
+// Step 2: First CTA Click (Compare Rates)
 export const logClickedCTA = (amount, country, currency) => {
-  console.log('🚀 첫 번째 CTA 클릭 이벤트:', { amount, country, currency });
-  logEvent('clicked_cta', { 
+  console.log('🚀 First CTA click event:', { amount, country, currency });
+  logEvent('clicked_cta', {
     amount: amount,
-    country: country, 
+    country: country,
     transfer_currency: currency,
-    is_first_search: true  // 🔥 첫 번째 검색임을 명시
+    is_first_search: true  // 🔥 Specify that this is the first search
   });
 };
 
-// 3단계: 재비교 (Compare Again) - 🔥 다른 이벤트명 사용
+// Step 3: Compare Again - 🔥 Using different event name
 export const logCompareAgain = (amount, country, currency) => {
-  console.log('🔄 Compare Again 이벤트 (재검색)');
-  logEvent('compare_again', {  // 🔥 'clicked_cta'가 아닌 'compare_again' 사용
+  console.log('🔄 Compare Again event (re-search)');
+  logEvent('compare_again', {  // 🔥 Use 'compare_again' instead of 'clicked_cta'
     amount: amount,
     country: country,
     transfer_currency: currency,
@@ -219,35 +219,35 @@ export const logCompareAgain = (amount, country, currency) => {
   });
 };
 
-// 4단계: 업체 선택
+// Step 4: Provider Selection
 export const logClickedProvider = (providerName, amount, country, currency, additionalContext = {}) => {
-  console.log('🏦 Provider 클릭 이벤트:', providerName);
+  console.log('🏦 Provider click event:', providerName);
   logEvent('clicked_provider', {
-    // GA4 표준 이벤트 파라미터
+    // GA4 standard event parameters
     content_type: 'provider',
     item_id: providerName,
     item_name: providerName,
 
-    // 커스텀 파라미터 (GA4에서 커스텀 차원으로 등록 필요)
+    // Custom parameters (Registration as custom dimensions in GA4 required)
     provider_name: providerName,
     provider: providerName,
 
-    // 거래 정보
+    // Transaction information
     amount: amount,
     country: country,
     receiving_country: country,
     transfer_currency: currency,
     corridor: `KR-${country}`,
 
-    // 추가 컨텍스트
+    // Additional context
     ...additionalContext
   });
 };
 
 
-// 기타 이벤트들
+// Other events
 export const logSendingCountrySwitch = (currency) => {
-  console.log('🌍 국가 변경 이벤트:', currency);
+  console.log('🌍 Country change event:', currency);
   logEvent('sending_country_switch', {
     item_category: 'destination_country',
     item_name: currency,
@@ -255,9 +255,9 @@ export const logSendingCountrySwitch = (currency) => {
   });
 };
 
-// 결과 노출 이벤트 (스크롤하여 결과를 봤을 때)
+// Results impression event (When user scrolls to see results)
 export const logResultsImpression = (amount, country, currency, providerCount) => {
-  console.log('👁️ 결과 노출 이벤트 (Impression):', { amount, country, currency, providerCount });
+  console.log('👁️ Results impression event:', { amount, country, currency, providerCount });
   logEvent('results_impression', {
     amount: amount,
     country: country,
@@ -267,7 +267,7 @@ export const logResultsImpression = (amount, country, currency, providerCount) =
   });
 };
 
-// 결과 영역에서 실제로 스크롤을 했는지 측정
+// Measure if user actually scrolled within results area
 export const logResultsScroll = (
   amount,
   country,
@@ -276,7 +276,7 @@ export const logResultsScroll = (
   bestProvider,
   scrollY
 ) => {
-  console.log('📜 결과 영역 스크롤 이벤트:', { amount, country, currency, providerCount, bestProvider, scrollY });
+  console.log('📜 Results area scroll event:', { amount, country, currency, providerCount, bestProvider, scrollY });
   logEvent('results_scroll', {
     amount: amount,
     country: country,

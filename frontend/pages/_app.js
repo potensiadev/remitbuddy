@@ -1,4 +1,4 @@
-// 파일 위치: /frontend/pages/_app.js
+// File location: /frontend/pages/_app.js
 import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';

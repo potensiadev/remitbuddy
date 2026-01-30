@@ -1,4 +1,4 @@
-// next.config.js - SEO/보안/캐시 최적화 (권장 수정안)
+// next.config.js - SEO/Security/Cache optimization (Recommended version)
 const { i18n } = require('./next-i18next.config')
 
 /** @type {import('next').NextConfig} */
@@ -18,7 +18,7 @@ const nextConfig = {
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
 
-    // 개발/프로덕션 CSP
+    // Dev/Prod CSP
     const devCSP = [
       "default-src 'self' 'unsafe-eval' 'unsafe-inline'",
       "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
@@ -48,22 +48,22 @@ const nextConfig = {
     ].join('; ');
 
     return [
-      // 1) 모든 경로: 보안 헤더 (캐시는 제외!)
+      // 1) All paths: Security headers (excluding cache!)
       {
         source: '/(.*)',
         headers: [
-          // X-Frame-Options는 frame-ancestors와 중복 가능 → 하나만 써도 됨
+          // X-Frame-Options can overlap with frame-ancestors -> only one is needed
           ...(!isDev ? [{ key: 'X-Frame-Options', value: 'DENY' }] : []),
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: "camera=(), microphone=(), geolocation=(), payment=()" },
           { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
           { key: 'Content-Security-Policy', value: isDev ? devCSP : prodCSP },
-          // ❗ HTML에 장기 캐시 절대 금지 (Next 기본값 유지 또는 짧게)
+          // ❗ Long-term cache absolutely prohibited for HTML (keep Next default or keep short)
           { key: 'Cache-Control', value: isDev ? 'no-store, must-revalidate' : 'public, max-age=0, must-revalidate' },
         ],
       },
-      // 2) 정적 자산: 장기 캐시
+      // 2) Static assets: Long-term cache
       {
         source: '/_next/static/(.*)',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
@@ -89,19 +89,18 @@ const nextConfig = {
 
   async redirects() {
     return [
-      // (B) naked → www 강제
+      // (B) naked -> www forced
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'remitbuddy.com' }],
         destination: 'https://www.remitbuddy.com/:path*',
         permanent: true,
       },
-      // (C) 구버전 URL
+      // (C) Legacy URLs
       {
         source: '/compare',
         destination: '/en',
         permanent: true,
-        locale: false,
       },
     ]
   },

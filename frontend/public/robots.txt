@@ -1,54 +1,13 @@
 # RemitBuddy robots.txt
-# 위치: public/robots.txt
+# Location: public/robots.txt
 
 User-agent: *
 Allow: /
 
-# 13개 언어 페이지 명시적 허용
-Allow: /ko
+# Allowed languages
 Allow: /en
-Allow: /vi
-Allow: /ne
-Allow: /th
-Allow: /my
-Allow: /id
-Allow: /km
-Allow: /tl
-Allow: /uz
-Allow: /si
-Allow: /mn
-Allow: /bn
 
-# 국가별 가이드 페이지 허용
-Allow: /ko/guide/
-Allow: /vi/guide/
-Allow: /ne/guide/
-Allow: /th/guide/
-Allow: /my/guide/
-Allow: /id/guide/
-Allow: /km/guide/
-Allow: /tl/guide/
-Allow: /uz/guide/
-Allow: /si/guide/
-Allow: /mn/guide/
-Allow: /bn/guide/
-
-# 블로그 페이지 허용
-Allow: /blog/
-Allow: /ko/blog/
-Allow: /vi/blog/
-Allow: /ne/blog/
-Allow: /th/blog/
-Allow: /my/blog/
-Allow: /id/blog/
-Allow: /km/blog/
-Allow: /tl/blog/
-Allow: /uz/blog/
-Allow: /si/blog/
-Allow: /mn/blog/
-Allow: /bn/blog/
-
-# 크롤링 금지 영역
+# Crawl disallowed areas
 Disallow: /api/
 Disallow: /_next/
 Disallow: /admin/
@@ -57,13 +16,13 @@ Disallow: /test/
 Disallow: /dev/
 Disallow: /private/
 
-# 사이트맵 위치 (매우 중요!)
+# Sitemap location
 Sitemap: https://www.remitbuddy.com/sitemap.xml
 
-# 크롤링 지연 설정 (서버 부하 방지)
+# Crawl delay (to prevent server load)
 Crawl-delay: 1
 
-# 주요 검색엔진별 특별 설정
+# Special settings for search engines
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 0

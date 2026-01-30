@@ -1,15 +1,40 @@
 import React from 'react';
 import { useTranslation } from 'next-i18next';
 
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+interface ContactItem {
+  label: string;
+  value: string;
+}
+
+interface FooterSections {
+  service: {
+    title: string;
+    links: NavLink[];
+  };
+  contact: {
+    title: string;
+    items: ContactItem[];
+  };
+  legal: {
+    title: string;
+    links: NavLink[];
+  };
+}
+
 /**
  * Toss-style Footer Component
  * Comprehensive footer with enhanced sections matching Toss design
  */
-const Footer = () => {
+const Footer: React.FC = () => {
   const { t } = useTranslation('common');
   const currentYear = new Date().getFullYear();
 
-  const footerSections = {
+  const footerSections: FooterSections = {
     service: {
       title: t('nav.service'),
       links: [
@@ -40,7 +65,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Footer Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
-          {/* Brand and Description (Span 1 or 2 if needed) */}
+          {/* Brand and Description */}
           <div className="lg:col-span-1">
             <div className="mb-4">
               <span className="text-2xl font-bold text-gray-900">{t('footer.title')}</span>

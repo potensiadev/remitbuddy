@@ -115,11 +115,12 @@ const WelcomeBackBanner = ({ lastComparison, onUseLastComparison, onDismiss }) =
   );
 };
 
-export default function HomePage() {
+export default function HomePage({ buildTimestamp }) {
   const { t } = useTranslation('common');
   const router = useRouter();
 
   const [amount, setAmount] = useState('1000000');
+
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [lastComparison, setLastComparison] = useState(null);
@@ -305,13 +306,13 @@ export default function HomePage() {
         <meta property="og:description" content={t('seo.description')} />
 
         {/* Primary Image (Social - 1200x630) */}
-        <meta property="og:image" content={`https://www.remitbuddy.com/og-image.png?v=${Date.now()}`} />
+        <meta property="og:image" content={`https://www.remitbuddy.com/og-image.png?v=${buildTimestamp}`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
 
         {/* Secondary Image (Messenger - 800x400) - For better visibility in small thumbnails */}
-        <meta property="og:image" content={`https://www.remitbuddy.com/og-messenger.png?v=${Date.now()}`} />
+        <meta property="og:image" content={`https://www.remitbuddy.com/og-messenger.png?v=${buildTimestamp}`} />
         <meta property="og:image:width" content="800" />
         <meta property="og:image:height" content="400" />
         <meta property="og:image:type" content="image/png" />
@@ -324,7 +325,7 @@ export default function HomePage() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={t('seo.title')} />
         <meta name="twitter:description" content={t('seo.description')} />
-        <meta name="twitter:image" content={`https://www.remitbuddy.com/og-image.png?v=${Date.now()}`} />
+        <meta name="twitter:image" content={`https://www.remitbuddy.com/og-image.png?v=${buildTimestamp}`} />
 
         <link rel="preconnect" href="https://www.remitbuddy.com" />
         {FLAG_ASSETS.map((flag) => (
@@ -533,6 +534,7 @@ export default function HomePage() {
 export async function getStaticProps({ locale }) {
   return {
     props: {
+      buildTimestamp: Date.now(),
       ...(await serverSideTranslations(locale, ['common'])),
     },
   };

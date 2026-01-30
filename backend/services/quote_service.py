@@ -53,9 +53,9 @@ class QuoteService:
             country_lower, currency_upper, send_amount
         )
 
-        # Check cache
+        # Check cache (multi-layer: L1 memory -> L2 Redis)
         if use_cache:
-            cached = cache_service.get(cache_key)
+            cached = await cache_service.async_get(cache_key)
             if cached:
                 logger.info("cache_hit", cache_key=cache_key)
                 return QuoteResponse(**cached)
@@ -87,9 +87,9 @@ class QuoteService:
                 "best_rate_provider": sorted_quotes[0] if sorted_quotes else None,
             }
 
-            # Cache the response
+            # Cache the response (multi-layer: L1 memory + L2 Redis)
             if use_cache:
-                cache_service.set(cache_key, response_data)
+                await cache_service.async_set(cache_key, response_data)
 
             execution_time = time.time() - start_time
             logger.info(

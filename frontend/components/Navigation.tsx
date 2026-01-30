@@ -1,21 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import LanguageSwitcher from './LanguageSwitcher';
+
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+interface MenuSection {
+  title: string;
+  links: NavLink[];
+}
 
 /**
  * Toss-style Navigation Component
  * Mobile: Hamburger menu with full-screen overlay
  * Desktop: Horizontal navigation bar
  */
-const Navigation = () => {
+const Navigation: React.FC = () => {
   const { t } = useTranslation('common');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Handle scroll effect for navigation background
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
@@ -34,7 +43,7 @@ const Navigation = () => {
     };
   }, [isMenuOpen]);
 
-  const menuItems = {
+  const menuItems: { service: MenuSection } = {
     service: {
       title: t('nav.service'),
       links: [
@@ -45,18 +54,15 @@ const Navigation = () => {
     }
   };
 
-  const handleLinkClick = (href) => {
+  const handleLinkClick = (href: string): void => {
     setIsMenuOpen(false);
 
-    // If we're already on the home page, just scroll
     if (window.location.pathname === '/') {
       const element = document.querySelector(href.replace('/', ''));
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
-      // If we're on a subpage, let the link's default behavior (navigation) take over
-      // Or manually route
       window.location.href = href;
     }
   };
@@ -196,7 +202,6 @@ const Navigation = () => {
 
           {/* Bottom Actions */}
           <div className="mt-8 pt-8 border-t border-gray-100">
-            {/* You can add language switcher or other actions here later */}
             <p className="text-center text-sm font-medium text-gray-400">© 2024 RemitBuddy</p>
           </div>
         </div>
@@ -206,4 +211,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-

@@ -6,27 +6,46 @@ import ProviderCard from './ProviderCard';
 import { SavedCorridors, SaveCorridorButton } from './SavedCorridors';
 import { ViewToggle, ResultsTable } from './ResultsTable';
 import RateChart from './RateChart';
+import { Quote, QueryParams } from '../../types';
 
-export default function ComparisonResults({
+interface ComparisonResultsProps {
+  queryParams: QueryParams;
+  amount: string | number;
+  forceRefresh: number;
+  onCompareAgain: () => void;
+  apiBaseUrl: string;
+  isAutoScrolling?: boolean;
+  view?: 'card' | 'table';
+  onViewChange?: (view: 'card' | 'table') => void;
+  onSaveCorridor?: () => void;
+  isCorridorSaved?: boolean;
+}
+
+interface FetchError {
+  type: 'empty' | 'api';
+  message?: string;
+}
+
+const ComparisonResults: React.FC<ComparisonResultsProps> = ({
   queryParams,
   amount,
   forceRefresh,
   onCompareAgain,
   apiBaseUrl,
-  isAutoScrolling,
-  view,
+  isAutoScrolling = false,
+  view = 'card',
   onViewChange,
   onSaveCorridor,
-  isCorridorSaved
-}) {
+  isCorridorSaved = false
+}) => {
   const { t } = useTranslation('common');
 
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Quote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [snapshotTime, setSnapshotTime] = useState(null);
-  const amountRef = useRef(amount);
-  const resultsContainerRef = useRef(null);
+  const [error, setError] = useState<FetchError | null>(null);
+  const [snapshotTime, setSnapshotTime] = useState<string | null>(null);
+  const amountRef = useRef<string | number>(amount);
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
   const [hasLoggedImpression, setHasLoggedImpression] = useState(false);
   const [hasLoggedScroll, setHasLoggedScroll] = useState(false);
 
@@ -42,7 +61,7 @@ export default function ComparisonResults({
   useEffect(() => {
     if (!queryParams.receive_country) return;
 
-    const fetchQuotes = async () => {
+    const fetchQuotes = async (): Promise<void> => {
       setIsLoading(true);
       setError(null);
       setResults([]);
@@ -79,7 +98,8 @@ export default function ComparisonResults({
           setError({ type: 'empty' });
         }
       } catch (err) {
-        setError({ type: 'api', message: err.message });
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+        setError({ type: 'api', message: errorMessage });
       } finally {
         setIsLoading(false);
       }
@@ -95,8 +115,8 @@ export default function ComparisonResults({
       ? Math.round(bestProvider.recipient_gets - worstProvider.recipient_gets)
       : 0;
 
-  const getAmountRange = (val) => {
-    const v = parseInt(val || '0', 10);
+  const getAmountRange = (val: string | number): string => {
+    const v = parseInt(String(val) || '0', 10);
     if (v < 100000) return '0-100k';
     if (v < 500000) return '100k-500k';
     if (v < 1000000) return '500k-1M';
@@ -104,8 +124,8 @@ export default function ComparisonResults({
     return '3M+';
   };
 
-  const handleProviderClick = (provider, index) => {
-    const amountVal = parseInt(amountRef.current || '0', 10);
+  const handleProviderClick = (provider: Quote, index: number): void => {
+    const amountVal = parseInt(String(amountRef.current) || '0', 10);
     trackEvent(ANALYTICS_EVENTS.CLICK_PROVIDER, {
       provider: provider.provider,
       rank: index + 1,
@@ -114,14 +134,13 @@ export default function ComparisonResults({
       amount: amountVal,
       amount_range: getAmountRange(amountVal),
       recipient_gets: provider.recipient_gets,
-      // Monetization metric: Difference from best rate
       markup_spread: bestProvider ? (bestProvider.exchange_rate - provider.exchange_rate) : 0
     });
   };
 
   useEffect(() => {
     if (!isLoading && !error && results.length > 0 && !hasLoggedImpression) {
-      const amountVal = parseInt(amountRef.current || '0', 10);
+      const amountVal = parseInt(String(amountRef.current) || '0', 10);
       trackEvent(ANALYTICS_EVENTS.VIEW_RESULTS, {
         provider_count: results.length,
         best_provider: bestProvider?.provider,
@@ -136,12 +155,11 @@ export default function ComparisonResults({
   useEffect(() => {
     if (hasLoggedScroll || isLoading || error || results.length === 0) return;
 
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       if (hasLoggedScroll || isAutoScrolling) return;
 
       const sectionTop = resultsContainerRef.current?.offsetTop ?? 0;
       if (window.scrollY > sectionTop + 50) {
-        // Optional: specific scroll event if needed, or skip
         setHasLoggedScroll(true);
       }
     };
@@ -159,7 +177,7 @@ export default function ComparisonResults({
     bestProvider?.provider
   ]);
 
-  const formattedAmount = parseInt(amount || '0', 10).toLocaleString();
+  const formattedAmount = parseInt(String(amount) || '0', 10).toLocaleString();
 
   return (
     <div ref={resultsContainerRef} className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
@@ -189,7 +207,7 @@ export default function ComparisonResults({
             <span className="text-gray-400 text-xs sm:text-sm font-medium">to {queryParams.receive_country}</span>
           </div>
 
-          {/* Mini Badges (Scrollable if needed, or hidden on very small screens) */}
+          {/* Mini Badges */}
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
             {savings > 0 && (
               <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-100/80 text-emerald-700 text-[10px] sm:text-xs font-bold whitespace-nowrap">
@@ -250,8 +268,6 @@ export default function ComparisonResults({
 
       {!isLoading && !error && results.length > 0 && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-          {/* RateChart removed */}
-
           {view === 'table' ? (
             <ResultsTable
               results={results}
@@ -279,4 +295,6 @@ export default function ComparisonResults({
       )}
     </div>
   );
-}
+};
+
+export default ComparisonResults;

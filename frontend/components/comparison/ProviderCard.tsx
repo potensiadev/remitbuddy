@@ -1,8 +1,26 @@
 import React from 'react';
 import { useTranslation } from 'next-i18next';
-import { PROVIDER_LOGO_MAP } from '../../lib/constants';
+import { Quote } from '../../types';
 
-const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, worstAmount, sendAmount }) => {
+interface ProviderCardProps {
+  provider: Quote;
+  isBest: boolean;
+  index: number;
+  onProviderClick: () => void;
+  bestAmount: number;
+  worstAmount: number;
+  sendAmount: string | number;
+}
+
+const ProviderCard: React.FC<ProviderCardProps> = ({
+  provider,
+  isBest,
+  index,
+  onProviderClick,
+  bestAmount,
+  worstAmount,
+  sendAmount
+}) => {
   const { t } = useTranslation('common');
 
   const displayName =
@@ -56,7 +74,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
           <div className="flex justify-between items-center text-xs md:text-sm">
             <span className="text-gray-400 font-medium">You Pay</span>
             <span className="text-gray-600 font-bold">
-              {parseInt(sendAmount || 0).toLocaleString()} KRW
+              {parseInt(String(sendAmount) || '0', 10).toLocaleString()} KRW
             </span>
           </div>
 

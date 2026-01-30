@@ -3,12 +3,16 @@ import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Script from 'next/script';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import type { AppProps } from 'next/app';
+
 import '../styles/globals.css';
 import { initRetentionTracking } from '../utils/analytics';
+import { queryClient } from '../lib/queryClient';
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  // Use the ID from env or fallback (User should update this)
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-Z0SHT6SKJ3';
 
   useEffect(() => {
@@ -29,7 +33,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <GoogleAnalytics trackPageViews gaMeasurementId={measurementId} />
 
       {/* Google AdSense */}
@@ -40,7 +44,12 @@ function MyApp({ Component, pageProps }) {
       />
 
       <Component {...pageProps} />
-    </>
+
+      {/* React Query Devtools - only in development */}
+      {process.env.NODE_ENV === 'development' && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
+    </QueryClientProvider>
   );
 }
 

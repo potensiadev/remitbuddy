@@ -37,34 +37,80 @@ app = FastAPI(
 )
 
 
-# Security middleware - Block admin/debug in production
+# Security middleware - Multi-layer protection for admin/debug endpoints
 @app.middleware("http")
 async def security_middleware(request: Request, call_next):
-    if not settings.is_development:
-        path = request.url.path
-        if path.startswith("/admin") or path.startswith("/debug"):
+    path = request.url.path
+
+    # Check if accessing admin or debug endpoints
+    if path.startswith("/admin") or path.startswith("/debug"):
+        # Layer 1: Master switch - if disabled, block all access
+        if not settings.admin_endpoints_enabled:
+            logger.warning("admin_access_blocked_disabled", path=path)
             return JSONResponse(status_code=404, content={"detail": "Not Found"})
+
+        # Layer 2: Production environment - block completely
+        if settings.is_production:
+            logger.warning(
+                "admin_access_blocked_production",
+                path=path,
+                client_ip=request.client.host if request.client else "unknown",
+            )
+            return JSONResponse(status_code=404, content={"detail": "Not Found"})
+
+        # Layer 3: IP whitelist check (development/staging)
+        client_ip = request.client.host if request.client else "unknown"
+        if not settings.is_admin_ip_allowed(client_ip):
+            logger.warning(
+                "admin_access_blocked_ip",
+                path=path,
+                client_ip=client_ip,
+                allowed_ips=settings.admin_allowed_ips,
+            )
+            return JSONResponse(status_code=404, content={"detail": "Not Found"})
+
+        # Layer 4: Token validation (if configured)
+        admin_token = request.headers.get("X-Admin-Token")
+        if not settings.is_admin_token_valid(admin_token):
+            logger.warning(
+                "admin_access_blocked_token",
+                path=path,
+                client_ip=client_ip,
+            )
+            return JSONResponse(status_code=404, content={"detail": "Not Found"})
+
+        logger.info("admin_access_granted", path=path, client_ip=client_ip)
+
     return await call_next(request)
 
 
-# CORS configuration
-if settings.is_production:
-    allowed_origins = settings.cors_allowed_origins
-    allow_origin_regex = None
-    logger.info("cors_production_mode", origins=allowed_origins)
-else:
-    allowed_origins = settings.cors_dev_origins
-    allow_origin_regex = settings.cors_dev_origin_regex
-    logger.info("cors_development_mode", origins=allowed_origins)
+# CORS configuration - environment-specific with no private IP ranges
+def get_cors_origins() -> list:
+    """Get CORS origins based on environment."""
+    if settings.is_production:
+        return settings.cors_allowed_origins
+    elif settings.is_staging:
+        return settings.cors_staging_origins
+    else:
+        return settings.cors_dev_origins
+
+
+cors_origins = get_cors_origins()
+logger.info(
+    "cors_configured",
+    env=settings.env,
+    origins=cors_origins,
+    allow_credentials=False,
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_origin_regex=allow_origin_regex,
+    allow_origins=cors_origins,
+    allow_origin_regex=None,  # Private IP regex removed for security
     allow_credentials=False,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
-    expose_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],  # Restricted to needed methods only
+    allow_headers=["Content-Type", "Authorization", "X-Admin-Token"],  # Restricted headers
+    expose_headers=["X-RateLimit-Remaining", "X-RateLimit-Reset"],
     max_age=600,
 )
 
@@ -89,6 +135,26 @@ def read_root():
 @app.on_event("startup")
 async def startup_event():
     """Initialize application on startup."""
+    # Validate production requirements
+    config_errors = settings.validate_production_requirements()
+    if config_errors:
+        for error in config_errors:
+            logger.warning("production_config_warning", issue=error)
+
+        # In production, critical errors should prevent startup
+        if settings.is_production and settings.require_redis_in_production and not settings.redis_url:
+            logger.critical("production_startup_blocked", errors=config_errors)
+            raise RuntimeError(f"Production startup blocked: {', '.join(config_errors)}")
+
+    # Log environment info
+    logger.info(
+        "app_startup",
+        env=settings.env,
+        admin_endpoints_enabled=settings.admin_endpoints_enabled,
+        admin_allowed_ips=settings.admin_allowed_ips,
+        admin_token_configured=bool(settings.admin_secret_token),
+    )
+
     try:
         proxy_configs = proxy_config_manager.get_proxy_configs()
         for proxy_config in proxy_configs:

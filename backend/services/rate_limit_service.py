@@ -12,6 +12,7 @@ logger = structlog.get_logger(__name__)
 
 # Redis client (optional)
 redis_client = None
+redis_available = False
 
 try:
     import redis.asyncio as redis
@@ -20,35 +21,59 @@ try:
         redis_client = redis.from_url(
             settings.redis_url, encoding="utf-8", decode_responses=True
         )
+        redis_available = True
         logger.info(
             "redis_connected", url=settings.redis_url.split("@")[-1]
         )
+    else:
+        logger.warning("redis_not_configured", fallback="memory")
 except Exception as e:
     logger.error("redis_connection_failed", error=str(e))
 
 
 class RateLimitService:
-    """Service for managing rate limiting."""
+    """Service for managing rate limiting with strict mode support."""
 
     def __init__(
         self,
         limit: int = 15,
         window: int = 60,
+        strict_mode: bool = True,
     ):
         self.limit = limit
         self.window = window
+        self.strict_mode = strict_mode
         self._timestamps: Dict[str, List[float]] = {}
+        self._redis_failure_logged = False
 
     async def check_rate_limit(self, client_ip: str) -> None:
         """
         Check if client has exceeded rate limit.
 
+        Strict Mode (production):
+        - If Redis is required but unavailable, block the request
+        - If Redis fails during request, block instead of fallback
+
+        Non-Strict Mode (development):
+        - Fall back to in-memory if Redis is unavailable
+
         Args:
             client_ip: Client IP address
 
         Raises:
-            RateLimitExceeded: If rate limit is exceeded
+            RateLimitExceeded: If rate limit is exceeded or Redis unavailable in strict mode
         """
+        # Check if Redis is required but not available
+        if settings.is_production and settings.require_redis_in_production:
+            if not redis_available:
+                if not self._redis_failure_logged:
+                    logger.critical(
+                        "rate_limit_redis_required_but_unavailable",
+                        action="blocking_request",
+                    )
+                    self._redis_failure_logged = True
+                raise RateLimitExceeded(client_ip, self.limit, self.window)
+
         # Try Redis first
         if redis_client:
             try:
@@ -59,10 +84,24 @@ class RateLimitService:
                     "redis_rate_limit_error",
                     client_ip=client_ip,
                     error=str(e),
-                    fallback="memory",
                 )
 
-        # Fall back to in-memory
+                # Strict mode in production: block on Redis failure
+                if self.strict_mode and settings.is_production:
+                    logger.warning(
+                        "rate_limit_strict_mode_blocking",
+                        client_ip=client_ip,
+                        reason="redis_failure",
+                    )
+                    raise RateLimitExceeded(client_ip, self.limit, self.window)
+
+                # Non-strict: fall back to memory
+                logger.warning(
+                    "rate_limit_fallback_to_memory",
+                    client_ip=client_ip,
+                )
+
+        # Fall back to in-memory (only in non-strict mode or non-production)
         await self._check_memory_rate_limit(client_ip)
 
     async def _check_redis_rate_limit(self, client_ip: str) -> None:
@@ -116,4 +155,5 @@ class RateLimitService:
 rate_limit_service = RateLimitService(
     limit=settings.rate_limit,
     window=settings.rate_limit_window,
+    strict_mode=settings.is_production,  # Strict mode enabled in production
 )

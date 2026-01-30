@@ -29,11 +29,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# --- Security Middleware (Block Admin/Debug in Prod) ---
+# --- Security Middleware (Block Admin/Debug in Prod/Staging) ---
 @app.middleware("http")
 async def security_middleware(request: Request, call_next):
-    # Block /admin and /debug endpoints in production
-    if os.getenv("ENV", "").lower() == "production":
+    # Block /admin and /debug endpoints in ALL environments except 'development'
+    env = os.getenv("ENV", "").lower()
+    if env != "development":
         path = request.url.path
         if path.startswith("/admin") or path.startswith("/debug"):
             # Return 404 to hide existence
@@ -73,7 +74,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_origin_regex=allow_origin_regex,
-    allow_credentials=True,
+    # Disable credentials to prevent CSRF since frontend does not use cookies
+    allow_credentials=False,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
     expose_headers=["*"],

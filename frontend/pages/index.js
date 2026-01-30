@@ -305,13 +305,13 @@ export default function HomePage() {
         <meta property="og:description" content={t('seo.description')} />
 
         {/* Primary Image (Social - 1200x630) */}
-        <meta property="og:image" content="https://www.remitbuddy.com/og-image.png" />
+        <meta property="og:image" content={`https://www.remitbuddy.com/og-image.png?v=${Date.now()}`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
 
         {/* Secondary Image (Messenger - 800x400) - For better visibility in small thumbnails */}
-        <meta property="og:image" content="https://www.remitbuddy.com/og-messenger.png" />
+        <meta property="og:image" content={`https://www.remitbuddy.com/og-messenger.png?v=${Date.now()}`} />
         <meta property="og:image:width" content="800" />
         <meta property="og:image:height" content="400" />
         <meta property="og:image:type" content="image/png" />
@@ -324,7 +324,7 @@ export default function HomePage() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={t('seo.title')} />
         <meta name="twitter:description" content={t('seo.description')} />
-        <meta name="twitter:image" content="https://www.remitbuddy.com/og-image.png" />
+        <meta name="twitter:image" content={`https://www.remitbuddy.com/og-image.png?v=${Date.now()}`} />
 
         <link rel="preconnect" href="https://www.remitbuddy.com" />
         {FLAG_ASSETS.map((flag) => (

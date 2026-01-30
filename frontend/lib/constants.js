@@ -104,3 +104,42 @@ export const getApiBaseUrl = () => {
   // 3. Production fallback
   return 'https://remitbuddy.up.railway.app';
 };
+
+/**
+ * SEO Utility Functions
+ */
+
+// Generate SEO-friendly slug from any text
+export const generateSEOSlug = (text) => {
+  return text.toLowerCase()
+    .replace(/[^a-z0-9가-힣]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+};
+
+// Get all currency pairs for SEO pages
+export const getCurrencyPairs = () => {
+  return COUNTRIES.map(c => ({
+    from: 'KRW',
+    to: c.currency,
+    slug: `krw-to-${c.currency.toLowerCase()}`,
+    country: c
+  }));
+};
+
+// Format amount for display
+export const formatAmount = (amount) => {
+  return parseInt(amount).toLocaleString('en-US');
+};
+
+// Parse amount from slug (e.g., "1000000-to-vietnam" -> 1000000)
+export const parseAmountFromSlug = (slug) => {
+  const match = slug.match(/^(\d+)-to-/);
+  return match ? parseInt(match[1]) : null;
+};
+
+// Extract country slug from compound slug
+export const extractCountrySlug = (slug) => {
+  const match = slug.match(/-to-(.+)$/);
+  return match ? match[1] : null;
+};
+

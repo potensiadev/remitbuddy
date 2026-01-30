@@ -1382,10 +1382,19 @@ export default function HomePage() {
         {/* Open Graph Meta Tags */}
         <meta property="og:title" content={t('seo.title')} />
         <meta property="og:description" content={t('seo.description')} />
+        
+        {/* Primary Image (Social - 1200x630) */}
         <meta property="og:image" content="https://www.remitbuddy.com/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
+
+        {/* Secondary Image (Messenger - 800x400) - For better visibility in small thumbnails */}
+        <meta property="og:image" content="https://www.remitbuddy.com/og-messenger.png" />
+        <meta property="og:image:width" content="800" />
+        <meta property="og:image:height" content="400" />
+        <meta property="og:image:type" content="image/png" />
+
         <meta property="og:url" content="https://www.remitbuddy.com" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="RemitBuddy" />
@@ -1400,6 +1409,8 @@ export default function HomePage() {
         {FLAG_ASSETS.map((flag) => (
           <link key={flag} rel="preload" as="image" href={flag} />
         ))}
+        {/* Preload critical OG images for bots */}
+        <link rel="preload" as="image" href="/og-image.png" />
       </Head>
 
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">

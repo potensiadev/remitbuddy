@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 import { trackEvent, ANALYTICS_EVENTS } from '../../utils/analytics';
 import { ClockIcon } from './Icons';
@@ -7,6 +7,7 @@ import { SavedCorridors, SaveCorridorButton } from './SavedCorridors';
 import { ViewToggle, ResultsTable } from './ResultsTable';
 import RateChart from './RateChart';
 import { Quote, QueryParams } from '../../types';
+import { useQuotes } from '../../hooks';
 
 interface ComparisonResultsProps {
   queryParams: QueryParams;
@@ -19,11 +20,6 @@ interface ComparisonResultsProps {
   onViewChange?: (view: 'card' | 'table') => void;
   onSaveCorridor?: () => void;
   isCorridorSaved?: boolean;
-}
-
-interface FetchError {
-  type: 'empty' | 'api';
-  message?: string;
 }
 
 const ComparisonResults: React.FC<ComparisonResultsProps> = ({
@@ -40,80 +36,57 @@ const ComparisonResults: React.FC<ComparisonResultsProps> = ({
 }) => {
   const { t } = useTranslation('common');
 
-  const [results, setResults] = useState<Quote[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<FetchError | null>(null);
-  const [snapshotTime, setSnapshotTime] = useState<string | null>(null);
+  // Use React Query hook for data fetching
+  const {
+    results,
+    bestProvider,
+    worstProvider,
+    savings,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    dataUpdatedAt
+  } = useQuotes({
+    queryParams,
+    amount,
+    apiBaseUrl,
+    enabled: Boolean(queryParams.receive_country)
+  });
+
   const amountRef = useRef<string | number>(amount);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
   const [hasLoggedImpression, setHasLoggedImpression] = useState(false);
   const [hasLoggedScroll, setHasLoggedScroll] = useState(false);
 
+  // Derive snapshot time from dataUpdatedAt
+  const snapshotTime = useMemo(() => {
+    if (!dataUpdatedAt) return null;
+    const now = new Date(dataUpdatedAt);
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  }, [dataUpdatedAt]);
+
   useEffect(() => {
     amountRef.current = amount;
   }, [amount]);
 
+  // Reset analytics flags on query change
   useEffect(() => {
     setHasLoggedImpression(false);
     setHasLoggedScroll(false);
   }, [forceRefresh, queryParams.receive_country, queryParams.receive_currency, amount]);
 
+  // Refetch when forceRefresh changes
   useEffect(() => {
-    if (!queryParams.receive_country) return;
-
-    const fetchQuotes = async (): Promise<void> => {
-      setIsLoading(true);
-      setError(null);
-      setResults([]);
-
-      const url = `${apiBaseUrl}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}&_t=${Date.now()}`;
-
-      try {
-        const response = await fetch(url, {
-          method: 'GET',
-          mode: 'cors',
-          cache: 'no-store',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error(`API Error: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.results && data.results.length > 0) {
-          setResults(data.results);
-          const now = new Date();
-          const year = now.getFullYear();
-          const month = String(now.getMonth() + 1).padStart(2, '0');
-          const day = String(now.getDate()).padStart(2, '0');
-          const hours = String(now.getHours()).padStart(2, '0');
-          const minutes = String(now.getMinutes()).padStart(2, '0');
-          setSnapshotTime(`${year}-${month}-${day} ${hours}:${minutes}`);
-        } else {
-          setError({ type: 'empty' });
-        }
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-        setError({ type: 'api', message: errorMessage });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchQuotes();
-  }, [queryParams.receive_country, queryParams.receive_currency, forceRefresh, apiBaseUrl]);
-
-  const bestProvider = results.length > 0 ? results[0] : null;
-  const worstProvider = results.length > 1 ? results[results.length - 1] : null;
-  const savings =
-    bestProvider && worstProvider
-      ? Math.round(bestProvider.recipient_gets - worstProvider.recipient_gets)
-      : 0;
+    if (forceRefresh > 0) {
+      refetch();
+    }
+  }, [forceRefresh, refetch]);
 
   const getAmountRange = (val: string | number): string => {
     const v = parseInt(String(val) || '0', 10);
@@ -139,7 +112,7 @@ const ComparisonResults: React.FC<ComparisonResultsProps> = ({
   };
 
   useEffect(() => {
-    if (!isLoading && !error && results.length > 0 && !hasLoggedImpression) {
+    if (!isLoading && !isError && results.length > 0 && !hasLoggedImpression) {
       const amountVal = parseInt(String(amountRef.current) || '0', 10);
       trackEvent(ANALYTICS_EVENTS.VIEW_RESULTS, {
         provider_count: results.length,
@@ -150,10 +123,10 @@ const ComparisonResults: React.FC<ComparisonResultsProps> = ({
       });
       setHasLoggedImpression(true);
     }
-  }, [isLoading, error, results.length, hasLoggedImpression, queryParams.receive_country, queryParams.receive_currency, bestProvider]);
+  }, [isLoading, isError, results.length, hasLoggedImpression, queryParams.receive_country, queryParams.receive_currency, bestProvider]);
 
   useEffect(() => {
-    if (hasLoggedScroll || isLoading || error || results.length === 0) return;
+    if (hasLoggedScroll || isLoading || isError || results.length === 0) return;
 
     const handleScroll = (): void => {
       if (hasLoggedScroll || isAutoScrolling) return;
@@ -170,7 +143,7 @@ const ComparisonResults: React.FC<ComparisonResultsProps> = ({
     hasLoggedScroll,
     isAutoScrolling,
     isLoading,
-    error,
+    isError,
     results.length,
     queryParams.receive_country,
     queryParams.receive_currency,
@@ -181,7 +154,7 @@ const ComparisonResults: React.FC<ComparisonResultsProps> = ({
 
   return (
     <div ref={resultsContainerRef} className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-      {!isLoading && !error && results.length > 0 && (
+      {!isLoading && !isError && results.length > 0 && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <p className="text-gray-900 font-bold text-lg">
             {results.length} Providers Found
@@ -249,16 +222,16 @@ const ComparisonResults: React.FC<ComparisonResultsProps> = ({
         </div>
       )}
 
-      {error && (
+      {isError && (
         <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-left w-full">
           <h3 className="text-lg font-bold text-red-700 mb-2">Unavailable</h3>
           <p className="text-red-600 text-sm mb-4">
-            {error.type === 'empty'
+            {error?.message?.includes('No providers')
               ? t('results.error_empty')
-              : t('results.error_api', { message: error.message })}
+              : t('results.error_api', { message: error?.message })}
           </p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => refetch()}
             className="text-sm font-bold text-red-700 hover:text-red-800 underline"
           >
             {t('results.retry')}
@@ -266,7 +239,7 @@ const ComparisonResults: React.FC<ComparisonResultsProps> = ({
         </div>
       )}
 
-      {!isLoading && !error && results.length > 0 && (
+      {!isLoading && !isError && results.length > 0 && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
           {view === 'table' ? (
             <ResultsTable

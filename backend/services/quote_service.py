@@ -12,6 +12,7 @@ from core.exceptions import NoProvidersAvailable, RequestTimeout
 from models.quote import Quote, QuoteResponse
 from providers.registry import get_all_providers
 from services.cache_service import cache_service
+from services.circuit_breaker import circuit_registry
 from infrastructure.proxy.manager import proxy_manager
 
 logger = structlog.get_logger(__name__)
@@ -107,13 +108,13 @@ class QuoteService:
     async def _fetch_all_quotes(
         self, send_amount: int, receive_currency: str, receive_country: str
     ) -> List[Dict]:
-        """Fetch quotes from all providers in parallel."""
+        """Fetch quotes from all providers in parallel with circuit breaker protection."""
 
         async def create_session_wrapper(provider, *args):
-            """Create session and fetch quote for a provider."""
+            """Create session and fetch quote for a provider with circuit breaker."""
             timeout = aiohttp.ClientTimeout(total=self.provider_timeout)
             async with aiohttp.ClientSession(timeout=timeout) as session:
-                return await provider.get_quote(session, *args)
+                return await provider.get_quote_with_circuit_breaker(session, *args)
 
         providers = get_all_providers()
         tasks = [
@@ -156,6 +157,15 @@ class QuoteService:
         proxy_stats = proxy_manager.get_proxy_stats()
         if proxy_stats:
             logger.info("proxy_usage_stats", stats=proxy_stats)
+
+        # Log circuit breaker statistics
+        cb_stats = circuit_registry.get_all_stats()
+        open_circuits = [
+            name for name, stats in cb_stats.items()
+            if stats.get("state") == "open"
+        ]
+        if open_circuits:
+            logger.warning("open_circuit_breakers", providers=open_circuits)
 
         return results
 

@@ -5,12 +5,14 @@ from datetime import datetime
 
 import psutil
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 
 import structlog
 
 from services.cache_service import cache_service
+from services.circuit_breaker import circuit_registry
 from infrastructure.proxy.manager import proxy_manager
+from core.metrics import get_metrics, get_metrics_content_type
 
 logger = structlog.get_logger(__name__)
 
@@ -73,6 +75,7 @@ async def detailed_health_check():
             "size": cache_service.size,
             "max_size": cache_service.maxsize,
         },
+        "circuit_breakers": circuit_registry.get_all_stats(),
     }
 
 
@@ -156,3 +159,16 @@ async def liveness_check():
                 "timestamp": datetime.utcnow().isoformat(),
             },
         )
+
+
+@router.get(
+    "/metrics",
+    summary="Prometheus metrics",
+    description="Returns Prometheus-formatted metrics",
+)
+async def metrics():
+    """Prometheus metrics endpoint."""
+    return Response(
+        content=get_metrics(),
+        media_type=get_metrics_content_type(),
+    )

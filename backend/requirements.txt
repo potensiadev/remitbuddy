@@ -20,3 +20,9 @@ python-dotenv
 
 # System monitoring
 psutil
+
+# Error tracking
+sentry-sdk[fastapi]>=2.0.0
+
+# Metrics
+prometheus-client>=0.20.0

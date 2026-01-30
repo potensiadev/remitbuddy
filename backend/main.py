@@ -13,9 +13,17 @@ from fastapi.responses import JSONResponse
 from core.config import settings
 from core.logging import setup_logging, get_logger
 from core.exceptions import RateLimitExceeded
+from core.sentry import init_sentry
+from core.metrics import init_metrics
 from api.v1.router import api_router
 from infrastructure.proxy.config import proxy_config_manager
 from infrastructure.proxy.manager import proxy_manager
+
+# Initialize Sentry first (before other setup)
+init_sentry()
+
+# Initialize Prometheus metrics
+init_metrics(version=settings.api_version, env=settings.env)
 
 # Setup structured logging
 setup_logging()

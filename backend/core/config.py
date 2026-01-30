@@ -38,6 +38,11 @@ class Settings(BaseSettings):
     provider_timeout: float = 2.0
     fetch_timeout: float = 3.0
 
+    # Sentry
+    sentry_dsn: Optional[str] = None
+    sentry_traces_sample_rate: float = 0.1
+    sentry_profiles_sample_rate: float = 0.1
+
     # CORS
     cors_allowed_origins: List[str] = [
         "https://www.remitbuddy.com",

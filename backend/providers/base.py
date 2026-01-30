@@ -6,6 +6,8 @@ from typing import Dict, Optional
 import aiohttp
 import structlog
 
+from services.circuit_breaker import circuit_registry, CircuitState
+
 logger = structlog.get_logger(__name__)
 
 
@@ -14,6 +16,61 @@ class BaseProvider(ABC):
 
     name: str = "BaseProvider"
     link: str = ""
+
+    # Circuit breaker settings (can be overridden by subclasses)
+    failure_threshold: int = 5
+    recovery_timeout: int = 60
+
+    @property
+    def circuit_breaker(self):
+        """Get or create circuit breaker for this provider."""
+        return circuit_registry.get_or_create(
+            self.name,
+            failure_threshold=self.failure_threshold,
+            recovery_timeout=self.recovery_timeout,
+        )
+
+    async def get_quote_with_circuit_breaker(
+        self,
+        session: aiohttp.ClientSession,
+        send_amount: int,
+        receive_currency: str,
+        receive_country: str,
+    ) -> Optional[Dict]:
+        """
+        Fetch a quote with circuit breaker protection.
+
+        This method wraps get_quote() with circuit breaker logic.
+        """
+        cb = self.circuit_breaker
+
+        # Check if circuit is available
+        if not cb.is_available():
+            self._log_debug(
+                "circuit_breaker_blocked",
+                state=cb.state.value,
+            )
+            return None
+
+        try:
+            result = await self.get_quote(
+                session, send_amount, receive_currency, receive_country
+            )
+
+            if result is not None:
+                cb.record_success()
+            else:
+                # None result is treated as a failure for circuit breaker
+                # but only if it's not due to unsupported country/currency
+                # We'll let individual providers handle this distinction
+                pass
+
+            return result
+
+        except Exception as e:
+            cb.record_failure()
+            self._log_error(e)
+            return None
 
     @abstractmethod
     async def get_quote(

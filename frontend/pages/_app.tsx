@@ -10,6 +10,7 @@ import type { AppProps } from 'next/app';
 import '../styles/globals.css';
 import { initRetentionTracking } from '../utils/analytics';
 import { queryClient } from '../lib/queryClient';
+import { ErrorBoundary } from '../components';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -43,7 +44,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         crossOrigin="anonymous"
       />
 
-      <Component {...pageProps} />
+      <ErrorBoundary>
+        <Component {...pageProps} />
+      </ErrorBoundary>
 
       {/* React Query Devtools - only in development */}
       {process.env.NODE_ENV === 'development' && (

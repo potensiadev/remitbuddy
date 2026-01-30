@@ -3,6 +3,12 @@
 from services.cache_service import CacheService, cache_service
 from services.rate_limit_service import RateLimitService, rate_limit_service
 from services.quote_service import QuoteService, quote_service
+from services.circuit_breaker import (
+    CircuitBreaker,
+    CircuitBreakerRegistry,
+    CircuitState,
+    circuit_registry,
+)
 
 __all__ = [
     "CacheService",
@@ -11,4 +17,8 @@ __all__ = [
     "rate_limit_service",
     "QuoteService",
     "quote_service",
+    "CircuitBreaker",
+    "CircuitBreakerRegistry",
+    "CircuitState",
+    "circuit_registry",
 ]

@@ -3,79 +3,9 @@ import { NextResponse } from 'next/server';
 export function middleware(request) {
   const { pathname, locale } = request.nextUrl;
 
-<<<<<<< HEAD
-  // 1. Skip static assets (Safety check)
-  if (
-    pathname.includes('.') ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/images')
-  ) {
-    return NextResponse.next();
-  }
-
-  // 2. IMPORTANT: Stop loop if we are already on the correct locale
-  // If the URL already has /ko, Next.js sets locale to 'ko'
-  if (locale === 'ko') {
-    return NextResponse.next();
-  }
-
-  // Also check explicit pathname just in case
-  if (pathname.startsWith('/ko') || pathname.startsWith('/en')) {
-    return NextResponse.next();
-  }
-
-  // 3. User Preference (Cookie)
-  const localeCookie = request.cookies.get('NEXT_LOCALE');
-  if (localeCookie) {
-    if (localeCookie.value === 'ko') {
-      // Avoid redirect loop: only redirect if we are NOT already on /ko
-      if (locale !== 'ko' && !pathname.startsWith('/ko')) {
-        const url = request.nextUrl.clone();
-        url.pathname = `/ko${pathname}`;
-        return NextResponse.redirect(url);
-      }
-    }
-    return NextResponse.next();
-  }
-
-  // 4. Browser Language Detection
-  const acceptLanguage = (request.headers.get('accept-language') || '').toLowerCase();
-  const isKorean = acceptLanguage.includes('ko');
-
-  if (isKorean) {
-    const url = request.nextUrl.clone();
-    url.pathname = `/ko${pathname}`;
-    const response = NextResponse.redirect(url);
-
-    // Set cookie
-    response.cookies.set('NEXT_LOCALE', 'ko', {
-      maxAge: 60 * 60 * 24 * 365,
-      path: '/',
-      sameSite: 'lax',
-    });
-    return response;
-  }
-
-  // 5. Default
-  return NextResponse.next();
-=======
-export function middleware(req) {
-  const url = req.nextUrl;
-  const pathname = url.pathname;
-
-  // Check if pathname starts with a locale
-  const pathnameHasLocale = locales.some(
-    (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
-  );
-
-  // Use standard crypto.randomUUID() which is supported in Edge Runtime
+  // --- CSP & Nonce Setup (Preserved from Origin) ---
   const nonce = crypto.randomUUID();
-
-  // CSP Config
   const isDev = process.env.NODE_ENV === 'development';
-  // Note: We are now avoiding unsafe-inline where possible by using nonces.
-  // 'unsafe-eval' is still often needed in dev mode for hot reloading.
 
   const cspHeader = `
     default-src 'self';
@@ -92,38 +22,78 @@ export function middleware(req) {
   `.replace(/\s{2,}/g, ' ').trim();
 
   // Clone headers to pass nonce to the backend/SSR
-  const requestHeaders = new Headers(req.headers);
+  const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-nonce', nonce);
   requestHeaders.set('content-security-policy', cspHeader);
 
-  // If it has 'en' locale, keep it
-  if (pathnameHasLocale) {
-    const response = NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+  // Helper: Attach CSP header to final response
+  const withHeaders = (response) => {
     response.headers.set('Content-Security-Policy', cspHeader);
     return response;
+  };
+
+  // --- i18n & Redirect Logic (From HEAD) ---
+
+  // 1. Skip static assets
+  if (
+    pathname.includes('.') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/images') ||
+    pathname.startsWith('/logos') ||
+    pathname.startsWith('/icons') ||
+    pathname.startsWith('/fonts')
+  ) {
+    return NextResponse.next();
   }
 
-  // Redirect root or paths without locale to /en
-  if (pathname === '/' || pathname === '') {
-    url.pathname = '/en';
+  // 2. Stop loop if already localized
+  if (locale === 'ko' || pathname.startsWith('/ko') || pathname.startsWith('/en')) {
+    // Pass headers for CSP
+    const response = NextResponse.next({
+      request: { headers: requestHeaders },
+    });
+    return withHeaders(response);
+  }
+
+  // 3. User Preference Cookie
+  const localeCookie = request.cookies.get('NEXT_LOCALE');
+  if (localeCookie) {
+    if (localeCookie.value === 'ko') {
+      if (locale !== 'ko' && !pathname.startsWith('/ko')) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/ko${pathname}`;
+        return NextResponse.redirect(url);
+      }
+    }
+    // Default (English) - Pass through with CSP
+    const response = NextResponse.next({
+      request: { headers: requestHeaders },
+    });
+    return withHeaders(response);
+  }
+
+  // 4. Browser Detection
+  const acceptLanguage = (request.headers.get('accept-language') || '').toLowerCase();
+  const isKorean = acceptLanguage.includes('ko');
+
+  if (isKorean) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/ko${pathname}`;
     const response = NextResponse.redirect(url);
-    // Redirects technically don't need CSP but good practice? 
-    // Usually browser just follows redirect. We can skip CSP on redirect strictly speaking.
+    response.cookies.set('NEXT_LOCALE', 'ko', {
+      maxAge: 60 * 60 * 24 * 365,
+      path: '/',
+      sameSite: 'lax',
+    });
     return response;
   }
 
+  // 5. Default Fallback
   const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
+    request: { headers: requestHeaders },
   });
-  response.headers.set('Content-Security-Policy', cspHeader);
-  return response;
->>>>>>> 290518636de02a2a1b2996aab642d2d67f9ac1cf
+  return withHeaders(response);
 }
 
 export const config = {

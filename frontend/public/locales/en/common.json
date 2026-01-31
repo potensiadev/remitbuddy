@@ -115,7 +115,7 @@
     "q1_title": "Is RemitBuddy free?",
     "q1_desc": "Yes! RemitBuddy is 100% free. We never charge you for comparing rates. Our goal is to help you find the best deal at no extra cost.",
     "q2_title": "Are rates updated in real-time?",
-    "q2_desc": "We show you live rates at the moment you click Compare. Keep in mind that rates can change frequently.",
+    "q2_desc": "We show you live rates at the moment you click 'Compare for Free'. Keep in mind that rates can change frequently.",
     "q3_title": "Can I send money through RemitBuddy?",
     "q3_desc": "RemitBuddy is a comparison platform. Once you find the best deal, we'll direct you to the provider's official site to complete your transfer.",
     "q4_title": "Which providers do you compare?",
@@ -246,7 +246,7 @@
     "title": "Terms of Service"
   },
   "footer": {
-    "title": "RemitBuddy – Compare International Transfers",
+    "title": "RemitBuddy",
     "description": "Stop Overpaying on Remittance Fees",
     "company": "Company",
     "privacy": "Privacy Policy",

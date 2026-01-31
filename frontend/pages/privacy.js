@@ -1,14 +1,15 @@
-import Head from 'next/head';
+import React from 'react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 export default function Privacy() {
     const { t } = useTranslation('common');
-
-    const { useRouter } = require('next/router');
-    const { locale } = useRouter();
+    const router = useRouter();
+    const { locale } = router;
 
     return (
         <>
@@ -26,7 +27,6 @@ export default function Privacy() {
                             <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-8">{t('privacy.title')}</h1>
 
                             <div className="prose prose-lg text-gray-600 max-w-none">
-<<<<<<< HEAD
                                 <p className="mb-6">
                                     {locale === 'ko'
                                         ? `최종 업데이트: ${new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}`
@@ -58,24 +58,24 @@ export default function Privacy() {
 
                                         <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">5. 문의하기</h2>
                                         <p>
-                                            이 개인정보처리방침에 대해 질문이 있는 경우 privacy@remitbuddy.com으로 문의하십시오: <a href="mailto:privacy@remitbuddy.com" className="text-brand-600 hover:underline">privacy@remitbuddy.com</a>
+                                            개인정보 보호정책에 대해 궁금한 점이 있으시면 <a href="mailto:privacy@remitbuddy.com" className="text-brand-600 hover:underline">privacy@remitbuddy.com</a>으로 문의해 주세요.
                                         </p>
                                     </>
                                 ) : (
                                     <>
                                         <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">1. Introduction</h2>
                                         <p>
-                                            RemitBuddy ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and share information about you when you use our website and services.
+                                            RemitBuddy ("us", "we", or "our") operates RemitBuddy (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
                                         </p>
 
-                                        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">2. Information We Collect</h2>
+                                        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">2. Information Collection and Use</h2>
                                         <p>
-                                            We may collect usage data when you use our comparison tools. This data is used to improve our services.
+                                            We collect several different types of information for various purposes to provide and improve our Service to you.
                                         </p>
 
-                                        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">3. How We Use Your Information</h2>
+                                        <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">3. Types of Data Collected</h2>
                                         <p>
-                                            We use the information we collect to provider, maintain, and improve our services, to communicate with you, and to monitor and analyze trends and usage.
+                                            We may collect information on how the Service is accessed and used ("Usage Data"). This Usage Data may include information such as your computer's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that you visit, the time and date of your visit, the time spent on those pages, unique device identifiers and other diagnostic data.
                                         </p>
 
                                         <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">4. Cookies and Tracking Technologies</h2>
@@ -89,52 +89,6 @@ export default function Privacy() {
                                         </p>
                                     </>
                                 )}
-=======
-                                <p className="mb-6">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-
-                                <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">1. Introduction</h2>
-                                <p>
-                                    RemitBuddy ("we," "our," or "us") respects your privacy. This Privacy Policy explains that we operate as a comparison service and do not execute financial transactions directly. We prioritize minimizing data collection.
-                                </p>
-
-                                <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">2. Collection of Personal Information</h2>
-                                <p className="font-semibold text-gray-800">We do NOT collect personal identification information for comparison purposes.</p>
-                                <ul className="list-disc pl-5 mt-2 space-y-1">
-                                    <li><strong>No Sign-Up Required:</strong> You can use our comparison tool without creating an account.</li>
-                                    <li><strong>Transaction Data:</strong> Since we do not process money transfers, we never see or store your bank account details, credit card numbers, or transaction history. All transfers happen on third-party provider websites.</li>
-                                    <li><strong>Input Data:</strong> The amounts and countries you enter for comparison are used solely to generate real-time quotes and are not linked to your identity.</li>
-                                </ul>
-
-                                <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">3. Information We Collect Automatically</h2>
-                                <p>
-                                    Like most websites, we may collect non-personal technical data to improve our service:
-                                </p>
-                                <ul className="list-disc pl-5 mt-2 space-y-1">
-                                    <li><strong>Usage Data:</strong> Pages visited, time spent, and click actions (e.g., clicking a "Go to Provider" button).</li>
-                                    <li><strong>Device Information:</strong> Browser type, device type (mobile/desktop), and approximate location (country level) based on IP address.</li>
-                                    <li><strong>Local Storage:</strong> We allow your browser to save your "Last Comparison" settings locally on your device for your convenience. This data never leaves your device.</li>
-                                </ul>
-
-                                <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">4. Cookies and Analytics</h2>
-                                <p>
-                                    We use cookies and similar technologies (e.g., Google Analytics) to understand how users interact with our site. This helps us optimize the user experience. You can disable cookies in your browser settings at any time.
-                                </p>
-
-                                <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">5. Third-Party Links</h2>
-                                <p>
-                                    RemitBuddy contains links to external remittance provider websites. We are not responsible for the privacy practices or content of these third-party sites. We encourage you to read their privacy policies before providing any personal information.
-                                </p>
-
-                                <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">6. Changes to This Policy</h2>
-                                <p>
-                                    We may update this policy periodically. Changes will be posted on this page with an updated date.
-                                </p>
-
-                                <h2 className="text-xl font-bold text-gray-900 mt-8 mb-4">7. Contact Us</h2>
-                                <p>
-                                    If you have questions about our data practices, please contact us at: <a href="mailto:privacy@remitbuddy.com" className="text-brand-600 hover:underline">privacy@remitbuddy.com</a>
-                                </p>
->>>>>>> 290518636de02a2a1b2996aab642d2d67f9ac1cf
                             </div>
                         </div>
                     </div>

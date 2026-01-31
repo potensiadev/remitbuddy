@@ -497,7 +497,9 @@ export default function HomePage({ buildTimestamp }) {
                           placeholder="1,000,000"
                           className={`w-full h-14 sm:h-16 pl-6 pr-16 bg-[#f2f4f6] rounded-2xl text-lg sm:text-xl font-bold text-[#1b1e26] placeholder-gray-400 outline-none transition-all duration-200 ${shakeInput ? 'ring-2 ring-red-400 bg-red-50' : 'focus:bg-white focus:ring-2 focus:ring-primary-500'}`}
                         />
-                        <span className="absolute right-6 top-1/2 -translate-y-1/2 text-sm font-bold text-[#8b95a1]">KRW</span>
+                        <div className="absolute right-6 inset-y-0 flex items-center pointer-events-none">
+                          <span className="text-sm font-bold text-[#8b95a1]">KRW</span>
+                        </div>
                       </div>
                       <div className="mt-2 ml-1 text-xs font-medium text-[#8b95a1]">
                         ₩{MIN_AMOUNT.toLocaleString()} — ₩{MAX_AMOUNT.toLocaleString()}

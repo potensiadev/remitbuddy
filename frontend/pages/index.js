@@ -357,9 +357,7 @@ export default function HomePage({ buildTimestamp }) {
                   </span>
                 </h1>
                 <p className="text-sm sm:text-lg md:text-xl text-neutral-600 mb-6 lg:mb-8 leading-relaxed font-medium max-w-xl mx-auto lg:mx-0">
-                  {t('Compare 8 providers in 3 seconds.')}
-                  <br className="block" />
-                  {t('Users save an average of ₩32,000 per transfer.')}
+                  {t('hero.subtitle')}
                 </p>
 
                 {/* Social Proof Stats */}

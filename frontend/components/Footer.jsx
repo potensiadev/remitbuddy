@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 
 /**
@@ -13,9 +14,9 @@ const Footer = () => {
     service: {
       title: t('nav.service'),
       links: [
-        { label: t('nav.service_intro'), href: '#hero' },
-        { label: t('nav.service_how'), href: '#how-it-works' },
-        { label: t('nav.service_faq'), href: '#faq' },
+        { label: t('nav.service_intro'), href: '/#hero' },
+        { label: t('nav.service_how'), href: '/#how-it-works' },
+        { label: t('nav.service_faq'), href: '/#faq' },
       ],
     },
     contact: {
@@ -58,12 +59,12 @@ const Footer = () => {
             <ul className="space-y-3 list-none p-0 m-0">
               {footerSections.service.links.map((link, index) => (
                 <li key={index}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-gray-600 hover:text-brand-600 transition-colors duration-150 text-sm block"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -101,12 +102,12 @@ const Footer = () => {
             <ul className="space-y-3 list-none p-0 m-0">
               {footerSections.legal.links.map((link, index) => (
                 <li key={index}>
-                  <a
+                  <Link
                     href={link.href}
                     className="text-gray-600 hover:text-brand-600 transition-colors duration-150 text-sm block"
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -135,7 +136,7 @@ const Footer = () => {
 
       {/* Decorative Bottom Border - Toss Style */}
       <div className="h-1 bg-gradient-to-r from-brand-500 via-accent-500 to-brand-600"></div>
-    </footer>
+    </footer >
   );
 };
 

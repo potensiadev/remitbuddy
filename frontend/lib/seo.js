@@ -21,7 +21,7 @@ export const generateComparisonSEO = (country, amount) => {
   const title = `${country.name} Remittance Comparison | ₩${formattedAmount} → ${country.currency} | RemitBuddy`;
 
   // Description
-  const description = `Compare ${country.name} remittance rates for ₩${formattedAmount}. Real-time comparison of 8 providers including Hanpass, GMoney Trans, E9Pay, Sentbe. Save up to ₩32,000!`;
+  const description = `Compare ${country.name} remittance rates for ₩${formattedAmount}. Real-time comparison of 8 providers including Hanpass, GMoney Trans, E9Pay, Sentbe.`;
 
   // Keywords
   const keywords = `${country.name} remittance, ${country.name} exchange rate, ${country.name} transfer fee, ${country.currency} rate, international money transfer, RemitBuddy`;

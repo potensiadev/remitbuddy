@@ -320,7 +320,7 @@ export async function getServerSideProps({ params, query, locale }) {
       countryData,
       initialAmount: validAmount.toString(),
       seoData,
-      ...(await serverSideTranslations('en', ['common']))
+      ...(await serverSideTranslations(locale, ['common']))
     }
   };
 }

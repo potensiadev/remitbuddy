@@ -22,10 +22,10 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
       {isBest && (
         <>
           <div className="absolute -top-8 left-[-2px] bg-blue-500 text-white px-6 py-1.5 rounded-t-xl font-bold text-sm shadow-sm md:flex hidden">
-            Best Rate Provider
+            {t('provider.best_rate_badge')}
           </div>
           <div className="absolute -top-6 left-0 right-0 bg-blue-500 text-white py-1 rounded-t-lg font-bold text-xs text-center shadow-sm flex md:hidden justify-center h-6 items-center">
-            Best Rate Provider
+            {t('provider.best_rate_badge')}
           </div>
         </>
       )}
@@ -45,7 +45,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
           {/* Row 1: Recipient Gets (Hero) */}
           <div className="flex justify-between items-center">
             <span className={`text-xs md:text-sm font-bold ${isBest ? 'text-blue-600' : 'text-gray-600'}`}>
-              Recipient Get
+              {t('provider.recipient_gets')}
             </span>
             <span className={`text-lg md:text-2xl font-black ${isBest ? 'text-blue-600' : 'text-slate-800'}`}>
               {provider.recipient_gets.toLocaleString('en-US', { maximumFractionDigits: 0 })} {provider.currency}
@@ -54,7 +54,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
 
           {/* Row 2: You Pay */}
           <div className="flex justify-between items-center text-xs md:text-sm">
-            <span className="text-gray-400 font-medium">You Pay</span>
+            <span className="text-gray-400 font-medium">{t('provider.you_pay')}</span>
             <span className="text-gray-600 font-bold">
               {parseInt(sendAmount || 0).toLocaleString()} KRW
             </span>
@@ -62,7 +62,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
 
           {/* Row 3: Fee */}
           <div className="flex justify-between items-center text-xs md:text-sm">
-            <span className="text-gray-400 font-medium">Fee</span>
+            <span className="text-gray-400 font-medium">{t('provider.fee')}</span>
             <span className="text-gray-600 font-bold">
               {formattedFeeInKRW === '0' ? '0 KRW' : `${formattedFeeInKRW} KRW`}
             </span>
@@ -70,7 +70,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
 
           {/* Row 4: Exchange Rate */}
           <div className="flex justify-between items-center text-xs md:text-sm">
-            <span className="text-gray-400 font-medium">Exchange Rate</span>
+            <span className="text-gray-400 font-medium">{t('provider.exchange_rate')}</span>
             <span className="text-gray-500 font-medium">
               1 {provider.currency} = {(1 / provider.exchange_rate).toFixed(2)} KRW
             </span>
@@ -90,7 +90,7 @@ const ProviderCard = ({ provider, isBest, index, onProviderClick, bestAmount, wo
                 : 'bg-white border-2 border-slate-800 text-slate-800 hover:bg-slate-50'
               }`}
           >
-            Go to {displayName}
+            {t('provider.go_to', { provider: displayName })}
             <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>

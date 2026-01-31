@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+<rect fill="#fff" width="900" height="600"/>
+<g transform="rotate(-33.69 450 300)">
+<path fill="#c60c30" d="M450 225a75 75 0 1 1 0 150 75 75 0 1 1 0-150 150 150 0 0 0 0-300"/>
+<path fill="#003478" d="M450 375a75 75 0 1 1 0-150 75 75 0 1 1 0 150 150 150 0 0 0 0 300"/>
+<path stroke="#000" stroke-width="30" d="M240 180h180M240 225h180M240 270h180M750 330h65m50 0h65M750 375h65m50 0h65M750 420h65m50 0h65M750 180h65m50 0h65M750 225h180M750 270h65m50 0h65M240 330h180M240 375h65m50 0h65M240 420h180"/>
+</g>
+</svg>

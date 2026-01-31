@@ -45,24 +45,24 @@ const FAQ = () => {
 
     const faqs = [
         {
-            question: "Is RemitBuddy free to use?",
-            answer: "Yes! RemitBuddy is 100% free for users. We don't charge any fees for comparing rates. Our goal is to help you find the best remittance service without any extra cost."
+            question: t('faq.q1_title'),
+            answer: t('faq.q1_desc')
         },
         {
-            question: "Are the exchange rates real-time?",
-            answer: "We strive to provide the most up-to-date rates possible. We update our data frequently throughout the day to reflect the latest market changes and provider offers."
+            question: t('faq.q2_title'),
+            answer: t('faq.q2_desc')
         },
         {
-            question: "Can I send money directly through RemitBuddy?",
-            answer: "RemitBuddy is a comparison platform. Once you find the best deal, we direct you to the provider's official website or app to complete your transfer securely."
+            question: t('faq.q3_title'),
+            answer: t('faq.q3_desc')
         },
         {
-            question: "Which providers do you compare?",
-            answer: "We compare rates from major trusted providers in Korea, including Hanpass, Sentbe, GmoneyTrans, E9Pay, Cross, and more. We only list licensed and regulated services."
+            question: t('faq.q4_title'),
+            answer: t('faq.q4_desc')
         },
         {
-            question: "Why do exchange rates vary between providers?",
-            answer: "Each provider has their own network, partnerships, and fee structures. Some may offer better rates for large amounts, while others are cheaper for smaller transfers. That's why comparing is essential!"
+            question: t('faq.q5_title'),
+            answer: t('faq.q5_desc')
         }
     ];
 
@@ -74,13 +74,13 @@ const FAQ = () => {
             <div className="max-w-4xl mx-auto fluid-container relative z-10">
                 <div className="text-center mb-16 sm:mb-24">
                     <span className="text-primary-600 font-bold tracking-wider uppercase text-sm mb-3 block">
-                        {t('support.badge', 'SUPPORT')}
+                        {t('faq.badge')}
                     </span>
                     <h2 className="text-[clamp(1.75rem,6vw,3.5rem)] font-black text-gray-900 mb-8 tracking-tight leading-tight">
-                        Got Questions?
+                        {t('faq.title')}
                     </h2>
                     <p className="text-[clamp(1rem,3vw,1.25rem)] text-gray-600 max-w-2xl mx-auto font-medium leading-relaxed">
-                        We've got answers to help you understand how RemitBuddy saves you money.
+                        {t('faq.subtitle')}
                     </p>
                 </div>
 

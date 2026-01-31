@@ -4,7 +4,8 @@ import { useTranslation } from 'next-i18next';
 
 // Mapping of language codes to display names and flags
 const LANGUAGES = [
-    { code: 'en', name: 'English', flag: '/images/flags/us.png' }
+    { code: 'en', name: 'English', flag: '/images/flags/us.png' },
+    { code: 'ko', name: '한국어', flag: '/images/flags/kr.png' }
 ];
 
 const LanguageSwitcher = ({ isMobile = false }) => {

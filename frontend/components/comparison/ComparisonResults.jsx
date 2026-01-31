@@ -163,12 +163,12 @@ export default function ComparisonResults({
       {!isLoading && !error && results.length > 0 && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <p className="text-gray-900 font-bold text-lg">
-            {results.length} Providers Found
+            {t('results.providers_found', { count: results.length })}
           </p>
 
           <div className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500">
             <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-            {t('results.ranking_explanation', 'Ranked by Recipient Gets')}
+            {t('results.ranking_explanation')}
           </div>
         </div>
       )}
@@ -180,17 +180,17 @@ export default function ComparisonResults({
         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 overflow-hidden">
           {/* Amount Display */}
           <div className="flex items-baseline gap-1.5 flex-shrink-0">
-            <span className="text-gray-500 text-xs font-bold uppercase tracking-wider hidden sm:block">Sending</span>
+            <span className="text-gray-500 text-xs font-bold uppercase tracking-wider hidden sm:block">{t('results.sending')}</span>
             <span className="text-gray-900 text-lg sm:text-xl font-black">{formattedAmount}</span>
             <span className="text-gray-500 text-xs sm:text-sm font-bold">KRW</span>
-            <span className="text-gray-400 text-xs sm:text-sm font-medium">to {queryParams.receive_country}</span>
+            <span className="text-gray-400 text-xs sm:text-sm font-medium">{t('results.to_country', { country: queryParams.receive_country })}</span>
           </div>
 
           {/* Mini Badges (Scrollable if needed, or hidden on very small screens) */}
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
             {savings > 0 && (
               <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-100/80 text-emerald-700 text-[10px] sm:text-xs font-bold whitespace-nowrap">
-                Save {savings.toLocaleString()} {queryParams.receive_currency}
+                {t('results.save_amount', { amount: savings.toLocaleString(), currency: queryParams.receive_currency })}
               </span>
             )}
             {snapshotTime && (
@@ -206,7 +206,7 @@ export default function ComparisonResults({
         <button
           onClick={onCompareAgain}
           className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-200 text-gray-400 hover:text-blue-600 hover:border-blue-200 shadow-sm transition-all active:scale-95"
-          aria-label="Change Amount"
+          aria-label={t('results.change_amount')}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -230,7 +230,7 @@ export default function ComparisonResults({
 
       {error && (
         <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-left w-full">
-          <h3 className="text-lg font-bold text-red-700 mb-2">Unavailable</h3>
+          <h3 className="text-lg font-bold text-red-700 mb-2">{t('results.unavailable')}</h3>
           <p className="text-red-600 text-sm mb-4">
             {error.type === 'empty'
               ? t('results.error_empty')

@@ -91,7 +91,7 @@ export default function CountryPage({ countryData }) {
   if (!countryData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p>Country not found</p>
+        <p>{t('country_page.not_found')}</p>
       </div>
     );
   }
@@ -143,11 +143,10 @@ export default function CountryPage({ countryData }) {
                   <button
                     key={amount}
                     onClick={() => setSelectedAmount(amount)}
-                    className={`px-5 py-3 rounded-xl font-semibold transition-all ${
-                      selectedAmount === amount
+                    className={`px-5 py-3 rounded-xl font-semibold transition-all ${selectedAmount === amount
                         ? 'bg-brand-600 text-white shadow-lg'
                         : 'bg-white text-gray-700 border border-gray-200 hover:border-brand-300 hover:bg-brand-50'
-                    }`}
+                      }`}
                   >
                     ₩{parseInt(amount).toLocaleString()}
                   </button>
@@ -211,7 +210,7 @@ export default function CountryPage({ countryData }) {
         {/* Other Countries */}
         <section className="py-16 bg-gray-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-xl font-bold text-gray-900 text-center mb-8">Other Popular Destinations</h2>
+            <h2 className="text-xl font-bold text-gray-900 text-center mb-8">{t('country_page.other_destinations')}</h2>
             <div className="flex flex-wrap justify-center gap-3">
               {Object.entries(COUNTRY_DATA)
                 .filter(([slug]) => slug !== router.query.country)

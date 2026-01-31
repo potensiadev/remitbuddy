@@ -161,7 +161,7 @@ const ShareButton = ({
           >
             {/* Header */}
             <div className="px-4 py-3 bg-neutral-50 border-b border-neutral-100">
-              <p className="text-sm font-semibold text-neutral-900">Share</p>
+              <p className="text-sm font-semibold text-neutral-900">{t('share.header')}</p>
             </div>
 
             {/* Copy Link */}
@@ -184,10 +184,10 @@ const ShareButton = ({
               </div>
               <div className="flex-1 min-w-0">
                 <span className={`font-medium block text-sm ${copied ? 'text-emerald-600' : 'text-neutral-900'}`}>
-                  {copied ? t('share.copied', 'Copied!') : t('share.copy_link', 'Copy Link')}
+                  {copied ? t('share.copied') : t('share.copy_link')}
                 </span>
                 <span className="text-xs text-neutral-500">
-                  {copied ? 'Saved to clipboard' : 'Copy to clipboard'}
+                  {copied ? t('share.saved_to_clipboard') : t('share.copy_to_clipboard')}
                 </span>
               </div>
             </button>
@@ -205,8 +205,8 @@ const ShareButton = ({
                   </svg>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="font-medium text-neutral-900 block text-sm">{t('share.native', 'Share via other apps')}</span>
-                  <span className="text-xs text-neutral-500">Message, Email, etc.</span>
+                  <span className="font-medium text-neutral-900 block text-sm">{t('share.native')}</span>
+                  <span className="text-xs text-neutral-500">{t('share.native_desc')}</span>
                 </div>
                 <svg className="w-4 h-4 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -224,7 +224,7 @@ const ShareButton = ({
             <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
-            <span className="text-sm font-medium">Link copied to clipboard</span>
+            <span className="text-sm font-medium">{t('share.link_copied')}</span>
           </div>
         </div>
       )}

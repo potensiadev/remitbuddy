@@ -7,20 +7,20 @@ const HowItWorks = () => {
     const steps = [
         {
             number: '01',
-            title: 'Compare Rates',
-            description: 'Enter the amount you want to send and select the destination country. We instantly compare live exchange rates and fees from top providers.',
+            title: t('how.s1_title'),
+            description: t('how.s1_desc'),
             image: '/images/landing/step_compare.png'
         },
         {
             number: '02',
-            title: 'Choose Provider',
-            description: 'See exactly how much the recipient will get. We highlight the best rates and lowest fees so you can make an informed decision.',
+            title: t('how.s2_title'),
+            description: t('how.s2_desc'),
             image: '/images/landing/step_choose.png'
         },
         {
             number: '03',
-            title: 'Send Money',
-            description: 'Click "Go to Site" to visit your chosen provider directly. Complete your secure transfer on their official platform.',
+            title: t('how.s3_title'),
+            description: t('how.s3_desc'),
             image: '/images/landing/step_send.png'
         }
     ];
@@ -32,13 +32,12 @@ const HowItWorks = () => {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-                    <span className="text-primary-600 font-bold tracking-wider uppercase text-sm mb-3 block">Process</span>
+                    <span className="text-primary-600 font-bold tracking-wider uppercase text-sm mb-3 block">{t('how.badge')}</span>
                     <h2 className="text-3xl sm:text-4xl font-black text-gray-900 mb-6 leading-tight">
-                        How RemitBuddy Works
+                        {t('how.title')}
                     </h2>
                     <p className="text-lg text-gray-600 leading-relaxed">
-                        Finding the best exchange rate shouldn't be complicated.
-                        We've simplified the process to help you save money in just three steps.
+                        {t('how.subtitle')}
                     </p>
                 </div>
 

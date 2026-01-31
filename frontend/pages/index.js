@@ -301,9 +301,9 @@ export default function HomePage() {
                 <div className="hidden sm:inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm text-primary-700 px-3 py-1.5 rounded-full text-xs font-bold mb-4 border border-primary-100 shadow-sm">
                   <span>{t('hero.badge')}</span>
                 </div>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-neutral-900 mb-4 lg:mb-6 leading-tight tracking-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 mb-4 lg:mb-6 leading-tight tracking-tight">
                   <span className="block mb-1">{t('hero.title_line1')}</span>
-                  <span className="block bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 bg-clip-text text-transparent pb-1 lg:pb-3">
+                  <span className="block text-primary-500 pb-1 lg:pb-3">
                     {t('hero.title_line2')}
                   </span>
                 </h1>
@@ -313,12 +313,11 @@ export default function HomePage() {
 
                 {/* Social Proof Stats */}
                 <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-3 lg:p-4 shadow-lg border border-white/60 w-full ring-1 ring-gray-100 mb-2 lg:mb-0">
-                  <div className="grid grid-cols-4 gap-2 sm:gap-8 divide-x divide-gray-200/50">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-8 divide-x divide-gray-200/50">
                     {[
                       { val: '8', label: t('hero.stats_companies') },
                       { val: '18', label: t('hero.stats_countries') },
-                      { val: '3s', label: t('hero.stats_seconds_label') },
-                      { val: '₩32K', label: t('hero.stats_savings') }
+                      { val: t('hero.stats_seconds_val', '3s'), label: t('hero.stats_seconds_label') }
                     ].map((stat, i) => (
                       <div key={i} className="text-center px-1">
                         <div className="text-lg sm:text-2xl md:text-3xl font-black text-primary-600 mb-0.5 lg:mb-1 leading-none">{stat.val}</div>

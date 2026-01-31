@@ -90,6 +90,7 @@ const Navigation = () => {
             <Link href="/#faq" className="px-4 py-2 text-gray-700 font-semibold hover:text-brand-600 transition-colors duration-200 rounded-lg hover:bg-gray-50 uppercase text-xs tracking-wider">
               {t('nav.service_faq')}
             </Link>
+            <LanguageSwitcher />
           </div>
 
           {/* Mobile Menu Button */}
@@ -157,7 +158,7 @@ const Navigation = () => {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{t('nav.service_intro')}</h3>
-                <p className="text-sm font-medium text-gray-500">Find the best rates instantly</p>
+                <p className="text-sm font-medium text-gray-500">{t('nav.service_intro_desc')}</p>
               </div>
             </a>
 
@@ -173,7 +174,7 @@ const Navigation = () => {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{t('nav.service_how')}</h3>
-                <p className="text-sm font-medium text-gray-500">Simple 3-step process</p>
+                <p className="text-sm font-medium text-gray-500">{t('nav.service_how_desc')}</p>
               </div>
             </a>
 
@@ -189,15 +190,15 @@ const Navigation = () => {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{t('nav.service_faq')}</h3>
-                <p className="text-sm font-medium text-gray-500">Frequently asked questions</p>
+                <p className="text-sm font-medium text-gray-500">{t('nav.service_faq_desc')}</p>
               </div>
             </a>
           </div>
 
           {/* Bottom Actions */}
           <div className="mt-8 pt-8 border-t border-gray-100">
-            {/* You can add language switcher or other actions here later */}
-            <p className="text-center text-sm font-medium text-gray-400">© 2024 RemitBuddy</p>
+            <LanguageSwitcher isMobile={true} />
+            <p className="text-center text-sm font-medium text-gray-400 mt-4">{t('footer.copyright', { year: new Date().getFullYear() })}</p>
           </div>
         </div>
       </div>

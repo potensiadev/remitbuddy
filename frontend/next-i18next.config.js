@@ -2,10 +2,11 @@
 module.exports = {
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'ko'],
     localeDetection: false,
   },
   react: {
     useSuspense: false,
   },
+  reloadOnPrerender: process.env.NODE_ENV === 'development',
 }

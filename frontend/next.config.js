@@ -18,33 +18,20 @@ const nextConfig = {
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
 
-    // Dev/Prod CSP
-    const devCSP = [
-      "default-src 'self' 'unsafe-eval' 'unsafe-inline'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https:",
-      "connect-src 'self' https://remitbuddynew.up.railway.app https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-      "upgrade-insecure-requests"
-    ].join('; ');
-
-    const prodCSP = [
+    // CSP 정책 - unsafe-eval 제거, strict-dynamic 사용
+    const cspPolicy = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
+      // script-src: unsafe-eval 제거, strict-dynamic 추가 (신뢰된 스크립트만 실행)
+      "script-src 'self' 'strict-dynamic' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com",
+      // style-src: unsafe-inline 유지 (스타일은 상대적으로 안전)
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https:",
-      "connect-src 'self' https://remitbuddynew.up.railway.app https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com",
-      "object-src 'none'",
+      "connect-src 'self' https://www.google-analytics.com https://api.remitbuddy.com https://remitbuddynew.up.railway.app",
+      "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
-      "frame-ancestors 'none'",
-      "upgrade-insecure-requests"
+      "upgrade-insecure-requests",
     ].join('; ');
 
     return [
@@ -58,7 +45,8 @@ const nextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: "camera=(), microphone=(), geolocation=(), payment=()" },
           { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-          { key: 'Content-Security-Policy', value: isDev ? devCSP : prodCSP },
+          // CSP 헤더 추가 - unsafe-eval 제거
+          ...(!isDev ? [{ key: 'Content-Security-Policy', value: cspPolicy }] : []),
           // ❗ Long-term cache absolutely prohibited for HTML (keep Next default or keep short)
           { key: 'Cache-Control', value: isDev ? 'no-store, must-revalidate' : 'public, max-age=0, must-revalidate' },
         ],

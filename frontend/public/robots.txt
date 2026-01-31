@@ -1,36 +1,11 @@
-# RemitBuddy robots.txt
-# Location: public/robots.txt
-
+# *
 User-agent: *
 Allow: /
+Disallow: /api/*
+Disallow: /admin/*
 
-# Allowed languages
-Allow: /en
+# Host
+Host: https://www.remitbuddy.com
 
-# Crawl disallowed areas
-Disallow: /api/
-Disallow: /_next/
-Disallow: /admin/
-Disallow: *.json$
-Disallow: /test/
-Disallow: /dev/
-Disallow: /private/
-
-# Sitemap location
+# Sitemaps
 Sitemap: https://www.remitbuddy.com/sitemap.xml
-
-# Crawl delay (to prevent server load)
-Crawl-delay: 1
-
-# Special settings for search engines
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 0
-
-User-agent: Bingbot  
-Allow: /
-Crawl-delay: 1
-
-User-agent: Baiduspider
-Allow: /
-Crawl-delay: 2

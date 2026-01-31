@@ -2,12 +2,19 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 
 class MyDocument extends Document {
+  static async getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx)
+    // Retrieve nonce from the request headers (set by middleware)
+    const nonce = ctx.req?.headers?.['x-nonce']
+    return { ...initialProps, nonce }
+  }
+
   render() {
-    const { locale } = this.props;
+    const { locale, nonce } = this.props;
 
     return (
       <Html lang={locale || 'en'}>
-        <Head>
+        <Head nonce={nonce}>
           <meta charSet="utf-8" />
           <meta
             name="viewport"
@@ -55,17 +62,16 @@ class MyDocument extends Document {
           />
 
           {/* Favicons */}
-          <link rel="icon" href="/icons/favicon.png?v=3" type="image/png" sizes="512x512" />
-          <link rel="icon" href="/icons/icon.svg?v=3" type="image/svg+xml" />
-          <link rel="apple-touch-icon" href="/icons/favicon.png?v=3" />
+          <link rel="icon" href="/icons/favicon.png?v=4" type="image/png" sizes="512x512" />
+          <link rel="apple-touch-icon" href="/icons/favicon.png?v=4" />
 
           {/* Manifest to override cached PWA settings */}
-          <link rel="manifest" href="/manifest.json?v=3" />
+          <link rel="manifest" href="/manifest.json?v=4" />
         </Head>
 
         <body>
           <Main />
-          <NextScript />
+          <NextScript nonce={nonce} />
         </body>
       </Html>
     );

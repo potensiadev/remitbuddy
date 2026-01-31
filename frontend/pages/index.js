@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Footer from '../components/Footer';
 import Navigation from '../components/Navigation';
-import { useTranslation } from 'next-i18next';
+import { useTranslation, Trans } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { logClickedCTA } from '../utils/analytics';
+import { trackEvent, ANALYTICS_EVENTS } from '../utils/analytics';
 
 // Import shared constants
 import {
@@ -115,11 +115,12 @@ const WelcomeBackBanner = ({ lastComparison, onUseLastComparison, onDismiss }) =
   );
 };
 
-export default function HomePage() {
+export default function HomePage({ buildTimestamp }) {
   const { t } = useTranslation('common');
   const router = useRouter();
 
   const [amount, setAmount] = useState('1000000');
+
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [lastComparison, setLastComparison] = useState(null);
@@ -260,7 +261,23 @@ export default function HomePage() {
     if (selectedCountry && amount) {
       setIsLoading(true); // Start loading
       const numericAmount = parseInt(amount.replace(/,/g, ''), 10) || 0;
-      logClickedCTA(numericAmount, selectedCountry.code || selectedCountry.name, selectedCountry.currency);
+
+      // Track Lead Gen Event
+      const getAmountRange = (val) => {
+        if (val < 100000) return '0-100k';
+        if (val < 500000) return '100k-500k';
+        if (val < 1000000) return '500k-1M';
+        if (val < 3000000) return '1M-3M';
+        return '3M+';
+      };
+
+      trackEvent(ANALYTICS_EVENTS.SEARCH_RATES, {
+        corridor: `KRW-${selectedCountry.currency}`,
+        amount: numericAmount,
+        amount_range: getAmountRange(numericAmount),
+        target_country: selectedCountry.code
+      });
+
       saveComparison(amount, selectedCountry);
       setShowWelcomeBack(false);
       router.push({
@@ -280,17 +297,49 @@ export default function HomePage() {
         <meta name="description" content={t('seo.description')} />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="keywords" content={t('seo.keywords')} />
+
+        {/* Verification Tags */}
+        <meta name="msvalidate.01" content="494B757ACE3C4582ECB2450FC6CEB3D4" />
+
+        {/* Open Graph Meta Tags */}
+        <meta property="og:title" content={t('seo.title')} />
+        <meta property="og:description" content={t('seo.description')} />
+
+        {/* Primary Image (Social - 1200x630) */}
+        <meta property="og:image" content={`https://www.remitbuddy.com/og-image.png?v=${buildTimestamp}`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+
+        {/* Secondary Image (Messenger - 800x400) - For better visibility in small thumbnails */}
+        <meta property="og:image" content={`https://www.remitbuddy.com/og-messenger.png?v=${buildTimestamp}`} />
+        <meta property="og:image:width" content="800" />
+        <meta property="og:image:height" content="400" />
+        <meta property="og:image:type" content="image/png" />
+
+        <meta property="og:url" content="https://www.remitbuddy.com" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="RemitBuddy" />
+
+        {/* Twitter Card Meta Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={t('seo.title')} />
+        <meta name="twitter:description" content={t('seo.description')} />
+        <meta name="twitter:image" content={`https://www.remitbuddy.com/og-image.png?v=${buildTimestamp}`} />
+
         <link rel="preconnect" href="https://www.remitbuddy.com" />
         {FLAG_ASSETS.map((flag) => (
           <link key={flag} rel="preload" as="image" href={flag} />
         ))}
+        {/* Preload critical OG images for bots */}
+        <link rel="preload" as="image" href="/og-image.png" />
       </Head>
 
       <div className="min-h-screen bg-white safe-top safe-bottom">
         <Navigation />
 
         {/* Hero Section */}
-        <section ref={heroRef} id="hero" className="relative pt-24 sm:pt-32 lg:pt-48 pb-12 md:pb-24 overflow-visible">
+        <section ref={heroRef} id="hero" className="relative pt-24 sm:pt-32 lg:pt-32 pb-12 md:pb-24 overflow-visible">
           <div className="absolute inset-0 bg-gradient-to-br from-primary-50/80 via-white to-accent-50/30" />
           <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
 
@@ -301,19 +350,30 @@ export default function HomePage() {
                 <div className="hidden sm:inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm text-primary-700 px-3 py-1.5 rounded-full text-xs font-bold mb-4 border border-primary-100 shadow-sm">
                   <span>{t('hero.badge')}</span>
                 </div>
+<<<<<<< HEAD
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 mb-4 lg:mb-6 leading-tight tracking-tight">
+=======
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-neutral-900 mb-1 leading-tight tracking-tight">
+>>>>>>> 290518636de02a2a1b2996aab642d2d67f9ac1cf
                   <span className="block mb-1">{t('hero.title_line1')}</span>
                   <span className="block text-primary-500 pb-1 lg:pb-3">
                     {t('hero.title_line2')}
                   </span>
                 </h1>
                 <p className="text-sm sm:text-lg md:text-xl text-neutral-600 mb-6 lg:mb-8 leading-relaxed font-medium max-w-xl mx-auto lg:mx-0">
-                  {t('hero.subtitle')}
+                  {t('Compare 8 providers in 3 seconds.')}
+                  <br className="block" />
+                  {t('Users save an average of ₩32,000 per transfer.')}
                 </p>
 
                 {/* Social Proof Stats */}
+<<<<<<< HEAD
                 <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-3 lg:p-4 shadow-lg border border-white/60 w-full ring-1 ring-gray-100 mb-2 lg:mb-0">
                   <div className="grid grid-cols-3 gap-2 sm:gap-8 divide-x divide-gray-200/50">
+=======
+                <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-3 lg:p-4 shadow-lg border border-white/60 w-fit mx-auto lg:mx-0 ring-1 ring-gray-100 mb-2 lg:mb-0">
+                  <div className="grid grid-cols-4 gap-2 sm:gap-8 divide-x divide-gray-200/50">
+>>>>>>> 290518636de02a2a1b2996aab642d2d67f9ac1cf
                     {[
                       { val: '8', label: t('hero.stats_companies') },
                       { val: '18', label: t('hero.stats_countries') },
@@ -482,6 +542,7 @@ export default function HomePage() {
 export async function getStaticProps({ locale }) {
   return {
     props: {
+      buildTimestamp: Date.now(),
       ...(await serverSideTranslations(locale, ['common'])),
     },
   };

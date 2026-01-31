@@ -3,5 +3,11 @@
   "short_name": "RemitBuddy",
   "display": "browser",
   "start_url": "/",
-  "icons": []
+  "icons": [
+    {
+      "src": "/icons/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

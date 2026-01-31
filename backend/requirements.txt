@@ -1,15 +1,28 @@
-# FastAPI 및 서버 실행
+# FastAPI and server
 fastapi
 uvicorn[standard]
 
-# 비동기 HTTP 요청 (스크래핑용)
+# Async HTTP requests (for scraping)
 aiohttp
 
-# (선택사항이지만 강력히 추천) 캐싱 기능용
+# Caching
 cachetools
+redis>=5.0.0
 
-# (선택사항이지만 강력히 추천) .env 파일 관리용
+# Configuration and validation
+pydantic-settings>=2.0.0
+
+# Structured logging
+structlog>=24.0.0
+
+# Environment variables
 python-dotenv
 
-# 시스템 모니터링용
+# System monitoring
 psutil
+
+# Error tracking
+sentry-sdk[fastapi]>=2.0.0
+
+# Metrics
+prometheus-client>=0.20.0

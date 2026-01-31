@@ -1,144 +1,138 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
-import { logClickedProvider, logResultsImpression, logResultsScroll } from '../../utils/analytics';
+import { trackEvent, ANALYTICS_EVENTS } from '../../utils/analytics';
 import { ClockIcon } from './Icons';
 import ProviderCard from './ProviderCard';
 import { SavedCorridors, SaveCorridorButton } from './SavedCorridors';
 import { ViewToggle, ResultsTable } from './ResultsTable';
 import RateChart from './RateChart';
+import { Quote, QueryParams } from '../../types';
+import { useQuotes } from '../../hooks';
 
-export default function ComparisonResults({
+interface ComparisonResultsProps {
+  queryParams: QueryParams;
+  amount: string | number;
+  forceRefresh: number;
+  onCompareAgain: () => void;
+  apiBaseUrl: string;
+  isAutoScrolling?: boolean;
+  view?: 'card' | 'table';
+  onViewChange?: (view: 'card' | 'table') => void;
+  onSaveCorridor?: () => void;
+  isCorridorSaved?: boolean;
+}
+
+const ComparisonResults: React.FC<ComparisonResultsProps> = ({
   queryParams,
   amount,
   forceRefresh,
   onCompareAgain,
   apiBaseUrl,
-  isAutoScrolling,
-  view,
+  isAutoScrolling = false,
+  view = 'card',
   onViewChange,
   onSaveCorridor,
-  isCorridorSaved
-}) {
+  isCorridorSaved = false
+}) => {
   const { t } = useTranslation('common');
 
-  const [results, setResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [snapshotTime, setSnapshotTime] = useState(null);
-  const amountRef = useRef(amount);
-  const resultsContainerRef = useRef(null);
+  // Use React Query hook for data fetching
+  const {
+    results,
+    bestProvider,
+    worstProvider,
+    savings,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    dataUpdatedAt
+  } = useQuotes({
+    queryParams,
+    amount,
+    apiBaseUrl,
+    enabled: Boolean(queryParams.receive_country)
+  });
+
+  const amountRef = useRef<string | number>(amount);
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
   const [hasLoggedImpression, setHasLoggedImpression] = useState(false);
   const [hasLoggedScroll, setHasLoggedScroll] = useState(false);
+
+  // Derive snapshot time from dataUpdatedAt
+  const snapshotTime = useMemo(() => {
+    if (!dataUpdatedAt) return null;
+    const now = new Date(dataUpdatedAt);
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  }, [dataUpdatedAt]);
 
   useEffect(() => {
     amountRef.current = amount;
   }, [amount]);
 
+  // Reset analytics flags on query change
   useEffect(() => {
     setHasLoggedImpression(false);
     setHasLoggedScroll(false);
   }, [forceRefresh, queryParams.receive_country, queryParams.receive_currency, amount]);
 
+  // Refetch when forceRefresh changes
   useEffect(() => {
-    if (!queryParams.receive_country) return;
+    if (forceRefresh > 0) {
+      refetch();
+    }
+  }, [forceRefresh, refetch]);
 
-    const fetchQuotes = async () => {
-      setIsLoading(true);
-      setError(null);
-      setResults([]);
+  const getAmountRange = (val: string | number): string => {
+    const v = parseInt(String(val) || '0', 10);
+    if (v < 100000) return '0-100k';
+    if (v < 500000) return '100k-500k';
+    if (v < 1000000) return '500k-1M';
+    if (v < 3000000) return '1M-3M';
+    return '3M+';
+  };
 
-      const url = `${apiBaseUrl}/api/getRemittanceQuote?receive_country=${queryParams.receive_country}&receive_currency=${queryParams.receive_currency}&send_amount=${amountRef.current}&_t=${Date.now()}`;
-
-      try {
-        const response = await fetch(url, {
-          method: 'GET',
-          mode: 'cors',
-          cache: 'no-store',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error(`API Error: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.results && data.results.length > 0) {
-          setResults(data.results);
-          const now = new Date();
-          const year = now.getFullYear();
-          const month = String(now.getMonth() + 1).padStart(2, '0');
-          const day = String(now.getDate()).padStart(2, '0');
-          const hours = String(now.getHours()).padStart(2, '0');
-          const minutes = String(now.getMinutes()).padStart(2, '0');
-          setSnapshotTime(`${year}-${month}-${day} ${hours}:${minutes}`);
-        } else {
-          setError({ type: 'empty' });
-        }
-      } catch (err) {
-        setError({ type: 'api', message: err.message });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchQuotes();
-  }, [queryParams.receive_country, queryParams.receive_currency, forceRefresh, apiBaseUrl]);
-
-  const bestProvider = results.length > 0 ? results[0] : null;
-  const worstProvider = results.length > 1 ? results[results.length - 1] : null;
-  const savings =
-    bestProvider && worstProvider
-      ? Math.round(bestProvider.recipient_gets - worstProvider.recipient_gets)
-      : 0;
-
-  const handleProviderClick = (provider, index) => {
-    logClickedProvider(
-      provider.provider,
-      parseInt(amountRef.current || '0', 10),
-      queryParams.receive_country,
-      queryParams.receive_currency,
-      {
-        rank: index + 1,
-        is_top_provider: index === 0,
-        provider_count: results.length,
-        recipient_gets: provider.recipient_gets,
-        exchange_rate: provider.exchange_rate
-      }
-    );
+  const handleProviderClick = (provider: Quote, index: number): void => {
+    const amountVal = parseInt(String(amountRef.current) || '0', 10);
+    trackEvent(ANALYTICS_EVENTS.CLICK_PROVIDER, {
+      provider: provider.provider,
+      rank: index + 1,
+      corridor: `${queryParams.receive_country}-${queryParams.receive_currency}`,
+      rate_offered: provider.exchange_rate,
+      amount: amountVal,
+      amount_range: getAmountRange(amountVal),
+      recipient_gets: provider.recipient_gets,
+      markup_spread: bestProvider ? (bestProvider.exchange_rate - provider.exchange_rate) : 0
+    });
   };
 
   useEffect(() => {
-    if (!isLoading && !error && results.length > 0 && !hasLoggedImpression) {
-      logResultsImpression(
-        parseInt(amountRef.current || '0', 10),
-        queryParams.receive_country,
-        queryParams.receive_currency,
-        results.length
-      );
+    if (!isLoading && !isError && results.length > 0 && !hasLoggedImpression) {
+      const amountVal = parseInt(String(amountRef.current) || '0', 10);
+      trackEvent(ANALYTICS_EVENTS.VIEW_RESULTS, {
+        provider_count: results.length,
+        best_provider: bestProvider?.provider,
+        amount: amountVal,
+        amount_range: getAmountRange(amountVal),
+        corridor: `${queryParams.receive_country}-${queryParams.receive_currency}`
+      });
       setHasLoggedImpression(true);
     }
-  }, [isLoading, error, results.length, hasLoggedImpression, queryParams.receive_country, queryParams.receive_currency]);
+  }, [isLoading, isError, results.length, hasLoggedImpression, queryParams.receive_country, queryParams.receive_currency, bestProvider]);
 
   useEffect(() => {
-    if (hasLoggedScroll || isLoading || error || results.length === 0) return;
+    if (hasLoggedScroll || isLoading || isError || results.length === 0) return;
 
-    const handleScroll = () => {
+    const handleScroll = (): void => {
       if (hasLoggedScroll || isAutoScrolling) return;
 
       const sectionTop = resultsContainerRef.current?.offsetTop ?? 0;
       if (window.scrollY > sectionTop + 50) {
-        logResultsScroll(
-          parseInt(amountRef.current || '0', 10),
-          queryParams.receive_country,
-          queryParams.receive_currency,
-          results.length,
-          bestProvider?.provider,
-          window.scrollY
-        );
         setHasLoggedScroll(true);
       }
     };
@@ -149,18 +143,18 @@ export default function ComparisonResults({
     hasLoggedScroll,
     isAutoScrolling,
     isLoading,
-    error,
+    isError,
     results.length,
     queryParams.receive_country,
     queryParams.receive_currency,
     bestProvider?.provider
   ]);
 
-  const formattedAmount = parseInt(amount || '0', 10).toLocaleString();
+  const formattedAmount = parseInt(String(amount) || '0', 10).toLocaleString();
 
   return (
     <div ref={resultsContainerRef} className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-      {!isLoading && !error && results.length > 0 && (
+      {!isLoading && !isError && results.length > 0 && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <p className="text-gray-900 font-bold text-lg">
             {t('results.providers_found', { count: results.length })}
@@ -186,7 +180,7 @@ export default function ComparisonResults({
             <span className="text-gray-400 text-xs sm:text-sm font-medium">{t('results.to_country', { country: queryParams.receive_country })}</span>
           </div>
 
-          {/* Mini Badges (Scrollable if needed, or hidden on very small screens) */}
+          {/* Mini Badges */}
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
             {savings > 0 && (
               <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-emerald-100/80 text-emerald-700 text-[10px] sm:text-xs font-bold whitespace-nowrap">
@@ -228,16 +222,16 @@ export default function ComparisonResults({
         </div>
       )}
 
-      {error && (
+      {isError && (
         <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-left w-full">
           <h3 className="text-lg font-bold text-red-700 mb-2">{t('results.unavailable')}</h3>
           <p className="text-red-600 text-sm mb-4">
-            {error.type === 'empty'
+            {error?.message?.includes('No providers')
               ? t('results.error_empty')
-              : t('results.error_api', { message: error.message })}
+              : t('results.error_api', { message: error?.message })}
           </p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => refetch()}
             className="text-sm font-bold text-red-700 hover:text-red-800 underline"
           >
             {t('results.retry')}
@@ -245,10 +239,8 @@ export default function ComparisonResults({
         </div>
       )}
 
-      {!isLoading && !error && results.length > 0 && (
+      {!isLoading && !isError && results.length > 0 && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
-          {/* RateChart removed */}
-
           {view === 'table' ? (
             <ResultsTable
               results={results}
@@ -276,4 +268,6 @@ export default function ComparisonResults({
       )}
     </div>
   );
-}
+};
+
+export default ComparisonResults;

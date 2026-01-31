@@ -350,11 +350,7 @@ export default function HomePage({ buildTimestamp }) {
                 <div className="hidden sm:inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm text-primary-700 px-3 py-1.5 rounded-full text-xs font-bold mb-4 border border-primary-100 shadow-sm">
                   <span>{t('hero.badge')}</span>
                 </div>
-<<<<<<< HEAD
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-neutral-900 mb-4 lg:mb-6 leading-tight tracking-tight">
-=======
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-neutral-900 mb-1 leading-tight tracking-tight">
->>>>>>> 290518636de02a2a1b2996aab642d2d67f9ac1cf
                   <span className="block mb-1">{t('hero.title_line1')}</span>
                   <span className="block text-primary-500 pb-1 lg:pb-3">
                     {t('hero.title_line2')}
@@ -367,13 +363,8 @@ export default function HomePage({ buildTimestamp }) {
                 </p>
 
                 {/* Social Proof Stats */}
-<<<<<<< HEAD
                 <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-3 lg:p-4 shadow-lg border border-white/60 w-full ring-1 ring-gray-100 mb-2 lg:mb-0">
                   <div className="grid grid-cols-3 gap-2 sm:gap-8 divide-x divide-gray-200/50">
-=======
-                <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-3 lg:p-4 shadow-lg border border-white/60 w-fit mx-auto lg:mx-0 ring-1 ring-gray-100 mb-2 lg:mb-0">
-                  <div className="grid grid-cols-4 gap-2 sm:gap-8 divide-x divide-gray-200/50">
->>>>>>> 290518636de02a2a1b2996aab642d2d67f9ac1cf
                     {[
                       { val: '8', label: t('hero.stats_companies') },
                       { val: '18', label: t('hero.stats_countries') },

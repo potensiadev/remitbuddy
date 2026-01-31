@@ -74,6 +74,8 @@ class Settings(BaseSettings):
         "http://localhost:3001",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:3001",
+        "https://www.remitbuddy.com",
+        "https://remitbuddy.com",
     ]
     # CORS - Staging origins
     cors_staging_origins: List[str] = [

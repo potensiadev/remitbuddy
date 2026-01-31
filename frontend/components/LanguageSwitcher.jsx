@@ -27,6 +27,9 @@ const LanguageSwitcher = ({ isMobile = false }) => {
     }, []);
 
     const handleLanguageChange = (langCode) => {
+        // Explicitly set cookie to persist preference
+        document.cookie = `NEXT_LOCALE=${langCode}; path=/; max-age=31536000; SameSite=Lax`;
+
         const { pathname, asPath, query } = router;
         router.push({ pathname, query }, asPath, { locale: langCode });
         setIsOpen(false);

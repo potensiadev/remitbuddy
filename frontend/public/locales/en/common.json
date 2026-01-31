@@ -6,9 +6,9 @@
   },
   "hero": {
     "badge": "Trusted by 15,000+ users",
-    "title_line1": "Save on Remittance Fees",
+    "title_line1": "Find the Lowest Remittance Rates",
     "title_line2": "in Just 3 Seconds",
-    "subtitle": "Find the best exchange rates and lowest fees instantly",
+    "subtitle": "Compare rates and fees from 8 top providers",
     "trust_1": "Real-time rates",
     "trust_2": "No hidden fees",
     "trust_3": "100% free",
@@ -36,7 +36,7 @@
     "recent_activity": "{{count}} people compared rates in the last hour"
   },
   "form": {
-    "title": "How much can you save?",
+    "title": "Let's See How Much You Can Save!",
     "label_country": "Where are you sending to?",
     "label_amount": "How much are you sending?",
     "placeholder_amount": "1,000,000",
@@ -247,7 +247,7 @@
   },
   "footer": {
     "title": "RemitBuddy – Compare International Transfers",
-    "description": "Save on remittance fees in just 3 seconds",
+    "description": "Stop Overpaying on Remittance Fees",
     "company": "Company",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",

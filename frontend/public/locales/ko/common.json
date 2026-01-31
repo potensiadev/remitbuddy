@@ -36,7 +36,7 @@
         "recent_activity": "최근 1시간 동안 {{count}}명이 비교했어요"
     },
     "form": {
-        "title": "얼마나 아낄 수 있을까요?",
+        "title": "얼마나 아낄 수 있는지 확인해보세요!",
         "label_country": "어디로 보내시나요?",
         "label_amount": "얼마를 보내시나요?",
         "placeholder_amount": "1,000,000",

@@ -10,10 +10,10 @@ export function middleware(request) {
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ""} https://www.googletagmanager.com https://www.google-analytics.com;
-    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    font-src 'self' https://fonts.gstatic.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://api.fontshare.com;
+    font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net https://api.fontshare.com;
     img-src 'self' data: https:;
-    connect-src 'self' https://remitbuddynew.up.railway.app https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com;
+    connect-src 'self' https://remitbuddy.up.railway.app https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';

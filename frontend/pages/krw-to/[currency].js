@@ -91,7 +91,7 @@ export default function CurrencyPairPage({ currencyPair, seoMeta, locale }) {
                                 </summary>
                                 <p className="mt-2 text-gray-600">
                                     {locale === 'ko'
-                                        ? `환율은 실시간으로 변동하며 업체마다 다릅니다. RemitBuddy에서 8개 업체를 비교해보세요.`
+                                        ? `환율은 실시간으로 변동하며 업체마다 다릅니다. RemitBuddy에서 9개 업체를 비교해보세요.`
                                         : `Rates vary by provider and change in real-time. Compare 8 providers on RemitBuddy.`}
                                 </p>
                             </details>

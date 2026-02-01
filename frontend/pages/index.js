@@ -25,6 +25,9 @@ import { SavedCorridors } from '../components/comparison/SavedCorridors';
 import { ChevronDownIcon } from '../components/comparison/Icons';
 import HowItWorks from '../components/landing/HowItWorks';
 import FAQ from '../components/landing/FAQ';
+import BlogSection from '../components/landing/BlogSection';
+import { getPublishedPosts } from '../lib/notion';
+import { translateText } from '../lib/translate';
 
 // Sub-components remaining in file (to be moved later if needed)
 const PWAInstallPrompt = ({ onDismiss }) => {
@@ -115,7 +118,7 @@ const WelcomeBackBanner = ({ lastComparison, onUseLastComparison, onDismiss }) =
   );
 };
 
-export default function HomePage({ buildTimestamp }) {
+export default function HomePage({ buildTimestamp, posts }) {
   const { t } = useTranslation('common');
   const router = useRouter();
 
@@ -522,6 +525,7 @@ export default function HomePage({ buildTimestamp }) {
 
         <HowItWorks />
         <FAQ />
+        <BlogSection posts={posts} />
 
         <Footer />
         <PWAInstallPrompt />
@@ -531,10 +535,35 @@ export default function HomePage({ buildTimestamp }) {
 }
 
 export async function getStaticProps({ locale }) {
+  let posts = [];
+  try {
+    posts = await getPublishedPosts();
+    // Only take recent 3 posts for homepage
+    posts = posts.slice(0, 3);
+
+    // Auto-translation logic for English
+    if (locale === 'en') {
+      posts = await Promise.all(posts.map(async (post) => {
+        const translatedTitle = post.titleEn ? post.titleEn : await translateText(post.title, 'en');
+        const translatedExcerpt = post.excerptEn ? post.excerptEn : await translateText(post.excerpt, 'en');
+
+        return {
+          ...post,
+          title: translatedTitle,
+          excerpt: translatedExcerpt
+        };
+      }));
+    }
+  } catch (e) {
+    console.error('Failed to fetch posts for homepage:', e);
+  }
+
   return {
     props: {
       buildTimestamp: Date.now(),
+      posts,
       ...(await serverSideTranslations(locale, ['common'])),
     },
+    revalidate: 60,
   };
 }

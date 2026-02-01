@@ -142,7 +142,7 @@ export default function PurposePage({ purpose, country, seoMeta, locale }) {
                                 </summary>
                                 <p className="mt-2 text-gray-600 text-sm">
                                     {locale === 'ko'
-                                        ? 'RemitBuddy에서 8개 업체를 비교하여 최저 수수료를 찾을 수 있습니다. 금액에 따라 최적의 업체가 다르므로 꼭 비교해보세요.'
+                                        ? 'RemitBuddy에서 9개 업체를 비교하여 최저 수수료를 찾을 수 있습니다. 금액에 따라 최적의 업체가 다르므로 꼭 비교해보세요.'
                                         : 'Compare 8 providers on RemitBuddy to find the lowest fee. The best option varies by amount.'}
                                 </p>
                             </details>

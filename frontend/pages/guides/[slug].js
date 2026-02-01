@@ -70,7 +70,7 @@ export default function GuidePage({ guide, seoMeta, locale }) {
                                     <ol>
                                         <li>
                                             <strong>{locale === 'ko' ? 'RemitBuddy에서 환율 비교' : 'Compare rates on RemitBuddy'}</strong>
-                                            <p>{locale === 'ko' ? '8개 업체의 실시간 환율을 한눈에 비교하세요.' : 'Compare live rates from 8 providers at a glance.'}</p>
+                                            <p>{locale === 'ko' ? '9개 업체의 실시간 환율을 한눈에 비교하세요.' : 'Compare live rates from 8 providers at a glance.'}</p>
                                         </li>
                                         <li>
                                             <strong>{locale === 'ko' ? '최적의 업체 선택' : 'Choose the best provider'}</strong>

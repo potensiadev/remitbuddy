@@ -13,13 +13,47 @@ const getPlainText = (richText) => {
 
 const mapPost = (page) => {
   const props = page.properties || {};
+  console.log('[Notion Debug] Available properties:', Object.keys(props));
+  if (props['Title (En)']) {
+    console.log('[Notion Debug] Title (En) found:', JSON.stringify(props['Title (En)']));
+  } else {
+    console.log('[Notion Debug] Title (En) MISSING');
+  }
+
+  let cover = null;
+  // Check for 'Image' property (Files & Media type)
+  if (props.Image?.files && props.Image.files.length > 0) {
+    const fileObj = props.Image.files[0];
+    if (fileObj.type === 'external') {
+      cover = fileObj.external.url;
+    } else if (fileObj.type === 'file') {
+      cover = fileObj.file.url;
+    }
+  }
+
+  // Fallback to page cover if no Image property
+  if (!cover && page.cover) {
+    if (page.cover.type === 'external') {
+      cover = page.cover.external.url;
+    } else if (page.cover.type === 'file') {
+      cover = page.cover.file.url;
+    }
+  }
+
+  // Also try to get tags/category if available (assuming 'Tags' multi-select)
+  const tags = props.Tags?.multi_select?.map(t => t.name) || [];
+
   return {
     id: page.id,
     title: getPlainText(props.Name?.title),
+    titleEn: getPlainText(props['Title (En)']?.rich_text),
     slug: getPlainText(props.Slug?.rich_text),
     excerpt: getPlainText(props.Excerpt?.rich_text),
+    excerptEn: getPlainText(props['Excerpt (En)']?.rich_text),
     featured: props.Featured?.checkbox ?? false,
     publishedAt: props['Publish Date']?.date?.start || null,
+    cover,
+    tags,
   };
 };
 

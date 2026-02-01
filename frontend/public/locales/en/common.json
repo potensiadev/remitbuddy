@@ -136,7 +136,9 @@
     "service_faq": "FAQ",
     "service_faq_desc": "Common questions answered",
     "open": "Open menu",
-    "close": "Close menu"
+    "close": "Close menu",
+    "blog_menu": "Blog",
+    "blog_desc": "Latest news & tips"
   },
   "rate_alert": {
     "title": "Get Rate Alerts",
@@ -233,7 +235,14 @@
     "link_copied": "Link copied!"
   },
   "blog": {
-    "title": "RemitBuddy Blog"
+    "title": "RemitBuddy Blog",
+    "subtitle": "Smart money transfer tips and latest news.",
+    "badge": "Blog",
+    "hero_title": "Must Know Remittance Tips",
+    "hero_desc": "Get the latest insights on exchange rates, fees, and the smartest ways to send money abroad.",
+    "read_more": "Read Article",
+    "empty_title": "No posts found",
+    "empty_desc": "Check back soon for new updates!"
   },
   "privacy": {
     "page_title": "Privacy Policy | RemitBuddy",

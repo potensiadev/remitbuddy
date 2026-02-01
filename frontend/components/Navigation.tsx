@@ -90,6 +90,9 @@ const Navigation = () => {
             <Link href="/#faq" className="px-4 py-2 text-gray-700 font-semibold hover:text-brand-600 transition-colors duration-200 rounded-lg hover:bg-gray-50 uppercase text-xs tracking-wider">
               {t('nav.service_faq')}
             </Link>
+            <Link href="/blog" className="px-4 py-2 text-gray-700 font-semibold hover:text-brand-600 transition-colors duration-200 rounded-lg hover:bg-gray-50 uppercase text-xs tracking-wider">
+              {t('nav.blog_menu')}
+            </Link>
             <LanguageSwitcher />
           </div>
 
@@ -193,6 +196,22 @@ const Navigation = () => {
                 <p className="text-sm font-medium text-gray-500">{t('nav.service_faq_desc')}</p>
               </div>
             </a>
+
+            <Link
+              href="/blog"
+              className="flex items-start gap-4 p-5 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md hover:border-primary-100 active:scale-[0.98] transition-all duration-200 group"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <div className="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center flex-shrink-0 group-hover:bg-orange-600 group-hover:text-white transition-colors duration-200">
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{t('nav.blog_menu')}</h3>
+                <p className="text-sm font-medium text-gray-500">{t('nav.blog_desc')}</p>
+              </div>
+            </Link>
           </div>
 
           {/* Bottom Actions */}

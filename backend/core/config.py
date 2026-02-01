@@ -57,10 +57,10 @@ class Settings(BaseSettings):
     # Admin Security
     admin_allowed_ips: List[str] = ["127.0.0.1", "::1", "testclient"]  # IP whitelist for admin endpoints
     admin_secret_token: Optional[str] = None  # Secret token for admin access (X-Admin-Token header)
-    admin_endpoints_enabled: bool = True  # Master switch for admin endpoints
+    admin_endpoints_enabled: bool = False  # Master switch for admin endpoints
 
     # Production Requirements
-    require_redis_in_production: bool = True
+    require_redis_in_production: bool = False
     require_sentry_in_production: bool = False  # Optional but recommended
 
     # CORS - Production origins (strict)

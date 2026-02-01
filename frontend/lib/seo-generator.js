@@ -85,8 +85,8 @@ function generateDescription({ pageType, country, amount, providers, purpose, lo
     const templates = {
         'amount-country': {
             ko: amount
-                ? `${formatAmount(amount)}원을 ${country?.name}로 송금하세요. 8개 업체 실시간 환율 비교로 최저 수수료 찾기. 평균 3만원 절약 가능!`
-                : `${country?.name} 송금 최저 수수료 비교. 한패스, 센트비, 이나인페이 등 8개 업체 실시간 환율 확인.`,
+                ? `${formatAmount(amount)}원을 ${country?.name}로 송금하세요. 9개 업체 실시간 환율 비교로 최저 수수료 찾기. 평균 3만원 절약 가능!`
+                : `${country?.name} 송금 최저 수수료 비교. 한패스, 센트비, 이나인페이 등 9개 업체 실시간 환율 확인.`,
             en: amount
                 ? `Send ₩${formatAmount(amount)} to ${country?.name}. Compare rates from 8 providers instantly. Save up to ₩32,000 per transfer!`
                 : `Compare ${country?.name} remittance rates from 8 providers. Find the best exchange rate and lowest fees.`
@@ -108,7 +108,7 @@ function generateDescription({ pageType, country, amount, providers, purpose, lo
             en: `Complete guide to sending money to ${country?.name}. Step-by-step instructions, required documents, and money-saving tips for beginners.`
         },
         'guide-cheapest': {
-            ko: `${country?.name} 송금 가장 싸게 하는 방법! 8개 업체 수수료 비교로 평균 3만원 절약하는 꿀팁 공개.`,
+            ko: `${country?.name} 송금 가장 싸게 하는 방법! 9개 업체 수수료 비교로 평균 3만원 절약하는 꿀팁 공개.`,
             en: `Cheapest way to send money to ${country?.name}! Compare fees from 8 providers and save up to ₩32,000 per transfer.`
         },
         'guide-best-rate': {

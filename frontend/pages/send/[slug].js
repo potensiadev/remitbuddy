@@ -99,7 +99,7 @@ export default function AmountCountryPage({ amount, country, seoMeta, locale }) 
 
                         <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto text-center">
                             {locale === 'ko'
-                                ? `8개 송금 업체의 실시간 환율을 비교하고 최저 수수료로 송금하세요.`
+                                ? `9개 송금 업체의 실시간 환율을 비교하고 최저 수수료로 송금하세요.`
                                 : `Compare real-time rates from 8 remittance providers and send with the lowest fees.`}
                         </p>
 
@@ -156,7 +156,7 @@ export default function AmountCountryPage({ amount, country, seoMeta, locale }) 
                                     {locale === 'ko' ? '실시간 환율 비교' : 'Real-time Rate Comparison'}
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                    {locale === 'ko' ? '8개 업체의 환율을 3초만에 비교' : 'Compare rates from 8 providers in 3 seconds'}
+                                    {locale === 'ko' ? '9개 업체의 환율을 3초만에 비교' : 'Compare rates from 8 providers in 3 seconds'}
                                 </p>
                             </div>
 
@@ -207,7 +207,7 @@ export default function AmountCountryPage({ amount, country, seoMeta, locale }) 
                                 </summary>
                                 <p className="mt-2 text-gray-600 text-sm">
                                     {locale === 'ko'
-                                        ? `업체마다 수수료가 다릅니다. 평균적으로 ₩5,000~₩15,000 사이이며, RemitBuddy에서 8개 업체를 비교하여 최저 수수료 업체를 찾을 수 있습니다.`
+                                        ? `업체마다 수수료가 다릅니다. 평균적으로 ₩5,000~₩15,000 사이이며, RemitBuddy에서 9개 업체를 비교하여 최저 수수료 업체를 찾을 수 있습니다.`
                                         : `Fees vary by provider, typically ranging from ₩5,000 to ₩15,000. Use RemitBuddy to compare 8 providers and find the lowest fee.`}
                                 </p>
                             </details>

@@ -36,7 +36,7 @@ class CrossProvider(BaseProvider):
     """Cross remittance provider."""
 
     name = "Cross"
-    link = "https://crossenf.com/"
+    link = "https://crossenf.com/remittance"
 
     async def get_quote(
         self,
@@ -46,44 +46,85 @@ class CrossProvider(BaseProvider):
         receive_country: str,
     ) -> Optional[Dict]:
         """Fetch quote from Cross."""
+        import time
+        import uuid
+        
         try:
-            url = "https://crossenf.com/api/v4/remit/quote/"
+            # Correct API endpoint (v2/outbound/quote)
+            url = "https://crossenf.com/v2/outbound/quote/"
             platform_id = CROSS_PLATFORM_MAPPING.get(receive_country.lower())
             if not platform_id:
                 return None
 
+            # Generate device ID for this request
+            device_id = f"W{int(time.time() * 1000)}{uuid.uuid4().hex[:8]}"
+            timestamp = f"{int(time.time() * 1000)}VGkD"
+
             params = {
-                "apply_user_limit": 0,
-                "deposit_type": "Manual",
                 "platform_id": platform_id,
                 "quote_type": "send",
                 "sending_amount": send_amount,
+                "receiving_amount": 0,
+                "use_max_point": "true",
+                "deposit_type": "Manual",
+                "apply_user_limit": 0,
+                "is_home": 0,
             }
 
-            async with session.get(url, params=params) as response:
+            # Required Cross-specific headers
+            headers = {
+                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1",
+                "Accept": "*/*",
+                "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+                "Content-Type": "application/json;charset=UTF-8",
+                "Referer": "https://crossenf.com/remittance",
+                "cross-device-id": device_id,
+                "cross-lang": "ko",
+                "cross-os": "web",
+                "cross-ts": timestamp,
+                "cross-user-agent": "CrossApp",
+            }
+
+            async with session.get(url, params=params, headers=headers) as response:
                 if response.status != 200:
+                    self._log_debug("cross_api_error", status=response.status)
                     return None
 
-                data = await response.json()
-                quote_data = data.get("data", {})
+                try:
+                    data = await response.json(content_type=None)
+                except Exception:
+                    self._log_debug("json_parse_failed")
+                    return None
 
+                if not data or data.get("result") != "success":
+                    self._log_debug("cross_api_failed", result=data.get("result") if data else None)
+                    return None
+
+                quote_data = data.get("data", {})
+                
                 receiving_amount = quote_data.get("receiving_amount", 0)
                 if not receiving_amount or receiving_amount <= 0:
                     return None
 
                 fee = quote_data.get("fee", 0)
-                pay_amount = quote_data.get("pay_amount", send_amount)
-
-                if pay_amount > 0:
-                    exchange_rate = receiving_amount / pay_amount
+                
+                # service_rate is KRW per 1 unit of target currency (e.g., 5.576 for VND)
+                # We need to convert to "target currency per 1 KRW" for consistency
+                service_rate = quote_data.get("service_rate", 0)
+                if service_rate > 0:
+                    exchange_rate = 1 / service_rate
                 else:
-                    exchange_rate = 0
+                    pay_amount = quote_data.get("pay_amount", send_amount)
+                    if pay_amount > 0:
+                        exchange_rate = receiving_amount / pay_amount
+                    else:
+                        exchange_rate = 0
 
                 self._log_debug(
                     "quote_received",
                     receiving_amount=receiving_amount,
-                    pay_amount=pay_amount,
                     exchange_rate=exchange_rate,
+                    service_rate=service_rate
                 )
 
                 return self._build_result(exchange_rate, fee, receiving_amount)

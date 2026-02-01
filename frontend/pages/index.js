@@ -364,7 +364,7 @@ export default function HomePage({ buildTimestamp }) {
                 <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-3 lg:p-4 shadow-lg border border-white/60 w-full ring-1 ring-gray-100 mb-2 lg:mb-0">
                   <div className="grid grid-cols-3 gap-2 sm:gap-8 divide-x divide-gray-200/50">
                     {[
-                      { val: '8', label: t('hero.stats_companies') },
+                      { val: '9', label: t('hero.stats_companies') },
                       { val: '18', label: t('hero.stats_countries') },
                       { val: t('hero.stats_seconds_val', '3s'), label: t('hero.stats_seconds_label') }
                     ].map((stat, i) => (

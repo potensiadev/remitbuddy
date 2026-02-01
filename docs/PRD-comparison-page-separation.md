@@ -61,7 +61,7 @@ Examples:
 <!-- Vietnam Example -->
 <title>베트남 송금 비교 | 1,000,000원 → VND | RemitBuddy</title>
 <meta name="description" content="베트남으로 1,000,000원 송금 시 최저 수수료 비교.
-  8개 송금사 실시간 환율 비교로 최대 32,000원 절약하세요." />
+  9개 송금사 실시간 환율 비교로 최대 32,000원 절약하세요." />
 ```
 
 #### 2.2.2 Open Graph Tags (Social Sharing)

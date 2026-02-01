@@ -252,7 +252,7 @@ If USD/CAD/EUR were added anyway:
 | **User expectation** | "Compare 10+ providers" | ❌ Violated - only 1 provider shown |
 
 **Marketing Problem**:
-- Homepage claims: "8개의 해외송금 업체의 환율과 수수료를 단 3초만에 비교"
+- Homepage claims: "9개의 해외송금 업체의 환율과 수수료를 단 3초만에 비교"
 - Reality for USD/CAD/EUR: Only 1 provider available
 - This constitutes false advertising
 
@@ -1034,7 +1034,7 @@ netlify watch
 |------|------------|--------|-----------|
 | **User confusion (only 1 provider)** | **High** | **High** | Warning banners, clear messaging |
 | **Reputation damage** | Medium | High | Transparent disclaimer, don't over-promise |
-| **Marketing misalignment** | **High** | Medium | Update homepage to "최대 8개 업체" instead of "8개 업체" |
+| **Marketing misalignment** | **High** | Medium | Update homepage to "최대 9개 업체" instead of "9개 업체" |
 | **Legal exposure** | Low | High | Consumer protection compliance review |
 
 ### 9.3 Provider Relationship Risks
@@ -1071,8 +1071,8 @@ Low Impact, Low Probability:
 
 **Rationale**:
 1. **Violates Core Value Proposition**: RemitBuddy's strength is multi-provider comparison. USD/CAD/EUR only have 1 provider.
-2. **User Experience Degradation**: Users expect "8개 업체" comparison, but will see only 1.
-3. **Marketing/Legal Risk**: "8개 업체 비교" claim becomes false advertising for USD/CAD/EUR.
+2. **User Experience Degradation**: Users expect "9개 업체" comparison, but will see only 1.
+3. **Marketing/Legal Risk**: "9개 업체 비교" claim becomes false advertising for USD/CAD/EUR.
 4. **Minimal User Benefit**: 1-provider "comparison" provides no competitive advantage.
 
 ### 10.2 Alternative Recommendation: Pursue Option C (New Providers)
@@ -1096,7 +1096,7 @@ Low Impact, Low Probability:
 
 1. ✅ Implement smart provider filtering (backend optimization)
 2. ✅ Add prominent warning banners (manage user expectations)
-3. ✅ Update marketing copy ("최대 8개 업체" instead of "8개 업체")
+3. ✅ Update marketing copy ("최대 9개 업체" instead of "9개 업체")
 4. ✅ Add provider count badges in dropdown (transparency)
 5. ✅ Monitor user feedback closely (Hotjar, surveys)
 6. ✅ Prepare rollback plan (fast revert if negative feedback)

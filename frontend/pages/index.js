@@ -306,7 +306,7 @@ export default function HomePage({ buildTimestamp }) {
         <meta property="og:description" content={t('seo.description')} />
 
         {/* Primary Image (Social - 1200x630) */}
-        <meta property="og:image" content={`https://www.remitbuddy.com/og-image.png?v=${buildTimestamp}`} />
+        <meta property="og:image" content={`https://www.remitbuddy.com/${router.locale === 'ko' ? 'og-image-ko.png' : 'og-image.png'}?v=${buildTimestamp}`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
@@ -325,14 +325,14 @@ export default function HomePage({ buildTimestamp }) {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={t('seo.title')} />
         <meta name="twitter:description" content={t('seo.description')} />
-        <meta name="twitter:image" content={`https://www.remitbuddy.com/og-image.png?v=${buildTimestamp}`} />
+        <meta name="twitter:image" content={`https://www.remitbuddy.com/${router.locale === 'ko' ? 'og-image-ko.png' : 'og-image.png'}?v=${buildTimestamp}`} />
 
         <link rel="preconnect" href="https://www.remitbuddy.com" />
         {FLAG_ASSETS.map((flag) => (
           <link key={flag} rel="preload" as="image" href={flag} />
         ))}
         {/* Preload critical OG images for bots */}
-        <link rel="preload" as="image" href="/og-image.png" />
+        <link rel="preload" as="image" href={`/${router.locale === 'ko' ? 'og-image-ko.png' : 'og-image.png'}`} />
       </Head>
 
       <div className="min-h-screen bg-white safe-top safe-bottom">

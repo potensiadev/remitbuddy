@@ -116,6 +116,13 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
         </div>
 
       </div>
+
+      {/* Regulatory Disclaimer - Financial Compliance */}
+      <div className="px-4 pb-3 pt-0 md:px-5 md:pb-4 md:pt-0">
+        <p className="text-[10px] text-gray-300 md:text-gray-400 text-center md:text-right leading-tight tracking-tight">
+          {t('provider.disclaimer')}
+        </p>
+      </div>
     </div>
   );
 };

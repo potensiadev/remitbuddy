@@ -62,7 +62,8 @@ class MyDocument extends Document {
           />
 
           {/* Favicons */}
-          <link rel="icon" href="/icons/favicon.png?v=4" type="image/png" sizes="512x512" />
+          <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+          <link rel="icon" href="/icons/favicon.png?v=4" sizes="any" />
           <link rel="apple-touch-icon" href="/icons/favicon.png?v=4" />
 
           {/* Manifest to override cached PWA settings */}

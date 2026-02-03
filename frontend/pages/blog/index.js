@@ -36,6 +36,19 @@ const BlogIndex = ({ posts }) => {
       <Head>
         <title>{t('blog.title', 'RemitBuddy Blog')} | RemitBuddy</title>
         <meta name="description" content={t('blog.subtitle', 'Smart money transfer tips and latest news.')} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={`${t('blog.title', 'RemitBuddy Blog')} | RemitBuddy`} />
+        <meta property="og:description" content={t('blog.subtitle', 'Smart money transfer tips and latest news.')} />
+        <meta property="og:image" content={`https://www.remitbuddy.com/og-image${i18n.language === 'ko' ? '-ko' : ''}.png`} />
+        <meta property="og:url" content={`https://www.remitbuddy.com/${i18n.language === 'en' ? '' : i18n.language + '/'}blog`} />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${t('blog.title', 'RemitBuddy Blog')} | RemitBuddy`} />
+        <meta name="twitter:description" content={t('blog.subtitle', 'Smart money transfer tips and latest news.')} />
+        <meta name="twitter:image" content={`https://www.remitbuddy.com/og-image${i18n.language === 'ko' ? '-ko' : ''}.png`} />
       </Head>
 
       <div className="min-h-screen bg-gray-50 flex flex-col safe-top safe-bottom">

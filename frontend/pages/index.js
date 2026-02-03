@@ -296,17 +296,17 @@ export default function HomePage({ buildTimestamp, posts }) {
   return (
     <>
       <Head>
-        <title>{t('seo.title')}</title>
-        <meta name="description" content={t('seo.description')} />
+        <title>{t('seo.title', 'RemitBuddy – Compare International Money Transfer Rates')}</title>
+        <meta name="description" content={t('seo.description', 'Find the cheapest way to send money abroad in just 3 seconds. Compare rates and fees from 8 top providers.')} />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <meta name="keywords" content={t('seo.keywords')} />
+        <meta name="keywords" content={t('seo.keywords', 'Korea money transfer, send money from Korea, Korea remittance comparison')} />
 
         {/* Verification Tags */}
         <meta name="msvalidate.01" content="494B757ACE3C4582ECB2450FC6CEB3D4" />
 
         {/* Open Graph Meta Tags */}
-        <meta property="og:title" content={t('seo.title')} />
-        <meta property="og:description" content={t('seo.description')} />
+        <meta property="og:title" content={t('seo.title', 'RemitBuddy – Compare International Money Transfer Rates')} />
+        <meta property="og:description" content={t('seo.description', 'Find the cheapest way to send money abroad in just 3 seconds. Compare rates and fees from 8 top providers.')} />
 
         {/* Primary Image (Social - 1200x630) */}
         <meta property="og:image" content={`https://www.remitbuddy.com/${router.locale === 'ko' ? 'og-image-ko.png' : 'og-image.png'}?v=${buildTimestamp}`} />
@@ -326,8 +326,8 @@ export default function HomePage({ buildTimestamp, posts }) {
 
         {/* Twitter Card Meta Tags */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={t('seo.title')} />
-        <meta name="twitter:description" content={t('seo.description')} />
+        <meta name="twitter:title" content={t('seo.title', 'RemitBuddy – Compare International Money Transfer Rates')} />
+        <meta name="twitter:description" content={t('seo.description', 'Find the cheapest way to send money abroad in just 3 seconds. Compare rates and fees from 8 top providers.')} />
         <meta name="twitter:image" content={`https://www.remitbuddy.com/${router.locale === 'ko' ? 'og-image-ko.png' : 'og-image.png'}?v=${buildTimestamp}`} />
 
         <link rel="preconnect" href="https://www.remitbuddy.com" />
@@ -336,6 +336,34 @@ export default function HomePage({ buildTimestamp, posts }) {
         ))}
         {/* Preload critical OG images for bots */}
         <link rel="preload" as="image" href={`/${router.locale === 'ko' ? 'og-image-ko.png' : 'og-image.png'}`} />
+
+        {/* JSON-LD for Rich Snippets */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "url": "https://www.remitbuddy.com",
+                  "name": "RemitBuddy",
+                  "description": t('seo.description', 'Find the cheapest way to send money abroad in just 3 seconds.'),
+                  "primaryImageOfPage": {
+                    "@type": "ImageObject",
+                    "url": `https://www.remitbuddy.com/${router.locale === 'ko' ? 'og-image-ko.png' : 'og-image.png'}`
+                  }
+                },
+                {
+                  "@type": "Organization",
+                  "name": "RemitBuddy",
+                  "url": "https://www.remitbuddy.com",
+                  "logo": "https://www.remitbuddy.com/icons/favicon.png"
+                }
+              ]
+            })
+          }}
+        />
       </Head>
 
       <div className="min-h-screen bg-white safe-top safe-bottom">

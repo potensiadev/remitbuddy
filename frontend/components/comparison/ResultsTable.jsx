@@ -9,8 +9,8 @@ export const ViewToggle = ({ view, onViewChange }) => {
       <button
         onClick={() => onViewChange('cards')}
         className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${view === 'cards'
-            ? 'bg-white text-gray-900 shadow-sm'
-            : 'text-gray-600 hover:text-gray-900'
+          ? 'bg-white text-gray-900 shadow-sm'
+          : 'text-gray-600 hover:text-gray-900'
           }`}
       >
         <span className="flex items-center gap-2">
@@ -23,8 +23,8 @@ export const ViewToggle = ({ view, onViewChange }) => {
       <button
         onClick={() => onViewChange('table')}
         className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${view === 'table'
-            ? 'bg-white text-gray-900 shadow-sm'
-            : 'text-gray-600 hover:text-gray-900'
+          ? 'bg-white text-gray-900 shadow-sm'
+          : 'text-gray-600 hover:text-gray-900'
           }`}
       >
         <span className="flex items-center gap-2">
@@ -88,7 +88,7 @@ export const ResultsTable = ({ results, currency, onProviderClick, bestAmount })
                     <span className="font-semibold text-gray-900">{displayName}</span>
                     {isBest && (
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-700">
-                        Best
+                        {t('provider.best_badge', 'Max Amount')}
                       </span>
                     )}
                   </div>
@@ -117,11 +117,11 @@ export const ResultsTable = ({ results, currency, onProviderClick, bestAmount })
                     rel="noopener noreferrer"
                     onClick={() => onProviderClick(provider, index)}
                     className={`inline-flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isBest
-                        ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                   >
-                    Send
+                    {t('provider.cta_default', 'Visit')}
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>

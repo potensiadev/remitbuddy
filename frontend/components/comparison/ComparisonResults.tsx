@@ -155,12 +155,12 @@ const ComparisonResults: React.FC<ComparisonResultsProps> = ({
   return (
     <div ref={resultsContainerRef} className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
       {!isLoading && !isError && results.length > 0 && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col items-center justify-center gap-2 mb-6 text-center">
           <p className="text-gray-900 font-bold text-lg">
             {t('results.providers_found', { count: results.length })}
           </p>
 
-          <div className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500">
+          <div className="inline-flex items-center justify-center gap-1.5 text-xs font-medium text-gray-500">
             <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
             {t('results.ranking_explanation')}
           </div>
@@ -209,7 +209,7 @@ const ComparisonResults: React.FC<ComparisonResultsProps> = ({
       </div>
 
       {isLoading && (
-        <div className="text-left py-12 w-full">
+        <div className="text-center py-12 w-full">
           <div className="inline-block relative mb-6">
             <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
           </div>

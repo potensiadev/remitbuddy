@@ -95,7 +95,14 @@ const BlogPost = ({ post }) => {
                 );
 
             case 'image':
-                const url = value.type === 'external' ? value.external.url : value.file.url;
+                let url = '';
+                if (value.type === 'external') {
+                    url = value.external.url;
+                } else if (value.type === 'file') {
+                    // Use proxy with blockId for inline images
+                    url = `/api/image?blockId=${id}`;
+                }
+
                 const caption = value.caption ? text(value.caption) : '';
                 return (
                     <figure className="my-8">

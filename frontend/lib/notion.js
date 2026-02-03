@@ -27,7 +27,8 @@ const mapPost = (page) => {
     if (fileObj.type === 'external') {
       cover = fileObj.external.url;
     } else if (fileObj.type === 'file') {
-      cover = fileObj.file.url;
+      // Use proxy for expiration-prone file URLs
+      cover = `/api/image?pageId=${page.id}&type=property`;
     }
   }
 
@@ -36,7 +37,8 @@ const mapPost = (page) => {
     if (page.cover.type === 'external') {
       cover = page.cover.external.url;
     } else if (page.cover.type === 'file') {
-      cover = page.cover.file.url;
+      // Use proxy for expiration-prone file URLs
+      cover = `/api/image?pageId=${page.id}&type=cover`;
     }
   }
 

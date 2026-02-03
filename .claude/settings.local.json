@@ -58,7 +58,13 @@
       "Bash(powershell -Command \"cd D:\\\\remitbuddy\\\\frontend; npm run build\")",
       "Bash(powershell -Command:*)",
       "Bash(cat:*)",
-      "Bash(more:*)"
+      "Bash(more:*)",
+      "Bash(pip install:*)",
+      "Bash(taskkill:*)",
+      "Bash(pkill:*)",
+      "Bash(git reset:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
     ],
     "deny": []
   }

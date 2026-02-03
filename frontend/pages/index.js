@@ -380,7 +380,7 @@ export default function HomePage({ buildTimestamp, posts }) {
                 </div>
               </div>
 
-              <div className="animate-fade-in-up w-full max-w-lg lg:max-w-none mx-auto relative shadow-buffer mt-6 lg:mt-0 px-4 sm:px-0">
+              <div className="animate-fade-in-up w-full max-w-lg lg:max-w-none mx-auto relative shadow-buffer mt-0 lg:mt-0 px-4 sm:px-0">
                 <div className="absolute -inset-8 bg-primary-100/10 blur-3xl -z-10 rounded-full" />
 
                 {savedCorridors.length > 0 && (

@@ -54,7 +54,7 @@ const SparklesIcon = () => (
 const ProviderCard = ({ provider, isBest, rank }) => {
     const { t } = useTranslation('common');
     const displayName = provider.provider === 'JP Remit' ? 'JRF' :
-        provider.provider === 'The Moin' ? 'Moin' : provider.provider;
+                       provider.provider === 'The Moin' ? 'Moin' : provider.provider;
 
     const feeInKRW = provider.fee.toLocaleString('en-US');
 
@@ -63,10 +63,11 @@ const ProviderCard = ({ provider, isBest, rank }) => {
             href={provider.link}
             target="_blank"
             rel="noopener noreferrer"
-            className={`block bg-white rounded-3xl p-8 mb-4 transition-all duration-300 hover:scale-[1.02] ${isBest
+            className={`block bg-white rounded-3xl p-8 mb-4 transition-all duration-300 hover:scale-[1.02] ${
+                isBest
                     ? 'border-4 border-blue-500 shadow-2xl relative overflow-hidden'
                     : 'border-2 border-gray-200 hover:border-blue-300 shadow-md hover:shadow-xl'
-                }`}
+            }`}
         >
             {isBest && (
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 opacity-10 rounded-bl-full"></div>
@@ -74,7 +75,25 @@ const ProviderCard = ({ provider, isBest, rank }) => {
 
             <div className="flex items-center justify-between mb-6 relative z-10">
                 <div className="flex items-center gap-4">
-
+                    <div className="relative">
+                        {PROVIDER_LOGO_MAP[provider.provider] ? (
+                            <img
+                                src={PROVIDER_LOGO_MAP[provider.provider]}
+                                alt={t('provider.logo_alt', { provider: displayName })}
+                                className="w-16 h-16 rounded-2xl object-contain bg-white shadow-sm"
+                                onError={(e) => { e.target.style.display = 'none'; }}
+                            />
+                        ) : (
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-2xl font-bold text-blue-600 shadow-sm">
+                                {displayName.charAt(0)}
+                            </div>
+                        )}
+                        {isBest && (
+                            <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full p-1">
+                                <SparklesIcon />
+                            </div>
+                        )}
+                    </div>
                     <div>
                         <div className="text-2xl font-bold text-gray-900">{displayName}</div>
                         {isBest && (

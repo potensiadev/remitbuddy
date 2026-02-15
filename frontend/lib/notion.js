@@ -16,9 +16,11 @@ const normalizeLocale = (locale = 'ko') => {
 const getDatabaseCandidatesByLocale = (locale = 'ko') => {
   const normalizedLocale = normalizeLocale(locale);
   const primary = normalizedLocale === 'en' ? DATABASE_ID_EN : DATABASE_ID_KO;
-  const secondary = normalizedLocale === 'en' ? DATABASE_ID_KO : DATABASE_ID_EN;
 
-  return [...new Set([primary, DATABASE_ID, secondary].filter(Boolean))];
+  // Do not cross-fallback to the other locale DB.
+  // Expected behavior: each locale shows only its own content,
+  // with optional legacy single-DB fallback during migration.
+  return [...new Set([primary, DATABASE_ID].filter(Boolean))];
 };
 
 const getPlainText = (richText) => {

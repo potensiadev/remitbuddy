@@ -2,7 +2,7 @@ import { GoogleAnalytics } from "nextjs-google-analytics";
 import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import Script from 'next/script';
+
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
@@ -38,11 +38,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <GoogleAnalytics trackPageViews gaMeasurementId={measurementId} />
 
       {/* Google AdSense */}
-      <Script
-        strategy="lazyOnload"
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8945839011287197"
-        crossOrigin="anonymous"
-      />
+
 
       <ErrorBoundary>
         <Component {...pageProps} />

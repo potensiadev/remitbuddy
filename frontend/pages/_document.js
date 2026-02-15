@@ -68,6 +68,13 @@ class MyDocument extends Document {
 
           {/* Manifest to override cached PWA settings */}
           <link rel="manifest" href="/manifest.json?v=4" />
+
+          {/* Google AdSense */}
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8945839011287197"
+            crossOrigin="anonymous"
+          />
         </Head>
 
         <body>

@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getPublishedPosts } from '../../lib/notion';
-import { translateText } from '../../lib/translate';
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
 import Head from 'next/head';
@@ -151,23 +150,7 @@ const BlogIndex = ({ posts }) => {
   );
 };
 export async function getStaticProps({ locale }) {
-  let posts = await getPublishedPosts();
-
-  // If locale is English, auto-translate titles and excerpts
-  if (locale === 'en') {
-    posts = await Promise.all(posts.map(async (post) => {
-      // Parallel translation for speed
-      // Use manual translation if available, otherwise auto-translate
-      const translatedTitle = post.titleEn ? post.titleEn : await translateText(post.title, 'en');
-      const translatedExcerpt = post.excerptEn ? post.excerptEn : await translateText(post.excerpt, 'en');
-
-      return {
-        ...post,
-        title: translatedTitle,
-        excerpt: translatedExcerpt
-      };
-    }));
-  }
+  const posts = await getPublishedPosts(locale);
 
   return {
     props: {

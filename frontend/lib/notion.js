@@ -5,6 +5,12 @@ const notion = new Client({
 });
 
 const DATABASE_ID = process.env.BLOG_DATABASE_ID;
+const DATABASE_ID_KO = process.env.BLOG_DATABASE_ID_KO || DATABASE_ID;
+const DATABASE_ID_EN = process.env.BLOG_DATABASE_ID_EN || DATABASE_ID;
+
+const getDatabaseIdByLocale = (locale = 'ko') => {
+  return locale === 'en' ? DATABASE_ID_EN : DATABASE_ID_KO;
+};
 
 const getPlainText = (richText) => {
   if (!Array.isArray(richText)) return '';
@@ -21,29 +27,24 @@ const mapPost = (page) => {
   }
 
   let cover = null;
-  // Check for 'Image' property (Files & Media type)
   if (props.Image?.files && props.Image.files.length > 0) {
     const fileObj = props.Image.files[0];
     if (fileObj.type === 'external') {
       cover = fileObj.external.url;
     } else if (fileObj.type === 'file') {
-      // Use proxy for expiration-prone file URLs
       cover = `/api/image?pageId=${page.id}&type=property`;
     }
   }
 
-  // Fallback to page cover if no Image property
   if (!cover && page.cover) {
     if (page.cover.type === 'external') {
       cover = page.cover.external.url;
     } else if (page.cover.type === 'file') {
-      // Use proxy for expiration-prone file URLs
       cover = `/api/image?pageId=${page.id}&type=cover`;
     }
   }
 
-  // Also try to get tags/category if available (assuming 'Tags' multi-select)
-  const tags = props.Tags?.multi_select?.map(t => t.name) || [];
+  const tags = props.Tags?.multi_select?.map((t) => t.name) || [];
 
   return {
     id: page.id,
@@ -59,17 +60,18 @@ const mapPost = (page) => {
   };
 };
 
-async function getPublishedPosts() {
+async function getPublishedPosts(locale = 'ko') {
   try {
+    const databaseId = getDatabaseIdByLocale(locale);
+    if (!databaseId) return [];
+
     const res = await notion.databases.query({
-      database_id: DATABASE_ID,
+      database_id: databaseId,
       filter: {
         property: 'Ready to Publish',
         checkbox: { equals: true },
       },
-      sorts: [
-        { property: 'Publish Date', direction: 'descending' },
-      ],
+      sorts: [{ property: 'Publish Date', direction: 'descending' }],
     });
 
     return res.results.map(mapPost).filter((p) => p.slug);
@@ -79,10 +81,13 @@ async function getPublishedPosts() {
   }
 }
 
-async function getPostBySlug(slug) {
+async function getPostBySlug(slug, locale = 'ko') {
   try {
+    const databaseId = getDatabaseIdByLocale(locale);
+    if (!databaseId) return null;
+
     const res = await notion.databases.query({
-      database_id: DATABASE_ID,
+      database_id: databaseId,
       filter: {
         and: [
           { property: 'Ready to Publish', checkbox: { equals: true } },

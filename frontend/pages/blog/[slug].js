@@ -3,7 +3,6 @@ import Head from 'next/head';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getPostBySlug, getPublishedPosts } from '../../lib/notion';
-import { translateText, translateBlocks } from '../../lib/translate';
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
 
@@ -201,32 +200,12 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params, locale }) {
-    let post = await getPostBySlug(params.slug);
+    const post = await getPostBySlug(params.slug, locale);
 
     if (!post) {
         return {
             notFound: true,
         };
-    }
-
-    // If locale is English, auto-translate content
-    if (locale === 'en') {
-        try {
-            // Use manual translation if available, otherwise auto-translate
-            const translatedTitle = post.titleEn ? post.titleEn : await translateText(post.title, 'en');
-            const translatedExcerpt = post.excerptEn ? post.excerptEn : await translateText(post.excerpt, 'en');
-            const translatedBlocksData = await translateBlocks(post.blocks, 'en');
-
-            post = {
-                ...post,
-                title: translatedTitle,
-                excerpt: translatedExcerpt,
-                blocks: translatedBlocksData
-            };
-        } catch (e) {
-            console.error('Translation failed for post:', post.slug, e);
-            // Fallback to original content
-        }
     }
 
     return {

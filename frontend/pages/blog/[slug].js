@@ -210,6 +210,7 @@ export async function getStaticProps({ params, locale }) {
     if (!post) {
         return {
             notFound: true,
+            revalidate: 60, // Re-check Notion after 60s (new posts will appear)
         };
     }
 

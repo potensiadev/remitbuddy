@@ -185,12 +185,17 @@ const BlogPost = ({ post }) => {
 };
 
 export async function getStaticPaths() {
-    const posts = await getPublishedPosts();
+    // Fetch posts from all locales to pre-generate all slug paths
+    const [koPosts, enPosts] = await Promise.all([
+        getPublishedPosts('ko'),
+        getPublishedPosts('en'),
+    ]);
 
-    // Clean paths for all locales if needed, but for now just default
-    // Just generating basic paths, fallback true handles others
-    const paths = posts.map((post) => ({
-        params: { slug: post.slug },
+    // Deduplicate slugs across both DBs
+    const allSlugs = [...new Set([...koPosts, ...enPosts].map((p) => p.slug))];
+
+    const paths = allSlugs.map((slug) => ({
+        params: { slug },
     }));
 
     return {

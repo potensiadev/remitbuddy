@@ -5,11 +5,20 @@ const notion = new Client({
 });
 
 const DATABASE_ID = process.env.BLOG_DATABASE_ID;
-const DATABASE_ID_KO = process.env.BLOG_DATABASE_ID_KO || DATABASE_ID;
-const DATABASE_ID_EN = process.env.BLOG_DATABASE_ID_EN || DATABASE_ID;
+const DATABASE_ID_KO = process.env.BLOG_DATABASE_ID_KO;
+const DATABASE_ID_EN = process.env.BLOG_DATABASE_ID_EN;
 
-const getDatabaseIdByLocale = (locale = 'ko') => {
-  return locale === 'en' ? DATABASE_ID_EN : DATABASE_ID_KO;
+const normalizeLocale = (locale = 'ko') => {
+  if (typeof locale !== 'string') return 'ko';
+  return locale.toLowerCase().startsWith('en') ? 'en' : 'ko';
+};
+
+const getDatabaseCandidatesByLocale = (locale = 'ko') => {
+  const normalizedLocale = normalizeLocale(locale);
+  const primary = normalizedLocale === 'en' ? DATABASE_ID_EN : DATABASE_ID_KO;
+  const secondary = normalizedLocale === 'en' ? DATABASE_ID_KO : DATABASE_ID_EN;
+
+  return [...new Set([primary, DATABASE_ID, secondary].filter(Boolean))];
 };
 
 const getPlainText = (richText) => {
@@ -19,12 +28,6 @@ const getPlainText = (richText) => {
 
 const mapPost = (page) => {
   const props = page.properties || {};
-  console.log('[Notion Debug] Available properties:', Object.keys(props));
-  if (props['Title (En)']) {
-    console.log('[Notion Debug] Title (En) found:', JSON.stringify(props['Title (En)']));
-  } else {
-    console.log('[Notion Debug] Title (En) MISSING');
-  }
 
   let cover = null;
   if (props.Image?.files && props.Image.files.length > 0) {
@@ -60,59 +63,73 @@ const mapPost = (page) => {
   };
 };
 
+async function queryPublishedPosts(databaseId) {
+  const res = await notion.databases.query({
+    database_id: databaseId,
+    filter: {
+      property: 'Ready to Publish',
+      checkbox: { equals: true },
+    },
+    sorts: [{ property: 'Publish Date', direction: 'descending' }],
+  });
+
+  return res.results.map(mapPost).filter((p) => p.slug);
+}
+
 async function getPublishedPosts(locale = 'ko') {
-  try {
-    const databaseId = getDatabaseIdByLocale(locale);
-    if (!databaseId) return [];
+  const databaseIds = getDatabaseCandidatesByLocale(locale);
 
-    const res = await notion.databases.query({
-      database_id: databaseId,
-      filter: {
-        property: 'Ready to Publish',
-        checkbox: { equals: true },
-      },
-      sorts: [{ property: 'Publish Date', direction: 'descending' }],
-    });
-
-    return res.results.map(mapPost).filter((p) => p.slug);
-  } catch (e) {
-    console.error('[Notion] getPublishedPosts failed:', e);
-    return [];
+  for (const databaseId of databaseIds) {
+    try {
+      const posts = await queryPublishedPosts(databaseId);
+      if (posts.length > 0) return posts;
+    } catch (e) {
+      console.error(`[Notion] getPublishedPosts failed for database ${databaseId}:`, e);
+    }
   }
+
+  return [];
+}
+
+async function queryPostBySlug(databaseId, slug) {
+  const res = await notion.databases.query({
+    database_id: databaseId,
+    filter: {
+      and: [
+        { property: 'Ready to Publish', checkbox: { equals: true } },
+        { property: 'Slug', rich_text: { equals: slug } },
+      ],
+    },
+    page_size: 1,
+  });
+
+  const page = res.results[0];
+  if (!page) return null;
+
+  const blocksRes = await notion.blocks.children.list({
+    block_id: page.id,
+    page_size: 100,
+  });
+
+  return {
+    ...mapPost(page),
+    blocks: blocksRes.results || [],
+  };
 }
 
 async function getPostBySlug(slug, locale = 'ko') {
-  try {
-    const databaseId = getDatabaseIdByLocale(locale);
-    if (!databaseId) return null;
+  const databaseIds = getDatabaseCandidatesByLocale(locale);
 
-    const res = await notion.databases.query({
-      database_id: databaseId,
-      filter: {
-        and: [
-          { property: 'Ready to Publish', checkbox: { equals: true } },
-          { property: 'Slug', rich_text: { equals: slug } },
-        ],
-      },
-      page_size: 1,
-    });
-
-    const page = res.results[0];
-    if (!page) return null;
-
-    const blocksRes = await notion.blocks.children.list({
-      block_id: page.id,
-      page_size: 100,
-    });
-
-    return {
-      ...mapPost(page),
-      blocks: blocksRes.results || [],
-    };
-  } catch (e) {
-    console.error('[Notion] getPostBySlug failed:', e);
-    return null;
+  for (const databaseId of databaseIds) {
+    try {
+      const post = await queryPostBySlug(databaseId, slug);
+      if (post) return post;
+    } catch (e) {
+      console.error(`[Notion] getPostBySlug failed for database ${databaseId}:`, e);
+    }
   }
+
+  return null;
 }
 
 module.exports = {

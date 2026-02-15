@@ -16,11 +16,18 @@ const normalizeLocale = (locale = 'ko') => {
 const getDatabaseCandidatesByLocale = (locale = 'ko') => {
   const normalizedLocale = normalizeLocale(locale);
   const primary = normalizedLocale === 'en' ? DATABASE_ID_EN : DATABASE_ID_KO;
+  const secondary = DATABASE_ID;
+  const otherLocaleDatabase = normalizedLocale === 'en' ? DATABASE_ID_KO : DATABASE_ID_EN;
 
-  // Do not cross-fallback to the other locale DB.
-  // Expected behavior: each locale shows only its own content,
-  // with optional legacy single-DB fallback during migration.
-  return [...new Set([primary, DATABASE_ID].filter(Boolean))];
+  // If locale-specific DB is configured, do NOT cross-fallback to the other locale.
+  // (Prevents /blog showing Korean posts when English DB is intentionally empty.)
+  if (primary) {
+    return [...new Set([primary, secondary].filter(Boolean))];
+  }
+
+  // If locale-specific DB is not configured at all, allow broader fallback
+  // to avoid empty pages during migration/misconfiguration.
+  return [...new Set([secondary, otherLocaleDatabase].filter(Boolean))];
 };
 
 const getPlainText = (richText) => {
@@ -81,6 +88,11 @@ async function queryPublishedPosts(databaseId) {
 async function getPublishedPosts(locale = 'ko') {
   const databaseIds = getDatabaseCandidatesByLocale(locale);
 
+  if (databaseIds.length === 0) {
+    console.error(`[Notion] No blog database configured for locale: ${locale}`);
+    return [];
+  }
+
   for (const databaseId of databaseIds) {
     try {
       const posts = await queryPublishedPosts(databaseId);
@@ -90,6 +102,7 @@ async function getPublishedPosts(locale = 'ko') {
     }
   }
 
+  console.warn(`[Notion] No published posts found for locale: ${locale}. Tried DBs: ${databaseIds.join(', ')}`);
   return [];
 }
 
@@ -122,6 +135,11 @@ async function queryPostBySlug(databaseId, slug) {
 async function getPostBySlug(slug, locale = 'ko') {
   const databaseIds = getDatabaseCandidatesByLocale(locale);
 
+  if (databaseIds.length === 0) {
+    console.error(`[Notion] No blog database configured for locale: ${locale}`);
+    return null;
+  }
+
   for (const databaseId of databaseIds) {
     try {
       const post = await queryPostBySlug(databaseId, slug);
@@ -131,6 +149,7 @@ async function getPostBySlug(slug, locale = 'ko') {
     }
   }
 
+  console.warn(`[Notion] Post not found for slug: ${slug} (locale: ${locale}). Tried DBs: ${databaseIds.join(', ')}`);
   return null;
 }
 

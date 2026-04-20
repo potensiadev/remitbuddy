@@ -1,0 +1,564 @@
+{
+  "name": "RemitBuddy Blog Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1,4"
+            }
+          ]
+        }
+      },
+      "id": "trigger-schedule",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 400],
+      "notes": "Every Monday and Thursday at 9:00 AM KST"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-4-20250514',\n  max_tokens: 4096,\n  system: `You are the News Collector for RemitBuddy, an international remittance comparison service.\n\n## Your Core Mission\nCollect and analyze the latest news about:\n1. Exchange rate trends (USD/KRW, VND, PHP, IDR, NPR, CNY, THB)\n2. Remittance industry news\n3. Korean regulatory updates\n4. Competitor news (Wise, Remitly, SentBe, 토스, 카카오뱅크)\n5. Target country news (Vietnam, Philippines, Indonesia, Nepal)\n\n## Target Audience Context\n- Foreign workers in Korea (manufacturing, service industries)\n- International students in Korea\n- People sending money to: Vietnam, Philippines, Indonesia, Nepal, China, Thailand\n- Concerns: Exchange rates, fees, speed, convenience\n\n## Output Requirements\nReturn ONLY valid JSON, no additional text.`,\n  messages: [\n    {\n      role: 'user',\n      content: `Today is ${new Date().toISOString().split('T')[0]}.\n\nResearch and collect the latest news about international remittance and exchange rates relevant to foreign workers in Korea.\n\nSearch for:\n1. 원달러 환율 동향 (USD/KRW trends)\n2. 해외송금 시장 뉴스 (remittance market news)\n3. 외국인 근로자 정책 (foreign worker policies)\n4. 경쟁사 동향 (Wise, Remitly, SentBe updates)\n5. 베트남/필리핀/인도네시아 송금 관련 뉴스\n\nOutput JSON format:\n{\n  \"collection_date\": \"YYYY-MM-DD\",\n  \"exchange_rate_summary\": {\n    \"usd_krw\": \"current trend summary\",\n    \"key_currencies\": [\n      { \"pair\": \"VND/KRW\", \"trend\": \"up/down/stable\", \"note\": \"...\" }\n    ],\n    \"forecast\": \"brief outlook\"\n  },\n  \"market_news\": [\n    {\n      \"headline\": \"...\",\n      \"summary\": \"2-3 sentences\",\n      \"relevance\": \"why this matters for foreign workers\",\n      \"source\": \"source name\"\n    }\n  ],\n  \"regulatory_updates\": [\n    {\n      \"title\": \"...\",\n      \"summary\": \"...\",\n      \"impact\": \"how it affects remittance users\"\n    }\n  ],\n  \"competitor_updates\": [\n    {\n      \"company\": \"Wise/Remitly/SentBe/etc\",\n      \"update\": \"...\"\n    }\n  ],\n  \"country_news\": {\n    \"vietnam\": \"relevant news for Vietnam remittance\",\n    \"philippines\": \"relevant news for Philippines remittance\",\n    \"indonesia\": \"relevant news for Indonesia remittance\",\n    \"others\": \"Nepal, Thailand, China news if any\"\n  },\n  \"content_opportunities\": [\n    {\n      \"topic_ko\": \"한국어 블로그 주제\",\n      \"topic_en\": \"English blog topic\",\n      \"primary_keyword_ko\": \"주요 키워드\",\n      \"primary_keyword_en\": \"primary keyword\",\n      \"content_type\": \"how-to/comparison/news/guide/tips\",\n      \"target_country\": \"general/vietnam/philippines/indonesia/nepal\",\n      \"urgency\": \"high/medium/low\",\n      \"reason\": \"why this topic now\"\n    }\n  ]\n}`\n    }\n  ]\n}) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "claude-news-collector",
+      "name": "Claude: News Collector",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.notion.com/v1/databases/{{ $env.NOTION_DB_KO }}/query",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.NOTION_API_KEY }}"
+            },
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"filter\": {\n    \"or\": [\n      {\n        \"property\": \"Status\",\n        \"select\": { \"equals\": \"Published\" }\n      },\n      {\n        \"property\": \"Status\",\n        \"select\": { \"equals\": \"Draft\" }\n      }\n    ]\n  },\n  \"sorts\": [\n    {\n      \"property\": \"Created\",\n      \"direction\": \"descending\"\n    }\n  ],\n  \"page_size\": 50\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "notion-read-published",
+      "name": "Read Notion Published",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [440, 500]
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "output": "empty"
+      },
+      "id": "merge-data",
+      "name": "Wait for All Data",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [680, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Claude API response and Notion data\nconst newsResponse = $items('Claude: News Collector')[0]?.json || {};\nconst notionResponse = $items('Read Notion Published')[0]?.json || {};\n\n// Extract news content from Claude response\nlet newsData = {};\nif (newsResponse.content && Array.isArray(newsResponse.content)) {\n  const textBlock = newsResponse.content.find(block => block.type === 'text');\n  if (textBlock?.text) {\n    try {\n      // Clean and parse JSON\n      let jsonText = textBlock.text\n        .replace(/^```json\\s*/i, '')\n        .replace(/^```\\s*/i, '')\n        .replace(/```$/i, '')\n        .trim();\n      const firstBrace = jsonText.indexOf('{');\n      const lastBrace = jsonText.lastIndexOf('}');\n      if (firstBrace !== -1 && lastBrace !== -1) {\n        jsonText = jsonText.slice(firstBrace, lastBrace + 1);\n      }\n      newsData = JSON.parse(jsonText);\n    } catch (e) {\n      console.error('Failed to parse news data:', e);\n      newsData = { error: 'Failed to parse', raw: textBlock.text };\n    }\n  }\n}\n\n// Extract published slugs from Notion\nconst publishedSlugs = [];\nconst publishedTitles = [];\nif (notionResponse.results && Array.isArray(notionResponse.results)) {\n  notionResponse.results.forEach(page => {\n    // Extract slug\n    const slugProp = page.properties?.Slug?.rich_text?.[0]?.plain_text;\n    if (slugProp) publishedSlugs.push(slugProp.toLowerCase());\n    \n    // Extract title\n    const titleProp = page.properties?.Title?.title?.[0]?.plain_text;\n    if (titleProp) publishedTitles.push(titleProp.toLowerCase());\n  });\n}\n\n// Get content opportunities\nconst opportunities = newsData.content_opportunities || [];\n\nreturn [{\n  json: {\n    news_data: newsData,\n    published_slugs: publishedSlugs.join(', '),\n    published_titles: publishedTitles.slice(0, 20).join(' | '),\n    published_count: publishedSlugs.length,\n    opportunities: opportunities,\n    collection_date: newsData.collection_date || new Date().toISOString().split('T')[0]\n  }\n}];"
+      },
+      "id": "process-data",
+      "name": "Process News & Notion Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [880, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-4-20250514',\n  max_tokens: 2048,\n  system: `You are a Content Strategist for RemitBuddy, an international remittance comparison service.\n\n## Target Audience\n- Foreign workers living in Korea (Vietnam, Philippines, Indonesia, Nepal, China, Thailand)\n- International students in Korea\n- People who send money home monthly\n- Many have limited Korean/English proficiency\n\n## Content Goals\n1. SEO ranking for remittance-related keywords\n2. Practical value for users  \n3. Drive traffic to RemitBuddy (www.remitbuddy.com)\n4. Build trust and authority\n\n## Prioritization Criteria\n1. Search volume & competition potential\n2. Timeliness (news-driven urgency)\n3. User pain point relevance\n4. Conversion potential to RemitBuddy\n\n## Output Requirements\nReturn ONLY valid JSON, no additional text.`,\n  messages: [\n    {\n      role: 'user',\n      content: `Based on the collected news and trends data, select the BEST topic for today's blog post.\n\n## News Data:\n${JSON.stringify($json.news_data, null, 2)}\n\n## Content Opportunities Identified:\n${JSON.stringify($json.opportunities, null, 2)}\n\n## Already Published (AVOID DUPLICATES):\nRecent slugs: ${$json.published_slugs}\nRecent titles: ${$json.published_titles}\nTotal published: ${$json.published_count} posts\n\n## Selection Criteria:\n1. NOT similar to already published topics\n2. High relevance to current news/trends\n3. Strong SEO potential\n4. Practical value for foreign workers/students\n5. Good conversion potential\n\nSelect ONE topic and provide complete details.\n\nOutput JSON:\n{\n  \"selected_topic\": {\n    \"title_ko\": \"한국어 제목 (60자 이내, SEO 최적화)\",\n    \"title_en\": \"English Title (under 60 chars, SEO optimized)\",\n    \"slug\": \"url-friendly-slug-in-english\",\n    \"primary_keyword_ko\": \"주요 키워드\",\n    \"primary_keyword_en\": \"primary keyword\",\n    \"secondary_keywords_ko\": [\"보조 키워드1\", \"보조 키워드2\"],\n    \"secondary_keywords_en\": [\"secondary kw1\", \"secondary kw2\"],\n    \"search_intent\": \"informational/transactional/navigational\",\n    \"content_type\": \"how-to/comparison/news/guide/tips\",\n    \"target_country\": \"general/vietnam/philippines/indonesia/nepal\",\n    \"category_ko\": \"환율 정보/송금 가이드/국가별 정보/뉴스 및 업데이트/팁과 노하우\",\n    \"category_en\": \"Exchange Rates/Remittance Guide/Country Guides/News & Updates/Tips & Tricks\",\n    \"urgency\": \"high/medium/low\",\n    \"selection_reason\": \"왜 이 주제를 선택했는지 설명\",\n    \"key_points_to_cover\": [\n      \"Point 1 to include in the blog\",\n      \"Point 2\",\n      \"Point 3\"\n    ],\n    \"news_context\": \"relevant news/data to reference\"\n  },\n  \"backup_topics\": [\n    {\n      \"title_ko\": \"...\",\n      \"title_en\": \"...\",\n      \"reason\": \"why this could be next\"\n    }\n  ]\n}`\n    }\n  ]\n}) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "claude-topic-selector",
+      "name": "Claude: Topic Selector",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1100, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse topic selection from Claude response\nconst response = $input.first().json;\nlet topicData = {};\n\nif (response.content && Array.isArray(response.content)) {\n  const textBlock = response.content.find(block => block.type === 'text');\n  if (textBlock?.text) {\n    try {\n      let jsonText = textBlock.text\n        .replace(/^```json\\s*/i, '')\n        .replace(/^```\\s*/i, '')\n        .replace(/```$/i, '')\n        .trim();\n      const firstBrace = jsonText.indexOf('{');\n      const lastBrace = jsonText.lastIndexOf('}');\n      if (firstBrace !== -1 && lastBrace !== -1) {\n        jsonText = jsonText.slice(firstBrace, lastBrace + 1);\n      }\n      topicData = JSON.parse(jsonText);\n    } catch (e) {\n      console.error('Failed to parse topic data:', e);\n      throw new Error('Failed to parse topic selection: ' + e.message);\n    }\n  }\n}\n\nif (!topicData.selected_topic) {\n  throw new Error('No topic selected by Claude');\n}\n\nconst topic = topicData.selected_topic;\n\n// Get previous node data\nconst prevData = $items('Process News & Notion Data')[0]?.json || {};\n\nreturn [{\n  json: {\n    topic: topic,\n    backup_topics: topicData.backup_topics || [],\n    news_data: prevData.news_data || {},\n    collection_date: prevData.collection_date\n  }\n}];"
+      },
+      "id": "parse-topic",
+      "name": "Parse Topic Selection",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-4-20250514',\n  max_tokens: 8192,\n  system: `You are a Blog Content Writer for RemitBuddy (레밋버디), an international remittance comparison service.\n\n## Official URLs\n- English: https://www.remitbuddy.com\n- Korean: https://www.remitbuddy.com/ko\n- Blog: https://www.remitbuddy.com/blog\n\n## Target Audience\n- Foreign workers in Korea (limited Korean proficiency)\n- International students in Korea\n- Key concerns: Exchange rates, fees, speed, safety, convenience\n\n## Korean Writing Guidelines\n- Length: 1,500-2,500 words\n- Tone: Professional yet friendly, trustworthy\n- 쉬운 한국어 사용 (외국인 독자 고려)\n- 존댓말 사용\n- 영어 용어는 괄호 안에 병기: 환율(Exchange Rate)\n- 짧은 문장, 짧은 단락 (3-4문장)\n- 불릿 포인트 적극 활용\n- 실용적인 예시와 숫자 포함\n\n## SEO Requirements\n- Primary keyword in title (H1)\n- Primary keyword in first paragraph\n- Primary keyword in 2-3 H2 headings\n- Keyword density: 1-2%\n- Meta description: 150-160 characters\n\n## Blog Structure\n1. H1 Title (under 60 chars, include keyword)\n2. Introduction (2-3 paragraphs: hook, keyword, preview)\n3. Body Sections (3-5 H2s with practical content)\n4. Conclusion + CTA for RemitBuddy\n5. FAQ Section (3-5 questions)\n\n## Output Requirements\nReturn ONLY valid JSON with complete blog content.`,\n  messages: [\n    {\n      role: 'user',\n      content: `Write a complete Korean blog post.\n\n## Topic Details:\n- Title: ${$json.topic.title_ko}\n- Primary Keyword: ${$json.topic.primary_keyword_ko}\n- Secondary Keywords: ${JSON.stringify($json.topic.secondary_keywords_ko)}\n- Content Type: ${$json.topic.content_type}\n- Category: ${$json.topic.category_ko}\n- Target Country: ${$json.topic.target_country}\n- Key Points to Cover: ${JSON.stringify($json.topic.key_points_to_cover)}\n\n## News Context to Reference:\n${$json.topic.news_context}\n\n## Exchange Rate Data (if relevant):\n${JSON.stringify($json.news_data?.exchange_rate_summary || {})}\n\nWrite the complete blog post in Korean.\n\nOutput JSON:\n{\n  \"language\": \"ko\",\n  \"title\": \"SEO 최적화된 제목\",\n  \"slug\": \"${$json.topic.slug}\",\n  \"meta_description\": \"150-160자 메타 설명, 키워드 포함\",\n  \"category\": \"${$json.topic.category_ko}\",\n  \"tags\": [\"태그1\", \"태그2\", \"태그3\", \"태그4\", \"태그5\"],\n  \"primary_keyword\": \"${$json.topic.primary_keyword_ko}\",\n  \"word_count\": 0,\n  \"content_markdown\": \"# 제목\\n\\n전체 블로그 내용을 마크다운 형식으로...\"\n}`\n    }\n  ]\n}) }}",
+        "options": {
+          "timeout": 180000
+        }
+      },
+      "id": "claude-blog-writer-ko",
+      "name": "Claude: Blog Writer KO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1540, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.ANTHROPIC_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  model: 'claude-sonnet-4-20250514',\n  max_tokens: 8192,\n  system: `You are a Blog Content Writer for RemitBuddy, an international remittance comparison service.\n\n## Official URLs\n- English: https://www.remitbuddy.com\n- Korean: https://www.remitbuddy.com/ko\n- Blog: https://www.remitbuddy.com/blog\n\n## Target Audience\n- Foreign workers in Korea\n- International students in Korea\n- Non-native English speakers\n- Key concerns: Exchange rates, fees, speed, safety, convenience\n\n## English Writing Guidelines\n- Length: 1,500-2,500 words\n- Simple, clear English\n- Avoid idioms and complex expressions\n- Short sentences (15-20 words average)\n- Use bullet points and lists liberally\n- Include practical examples with real numbers\n- Short paragraphs (3-4 sentences max)\n\n## SEO Requirements\n- Primary keyword in title\n- Primary keyword in first paragraph\n- Primary keyword in 2-3 H2 headings\n- Meta description: 150-160 characters\n\n## Blog Structure\n1. H1 Title (under 60 chars, include keyword)\n2. Introduction (hook with problem, include keyword, preview)\n3. Body Sections (3-5 H2s)\n4. Conclusion + CTA for RemitBuddy\n5. FAQ Section (3-5 questions)\n\n## Output Requirements\nReturn ONLY valid JSON with complete blog content.`,\n  messages: [\n    {\n      role: 'user',\n      content: `Write a complete English blog post.\n\n## Topic Details:\n- Title: ${$json.topic.title_en}\n- Primary Keyword: ${$json.topic.primary_keyword_en}\n- Secondary Keywords: ${JSON.stringify($json.topic.secondary_keywords_en)}\n- Content Type: ${$json.topic.content_type}\n- Category: ${$json.topic.category_en}\n- Target Country: ${$json.topic.target_country}\n- Key Points to Cover: ${JSON.stringify($json.topic.key_points_to_cover)}\n\n## News Context to Reference:\n${$json.topic.news_context}\n\n## Exchange Rate Data (if relevant):\n${JSON.stringify($json.news_data?.exchange_rate_summary || {})}\n\nWrite the complete blog post in simple, clear English for non-native speakers.\n\nOutput JSON:\n{\n  \"language\": \"en\",\n  \"title\": \"SEO-optimized title\",\n  \"slug\": \"${$json.topic.slug}\",\n  \"meta_description\": \"150-160 char meta description with keyword\",\n  \"category\": \"${$json.topic.category_en}\",\n  \"tags\": [\"tag1\", \"tag2\", \"tag3\", \"tag4\", \"tag5\"],\n  \"primary_keyword\": \"${$json.topic.primary_keyword_en}\",\n  \"word_count\": 0,\n  \"content_markdown\": \"# Title\\n\\nFull blog content in markdown...\"\n}`\n    }\n  ]\n}) }}",
+        "options": {
+          "timeout": 180000
+        }
+      },
+      "id": "claude-blog-writer-en",
+      "name": "Claude: Blog Writer EN",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1540, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Korean blog content from Claude response\nconst response = $input.first().json;\nlet blogData = {};\n\nif (response.content && Array.isArray(response.content)) {\n  const textBlock = response.content.find(block => block.type === 'text');\n  if (textBlock?.text) {\n    try {\n      let jsonText = textBlock.text\n        .replace(/^```json\\s*/i, '')\n        .replace(/^```\\s*/i, '')\n        .replace(/```$/i, '')\n        .trim();\n      const firstBrace = jsonText.indexOf('{');\n      const lastBrace = jsonText.lastIndexOf('}');\n      if (firstBrace !== -1 && lastBrace !== -1) {\n        jsonText = jsonText.slice(firstBrace, lastBrace + 1);\n      }\n      blogData = JSON.parse(jsonText);\n    } catch (e) {\n      console.error('Failed to parse Korean blog:', e);\n      throw new Error('Failed to parse Korean blog content');\n    }\n  }\n}\n\n// Convert markdown to Notion blocks\nfunction markdownToNotionBlocks(markdown) {\n  const lines = markdown.split('\\n');\n  const blocks = [];\n  let i = 0;\n  \n  while (i < lines.length) {\n    const line = lines[i];\n    \n    // Skip H1 (it's the title, handled in properties)\n    if (line.startsWith('# ')) {\n      i++;\n      continue;\n    }\n    \n    // H2 Heading\n    if (line.startsWith('## ')) {\n      blocks.push({\n        object: 'block',\n        type: 'heading_2',\n        heading_2: {\n          rich_text: [{ type: 'text', text: { content: line.slice(3).trim() } }]\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    // H3 Heading\n    if (line.startsWith('### ')) {\n      blocks.push({\n        object: 'block',\n        type: 'heading_3',\n        heading_3: {\n          rich_text: [{ type: 'text', text: { content: line.slice(4).trim() } }]\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    // Bulleted list\n    if (line.startsWith('- ') || line.startsWith('* ')) {\n      blocks.push({\n        object: 'block',\n        type: 'bulleted_list_item',\n        bulleted_list_item: {\n          rich_text: [{ type: 'text', text: { content: line.slice(2).trim() } }]\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    // Numbered list\n    if (/^\\d+\\.\\s/.test(line)) {\n      const content = line.replace(/^\\d+\\.\\s/, '').trim();\n      blocks.push({\n        object: 'block',\n        type: 'numbered_list_item',\n        numbered_list_item: {\n          rich_text: [{ type: 'text', text: { content: content } }]\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    // FAQ Question (bold Q:)\n    if (line.startsWith('**Q:') || line.startsWith('**Q.')) {\n      const question = line.replace(/\\*\\*/g, '').trim();\n      // Look for answer on next line(s)\n      let answer = '';\n      i++;\n      while (i < lines.length && !lines[i].startsWith('**Q')) {\n        if (lines[i].startsWith('A:') || lines[i].startsWith('A.')) {\n          answer = lines[i].replace(/^A[:.] ?/, '').trim();\n        } else if (lines[i].trim() && !lines[i].startsWith('#')) {\n          answer += ' ' + lines[i].trim();\n        }\n        i++;\n      }\n      \n      blocks.push({\n        object: 'block',\n        type: 'toggle',\n        toggle: {\n          rich_text: [{ type: 'text', text: { content: question } }],\n          children: [{\n            object: 'block',\n            type: 'paragraph',\n            paragraph: {\n              rich_text: [{ type: 'text', text: { content: answer.trim() } }]\n            }\n          }]\n        }\n      });\n      continue;\n    }\n    \n    // Blockquote / Callout\n    if (line.startsWith('> ')) {\n      blocks.push({\n        object: 'block',\n        type: 'callout',\n        callout: {\n          rich_text: [{ type: 'text', text: { content: line.slice(2).trim() } }],\n          icon: { emoji: '💡' }\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    // Regular paragraph (non-empty)\n    if (line.trim() !== '') {\n      // Handle inline formatting\n      let richText = [];\n      let text = line.trim();\n      \n      // Simple approach: just use plain text for now\n      // Could be enhanced to handle **bold**, *italic*, [links](url)\n      richText.push({ type: 'text', text: { content: text } });\n      \n      blocks.push({\n        object: 'block',\n        type: 'paragraph',\n        paragraph: {\n          rich_text: richText\n        }\n      });\n    }\n    \n    i++;\n  }\n  \n  // Notion API has a limit of 100 blocks per request\n  return blocks.slice(0, 100);\n}\n\nconst notionBlocks = markdownToNotionBlocks(blogData.content_markdown || '');\n\n// Calculate word count\nconst wordCount = (blogData.content_markdown || '').split(/\\s+/).length;\n\nreturn [{\n  json: {\n    ...blogData,\n    word_count: wordCount,\n    notion_blocks: notionBlocks,\n    blocks_count: notionBlocks.length\n  }\n}];"
+      },
+      "id": "parse-blog-ko",
+      "name": "Parse & Convert KO Blog",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse English blog content from Claude response\nconst response = $input.first().json;\nlet blogData = {};\n\nif (response.content && Array.isArray(response.content)) {\n  const textBlock = response.content.find(block => block.type === 'text');\n  if (textBlock?.text) {\n    try {\n      let jsonText = textBlock.text\n        .replace(/^```json\\s*/i, '')\n        .replace(/^```\\s*/i, '')\n        .replace(/```$/i, '')\n        .trim();\n      const firstBrace = jsonText.indexOf('{');\n      const lastBrace = jsonText.lastIndexOf('}');\n      if (firstBrace !== -1 && lastBrace !== -1) {\n        jsonText = jsonText.slice(firstBrace, lastBrace + 1);\n      }\n      blogData = JSON.parse(jsonText);\n    } catch (e) {\n      console.error('Failed to parse English blog:', e);\n      throw new Error('Failed to parse English blog content');\n    }\n  }\n}\n\n// Same markdown to Notion blocks function\nfunction markdownToNotionBlocks(markdown) {\n  const lines = markdown.split('\\n');\n  const blocks = [];\n  let i = 0;\n  \n  while (i < lines.length) {\n    const line = lines[i];\n    \n    if (line.startsWith('# ')) {\n      i++;\n      continue;\n    }\n    \n    if (line.startsWith('## ')) {\n      blocks.push({\n        object: 'block',\n        type: 'heading_2',\n        heading_2: {\n          rich_text: [{ type: 'text', text: { content: line.slice(3).trim() } }]\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    if (line.startsWith('### ')) {\n      blocks.push({\n        object: 'block',\n        type: 'heading_3',\n        heading_3: {\n          rich_text: [{ type: 'text', text: { content: line.slice(4).trim() } }]\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    if (line.startsWith('- ') || line.startsWith('* ')) {\n      blocks.push({\n        object: 'block',\n        type: 'bulleted_list_item',\n        bulleted_list_item: {\n          rich_text: [{ type: 'text', text: { content: line.slice(2).trim() } }]\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    if (/^\\d+\\.\\s/.test(line)) {\n      const content = line.replace(/^\\d+\\.\\s/, '').trim();\n      blocks.push({\n        object: 'block',\n        type: 'numbered_list_item',\n        numbered_list_item: {\n          rich_text: [{ type: 'text', text: { content: content } }]\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    if (line.startsWith('**Q:') || line.startsWith('**Q.')) {\n      const question = line.replace(/\\*\\*/g, '').trim();\n      let answer = '';\n      i++;\n      while (i < lines.length && !lines[i].startsWith('**Q')) {\n        if (lines[i].startsWith('A:') || lines[i].startsWith('A.')) {\n          answer = lines[i].replace(/^A[:.] ?/, '').trim();\n        } else if (lines[i].trim() && !lines[i].startsWith('#')) {\n          answer += ' ' + lines[i].trim();\n        }\n        i++;\n      }\n      \n      blocks.push({\n        object: 'block',\n        type: 'toggle',\n        toggle: {\n          rich_text: [{ type: 'text', text: { content: question } }],\n          children: [{\n            object: 'block',\n            type: 'paragraph',\n            paragraph: {\n              rich_text: [{ type: 'text', text: { content: answer.trim() } }]\n            }\n          }]\n        }\n      });\n      continue;\n    }\n    \n    if (line.startsWith('> ')) {\n      blocks.push({\n        object: 'block',\n        type: 'callout',\n        callout: {\n          rich_text: [{ type: 'text', text: { content: line.slice(2).trim() } }],\n          icon: { emoji: '💡' }\n        }\n      });\n      i++;\n      continue;\n    }\n    \n    if (line.trim() !== '') {\n      blocks.push({\n        object: 'block',\n        type: 'paragraph',\n        paragraph: {\n          rich_text: [{ type: 'text', text: { content: line.trim() } }]\n        }\n      });\n    }\n    \n    i++;\n  }\n  \n  return blocks.slice(0, 100);\n}\n\nconst notionBlocks = markdownToNotionBlocks(blogData.content_markdown || '');\nconst wordCount = (blogData.content_markdown || '').split(/\\s+/).length;\n\nreturn [{\n  json: {\n    ...blogData,\n    word_count: wordCount,\n    notion_blocks: notionBlocks,\n    blocks_count: notionBlocks.length\n  }\n}];"
+      },
+      "id": "parse-blog-en",
+      "name": "Parse & Convert EN Blog",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 500]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.notion.com/v1/pages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.NOTION_API_KEY }}"
+            },
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  parent: { database_id: $env.NOTION_DB_KO },\n  properties: {\n    Title: {\n      title: [{ text: { content: $json.title } }]\n    },\n    Slug: {\n      rich_text: [{ text: { content: $json.slug } }]\n    },\n    Status: {\n      select: { name: 'Draft' }\n    },\n    Category: {\n      select: { name: $json.category }\n    },\n    Tags: {\n      multi_select: $json.tags.slice(0, 5).map(tag => ({ name: tag }))\n    },\n    'Meta Description': {\n      rich_text: [{ text: { content: $json.meta_description } }]\n    },\n    'Primary Keyword': {\n      rich_text: [{ text: { content: $json.primary_keyword } }]\n    },\n    'Word Count': {\n      number: $json.word_count\n    }\n  },\n  children: $json.notion_blocks\n}) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "notion-upload-ko",
+      "name": "Notion Upload KO",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2020, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.notion.com/v1/pages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.NOTION_API_KEY }}"
+            },
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  parent: { database_id: $env.NOTION_DB_EN },\n  properties: {\n    Title: {\n      title: [{ text: { content: $json.title } }]\n    },\n    Slug: {\n      rich_text: [{ text: { content: $json.slug } }]\n    },\n    Status: {\n      select: { name: 'Draft' }\n    },\n    Category: {\n      select: { name: $json.category }\n    },\n    Tags: {\n      multi_select: $json.tags.slice(0, 5).map(tag => ({ name: tag }))\n    },\n    'Meta Description': {\n      rich_text: [{ text: { content: $json.meta_description } }]\n    },\n    'Primary Keyword': {\n      rich_text: [{ text: { content: $json.primary_keyword } }]\n    },\n    'Word Count': {\n      number: $json.word_count\n    }\n  },\n  children: $json.notion_blocks\n}) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "notion-upload-en",
+      "name": "Notion Upload EN",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2020, 500]
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch",
+        "output": "empty"
+      },
+      "id": "wait-uploads",
+      "name": "Wait for Uploads",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [2260, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compile final report\nconst koUpload = $items('Notion Upload KO')[0]?.json || {};\nconst enUpload = $items('Notion Upload EN')[0]?.json || {};\nconst koBlog = $items('Parse & Convert KO Blog')[0]?.json || {};\nconst enBlog = $items('Parse & Convert EN Blog')[0]?.json || {};\nconst topicData = $items('Parse Topic Selection')[0]?.json || {};\n\nconst report = {\n  timestamp: new Date().toISOString(),\n  status: 'completed',\n  topic: {\n    title_ko: topicData.topic?.title_ko || koBlog.title,\n    title_en: topicData.topic?.title_en || enBlog.title,\n    slug: koBlog.slug || enBlog.slug,\n    selection_reason: topicData.topic?.selection_reason\n  },\n  korean_blog: {\n    title: koBlog.title,\n    word_count: koBlog.word_count,\n    category: koBlog.category,\n    tags: koBlog.tags,\n    notion_page_id: koUpload.id,\n    notion_url: koUpload.url,\n    status: koUpload.id ? 'uploaded' : 'failed'\n  },\n  english_blog: {\n    title: enBlog.title,\n    word_count: enBlog.word_count,\n    category: enBlog.category,\n    tags: enBlog.tags,\n    notion_page_id: enUpload.id,\n    notion_url: enUpload.url,\n    status: enUpload.id ? 'uploaded' : 'failed'\n  },\n  backup_topics: topicData.backup_topics || [],\n  summary: `Created blog posts: KO (${koBlog.word_count} words), EN (${enBlog.word_count} words). Topic: ${koBlog.title || enBlog.title}`\n};\n\nreturn [{ json: report }];"
+      },
+      "id": "compile-report",
+      "name": "Compile Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2460, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.RESEND_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  from: 'RemitBuddy Bot <blog@remitbuddy.com>',\n  to: ['potensiainc@gmail.com'],\n  subject: '[RemitBuddy] Blog Posts Created: ' + $json.topic.title_en,\n  html: `\n    <div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n      <h1 style=\"color: #2563eb;\">Blog Posts Created</h1>\n      \n      <div style=\"background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n        <h2 style=\"margin-top: 0;\">Korean Version</h2>\n        <p><strong>Title:</strong> ${$json.korean_blog.title}</p>\n        <p><strong>Words:</strong> ${$json.korean_blog.word_count}</p>\n        <p><strong>Category:</strong> ${$json.korean_blog.category}</p>\n        <p><strong>Status:</strong> ${$json.korean_blog.status}</p>\n        <a href=\"${$json.korean_blog.notion_url || '#'}\" style=\"background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">View Korean Draft</a>\n      </div>\n      \n      <div style=\"background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n        <h2 style=\"margin-top: 0;\">English Version</h2>\n        <p><strong>Title:</strong> ${$json.english_blog.title}</p>\n        <p><strong>Words:</strong> ${$json.english_blog.word_count}</p>\n        <p><strong>Category:</strong> ${$json.english_blog.category}</p>\n        <p><strong>Status:</strong> ${$json.english_blog.status}</p>\n        <a href=\"${$json.english_blog.notion_url || '#'}\" style=\"background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">View English Draft</a>\n      </div>\n      \n      <div style=\"background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n        <h3 style=\"margin-top: 0;\">Why This Topic?</h3>\n        <p>${$json.topic.selection_reason || 'N/A'}</p>\n      </div>\n      \n      <div style=\"margin-top: 20px;\">\n        <h3>Next Topics (Backup)</h3>\n        <ul>\n          ${($json.backup_topics || []).map(t => '<li>' + t.title_en + '</li>').join('')}\n        </ul>\n      </div>\n      \n      <hr style=\"margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;\">\n      <p style=\"color: #6b7280; font-size: 12px;\">Generated at: ${$json.timestamp}</p>\n    </div>\n  `\n}) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "email-notify",
+      "name": "Email Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [2700, 400],
+      "notes": "Sends email via Resend API to potensiainc@gmail.com"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Claude: News Collector",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Read Notion Published",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude: News Collector": {
+      "main": [
+        [
+          {
+            "node": "Wait for All Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Notion Published": {
+      "main": [
+        [
+          {
+            "node": "Wait for All Data",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Wait for All Data": {
+      "main": [
+        [
+          {
+            "node": "Process News & Notion Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process News & Notion Data": {
+      "main": [
+        [
+          {
+            "node": "Claude: Topic Selector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude: Topic Selector": {
+      "main": [
+        [
+          {
+            "node": "Parse Topic Selection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Topic Selection": {
+      "main": [
+        [
+          {
+            "node": "Claude: Blog Writer KO",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Claude: Blog Writer EN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude: Blog Writer KO": {
+      "main": [
+        [
+          {
+            "node": "Parse & Convert KO Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude: Blog Writer EN": {
+      "main": [
+        [
+          {
+            "node": "Parse & Convert EN Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Convert KO Blog": {
+      "main": [
+        [
+          {
+            "node": "Notion Upload KO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Convert EN Blog": {
+      "main": [
+        [
+          {
+            "node": "Notion Upload EN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Upload KO": {
+      "main": [
+        [
+          {
+            "node": "Wait for Uploads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notion Upload EN": {
+      "main": [
+        [
+          {
+            "node": "Wait for Uploads",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Wait for Uploads": {
+      "main": [
+        [
+          {
+            "node": "Compile Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compile Report": {
+      "main": [
+        [
+          {
+            "node": "Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "RemitBuddy",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "name": "Blog Automation",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}

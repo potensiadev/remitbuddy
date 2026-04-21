@@ -13,7 +13,7 @@ This n8n workflow automates the entire blog content creation process for RemitBu
 
 ```
 ┌──────────────┐
-│   Schedule   │ (Mon/Thu 9:00 AM KST)
+│   Schedule   │ (Daily 9:00 AM KST)
 │   Trigger    │
 └──────┬───────┘
        │
@@ -90,35 +90,20 @@ Set these environment variables in Railway (or your n8n host):
 
 #### Create Databases
 
-Create two databases (Korean and English) with this schema:
+The workflow uses the following database schema (already set up):
 
-| Property | Type | Required |
-|----------|------|----------|
-| Title | Title | Yes |
-| Slug | Text | Yes |
-| Status | Select | Yes |
-| Category | Select | Yes |
-| Tags | Multi-select | Yes |
-| Meta Description | Text | Yes |
-| Primary Keyword | Text | Yes |
-| Word Count | Number | No |
-| Created | Created time | Auto |
-
-**Status options:** Draft, Published, Scheduled, Archived
-
-**Category options (KO):**
-- 환율 정보
-- 송금 가이드
-- 국가별 정보
-- 뉴스 및 업데이트
-- 팁과 노하우
-
-**Category options (EN):**
-- Exchange Rates
-- Remittance Guide
-- Country Guides
-- News & Updates
-- Tips & Tricks
+| Property | Type | Description |
+|----------|------|-------------|
+| Name | Title | Blog post title |
+| Slug | Text | URL-friendly slug |
+| Meta Title | Text | SEO meta title |
+| Meta Description | Text | SEO meta description |
+| Excerpt | Text | Short summary |
+| Publish Date | Date | Publication date |
+| Ready to Publish | Checkbox | Draft/Ready flag |
+| Featured | Checkbox | Featured post flag |
+| Image | Files | Featured image |
+| Last Edited Time | Auto | Auto-updated |
 
 #### Share with Integration
 
@@ -168,10 +153,10 @@ To change the recipient email, edit the "Email Notification" node:
 
 | Item | Monthly Cost |
 |------|-------------|
-| Claude API (~8 calls/month) | ~$3-5 |
+| Claude API (~120 calls/month) | ~$15-25 |
 | n8n (Railway Hobby) | ~$5 |
 | Notion | Free |
-| **Total** | **~$8-10/month** |
+| **Total** | **~$20-30/month** |
 
 ## Troubleshooting
 
@@ -198,8 +183,8 @@ To change the recipient email, edit the "Email Notification" node:
 ### Change Schedule
 
 Edit the Schedule Trigger node:
-- Current: Monday and Thursday at 9:00 AM KST
-- Cron: `0 9 * * 1,4`
+- Current: Every day at 9:00 AM KST
+- Cron: `0 9 * * *`
 
 ### Add More Languages
 

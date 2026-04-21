@@ -7,7 +7,7 @@
           "interval": [
             {
               "field": "cronExpression",
-              "expression": "0 9 * * 1,4"
+              "expression": "0 9 * * *"
             }
           ]
         }
@@ -17,7 +17,7 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [-80, -192],
-      "notes": "Every Monday and Thursday at 9:00 AM KST"
+      "notes": "Every day at 9:00 AM KST"
     },
     {
       "parameters": {
@@ -76,7 +76,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\n  \"filter\": {\n    \"or\": [\n      {\n        \"property\": \"Status\",\n        \"select\": { \"equals\": \"Published\" }\n      },\n      {\n        \"property\": \"Status\",\n        \"select\": { \"equals\": \"Draft\" }\n      }\n    ]\n  },\n  \"sorts\": [\n    {\n      \"property\": \"Created\",\n      \"direction\": \"descending\"\n    }\n  ],\n  \"page_size\": 50\n}",
+        "jsonBody": "{\n  \"sorts\": [\n    {\n      \"timestamp\": \"created_time\",\n      \"direction\": \"descending\"\n    }\n  ],\n  \"page_size\": 50\n}",
         "options": {
           "timeout": 30000
         }
@@ -100,7 +100,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Parse Claude API response and Notion data\nconst newsResponse = $items('Claude: News Collector')[0]?.json || {};\nconst notionResponse = $items('Read Notion Published')[0]?.json || {};\n\n// Extract news content from Claude response\nlet newsData = {};\nif (newsResponse.content && Array.isArray(newsResponse.content)) {\n  const textBlock = newsResponse.content.find(block => block.type === 'text');\n  if (textBlock?.text) {\n    try {\n      // Clean and parse JSON\n      let jsonText = textBlock.text\n        .replace(/^```json\\s*/i, '')\n        .replace(/^```\\s*/i, '')\n        .replace(/```$/i, '')\n        .trim();\n      const firstBrace = jsonText.indexOf('{');\n      const lastBrace = jsonText.lastIndexOf('}');\n      if (firstBrace !== -1 && lastBrace !== -1) {\n        jsonText = jsonText.slice(firstBrace, lastBrace + 1);\n      }\n      newsData = JSON.parse(jsonText);\n    } catch (e) {\n      console.error('Failed to parse news data:', e);\n      newsData = { error: 'Failed to parse', raw: textBlock.text };\n    }\n  }\n}\n\n// Extract published slugs from Notion\nconst publishedSlugs = [];\nconst publishedTitles = [];\nif (notionResponse.results && Array.isArray(notionResponse.results)) {\n  notionResponse.results.forEach(page => {\n    // Extract slug\n    const slugProp = page.properties?.Slug?.rich_text?.[0]?.plain_text;\n    if (slugProp) publishedSlugs.push(slugProp.toLowerCase());\n    \n    // Extract title\n    const titleProp = page.properties?.Title?.title?.[0]?.plain_text;\n    if (titleProp) publishedTitles.push(titleProp.toLowerCase());\n  });\n}\n\n// Get content opportunities\nconst opportunities = newsData.content_opportunities || [];\n\nreturn [{\n  json: {\n    news_data: newsData,\n    published_slugs: publishedSlugs.join(', '),\n    published_titles: publishedTitles.slice(0, 20).join(' | '),\n    published_count: publishedSlugs.length,\n    opportunities: opportunities,\n    collection_date: newsData.collection_date || new Date().toISOString().split('T')[0]\n  }\n}];"
+        "jsCode": "// Parse Claude API response and Notion data\nconst newsResponse = $items('Claude: News Collector')[0]?.json || {};\nconst notionResponse = $items('Read Notion Published')[0]?.json || {};\n\n// Extract news content from Claude response\nlet newsData = {};\nif (newsResponse.content && Array.isArray(newsResponse.content)) {\n  const textBlock = newsResponse.content.find(block => block.type === 'text');\n  if (textBlock?.text) {\n    try {\n      // Clean and parse JSON\n      let jsonText = textBlock.text\n        .replace(/^```json\\s*/i, '')\n        .replace(/^```\\s*/i, '')\n        .replace(/```$/i, '')\n        .trim();\n      const firstBrace = jsonText.indexOf('{');\n      const lastBrace = jsonText.lastIndexOf('}');\n      if (firstBrace !== -1 && lastBrace !== -1) {\n        jsonText = jsonText.slice(firstBrace, lastBrace + 1);\n      }\n      newsData = JSON.parse(jsonText);\n    } catch (e) {\n      console.error('Failed to parse news data:', e);\n      newsData = { error: 'Failed to parse', raw: textBlock.text };\n    }\n  }\n}\n\n// Extract published slugs from Notion\nconst publishedSlugs = [];\nconst publishedTitles = [];\nif (notionResponse.results && Array.isArray(notionResponse.results)) {\n  notionResponse.results.forEach(page => {\n    // Extract slug\n    const slugProp = page.properties?.Slug?.rich_text?.[0]?.plain_text;\n    if (slugProp) publishedSlugs.push(slugProp.toLowerCase());\n    \n    // Extract title (property is 'Name' in Notion)\n    const titleProp = page.properties?.Name?.title?.[0]?.plain_text;\n    if (titleProp) publishedTitles.push(titleProp.toLowerCase());\n  });\n}\n\n// Get content opportunities\nconst opportunities = newsData.content_opportunities || [];\n\nreturn [{\n  json: {\n    news_data: newsData,\n    published_slugs: publishedSlugs.join(', '),\n    published_titles: publishedTitles.slice(0, 20).join(' | '),\n    published_count: publishedSlugs.length,\n    opportunities: opportunities,\n    collection_date: newsData.collection_date || new Date().toISOString().split('T')[0]\n  }\n}];"
       },
       "id": "1f9b4197-8530-4d2b-bbc5-f24895d673a7",
       "name": "Process News & Notion Data",
@@ -263,7 +263,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({\n  parent: { database_id: '2d61bac13f5280a7a460f98df9036e4b' },\n  properties: {\n    Title: {\n      title: [{ text: { content: $json.title } }]\n    },\n    Slug: {\n      rich_text: [{ text: { content: $json.slug } }]\n    },\n    Status: {\n      select: { name: 'Draft' }\n    },\n    Category: {\n      select: { name: $json.category }\n    },\n    Tags: {\n      multi_select: $json.tags.slice(0, 5).map(tag => ({ name: tag }))\n    },\n    'Meta Description': {\n      rich_text: [{ text: { content: $json.meta_description } }]\n    },\n    'Primary Keyword': {\n      rich_text: [{ text: { content: $json.primary_keyword } }]\n    },\n    'Word Count': {\n      number: $json.word_count\n    }\n  },\n  children: $json.notion_blocks\n}) }}",
+        "jsonBody": "={{ JSON.stringify({\n  parent: { database_id: '2d61bac13f5280a7a460f98df9036e4b' },\n  properties: {\n    Name: {\n      title: [{ text: { content: $json.title } }]\n    },\n    Slug: {\n      rich_text: [{ text: { content: $json.slug } }]\n    },\n    'Meta Title': {\n      rich_text: [{ text: { content: $json.title.slice(0, 60) } }]\n    },\n    'Meta Description': {\n      rich_text: [{ text: { content: $json.meta_description } }]\n    },\n    Excerpt: {\n      rich_text: [{ text: { content: $json.meta_description.slice(0, 200) } }]\n    },\n    'Ready to Publish': {\n      checkbox: false\n    }\n  },\n  children: $json.notion_blocks\n}) }}",
         "options": {
           "timeout": 60000
         }
@@ -297,7 +297,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({\n  parent: { database_id: '3081bac13f5281c589f4e9ccd21156dc' },\n  properties: {\n    Title: {\n      title: [{ text: { content: $json.title } }]\n    },\n    Slug: {\n      rich_text: [{ text: { content: $json.slug } }]\n    },\n    Status: {\n      select: { name: 'Draft' }\n    },\n    Category: {\n      select: { name: $json.category }\n    },\n    Tags: {\n      multi_select: $json.tags.slice(0, 5).map(tag => ({ name: tag }))\n    },\n    'Meta Description': {\n      rich_text: [{ text: { content: $json.meta_description } }]\n    },\n    'Primary Keyword': {\n      rich_text: [{ text: { content: $json.primary_keyword } }]\n    },\n    'Word Count': {\n      number: $json.word_count\n    }\n  },\n  children: $json.notion_blocks\n}) }}",
+        "jsonBody": "={{ JSON.stringify({\n  parent: { database_id: '3081bac13f5281c589f4e9ccd21156dc' },\n  properties: {\n    Name: {\n      title: [{ text: { content: $json.title } }]\n    },\n    Slug: {\n      rich_text: [{ text: { content: $json.slug } }]\n    },\n    'Meta Title': {\n      rich_text: [{ text: { content: $json.title.slice(0, 60) } }]\n    },\n    'Meta Description': {\n      rich_text: [{ text: { content: $json.meta_description } }]\n    },\n    Excerpt: {\n      rich_text: [{ text: { content: $json.meta_description.slice(0, 200) } }]\n    },\n    'Ready to Publish': {\n      checkbox: false\n    }\n  },\n  children: $json.notion_blocks\n}) }}",
         "options": {
           "timeout": 60000
         }

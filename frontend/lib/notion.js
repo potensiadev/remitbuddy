@@ -8,6 +8,32 @@ const DATABASE_ID = process.env.BLOG_DATABASE_ID;
 const DATABASE_ID_KO = process.env.BLOG_DATABASE_ID_KO;
 const DATABASE_ID_EN = process.env.BLOG_DATABASE_ID_EN;
 
+// 모든 블록을 페이지네이션으로 가져오고, 중첩 블록도 재귀적으로 조회
+async function getAllBlocks(blockId) {
+  const blocks = [];
+  let cursor = undefined;
+
+  do {
+    const response = await notion.blocks.children.list({
+      block_id: blockId,
+      page_size: 100,
+      start_cursor: cursor,
+    });
+
+    blocks.push(...response.results);
+    cursor = response.has_more ? response.next_cursor : undefined;
+  } while (cursor);
+
+  // 중첩 블록(toggle, column, table 등)의 자식 재귀 조회
+  for (const block of blocks) {
+    if (block.has_children) {
+      block.children = await getAllBlocks(block.id);
+    }
+  }
+
+  return blocks;
+}
+
 const normalizeLocale = (locale = 'ko') => {
   if (typeof locale !== 'string') return 'ko';
   return locale.toLowerCase().startsWith('en') ? 'en' : 'ko';
@@ -121,14 +147,12 @@ async function queryPostBySlug(databaseId, slug) {
   const page = res.results[0];
   if (!page) return null;
 
-  const blocksRes = await notion.blocks.children.list({
-    block_id: page.id,
-    page_size: 100,
-  });
+  // 모든 블록을 페이지네이션 + 중첩 블록 포함하여 가져오기
+  const blocks = await getAllBlocks(page.id);
 
   return {
     ...mapPost(page),
-    blocks: blocksRes.results || [],
+    blocks,
   };
 }
 

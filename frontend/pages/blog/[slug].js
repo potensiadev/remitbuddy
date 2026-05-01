@@ -9,24 +9,63 @@ import Footer from '../../components/Footer';
 const BlogPost = ({ post }) => {
     const { t, i18n } = useTranslation('common');
 
-    // Helper formatting functions
+    // 색상 매핑 함수
+    const getColorClass = (color) => {
+        if (!color || color === 'default') return '';
+
+        const colorMap = {
+            'gray': 'text-gray-500',
+            'brown': 'text-amber-700',
+            'orange': 'text-orange-600',
+            'yellow': 'text-yellow-600',
+            'green': 'text-green-600',
+            'blue': 'text-blue-600',
+            'purple': 'text-purple-600',
+            'pink': 'text-pink-600',
+            'red': 'text-red-600',
+            'gray_background': 'bg-gray-100 px-1 rounded',
+            'brown_background': 'bg-amber-100 px-1 rounded',
+            'orange_background': 'bg-orange-100 px-1 rounded',
+            'yellow_background': 'bg-yellow-100 px-1 rounded',
+            'green_background': 'bg-green-100 px-1 rounded',
+            'blue_background': 'bg-blue-100 px-1 rounded',
+            'purple_background': 'bg-purple-100 px-1 rounded',
+            'pink_background': 'bg-pink-100 px-1 rounded',
+            'red_background': 'bg-red-100 px-1 rounded',
+        };
+        return colorMap[color] || '';
+    };
+
+    // Rich Text 렌더링 (색상 지원 포함)
     const text = (richText) => {
         if (!Array.isArray(richText)) return '';
-        return richText.map(t => {
-            // Basic styling
+        return richText.map((t, idx) => {
             let content = t.plain_text;
-            if (t.annotations.bold) content = <strong>{content}</strong>;
-            if (t.annotations.italic) content = <em>{content}</em>;
-            if (t.annotations.underline) content = <u>{content}</u>;
-            if (t.annotations.strikethrough) content = <s>{content}</s>;
-            if (t.annotations.code) content = <code className="bg-gray-100 text-red-500 px-1 rounded text-sm">{content}</code>;
-            // Handle links
-            if (t.href) content = <a href={t.href} className="text-blue-600 hover:underline">{content}</a>;
+            const { annotations } = t;
 
-            return <span key={Math.random()}>{content}</span>;
+            if (annotations.bold) content = <strong key={`bold-${idx}`}>{content}</strong>;
+            if (annotations.italic) content = <em key={`italic-${idx}`}>{content}</em>;
+            if (annotations.underline) content = <u key={`underline-${idx}`}>{content}</u>;
+            if (annotations.strikethrough) content = <s key={`strike-${idx}`}>{content}</s>;
+            if (annotations.code) {
+                content = <code key={`code-${idx}`} className="bg-gray-100 text-red-500 px-1.5 py-0.5 rounded text-sm font-mono">{content}</code>;
+            }
+            if (t.href) {
+                content = <a key={`link-${idx}`} href={t.href} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{content}</a>;
+            }
+
+            const colorClass = getColorClass(annotations.color);
+            return <span key={idx} className={colorClass}>{content}</span>;
         });
     };
 
+    // Plain text 추출
+    const getPlainText = (richText) => {
+        if (!Array.isArray(richText)) return '';
+        return richText.map(t => t.plain_text).join('');
+    };
+
+    // 날짜 포맷
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -37,7 +76,6 @@ const BlogPost = ({ post }) => {
                 day: 'numeric'
             });
         } else {
-            // English format: 1 Feb 2026
             return date.toLocaleDateString('en-GB', {
                 day: 'numeric',
                 month: 'short',
@@ -46,13 +84,66 @@ const BlogPost = ({ post }) => {
         }
     };
 
-    // Block Renderer
+    // 연속된 리스트 아이템을 그룹화
+    const groupBlocks = (blocks) => {
+        if (!blocks) return [];
+        const grouped = [];
+        let currentList = null;
+
+        blocks.forEach((block) => {
+            if (block.type === 'bulleted_list_item') {
+                if (!currentList || currentList.type !== 'bulleted_list') {
+                    currentList = { type: 'bulleted_list', id: `list-${block.id}`, items: [] };
+                    grouped.push(currentList);
+                }
+                currentList.items.push(block);
+            } else if (block.type === 'numbered_list_item') {
+                if (!currentList || currentList.type !== 'numbered_list') {
+                    currentList = { type: 'numbered_list', id: `list-${block.id}`, items: [] };
+                    grouped.push(currentList);
+                }
+                currentList.items.push(block);
+            } else if (block.type === 'to_do') {
+                if (!currentList || currentList.type !== 'to_do_list') {
+                    currentList = { type: 'to_do_list', id: `list-${block.id}`, items: [] };
+                    grouped.push(currentList);
+                }
+                currentList.items.push(block);
+            } else {
+                currentList = null;
+                grouped.push(block);
+            }
+        });
+
+        return grouped;
+    };
+
+    // Callout 색상 매핑
+    const getCalloutStyle = (color) => {
+        const styleMap = {
+            'gray_background': 'bg-gray-50 border-gray-200',
+            'brown_background': 'bg-amber-50 border-amber-200',
+            'orange_background': 'bg-orange-50 border-orange-200',
+            'yellow_background': 'bg-yellow-50 border-yellow-200',
+            'green_background': 'bg-green-50 border-green-200',
+            'blue_background': 'bg-blue-50 border-blue-200',
+            'purple_background': 'bg-purple-50 border-purple-200',
+            'pink_background': 'bg-pink-50 border-pink-200',
+            'red_background': 'bg-red-50 border-red-200',
+        };
+        return styleMap[color] || 'bg-gray-50 border-gray-200';
+    };
+
+    // 블록 렌더러
     const renderBlock = (block) => {
         const { type, id } = block;
         const value = block[type];
 
         switch (type) {
             case 'paragraph':
+                if (!value.rich_text || value.rich_text.length === 0) {
+                    return <div className="h-4" />;
+                }
                 return <p className="mb-4 text-gray-700 leading-relaxed text-lg">{text(value.rich_text)}</p>;
 
             case 'heading_1':
@@ -66,16 +157,36 @@ const BlogPost = ({ post }) => {
 
             case 'bulleted_list_item':
                 return (
-                    <li className="mb-2 text-gray-700 leading-relaxed list-disc ml-5">
+                    <li className="text-gray-700 leading-relaxed">
                         {text(value.rich_text)}
+                        {block.children && block.children.length > 0 && (
+                            <ul className="mt-2 ml-6 space-y-2 list-disc">
+                                {groupBlocks(block.children).map(child => renderGroupedBlock(child))}
+                            </ul>
+                        )}
                     </li>
                 );
 
             case 'numbered_list_item':
                 return (
-                    <li className="mb-2 text-gray-700 leading-relaxed list-decimal ml-5">
+                    <li className="text-gray-700 leading-relaxed">
                         {text(value.rich_text)}
+                        {block.children && block.children.length > 0 && (
+                            <ol className="mt-2 ml-6 space-y-2 list-decimal">
+                                {groupBlocks(block.children).map(child => renderGroupedBlock(child))}
+                            </ol>
+                        )}
                     </li>
+                );
+
+            case 'to_do':
+                return (
+                    <div className="flex items-start gap-3 py-1">
+                        <span className="mt-0.5 text-lg flex-shrink-0">{value.checked ? '✅' : '⬜'}</span>
+                        <span className={value.checked ? 'line-through text-gray-400' : 'text-gray-700'}>
+                            {text(value.rich_text)}
+                        </span>
+                    </div>
                 );
 
             case 'quote':
@@ -87,35 +198,293 @@ const BlogPost = ({ post }) => {
 
             case 'callout':
                 return (
-                    <div className="flex gap-4 p-4 my-6 bg-gray-50 border border-gray-200 rounded-xl">
-                        <div className="text-2xl">{value.icon?.emoji}</div>
-                        <div className="text-gray-700">{text(value.rich_text)}</div>
+                    <div className={`flex gap-4 p-5 my-6 ${getCalloutStyle(value.color)} border rounded-2xl`}>
+                        <div className="text-3xl flex-shrink-0">{value.icon?.emoji || '💡'}</div>
+                        <div className="text-gray-700 leading-relaxed flex-1">
+                            {text(value.rich_text)}
+                            {block.children && block.children.length > 0 && (
+                                <div className="mt-3">
+                                    {groupBlocks(block.children).map(child => renderGroupedBlock(child))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+
+            case 'toggle':
+                return (
+                    <details className="my-4 group">
+                        <summary className="cursor-pointer p-4 bg-gray-50 hover:bg-gray-100 rounded-xl font-medium flex items-center gap-3 transition-colors list-none">
+                            <span className="text-gray-400 group-open:rotate-90 transition-transform">▶</span>
+                            {value.icon?.emoji && <span className="text-xl">{value.icon.emoji}</span>}
+                            <span>{text(value.rich_text)}</span>
+                        </summary>
+                        <div className="pl-8 pr-4 py-3 border-l-2 border-gray-200 ml-4 mt-2">
+                            {block.children && groupBlocks(block.children).map(child => renderGroupedBlock(child))}
+                        </div>
+                    </details>
+                );
+
+            case 'code':
+                return (
+                    <div className="my-6">
+                        <div className="bg-gray-800 rounded-t-xl px-4 py-2 flex justify-between items-center">
+                            <span className="text-gray-400 text-sm font-mono">{value.language || 'code'}</span>
+                        </div>
+                        <pre className="bg-gray-900 text-gray-100 p-4 rounded-b-xl overflow-x-auto">
+                            <code className="text-sm font-mono leading-relaxed whitespace-pre-wrap">
+                                {getPlainText(value.rich_text)}
+                            </code>
+                        </pre>
+                        {value.caption && value.caption.length > 0 && (
+                            <p className="text-sm text-gray-500 mt-2">{text(value.caption)}</p>
+                        )}
+                    </div>
+                );
+
+            case 'table':
+                return (
+                    <div className="my-6 overflow-x-auto">
+                        <table className="min-w-full border-collapse border border-gray-200 rounded-xl overflow-hidden">
+                            <tbody>
+                                {block.children?.map((row, rowIdx) => (
+                                    <tr key={row.id} className={rowIdx === 0 && value.has_column_header ? 'bg-gray-50 font-semibold' : ''}>
+                                        {row.table_row?.cells.map((cell, cellIdx) => {
+                                            const Tag = rowIdx === 0 && value.has_column_header ? 'th' : 'td';
+                                            const isRowHeader = cellIdx === 0 && value.has_row_header;
+                                            return (
+                                                <Tag
+                                                    key={cellIdx}
+                                                    className={`px-4 py-3 border border-gray-200 text-left ${isRowHeader ? 'bg-gray-50 font-semibold' : ''}`}
+                                                >
+                                                    {text(cell)}
+                                                </Tag>
+                                            );
+                                        })}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+
+            case 'bookmark':
+                return (
+                    <a
+                        href={value.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="my-6 block p-4 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all group"
+                    >
+                        <div className="flex items-center gap-3">
+                            <span className="text-2xl">🔗</span>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-blue-600 group-hover:underline truncate">{value.url}</p>
+                                {value.caption && value.caption.length > 0 && (
+                                    <p className="text-sm text-gray-500 mt-1">{text(value.caption)}</p>
+                                )}
+                            </div>
+                            <span className="text-gray-400">↗</span>
+                        </div>
+                    </a>
+                );
+
+            case 'link_preview':
+                return (
+                    <a
+                        href={value.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="my-6 block p-4 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all group"
+                    >
+                        <div className="flex items-center gap-3">
+                            <span className="text-2xl">🔗</span>
+                            <p className="text-blue-600 group-hover:underline truncate flex-1">{value.url}</p>
+                            <span className="text-gray-400">↗</span>
+                        </div>
+                    </a>
+                );
+
+            case 'video':
+                const videoUrl = value.type === 'external' ? value.external?.url : value.file?.url;
+                if (!videoUrl) return null;
+
+                const isYouTube = videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be');
+
+                if (isYouTube) {
+                    const videoId = videoUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?\s]+)/)?.[1];
+                    if (videoId) {
+                        return (
+                            <div className="my-6 aspect-video rounded-xl overflow-hidden shadow-lg">
+                                <iframe
+                                    src={`https://www.youtube.com/embed/${videoId}`}
+                                    className="w-full h-full"
+                                    allowFullScreen
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                />
+                            </div>
+                        );
+                    }
+                }
+                return (
+                    <div className="my-6">
+                        <video src={videoUrl} controls className="w-full rounded-xl shadow-lg" />
+                        {value.caption && value.caption.length > 0 && (
+                            <p className="text-sm text-gray-500 mt-2 text-center">{text(value.caption)}</p>
+                        )}
+                    </div>
+                );
+
+            case 'embed':
+                return (
+                    <div className="my-6 aspect-video rounded-xl overflow-hidden border border-gray-200">
+                        <iframe src={value.url} className="w-full h-full" allowFullScreen />
+                    </div>
+                );
+
+            case 'file':
+                const fileUrl = value.type === 'external' ? value.external?.url : value.file?.url;
+                const fileName = value.name || fileUrl?.split('/').pop() || 'Download File';
+                return (
+                    <a
+                        href={fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="my-4 flex items-center gap-3 p-4 bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors group"
+                    >
+                        <span className="text-2xl">📎</span>
+                        <span className="flex-1 text-gray-700 group-hover:text-blue-600">{fileName}</span>
+                        <span className="text-sm text-gray-400">↓</span>
+                    </a>
+                );
+
+            case 'pdf':
+                const pdfUrl = value.type === 'external' ? value.external?.url : value.file?.url;
+                return (
+                    <div className="my-6">
+                        <iframe src={pdfUrl} className="w-full h-96 rounded-xl border border-gray-200" />
+                        {value.caption && value.caption.length > 0 && (
+                            <p className="text-sm text-gray-500 mt-2 text-center">{text(value.caption)}</p>
+                        )}
                     </div>
                 );
 
             case 'image':
-                let url = '';
+                let imgUrl = '';
                 if (value.type === 'external') {
-                    url = value.external.url;
+                    imgUrl = value.external.url;
                 } else if (value.type === 'file') {
-                    // Use proxy with blockId for inline images
-                    url = `/api/image?blockId=${id}`;
+                    imgUrl = `/api/image?blockId=${id}`;
                 }
 
-                const caption = value.caption ? text(value.caption) : '';
+                const imgCaption = value.caption ? text(value.caption) : '';
                 return (
                     <figure className="my-8">
-                        <img src={url} alt={caption} className="w-full rounded-2xl shadow-sm border border-gray-100" loading="lazy" />
-                        {caption && <figcaption className="text-center text-sm text-gray-500 mt-2">{caption}</figcaption>}
+                        <img src={imgUrl} alt={getPlainText(value.caption) || ''} className="w-full rounded-2xl shadow-sm border border-gray-100" loading="lazy" />
+                        {imgCaption && <figcaption className="text-center text-sm text-gray-500 mt-3">{imgCaption}</figcaption>}
                     </figure>
+                );
+
+            case 'column_list':
+                return (
+                    <div className="my-6 flex flex-col md:flex-row gap-4">
+                        {block.children?.map(column => (
+                            <div key={column.id} className="flex-1">
+                                {column.children && groupBlocks(column.children).map(child => renderGroupedBlock(child))}
+                            </div>
+                        ))}
+                    </div>
+                );
+
+            case 'column':
+                return (
+                    <>
+                        {block.children && groupBlocks(block.children).map(child => renderGroupedBlock(child))}
+                    </>
+                );
+
+            case 'table_of_contents':
+                return (
+                    <nav className="my-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                        <p className="font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                            <span>📑</span> {i18n.language === 'ko' ? '목차' : 'Table of Contents'}
+                        </p>
+                    </nav>
+                );
+
+            case 'equation':
+                return (
+                    <div className="my-4 p-4 bg-gray-50 rounded-xl text-center font-mono overflow-x-auto">
+                        {value.expression}
+                    </div>
+                );
+
+            case 'synced_block':
+                return (
+                    <>
+                        {block.children && groupBlocks(block.children).map(child => renderGroupedBlock(child))}
+                    </>
                 );
 
             case 'divider':
                 return <hr className="my-10 border-gray-200" />;
 
+            case 'audio':
+                const audioUrl = value.type === 'external' ? value.external?.url : value.file?.url;
+                return (
+                    <div className="my-6">
+                        <audio src={audioUrl} controls className="w-full" />
+                        {value.caption && value.caption.length > 0 && (
+                            <p className="text-sm text-gray-500 mt-2 text-center">{text(value.caption)}</p>
+                        )}
+                    </div>
+                );
+
             default:
-                return null; // Unsupported blocks
+                console.log('Unsupported block type:', type);
+                return null;
         }
+    };
+
+    // 그룹화된 블록 렌더링
+    const renderGroupedBlock = (block) => {
+        if (block.type === 'bulleted_list') {
+            return (
+                <ul key={block.id} className="my-4 ml-6 space-y-2 list-disc text-gray-700">
+                    {block.items.map(item => (
+                        <React.Fragment key={item.id}>
+                            {renderBlock(item)}
+                        </React.Fragment>
+                    ))}
+                </ul>
+            );
+        }
+
+        if (block.type === 'numbered_list') {
+            return (
+                <ol key={block.id} className="my-4 ml-6 space-y-2 list-decimal text-gray-700">
+                    {block.items.map(item => (
+                        <React.Fragment key={item.id}>
+                            {renderBlock(item)}
+                        </React.Fragment>
+                    ))}
+                </ol>
+            );
+        }
+
+        if (block.type === 'to_do_list') {
+            return (
+                <div key={block.id} className="my-4 space-y-1">
+                    {block.items.map(item => (
+                        <React.Fragment key={item.id}>
+                            {renderBlock(item)}
+                        </React.Fragment>
+                    ))}
+                </div>
+            );
+        }
+
+        return <React.Fragment key={block.id}>{renderBlock(block)}</React.Fragment>;
     };
 
     if (!post) return null;
@@ -166,18 +535,12 @@ const BlogPost = ({ post }) => {
 
                         {/* Post Content */}
                         <div className="prose prose-lg prose-blue max-w-none text-gray-700">
-                            {/* Render blocks, grouping lists if needed (simplified here for individual mapping) */}
-                            {post.blocks.map((block) => (
-                                <React.Fragment key={block.id}>
-                                    {renderBlock(block)}
-                                </React.Fragment>
-                            ))}
+                            {groupBlocks(post.blocks).map((block) => renderGroupedBlock(block))}
                         </div>
 
                     </div>
                 </article>
 
-                {/* Removed the manual CTA section requested to be removed */}
                 <Footer />
             </div>
         </>
@@ -185,13 +548,11 @@ const BlogPost = ({ post }) => {
 };
 
 export async function getStaticPaths() {
-    // Fetch posts from all locales to pre-generate all slug paths
     const [koPosts, enPosts] = await Promise.all([
         getPublishedPosts('ko'),
         getPublishedPosts('en'),
     ]);
 
-    // Deduplicate slugs across both DBs
     const allSlugs = [...new Set([...koPosts, ...enPosts].map((p) => p.slug))];
 
     const paths = allSlugs.map((slug) => ({
@@ -210,7 +571,7 @@ export async function getStaticProps({ params, locale }) {
     if (!post) {
         return {
             notFound: true,
-            revalidate: 60, // Re-check Notion after 60s (new posts will appear)
+            revalidate: 60,
         };
     }
 
@@ -219,7 +580,7 @@ export async function getStaticProps({ params, locale }) {
             post,
             ...(await serverSideTranslations(locale, ['common'])),
         },
-        revalidate: 60, // ISR: Revalidate every 60 seconds
+        revalidate: 60,
     };
 }
 

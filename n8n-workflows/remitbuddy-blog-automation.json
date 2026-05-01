@@ -242,6 +242,26 @@
     },
     {
       "parameters": {
+        "jsCode": "// Blog Content Validator for Korean\nconst blog = $input.first().json;\nconst markdown = blog.content_markdown || '';\nconst blocks = blog.notion_blocks || [];\n\nconst errors = [];\nconst warnings = [];\nconst checks = {\n  content_structure: { passed: 0, failed: 0, details: [] },\n  seo: { passed: 0, failed: 0, details: [] },\n  notion_blocks: { passed: 0, failed: 0, details: [] },\n  readability: { passed: 0, failed: 0, details: [] },\n  metadata: { passed: 0, failed: 0, details: [] }\n};\n\n// Helper functions\nconst countPattern = (text, pattern) => (text.match(pattern) || []).length;\nconst hasPattern = (text, pattern) => pattern.test(text);\n\n// 1. Content Structure Checks\n// 1.1 Word count (1500-2500)\nconst wordCount = blog.word_count || 0;\nif (wordCount >= 1500 && wordCount <= 2500) {\n  checks.content_structure.passed++;\n  checks.content_structure.details.push({ item: 'word_count', status: 'pass', value: wordCount });\n} else if (wordCount >= 1000) {\n  checks.content_structure.passed++;\n  warnings.push(`Word count ${wordCount} is outside ideal range (1500-2500)`);\n  checks.content_structure.details.push({ item: 'word_count', status: 'warn', value: wordCount });\n} else {\n  checks.content_structure.failed++;\n  errors.push(`Word count ${wordCount} is too low (min 1000)`);\n  checks.content_structure.details.push({ item: 'word_count', status: 'fail', value: wordCount });\n}\n\n// 1.2 H1 count (exactly 1)\nconst h1Count = countPattern(markdown, /^# [^#]/gm);\nif (h1Count === 1) {\n  checks.content_structure.passed++;\n} else {\n  checks.content_structure.failed++;\n  errors.push(`H1 count: ${h1Count} (expected 1)`);\n}\n\n// 1.3 H2 count (3-5)\nconst h2Count = countPattern(markdown, /^## [^#]/gm);\nif (h2Count >= 3 && h2Count <= 7) {\n  checks.content_structure.passed++;\n} else if (h2Count >= 2) {\n  checks.content_structure.passed++;\n  warnings.push(`H2 count: ${h2Count} (ideal: 3-5)`);\n} else {\n  checks.content_structure.failed++;\n  errors.push(`H2 count: ${h2Count} (min 2)`);\n}\n\n// 1.4 Conclusion section\nconst hasConclusion = /결론|마무리|정리|conclusion/i.test(markdown);\nif (hasConclusion) {\n  checks.content_structure.passed++;\n} else {\n  warnings.push('No conclusion section detected');\n}\n\n// 1.5 FAQ section\nconst faqCount = countPattern(markdown, /\\*\\*Q[:.]/gi) + countPattern(markdown, /^Q[:.]/gim);\nif (faqCount >= 3) {\n  checks.content_structure.passed++;\n} else if (faqCount >= 1) {\n  checks.content_structure.passed++;\n  warnings.push(`FAQ count: ${faqCount} (recommended: 3-5)`);\n} else {\n  warnings.push('No FAQ section detected');\n}\n\n// 1.6 CTA (RemitBuddy mention)\nconst hasRemitBuddy = /remitbuddy|레밋버디/i.test(markdown);\nif (hasRemitBuddy) {\n  checks.content_structure.passed++;\n} else {\n  checks.content_structure.failed++;\n  errors.push('No RemitBuddy CTA found');\n}\n\n// 2. SEO Checks\nconst primaryKeyword = blog.primary_keyword || '';\nconst title = blog.title || '';\n\n// 2.1 Keyword in title\nif (primaryKeyword && title.toLowerCase().includes(primaryKeyword.toLowerCase())) {\n  checks.seo.passed++;\n} else if (primaryKeyword) {\n  checks.seo.failed++;\n  errors.push(`Primary keyword \"${primaryKeyword}\" not in title`);\n}\n\n// 2.2 Keyword in first paragraph\nconst firstPara = markdown.split('\\n\\n')[1] || '';\nif (primaryKeyword && firstPara.toLowerCase().includes(primaryKeyword.toLowerCase())) {\n  checks.seo.passed++;\n} else if (primaryKeyword) {\n  warnings.push('Primary keyword not in first paragraph');\n}\n\n// 2.3 Meta description length\nconst metaDesc = blog.meta_description || '';\nif (metaDesc.length >= 100 && metaDesc.length <= 160) {\n  checks.seo.passed++;\n} else {\n  checks.seo.failed++;\n  errors.push(`Meta description length: ${metaDesc.length} (ideal: 100-160)`);\n}\n\n// 2.4 Title length\nif (title.length <= 60) {\n  checks.seo.passed++;\n} else {\n  warnings.push(`Title length: ${title.length} (max 60)`);\n}\n\n// 2.5 Slug format\nconst slug = blog.slug || '';\nif (/^[a-z0-9-]+$/.test(slug)) {\n  checks.seo.passed++;\n} else {\n  checks.seo.failed++;\n  errors.push(`Invalid slug format: ${slug}`);\n}\n\n// 3. Notion Blocks Checks\n// 3.1 Has lists\nconst hasBulletList = blocks.some(b => b.type === 'bulleted_list_item');\nconst hasNumberedList = blocks.some(b => b.type === 'numbered_list_item');\nif (hasBulletList || hasNumberedList) {\n  checks.notion_blocks.passed++;\n} else {\n  warnings.push('No lists found in content');\n}\n\n// 3.2 Has callout\nconst hasCallout = blocks.some(b => b.type === 'callout');\nif (hasCallout) {\n  checks.notion_blocks.passed++;\n} else {\n  warnings.push('No callout blocks - consider adding for important tips');\n}\n\n// 3.3 Has toggle (FAQ)\nconst hasToggle = blocks.some(b => b.type === 'toggle');\nif (hasToggle) {\n  checks.notion_blocks.passed++;\n} else if (faqCount > 0) {\n  checks.notion_blocks.failed++;\n  errors.push('FAQ detected but no toggle blocks created');\n}\n\n// 3.4 Has emoji\nconst emojiRegex = /[\\u{1F300}-\\u{1F9FF}\\u{2600}-\\u{26FF}\\u{2700}-\\u{27BF}]/u;\nconst hasEmoji = emojiRegex.test(markdown);\nif (hasEmoji) {\n  checks.notion_blocks.passed++;\n} else {\n  warnings.push('No emojis found - consider adding for better readability');\n}\n\n// 4. Readability Checks\n// 4.1 Short paragraphs (check for very long paragraphs)\nconst paragraphs = markdown.split(/\\n\\n+/);\nconst longParas = paragraphs.filter(p => p.split(/[.!?]/).length > 6);\nif (longParas.length === 0) {\n  checks.readability.passed++;\n} else {\n  warnings.push(`${longParas.length} paragraphs may be too long`);\n}\n\n// 4.2 Korean honorifics (존댓말)\nconst hasHonorifics = /습니다|세요|어요|해요/g.test(markdown);\nif (hasHonorifics) {\n  checks.readability.passed++;\n} else {\n  warnings.push('No Korean honorifics detected');\n}\n\n// 4.3 English terms with Korean (영어 병기)\nconst hasBilingual = /\\([A-Za-z]+\\)|\\([A-Za-z]+ [A-Za-z]+\\)/.test(markdown);\nif (hasBilingual) {\n  checks.readability.passed++;\n} else {\n  warnings.push('Consider adding English terms in parentheses for clarity');\n}\n\n// 4.4 Has numbers/examples\nconst hasNumbers = /\\d{1,3}(,\\d{3})*원|\\d+%|\\$\\d+/.test(markdown);\nif (hasNumbers) {\n  checks.readability.passed++;\n} else {\n  warnings.push('No numerical examples found');\n}\n\n// 5. Metadata Checks\n// 5.1 Tags count\nconst tags = blog.tags || [];\nif (tags.length >= 3 && tags.length <= 5) {\n  checks.metadata.passed++;\n} else {\n  warnings.push(`Tags count: ${tags.length} (ideal: 3-5)`);\n}\n\n// 5.2 Category exists\nif (blog.category) {\n  checks.metadata.passed++;\n} else {\n  checks.metadata.failed++;\n  errors.push('No category specified');\n}\n\n// Calculate score\nconst totalPassed = Object.values(checks).reduce((sum, c) => sum + c.passed, 0);\nconst totalFailed = Object.values(checks).reduce((sum, c) => sum + c.failed, 0);\nconst totalChecks = totalPassed + totalFailed;\nconst score = totalChecks > 0 ? Math.round((totalPassed / totalChecks) * 100) : 0;\n\nconst validation = {\n  language: 'ko',\n  validation_passed: errors.length === 0,\n  score: score,\n  total_checks: totalChecks,\n  checks: checks,\n  errors: errors,\n  warnings: warnings,\n  summary: errors.length === 0 \n    ? `✅ Validation passed (${score}% score, ${warnings.length} warnings)`\n    : `❌ Validation failed: ${errors.length} errors`\n};\n\nreturn [{ json: { ...blog, validation } }];"
+      },
+      "id": "v4l1d4t3-k0r3-4n00-b10g-ch3ck3r00001",
+      "name": "Validate KO Blog",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1624, -288]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Blog Content Validator for English\nconst blog = $input.first().json;\nconst markdown = blog.content_markdown || '';\nconst blocks = blog.notion_blocks || [];\n\nconst errors = [];\nconst warnings = [];\nconst checks = {\n  content_structure: { passed: 0, failed: 0, details: [] },\n  seo: { passed: 0, failed: 0, details: [] },\n  notion_blocks: { passed: 0, failed: 0, details: [] },\n  readability: { passed: 0, failed: 0, details: [] },\n  metadata: { passed: 0, failed: 0, details: [] }\n};\n\nconst countPattern = (text, pattern) => (text.match(pattern) || []).length;\n\n// 1. Content Structure Checks\nconst wordCount = blog.word_count || 0;\nif (wordCount >= 1500 && wordCount <= 2500) {\n  checks.content_structure.passed++;\n} else if (wordCount >= 1000) {\n  checks.content_structure.passed++;\n  warnings.push(`Word count ${wordCount} outside ideal range (1500-2500)`);\n} else {\n  checks.content_structure.failed++;\n  errors.push(`Word count ${wordCount} too low (min 1000)`);\n}\n\nconst h1Count = countPattern(markdown, /^# [^#]/gm);\nif (h1Count === 1) {\n  checks.content_structure.passed++;\n} else {\n  checks.content_structure.failed++;\n  errors.push(`H1 count: ${h1Count} (expected 1)`);\n}\n\nconst h2Count = countPattern(markdown, /^## [^#]/gm);\nif (h2Count >= 3 && h2Count <= 7) {\n  checks.content_structure.passed++;\n} else if (h2Count >= 2) {\n  checks.content_structure.passed++;\n  warnings.push(`H2 count: ${h2Count} (ideal: 3-5)`);\n} else {\n  checks.content_structure.failed++;\n  errors.push(`H2 count: ${h2Count} (min 2)`);\n}\n\nconst hasConclusion = /conclusion|summary|final thoughts|wrap up/i.test(markdown);\nif (hasConclusion) {\n  checks.content_structure.passed++;\n} else {\n  warnings.push('No conclusion section detected');\n}\n\nconst faqCount = countPattern(markdown, /\\*\\*Q[:.]/gi) + countPattern(markdown, /^Q[:.]/gim);\nif (faqCount >= 3) {\n  checks.content_structure.passed++;\n} else if (faqCount >= 1) {\n  checks.content_structure.passed++;\n  warnings.push(`FAQ count: ${faqCount} (recommended: 3-5)`);\n} else {\n  warnings.push('No FAQ section detected');\n}\n\nconst hasRemitBuddy = /remitbuddy/i.test(markdown);\nif (hasRemitBuddy) {\n  checks.content_structure.passed++;\n} else {\n  checks.content_structure.failed++;\n  errors.push('No RemitBuddy CTA found');\n}\n\n// 2. SEO Checks\nconst primaryKeyword = blog.primary_keyword || '';\nconst title = blog.title || '';\n\nif (primaryKeyword && title.toLowerCase().includes(primaryKeyword.toLowerCase())) {\n  checks.seo.passed++;\n} else if (primaryKeyword) {\n  checks.seo.failed++;\n  errors.push(`Primary keyword \"${primaryKeyword}\" not in title`);\n}\n\nconst firstPara = markdown.split('\\n\\n')[1] || '';\nif (primaryKeyword && firstPara.toLowerCase().includes(primaryKeyword.toLowerCase())) {\n  checks.seo.passed++;\n} else if (primaryKeyword) {\n  warnings.push('Primary keyword not in first paragraph');\n}\n\nconst metaDesc = blog.meta_description || '';\nif (metaDesc.length >= 100 && metaDesc.length <= 160) {\n  checks.seo.passed++;\n} else {\n  checks.seo.failed++;\n  errors.push(`Meta description length: ${metaDesc.length} (ideal: 100-160)`);\n}\n\nif (title.length <= 60) {\n  checks.seo.passed++;\n} else {\n  warnings.push(`Title length: ${title.length} (max 60)`);\n}\n\nconst slug = blog.slug || '';\nif (/^[a-z0-9-]+$/.test(slug)) {\n  checks.seo.passed++;\n} else {\n  checks.seo.failed++;\n  errors.push(`Invalid slug format: ${slug}`);\n}\n\n// 3. Notion Blocks Checks\nconst hasBulletList = blocks.some(b => b.type === 'bulleted_list_item');\nconst hasNumberedList = blocks.some(b => b.type === 'numbered_list_item');\nif (hasBulletList || hasNumberedList) {\n  checks.notion_blocks.passed++;\n} else {\n  warnings.push('No lists found in content');\n}\n\nconst hasCallout = blocks.some(b => b.type === 'callout');\nif (hasCallout) {\n  checks.notion_blocks.passed++;\n} else {\n  warnings.push('No callout blocks');\n}\n\nconst hasToggle = blocks.some(b => b.type === 'toggle');\nif (hasToggle) {\n  checks.notion_blocks.passed++;\n} else if (faqCount > 0) {\n  checks.notion_blocks.failed++;\n  errors.push('FAQ detected but no toggle blocks created');\n}\n\nconst emojiRegex = /[\\u{1F300}-\\u{1F9FF}\\u{2600}-\\u{26FF}\\u{2700}-\\u{27BF}]/u;\nconst hasEmoji = emojiRegex.test(markdown);\nif (hasEmoji) {\n  checks.notion_blocks.passed++;\n} else {\n  warnings.push('No emojis found');\n}\n\n// 4. Readability Checks\nconst sentences = markdown.split(/[.!?]+/).filter(s => s.trim());\nconst avgWordsPerSentence = sentences.length > 0 \n  ? Math.round(wordCount / sentences.length) : 0;\nif (avgWordsPerSentence <= 20) {\n  checks.readability.passed++;\n} else {\n  warnings.push(`Avg sentence length: ${avgWordsPerSentence} words (ideal: 15-20)`);\n}\n\nconst hasNumbers = /\\$\\d+|\\d+%|\\d{1,3}(,\\d{3})*/.test(markdown);\nif (hasNumbers) {\n  checks.readability.passed++;\n} else {\n  warnings.push('No numerical examples found');\n}\n\n// 5. Metadata Checks\nconst tags = blog.tags || [];\nif (tags.length >= 3 && tags.length <= 5) {\n  checks.metadata.passed++;\n} else {\n  warnings.push(`Tags count: ${tags.length} (ideal: 3-5)`);\n}\n\nif (blog.category) {\n  checks.metadata.passed++;\n} else {\n  checks.metadata.failed++;\n  errors.push('No category specified');\n}\n\nconst totalPassed = Object.values(checks).reduce((sum, c) => sum + c.passed, 0);\nconst totalFailed = Object.values(checks).reduce((sum, c) => sum + c.failed, 0);\nconst totalChecks = totalPassed + totalFailed;\nconst score = totalChecks > 0 ? Math.round((totalPassed / totalChecks) * 100) : 0;\n\nconst validation = {\n  language: 'en',\n  validation_passed: errors.length === 0,\n  score: score,\n  total_checks: totalChecks,\n  checks: checks,\n  errors: errors,\n  warnings: warnings,\n  summary: errors.length === 0 \n    ? `✅ Validation passed (${score}% score, ${warnings.length} warnings)`\n    : `❌ Validation failed: ${errors.length} errors`\n};\n\nreturn [{ json: { ...blog, validation } }];"
+      },
+      "id": "v4l1d4t3-3ngl-1sh0-b10g-ch3ck3r00002",
+      "name": "Validate EN Blog",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1624, -96]
+    },
+    {
+      "parameters": {
         "method": "POST",
         "url": "https://api.notion.com/v1/pages",
         "sendHeaders": true,
@@ -272,7 +292,7 @@
       "name": "Notion Upload KO",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
-      "position": [1744, -288]
+      "position": [1864, -288]
     },
     {
       "parameters": {
@@ -306,7 +326,7 @@
       "name": "Notion Upload EN",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
-      "position": [1744, -96]
+      "position": [1864, -96]
     },
     {
       "parameters": {
@@ -316,7 +336,7 @@
       "name": "Append Remaining KO",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1904, -288]
+      "position": [2024, -288]
     },
     {
       "parameters": {
@@ -326,7 +346,7 @@
       "name": "Append Remaining EN",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1904, -96]
+      "position": [2024, -96]
     },
     {
       "parameters": {
@@ -337,17 +357,17 @@
       "name": "Wait for Uploads",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
-      "position": [2144, -192]
+      "position": [2264, -192]
     },
     {
       "parameters": {
-        "jsCode": "// Compile final report\nconst koUpload = $items('Append Remaining KO')[0]?.json || {};\nconst enUpload = $items('Append Remaining EN')[0]?.json || {};\nconst koBlog = $items('Parse & Convert KO Blog')[0]?.json || {};\nconst enBlog = $items('Parse & Convert EN Blog')[0]?.json || {};\nconst topicData = $items('Parse Topic Selection')[0]?.json || {};\n\nconst report = {\n  timestamp: new Date().toISOString(),\n  status: 'completed',\n  topic: {\n    title_ko: topicData.topic?.title_ko || koBlog.title,\n    title_en: topicData.topic?.title_en || enBlog.title,\n    slug: koBlog.slug || enBlog.slug,\n    selection_reason: topicData.topic?.selection_reason\n  },\n  korean_blog: {\n    title: koBlog.title,\n    word_count: koBlog.word_count,\n    category: koBlog.category,\n    tags: koBlog.tags,\n    notion_page_id: koUpload.id,\n    notion_url: koUpload.url,\n    status: koUpload.id ? 'uploaded' : 'failed'\n  },\n  english_blog: {\n    title: enBlog.title,\n    word_count: enBlog.word_count,\n    category: enBlog.category,\n    tags: enBlog.tags,\n    notion_page_id: enUpload.id,\n    notion_url: enUpload.url,\n    status: enUpload.id ? 'uploaded' : 'failed'\n  },\n  backup_topics: topicData.backup_topics || [],\n  summary: `Created blog posts: KO (${koBlog.word_count} words), EN (${enBlog.word_count} words). Topic: ${koBlog.title || enBlog.title}`\n};\n\nreturn [{ json: report }];"
+        "jsCode": "// Compile final report with validation results\nconst koUpload = $items('Append Remaining KO')[0]?.json || {};\nconst enUpload = $items('Append Remaining EN')[0]?.json || {};\nconst koValidated = $items('Validate KO Blog')[0]?.json || {};\nconst enValidated = $items('Validate EN Blog')[0]?.json || {};\nconst topicData = $items('Parse Topic Selection')[0]?.json || {};\n\nconst koValidation = koValidated.validation || {};\nconst enValidation = enValidated.validation || {};\n\nconst report = {\n  timestamp: new Date().toISOString(),\n  status: 'completed',\n  topic: {\n    title_ko: topicData.topic?.title_ko || koValidated.title,\n    title_en: topicData.topic?.title_en || enValidated.title,\n    slug: koValidated.slug || enValidated.slug,\n    selection_reason: topicData.topic?.selection_reason\n  },\n  korean_blog: {\n    title: koValidated.title,\n    word_count: koValidated.word_count,\n    category: koValidated.category,\n    tags: koValidated.tags,\n    notion_page_id: koUpload.id,\n    notion_url: koUpload.url,\n    status: koUpload.id ? 'uploaded' : 'failed',\n    validation: {\n      passed: koValidation.validation_passed,\n      score: koValidation.score,\n      errors: koValidation.errors || [],\n      warnings: koValidation.warnings || [],\n      summary: koValidation.summary\n    }\n  },\n  english_blog: {\n    title: enValidated.title,\n    word_count: enValidated.word_count,\n    category: enValidated.category,\n    tags: enValidated.tags,\n    notion_page_id: enUpload.id,\n    notion_url: enUpload.url,\n    status: enUpload.id ? 'uploaded' : 'failed',\n    validation: {\n      passed: enValidation.validation_passed,\n      score: enValidation.score,\n      errors: enValidation.errors || [],\n      warnings: enValidation.warnings || [],\n      summary: enValidation.summary\n    }\n  },\n  backup_topics: topicData.backup_topics || [],\n  summary: `Created blog posts: KO (${koValidated.word_count} words, ${koValidation.score || 0}% score), EN (${enValidated.word_count} words, ${enValidation.score || 0}% score). Topic: ${koValidated.title || enValidated.title}`\n};\n\nreturn [{ json: report }];"
       },
       "id": "52e4eac6-ee05-4bf2-99a7-8308c156da7c",
       "name": "Compile Report",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2352, -192]
+      "position": [2472, -192]
     },
     {
       "parameters": {
@@ -368,7 +388,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({\n  from: 'RemitBuddy Bot <onboarding@resend.dev>',\n  to: ['potensiainc@gmail.com'],\n  subject: '[RemitBuddy] Blog Posts Created: ' + $json.topic.title_en,\n  html: `\n    <div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n      <h1 style=\"color: #2563eb;\">Blog Posts Created</h1>\n      \n      <div style=\"background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n        <h2 style=\"margin-top: 0;\">Korean Version</h2>\n        <p><strong>Title:</strong> ${$json.korean_blog.title}</p>\n        <p><strong>Words:</strong> ${$json.korean_blog.word_count}</p>\n        <p><strong>Category:</strong> ${$json.korean_blog.category}</p>\n        <p><strong>Status:</strong> ${$json.korean_blog.status}</p>\n        <a href=\"${$json.korean_blog.notion_url || '#'}\" style=\"background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">View Korean Draft</a>\n      </div>\n      \n      <div style=\"background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n        <h2 style=\"margin-top: 0;\">English Version</h2>\n        <p><strong>Title:</strong> ${$json.english_blog.title}</p>\n        <p><strong>Words:</strong> ${$json.english_blog.word_count}</p>\n        <p><strong>Category:</strong> ${$json.english_blog.category}</p>\n        <p><strong>Status:</strong> ${$json.english_blog.status}</p>\n        <a href=\"${$json.english_blog.notion_url || '#'}\" style=\"background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">View English Draft</a>\n      </div>\n      \n      <div style=\"background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n        <h3 style=\"margin-top: 0;\">Why This Topic?</h3>\n        <p>${$json.topic.selection_reason || 'N/A'}</p>\n      </div>\n      \n      <div style=\"margin-top: 20px;\">\n        <h3>Next Topics (Backup)</h3>\n        <ul>\n          ${($json.backup_topics || []).map(t => '<li>' + t.title_en + '</li>').join('')}\n        </ul>\n      </div>\n      \n      <hr style=\"margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;\">\n      <p style=\"color: #6b7280; font-size: 12px;\">Generated at: ${$json.timestamp}</p>\n    </div>\n  `\n}) }}",
+        "jsonBody": "={{ JSON.stringify({\n  from: 'RemitBuddy Bot <onboarding@resend.dev>',\n  to: ['potensiainc@gmail.com'],\n  subject: '[RemitBuddy] Blog Posts Created: ' + $json.topic.title_en,\n  html: `\n    <div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n      <h1 style=\"color: #2563eb;\">Blog Posts Created</h1>\n      \n      <div style=\"background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n        <h2 style=\"margin-top: 0;\">Korean Version</h2>\n        <p><strong>Title:</strong> ${$json.korean_blog.title}</p>\n        <p><strong>Words:</strong> ${$json.korean_blog.word_count}</p>\n        <p><strong>Category:</strong> ${$json.korean_blog.category}</p>\n        <p><strong>Status:</strong> ${$json.korean_blog.status}</p>\n        <div style=\"margin: 10px 0; padding: 10px; background: ${$json.korean_blog.validation?.passed ? '#d1fae5' : '#fee2e2'}; border-radius: 5px;\">\n          <strong>Validation:</strong> ${$json.korean_blog.validation?.summary || 'N/A'}\n          ${($json.korean_blog.validation?.errors || []).length > 0 ? '<br><span style=\"color: #dc2626;\">Errors: ' + $json.korean_blog.validation.errors.join(', ') + '</span>' : ''}\n          ${($json.korean_blog.validation?.warnings || []).length > 0 ? '<br><span style=\"color: #d97706;\">Warnings: ' + $json.korean_blog.validation.warnings.slice(0, 3).join(', ') + '</span>' : ''}\n        </div>\n        <a href=\"${$json.korean_blog.notion_url || '#'}\" style=\"background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">View Korean Draft</a>\n      </div>\n      \n      <div style=\"background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n        <h2 style=\"margin-top: 0;\">English Version</h2>\n        <p><strong>Title:</strong> ${$json.english_blog.title}</p>\n        <p><strong>Words:</strong> ${$json.english_blog.word_count}</p>\n        <p><strong>Category:</strong> ${$json.english_blog.category}</p>\n        <p><strong>Status:</strong> ${$json.english_blog.status}</p>\n        <div style=\"margin: 10px 0; padding: 10px; background: ${$json.english_blog.validation?.passed ? '#d1fae5' : '#fee2e2'}; border-radius: 5px;\">\n          <strong>Validation:</strong> ${$json.english_blog.validation?.summary || 'N/A'}\n          ${($json.english_blog.validation?.errors || []).length > 0 ? '<br><span style=\"color: #dc2626;\">Errors: ' + $json.english_blog.validation.errors.join(', ') + '</span>' : ''}\n          ${($json.english_blog.validation?.warnings || []).length > 0 ? '<br><span style=\"color: #d97706;\">Warnings: ' + $json.english_blog.validation.warnings.slice(0, 3).join(', ') + '</span>' : ''}\n        </div>\n        <a href=\"${$json.english_blog.notion_url || '#'}\" style=\"background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">View English Draft</a>\n      </div>\n      \n      <div style=\"background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n        <h3 style=\"margin-top: 0;\">Why This Topic?</h3>\n        <p>${$json.topic.selection_reason || 'N/A'}</p>\n      </div>\n      \n      <div style=\"margin-top: 20px;\">\n        <h3>Next Topics (Backup)</h3>\n        <ul>\n          ${($json.backup_topics || []).map(t => '<li>' + t.title_en + '</li>').join('')}\n        </ul>\n      </div>\n      \n      <hr style=\"margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;\">\n      <p style=\"color: #6b7280; font-size: 12px;\">Generated at: ${$json.timestamp}</p>\n    </div>\n  `\n}) }}",
         "options": {
           "timeout": 30000
         }
@@ -377,7 +397,7 @@
       "name": "Email Notification",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
-      "position": [2592, -192],
+      "position": [2712, -192],
       "notes": "Sends email via Resend API to potensiainc@gmail.com"
     }
   ],
@@ -495,7 +515,7 @@
       "main": [
         [
           {
-            "node": "Notion Upload KO",
+            "node": "Validate KO Blog",
             "type": "main",
             "index": 0
           }
@@ -503,6 +523,28 @@
       ]
     },
     "Parse & Convert EN Blog": {
+      "main": [
+        [
+          {
+            "node": "Validate EN Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate KO Blog": {
+      "main": [
+        [
+          {
+            "node": "Notion Upload KO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate EN Blog": {
       "main": [
         [
           {

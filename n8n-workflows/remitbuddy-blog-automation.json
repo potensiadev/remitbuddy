@@ -372,14 +372,10 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.resend.com/emails",
+        "url": "https://hooks.slack.com/services/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",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer re_SH9QT7Zt_F4jKpjk3mms33BeF2wiQt8DK"
-            },
             {
               "name": "Content-Type",
               "value": "application/json"
@@ -388,17 +384,110 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({\n  from: 'RemitBuddy Bot <onboarding@resend.dev>',\n  to: ['potensiainc@gmail.com'],\n  subject: '[RemitBuddy] Blog Posts Created: ' + $json.topic.title_en,\n  html: `\n    <div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n      <h1 style=\"color: #2563eb;\">Blog Posts Created</h1>\n      \n      <div style=\"background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n        <h2 style=\"margin-top: 0;\">Korean Version</h2>\n        <p><strong>Title:</strong> ${$json.korean_blog.title}</p>\n        <p><strong>Words:</strong> ${$json.korean_blog.word_count}</p>\n        <p><strong>Category:</strong> ${$json.korean_blog.category}</p>\n        <p><strong>Status:</strong> ${$json.korean_blog.status}</p>\n        <div style=\"margin: 10px 0; padding: 10px; background: ${$json.korean_blog.validation?.passed ? '#d1fae5' : '#fee2e2'}; border-radius: 5px;\">\n          <strong>Validation:</strong> ${$json.korean_blog.validation?.summary || 'N/A'}\n          ${($json.korean_blog.validation?.errors || []).length > 0 ? '<br><span style=\"color: #dc2626;\">Errors: ' + $json.korean_blog.validation.errors.join(', ') + '</span>' : ''}\n          ${($json.korean_blog.validation?.warnings || []).length > 0 ? '<br><span style=\"color: #d97706;\">Warnings: ' + $json.korean_blog.validation.warnings.slice(0, 3).join(', ') + '</span>' : ''}\n        </div>\n        <a href=\"${$json.korean_blog.notion_url || '#'}\" style=\"background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">View Korean Draft</a>\n      </div>\n      \n      <div style=\"background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n        <h2 style=\"margin-top: 0;\">English Version</h2>\n        <p><strong>Title:</strong> ${$json.english_blog.title}</p>\n        <p><strong>Words:</strong> ${$json.english_blog.word_count}</p>\n        <p><strong>Category:</strong> ${$json.english_blog.category}</p>\n        <p><strong>Status:</strong> ${$json.english_blog.status}</p>\n        <div style=\"margin: 10px 0; padding: 10px; background: ${$json.english_blog.validation?.passed ? '#d1fae5' : '#fee2e2'}; border-radius: 5px;\">\n          <strong>Validation:</strong> ${$json.english_blog.validation?.summary || 'N/A'}\n          ${($json.english_blog.validation?.errors || []).length > 0 ? '<br><span style=\"color: #dc2626;\">Errors: ' + $json.english_blog.validation.errors.join(', ') + '</span>' : ''}\n          ${($json.english_blog.validation?.warnings || []).length > 0 ? '<br><span style=\"color: #d97706;\">Warnings: ' + $json.english_blog.validation.warnings.slice(0, 3).join(', ') + '</span>' : ''}\n        </div>\n        <a href=\"${$json.english_blog.notion_url || '#'}\" style=\"background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;\">View English Draft</a>\n      </div>\n      \n      <div style=\"background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;\">\n        <h3 style=\"margin-top: 0;\">Why This Topic?</h3>\n        <p>${$json.topic.selection_reason || 'N/A'}</p>\n      </div>\n      \n      <div style=\"margin-top: 20px;\">\n        <h3>Next Topics (Backup)</h3>\n        <ul>\n          ${($json.backup_topics || []).map(t => '<li>' + t.title_en + '</li>').join('')}\n        </ul>\n      </div>\n      \n      <hr style=\"margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;\">\n      <p style=\"color: #6b7280; font-size: 12px;\">Generated at: ${$json.timestamp}</p>\n    </div>\n  `\n}) }}",
+        "jsonBody": "={{ JSON.stringify({\n  blocks: [\n    {\n      type: 'header',\n      text: {\n        type: 'plain_text',\n        text: '📝 Blog Posts Created',\n        emoji: true\n      }\n    },\n    {\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: '*Topic:* ' + $json.topic.title_en\n      }\n    },\n    {\n      type: 'divider'\n    },\n    {\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: '*🇰🇷 Korean Version*\\n' +\n          '• *Title:* ' + $json.korean_blog.title + '\\n' +\n          '• *Words:* ' + $json.korean_blog.word_count + '\\n' +\n          '• *Category:* ' + $json.korean_blog.category + '\\n' +\n          '• *Validation:* ' + ($json.korean_blog.validation?.passed ? '✅ Passed' : '❌ Failed') + ' (' + ($json.korean_blog.validation?.score || 0) + '%)' +\n          (($json.korean_blog.validation?.errors || []).length > 0 ? '\\n• *Errors:* ' + $json.korean_blog.validation.errors.join(', ') : '')\n      },\n      accessory: {\n        type: 'button',\n        text: {\n          type: 'plain_text',\n          text: 'View Draft',\n          emoji: true\n        },\n        url: $json.korean_blog.notion_url || 'https://notion.so',\n        action_id: 'view_ko_draft'\n      }\n    },\n    {\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: '*🇺🇸 English Version*\\n' +\n          '• *Title:* ' + $json.english_blog.title + '\\n' +\n          '• *Words:* ' + $json.english_blog.word_count + '\\n' +\n          '• *Category:* ' + $json.english_blog.category + '\\n' +\n          '• *Validation:* ' + ($json.english_blog.validation?.passed ? '✅ Passed' : '❌ Failed') + ' (' + ($json.english_blog.validation?.score || 0) + '%)' +\n          (($json.english_blog.validation?.errors || []).length > 0 ? '\\n• *Errors:* ' + $json.english_blog.validation.errors.join(', ') : '')\n      },\n      accessory: {\n        type: 'button',\n        text: {\n          type: 'plain_text',\n          text: 'View Draft',\n          emoji: true\n        },\n        url: $json.english_blog.notion_url || 'https://notion.so',\n        action_id: 'view_en_draft'\n      }\n    },\n    {\n      type: 'divider'\n    },\n    {\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: '*💡 Why This Topic?*\\n' + ($json.topic.selection_reason || 'N/A')\n      }\n    },\n    {\n      type: 'context',\n      elements: [\n        {\n          type: 'mrkdwn',\n          text: '📅 Generated at: ' + $json.timestamp + ' | *Backup Topics:* ' + ($json.backup_topics || []).map(t => t.title_en).slice(0, 2).join(', ')\n        }\n      ]\n    }\n  ]\n}) }}",
         "options": {
           "timeout": 30000
         }
       },
       "id": "a457aa6e-8702-48e6-a944-a54e92b605c7",
-      "name": "Email Notification",
+      "name": "Slack Notification",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [2712, -192],
-      "notes": "Sends email via Resend API to potensiainc@gmail.com"
+      "notes": "Sends Slack notification via Webhook"
+    },
+    {
+      "parameters": {},
+      "id": "3rr0r-tr1g-g3r0-n0d3-00000000001",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [-80, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/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",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  blocks: [\n    {\n      type: 'header',\n      text: {\n        type: 'plain_text',\n        text: '⚠️ Blog Workflow Failed',\n        emoji: true\n      }\n    },\n    {\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: '*Error Details:*\\n' +\n          '• *Node:* ' + ($json.execution?.error?.node?.name || 'Unknown') + '\\n' +\n          '• *Message:* ' + ($json.execution?.error?.message || 'Unknown error') + '\\n' +\n          '• *Execution ID:* ' + ($json.execution?.id || 'N/A')\n      }\n    },\n    {\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: '🔄 *Automatic retry scheduled in 10 minutes...*'\n      }\n    },\n    {\n      type: 'context',\n      elements: [\n        {\n          type: 'mrkdwn',\n          text: '⏰ Failed at: ' + new Date().toISOString()\n        }\n      ]\n    }\n  ]\n}) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "3rr0r-sl4c-k001-n0d3-00000000002",
+      "name": "Slack Error Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [160, 200]
+    },
+    {
+      "parameters": {
+        "amount": 10,
+        "unit": "minutes"
+      },
+      "id": "w41t-10m1-n0d3-r3tr-00000000003",
+      "name": "Wait 10 Minutes",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [400, 200]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{ $workflow.id }}",
+        "mode": "once"
+      },
+      "id": "3x3c-w0rk-fl0w-r3tr-00000000004",
+      "name": "Retry Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.1,
+      "position": [640, 200],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check retry result\nconst input = $input.first();\nconst success = !input?.error;\n\nreturn [{\n  json: {\n    retry_success: success,\n    retry_time: new Date().toISOString(),\n    result: success ? 'Retry completed successfully' : 'Retry also failed',\n    details: input?.json || {}\n  }\n}];"
+      },
+      "id": "ch3c-k0r3-try0-r3su-00000000005",
+      "name": "Check Retry Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [880, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/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",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  blocks: [\n    {\n      type: 'header',\n      text: {\n        type: 'plain_text',\n        text: $json.retry_success ? '✅ Retry Successful' : '❌ Retry Failed',\n        emoji: true\n      }\n    },\n    {\n      type: 'section',\n      text: {\n        type: 'mrkdwn',\n        text: $json.retry_success \n          ? '*Blog workflow retry completed successfully!*\\nCheck the main Slack channel for blog post details.'\n          : '*Blog workflow retry also failed.*\\n⚠️ Manual intervention required. Please check the n8n workflow logs.'\n      }\n    },\n    {\n      type: 'context',\n      elements: [\n        {\n          type: 'mrkdwn',\n          text: '🔄 Retry completed at: ' + $json.retry_time\n        }\n      ]\n    }\n  ]\n}) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "r3tr-y0sl-4ck0-n0t1-00000000006",
+      "name": "Slack Retry Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 200]
     }
   ],
   "connections": {
@@ -614,7 +703,62 @@
       "main": [
         [
           {
-            "node": "Email Notification",
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Slack Error Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Error Alert": {
+      "main": [
+        [
+          {
+            "node": "Wait 10 Minutes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 10 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Retry Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry Workflow": {
+      "main": [
+        [
+          {
+            "node": "Check Retry Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Retry Result": {
+      "main": [
+        [
+          {
+            "node": "Slack Retry Result",
             "type": "main",
             "index": 0
           }

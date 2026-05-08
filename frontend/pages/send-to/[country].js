@@ -207,6 +207,67 @@ export default function CountryPage({ countryData }) {
           </div>
         </section>
 
+        {/* Related Blog Posts */}
+        <section className="py-16 bg-white border-t border-gray-100">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-gray-900 text-center mb-3">
+              📚 {t('country_page.helpful_guides', 'Helpful Guides for {{country}} Transfers').replace('{{country}}', countryData.name)}
+            </h2>
+            <p className="text-gray-600 text-center mb-8">
+              {t('country_page.guides_subtitle', 'Save more with these tips and tricks')}
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Link
+                href="/blog/7-ways-save-money-remittance-fees"
+                className="group p-5 bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl hover:shadow-lg hover:border-blue-200 transition-all"
+              >
+                <span className="text-2xl mb-2 block">💰</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 mb-1">
+                  7 Smart Ways to Save on Fees
+                </h3>
+                <p className="text-sm text-gray-600">Cut your transfer costs by up to 70%</p>
+              </Link>
+
+              <Link
+                href={countryData.code === 'VN' ? '/blog/real-time-remittance-guide-vietnam-2026' :
+                      countryData.code === 'NP' ? '/blog/send-money-korea-to-nepal-guide' :
+                      countryData.code === 'ID' ? '/blog/indonesia-remittance-tax-exemption-guide' :
+                      '/blog/7-ways-save-money-remittance-fees'}
+                className="group p-5 bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-2xl hover:shadow-lg hover:border-green-200 transition-all"
+              >
+                <span className="text-2xl mb-2 block">🎯</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-green-600 mb-1">
+                  {countryData.name} Transfer Guide
+                </h3>
+                <p className="text-sm text-gray-600">Complete guide for {countryData.currency} transfers</p>
+              </Link>
+
+              <Link
+                href="/blog/remittance-tax-incentive-guide-foreign-workers-2026"
+                className="group p-5 bg-gradient-to-br from-purple-50 to-white border border-purple-100 rounded-2xl hover:shadow-lg hover:border-purple-200 transition-all"
+              >
+                <span className="text-2xl mb-2 block">🏛️</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-purple-600 mb-1">
+                  2026 Tax Incentive Program
+                </h3>
+                <p className="text-sm text-gray-600">Save up to 15% on income taxes</p>
+              </Link>
+
+              <Link
+                href="/blog"
+                className="group p-5 bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl hover:shadow-lg hover:border-gray-300 transition-all"
+              >
+                <span className="text-2xl mb-2 block">📖</span>
+                <h3 className="font-bold text-gray-900 group-hover:text-gray-700 mb-1">
+                  View All Guides
+                </h3>
+                <p className="text-sm text-gray-600">More tips to maximize your transfers</p>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Other Countries */}
         <section className="py-16 bg-gray-50">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

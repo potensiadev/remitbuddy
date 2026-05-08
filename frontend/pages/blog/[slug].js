@@ -1,12 +1,109 @@
 import React from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { getPostBySlug, getPublishedPosts } from '../../lib/notion';
+import { getPostBySlug, getPublishedPosts, getRelatedPosts } from '../../lib/notion';
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
 
-const BlogPost = ({ post }) => {
+// Inline CTA Component (Contextual, not aggressive)
+const InlineCTA = ({ type, lang }) => {
+    const isKo = lang === 'ko';
+
+    if (type === 'compare') {
+        return (
+            <div className="my-8 p-5 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl">
+                <div className="flex items-start gap-4">
+                    <span className="text-2xl">💡</span>
+                    <div className="flex-1">
+                        <p className="font-medium text-gray-900 mb-2">
+                            {isKo ? '실시간 환율로 비교해보세요' : 'Compare with live rates'}
+                        </p>
+                        <p className="text-sm text-gray-600 mb-3">
+                            {isKo
+                                ? '지금 ₩1,000,000 송금 시 얼마나 받을 수 있는지 확인하세요'
+                                : 'See how much your family receives when you send ₩1,000,000'}
+                        </p>
+                        <Link
+                            href="/?amount=1000000"
+                            className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
+                        >
+                            {isKo ? '비교 결과 보기 →' : 'View comparison →'}
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (type === 'calculator') {
+        return (
+            <div className="my-8 p-5 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-100 rounded-2xl">
+                <div className="flex items-start gap-4">
+                    <span className="text-2xl">🧮</span>
+                    <div className="flex-1">
+                        <p className="font-medium text-gray-900 mb-2">
+                            {isKo ? '내 송금액으로 계산해보기' : 'Calculate with your amount'}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            <Link href="/?amount=500000" className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-sm hover:bg-green-50">₩500,000</Link>
+                            <Link href="/?amount=1000000" className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-sm hover:bg-green-50">₩1,000,000</Link>
+                            <Link href="/?amount=2000000" className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-sm hover:bg-green-50">₩2,000,000</Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return null;
+};
+
+// Related Posts Component
+const RelatedPosts = ({ posts, lang }) => {
+    if (!posts || posts.length === 0) return null;
+
+    const isKo = lang === 'ko';
+
+    return (
+        <div className="mt-12 p-6 bg-gray-50 rounded-2xl">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                📚 {isKo ? '관련 가이드' : 'Related Guides'}
+            </h3>
+            <div className="space-y-3">
+                {posts.map(post => (
+                    <Link
+                        key={post.slug}
+                        href={`/blog/${post.slug}`}
+                        className="block p-4 bg-white rounded-xl border border-gray-100 hover:border-blue-200 hover:shadow-sm transition-all group"
+                    >
+                        <div className="flex items-start gap-3">
+                            <div className="flex-1">
+                                <h4 className="font-medium text-gray-900 group-hover:text-blue-600 line-clamp-2">
+                                    {post.title}
+                                </h4>
+                                {post.matchingTags && post.matchingTags.length > 0 && (
+                                    <div className="flex gap-1 mt-2">
+                                        {post.matchingTags.slice(0, 2).map(tag => (
+                                            <span key={tag} className="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs rounded-full">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            <span className="text-gray-400 group-hover:text-blue-500">→</span>
+                        </div>
+                    </Link>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const BlogPost = ({ post, relatedPosts }) => {
     const { t, i18n } = useTranslation('common');
 
     // 색상 매핑 함수
@@ -197,6 +294,18 @@ const BlogPost = ({ post }) => {
                 );
 
             case 'callout':
+                // Mid-article CTA detection: Check if callout is a CTA marker
+                const calloutText = getPlainText(value.rich_text).toLowerCase();
+                const ctaIcon = value.icon?.emoji;
+
+                // If callout contains CTA markers, render inline CTA instead
+                if (ctaIcon === '🎯' || calloutText.includes('[cta:compare]')) {
+                    return <InlineCTA type="compare" lang={i18n.language} />;
+                }
+                if (ctaIcon === '🧮' || calloutText.includes('[cta:calculator]')) {
+                    return <InlineCTA type="calculator" lang={i18n.language} />;
+                }
+
                 return (
                     <div className={`flex gap-4 p-5 my-6 ${getCalloutStyle(value.color)} border rounded-2xl`}>
                         <div className="text-3xl flex-shrink-0">{value.icon?.emoji || '💡'}</div>
@@ -489,12 +598,78 @@ const BlogPost = ({ post }) => {
 
     if (!post) return null;
 
+    const seoTitle = post.metaTitle || post.title;
+    const seoDescription = post.metaDescription || post.excerpt;
+    const canonicalUrl = `https://www.remitbuddy.com/blog/${post.slug}`;
+    const ogImage = post.cover || 'https://www.remitbuddy.com/og-default.png';
+
+    // JSON-LD structured data for SEO
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: post.title,
+        description: seoDescription,
+        image: ogImage,
+        datePublished: post.publishedAt,
+        dateModified: post.publishedAt,
+        author: {
+            '@type': 'Organization',
+            name: 'RemitBuddy',
+            url: 'https://www.remitbuddy.com'
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'RemitBuddy',
+            logo: {
+                '@type': 'ImageObject',
+                url: 'https://www.remitbuddy.com/logo.png'
+            }
+        },
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': canonicalUrl
+        },
+        keywords: post.tags?.join(', ')
+    };
+
     return (
         <>
             <Head>
-                <title>{post.title} | RemitBuddy Blog</title>
-                <meta name="description" content={post.excerpt} />
-                {post.cover && <meta property="og:image" content={post.cover} />}
+                {/* Primary Meta Tags */}
+                <title>{seoTitle} | RemitBuddy Blog</title>
+                <meta name="title" content={`${seoTitle} | RemitBuddy Blog`} />
+                <meta name="description" content={seoDescription} />
+                {post.tags?.length > 0 && (
+                    <meta name="keywords" content={post.tags.join(', ')} />
+                )}
+                <link rel="canonical" href={canonicalUrl} />
+
+                {/* Open Graph / Facebook */}
+                <meta property="og:type" content="article" />
+                <meta property="og:url" content={canonicalUrl} />
+                <meta property="og:title" content={seoTitle} />
+                <meta property="og:description" content={seoDescription} />
+                <meta property="og:image" content={ogImage} />
+                <meta property="og:site_name" content="RemitBuddy" />
+                {post.publishedAt && (
+                    <meta property="article:published_time" content={post.publishedAt} />
+                )}
+                {post.tags?.map(tag => (
+                    <meta property="article:tag" content={tag} key={tag} />
+                ))}
+
+                {/* Twitter */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:url" content={canonicalUrl} />
+                <meta name="twitter:title" content={seoTitle} />
+                <meta name="twitter:description" content={seoDescription} />
+                <meta name="twitter:image" content={ogImage} />
+
+                {/* JSON-LD Structured Data */}
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
             </Head>
 
             <div className="min-h-screen bg-white safe-top safe-bottom">
@@ -526,16 +701,61 @@ const BlogPost = ({ post }) => {
                             )}
                         </header>
 
-                        {/* Cover Image */}
+                        {/* Cover Image - Optimized for mobile */}
                         {post.cover && (
-                            <div className="mb-12 rounded-3xl overflow-hidden shadow-lg border border-gray-100 aspect-video">
-                                <img src={post.cover} alt={post.title} className="w-full h-full object-cover" />
+                            <div className="mb-12 rounded-3xl overflow-hidden shadow-lg border border-gray-100 aspect-video relative">
+                                {post.cover.startsWith('/') ? (
+                                    <Image
+                                        src={post.cover}
+                                        alt={post.title}
+                                        fill
+                                        className="object-cover"
+                                        priority
+                                        sizes="(max-width: 768px) 100vw, 768px"
+                                    />
+                                ) : (
+                                    <img src={post.cover} alt={post.title} className="w-full h-full object-cover" loading="eager" />
+                                )}
                             </div>
                         )}
 
                         {/* Post Content */}
                         <div className="prose prose-lg prose-blue max-w-none text-gray-700">
                             {groupBlocks(post.blocks).map((block) => renderGroupedBlock(block))}
+                        </div>
+
+                        {/* Related Posts Section */}
+                        <RelatedPosts posts={relatedPosts} lang={i18n.language} />
+
+                        {/* Soft CTA: Contextual, not aggressive */}
+                        <div className="mt-12 p-6 bg-gradient-to-br from-gray-50 to-blue-50/30 border border-gray-100 rounded-2xl">
+                            <div className="flex items-start gap-4">
+                                <span className="text-3xl">💡</span>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-gray-900 mb-2">
+                                        {i18n.language === 'ko' ? '송금 비용 궁금하신가요?' : 'Curious about transfer costs?'}
+                                    </h3>
+                                    <p className="text-gray-600 mb-4">
+                                        {i18n.language === 'ko'
+                                            ? 'RemitBuddy에서 실시간 환율과 수수료를 비교해보세요.'
+                                            : 'Compare live exchange rates and fees on RemitBuddy.'}
+                                    </p>
+                                    <div className="flex flex-wrap gap-2">
+                                        <Link
+                                            href="/?amount=1000000"
+                                            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                                        >
+                                            {i18n.language === 'ko' ? '비교 도구 열기 →' : 'Open comparison tool →'}
+                                        </Link>
+                                        <Link
+                                            href="/blog"
+                                            className="inline-flex items-center px-4 py-2 bg-white text-gray-700 font-medium rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors text-sm"
+                                        >
+                                            {i18n.language === 'ko' ? '더 많은 가이드 보기' : 'More guides'}
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -575,9 +795,13 @@ export async function getStaticProps({ params, locale }) {
         };
     }
 
+    // Fetch related posts based on tag similarity
+    const relatedPosts = await getRelatedPosts(params.slug, post.tags || [], locale, 3);
+
     return {
         props: {
             post,
+            relatedPosts,
             ...(await serverSideTranslations(locale, ['common'])),
         },
         revalidate: 60,

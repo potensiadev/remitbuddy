@@ -91,6 +91,8 @@ const mapPost = (page) => {
     slug: getPlainText(props.Slug?.rich_text),
     excerpt: getPlainText(props.Excerpt?.rich_text),
     excerptEn: getPlainText(props['Excerpt (En)']?.rich_text),
+    metaTitle: getPlainText(props['Meta Title']?.rich_text),
+    metaDescription: getPlainText(props['Meta Description']?.rich_text),
     featured: props.Featured?.checkbox ?? false,
     publishedAt: props['Publish Date']?.date?.start || null,
     cover,
@@ -177,7 +179,51 @@ async function getPostBySlug(slug, locale = 'ko') {
   return null;
 }
 
+/**
+ * Get related posts based on tag similarity
+ * @param {string} currentSlug - Current post slug to exclude
+ * @param {string[]} tags - Tags of current post
+ * @param {string} locale - Locale for database selection
+ * @param {number} limit - Max number of related posts
+ */
+async function getRelatedPosts(currentSlug, tags = [], locale = 'ko', limit = 3) {
+  try {
+    const allPosts = await getPublishedPosts(locale);
+
+    // Exclude current post
+    const otherPosts = allPosts.filter(post => post.slug !== currentSlug);
+
+    if (otherPosts.length === 0) return [];
+
+    // Score posts by tag similarity
+    const scoredPosts = otherPosts.map(post => {
+      const matchingTags = post.tags.filter(tag => tags.includes(tag));
+      return {
+        ...post,
+        score: matchingTags.length,
+        matchingTags,
+      };
+    });
+
+    // Sort by score (descending), then by publishedAt (descending)
+    scoredPosts.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0);
+    });
+
+    // Return top matches
+    return scoredPosts.slice(0, limit).map(({ score, matchingTags, ...post }) => ({
+      ...post,
+      matchingTags, // Include for display purposes
+    }));
+  } catch (e) {
+    console.error('[Notion] getRelatedPosts failed:', e);
+    return [];
+  }
+}
+
 module.exports = {
   getPublishedPosts,
   getPostBySlug,
+  getRelatedPosts,
 };

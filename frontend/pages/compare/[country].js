@@ -19,6 +19,95 @@ import {
 } from '../../lib/constants';
 import { generateComparisonSEO } from '../../lib/seo';
 import { trackEvent, ANALYTICS_EVENTS } from '../../utils/analytics';
+import { getPublishedPosts } from '../../lib/notion';
+
+// Country-specific blog guides component
+const CountryGuides = ({ posts, countryName, lang }) => {
+  if (!posts || posts.length === 0) return null;
+
+  const isKo = lang === 'ko';
+
+  return (
+    <section className="py-10 sm:py-12 bg-white border-t border-neutral-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2 mb-6">
+          <span className="text-2xl">📚</span>
+          <h2 className="text-xl font-bold text-neutral-900 tracking-tight">
+            {isKo
+              ? `${countryName} 송금 가이드`
+              : `${countryName} Transfer Guides`}
+          </h2>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {posts.map((post, index) => (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="
+                group p-5 bg-gradient-to-br from-neutral-50 to-white
+                border border-neutral-200 rounded-2xl
+                hover:border-primary-300 hover:shadow-lg
+                transition-all duration-200
+                animate-fade-in-up
+              "
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <div className="flex items-start gap-3">
+                <span className="text-2xl flex-shrink-0">
+                  {post.tags?.includes('Tax') || post.tags?.includes('Tax Incentive') ? '🏛️' :
+                   post.tags?.includes('Real-time') || post.tags?.includes('Instant Transfer') ? '⚡' :
+                   post.tags?.includes('Guide') || post.tags?.includes('Remittance Guides') ? '📖' :
+                   '💡'}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-neutral-900 group-hover:text-primary-600 line-clamp-2 mb-1 transition-colors">
+                    {post.title}
+                  </h3>
+                  {post.excerpt && (
+                    <p className="text-sm text-neutral-500 line-clamp-2">
+                      {post.excerpt}
+                    </p>
+                  )}
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="flex gap-1 mt-2">
+                      {post.tags.slice(0, 2).map(tag => (
+                        <span key={tag} className="px-2 py-0.5 bg-primary-50 text-primary-600 text-xs rounded-full font-medium">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* View all guides link */}
+        <div className="mt-6 text-center">
+          <Link
+            href="/blog"
+            className="
+              inline-flex items-center gap-2
+              px-5 py-2.5
+              text-sm font-semibold
+              text-neutral-600 hover:text-primary-600
+              bg-neutral-100 hover:bg-primary-50
+              rounded-xl
+              transition-all duration-200
+            "
+          >
+            {isKo ? '모든 가이드 보기' : 'View All Guides'}
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 /**
  * Compare Page - /compare/[country]
@@ -32,8 +121,8 @@ import { trackEvent, ANALYTICS_EVENTS } from '../../utils/analytics';
  * - Quick amount selection
  * - Related countries navigation
  */
-export default function ComparePage({ countryData, initialAmount, seoData }) {
-  const { t } = useTranslation('common');
+export default function ComparePage({ countryData, initialAmount, seoData, relatedPosts }) {
+  const { t, i18n } = useTranslation('common');
   const router = useRouter();
 
   const [amount, setAmount] = useState(initialAmount);
@@ -210,6 +299,13 @@ export default function ComparePage({ countryData, initialAmount, seoData }) {
           </div>
         </section>
 
+        {/* Country-specific Blog Guides */}
+        <CountryGuides
+          posts={relatedPosts}
+          countryName={countryData.name}
+          lang={i18n.language}
+        />
+
         {/* Related Countries Section - Premium Cards */}
         <section className="py-10 sm:py-12 bg-neutral-50 border-t border-neutral-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -317,11 +413,69 @@ export async function getServerSideProps({ params, query, locale }) {
   // Generate SEO metadata
   const seoData = generateComparisonSEO(countryData, validAmount);
 
+  // Fetch related blog posts for this country
+  let relatedPosts = [];
+  try {
+    const allPosts = await getPublishedPosts(locale);
+
+    // Filter posts related to this country (by tag or title)
+    const countryKeywords = [
+      countryData.name.toLowerCase(),
+      countryData.currency.toLowerCase(),
+      countryData.code.toLowerCase()
+    ];
+
+    // Score posts by relevance to this country
+    const scoredPosts = allPosts.map(post => {
+      let score = 0;
+      const titleLower = (post.title || '').toLowerCase();
+      const tags = (post.tags || []).map(t => t.toLowerCase());
+
+      // Check title matches
+      countryKeywords.forEach(keyword => {
+        if (titleLower.includes(keyword)) score += 3;
+      });
+
+      // Check tag matches
+      countryKeywords.forEach(keyword => {
+        if (tags.some(tag => tag.includes(keyword))) score += 2;
+      });
+
+      // Boost general remittance guides
+      if (tags.includes('remittance') || tags.includes('remittance guides')) score += 1;
+      if (tags.includes('tax') || tags.includes('tax incentive')) score += 1;
+
+      return { ...post, score };
+    });
+
+    // Get top 3 relevant posts (score > 0) or fallback to recent posts
+    const relevantPosts = scoredPosts
+      .filter(p => p.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+
+    // If not enough country-specific posts, add general guides
+    if (relevantPosts.length < 3) {
+      const generalPosts = scoredPosts
+        .filter(p => p.score === 0)
+        .slice(0, 3 - relevantPosts.length);
+      relatedPosts = [...relevantPosts, ...generalPosts];
+    } else {
+      relatedPosts = relevantPosts;
+    }
+
+    // Remove score from final output
+    relatedPosts = relatedPosts.map(({ score, ...post }) => post);
+  } catch (e) {
+    console.error('Failed to fetch related posts:', e);
+  }
+
   return {
     props: {
       countryData,
       initialAmount: validAmount.toString(),
       seoData,
+      relatedPosts,
       ...(await serverSideTranslations(locale, ['common']))
     }
   };

@@ -28,22 +28,7 @@ COUNTRY_CODES: Dict[str, str] = {
     "unitedkingdom": "GB",
 }
 
-# Wirebarley ISO-3 country codes
-WIREBARLEY_COUNTRY_CODES: Dict[str, str] = {
-    "vietnam": "VNM",
-    "philippines": "PHL",
-    "indonesia": "IDN",
-    "nepal": "NPL",
-    "thailand": "THA",
-    "cambodia": "KHM",
-    "myanmar": "MMR",
-    "uzbekistan": "UZB",
-    "srilanka": "LKA",
-    "bangladesh": "BGD",
-    "mongolia": "MNG",
-}
-
-# SentBe country IDs
+# SentBe country IDs (reference only, not active provider)
 SENTBE_COUNTRY_CODES: Dict[str, int] = {
     "vietnam": 209,
     "philippines": 154,
@@ -241,63 +226,3 @@ THEMOIN_CURRENCIES: Dict[str, str] = {
     "unitedkingdom": "GBP",
 }
 
-# Wirebarley country codes
-WIREBARLEY_COUNTRIES: Dict[str, str] = {
-    "australia": "AU",
-    "newzealand": "NZ",
-    "philippines": "PH",
-    "vietnam": "VN",
-    "nepal": "NP",
-    "indonesia": "ID",
-    "china": "CN",
-    "singapore": "SG",
-    "malaysia": "MY",
-    "thailand": "TH",
-    "uk": "GB",
-    "france": "FR",
-    "germany": "DE",
-    "usa": "US",
-    "japan": "JP",
-    "india": "IN",
-    "cambodia": "KH",
-    "bangladesh": "BD",
-    "hongkong": "HK",
-    "canada": "CA",
-    "uzbekistan": "UZ",
-    "united states": "US",
-    "unitedstates": "US",
-    "united kingdom": "GB",
-    "unitedkingdom": "GB",
-    "hong kong": "HK",
-    "mongolia": "MN",
-}
-
-# SBI Cosmoney countries
-SBICOSMONEY_COUNTRIES: Dict[str, str] = {
-    "vietnam": "VIETNAM",
-    "philippines": "PHILIPPINES",
-    "indonesia": "INDONESIA",
-    "thailand": "THAILAND",
-    "nepal": "NEPAL",
-    "myanmar": "MYANMAR",
-    "uzbekistan": "UZBEKISTAN",
-    "srilanka": "SRILANKA",
-    "bangladesh": "BANGLADESH",
-    "cambodia": "CAMBODIA",
-    "mongolia": "MONGOLIA",
-}
-
-# SBI Cosmoney currencies
-SBICOSMONEY_CURRENCIES: Dict[str, str] = {
-    "vietnam": "VND",
-    "philippines": "PHP",
-    "indonesia": "IDR",
-    "thailand": "THB",
-    "nepal": "NPR",
-    "myanmar": "MMK",
-    "uzbekistan": "UZS",
-    "srilanka": "LKR",
-    "bangladesh": "BDT",
-    "cambodia": "KHR",
-    "mongolia": "MNT",
-}

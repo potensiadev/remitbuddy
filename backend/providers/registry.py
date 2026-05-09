@@ -4,13 +4,11 @@ from typing import Dict, List, Type
 
 from providers.base import BaseProvider
 from providers.hanpass import HanpassProvider
-from providers.wirebarley import WirebarleyProvider
 from providers.cross import CrossProvider
 from providers.gmoneytrans import GmoneytransProvider
 from providers.gmeremit import GmeremitProvider
 from providers.jpremit import JpremitProvider
 from providers.themoin import ThemoinProvider
-from providers.sbicosmoney import SbicosmoneyProvider
 from providers.e9pay import E9payProvider
 from providers.coinshot import CoinshotProvider
 
@@ -26,13 +24,11 @@ class ProviderRegistry:
         """Register all default providers."""
         default_providers: List[Type[BaseProvider]] = [
             HanpassProvider,
-            WirebarleyProvider,
-            CrossProvider,
+            CrossProvider,  # TODO: 개선 필요
             GmoneytransProvider,
             GmeremitProvider,
             JpremitProvider,
             ThemoinProvider,
-            SbicosmoneyProvider,
             E9payProvider,
             CoinshotProvider,
         ]

@@ -20,18 +20,14 @@ export const POPULAR_AMOUNTS = [
     5000000   // ₩5M
 ];
 
-// Provider slugs for comparison pages
+// Provider slugs for comparison pages (7 active providers)
 export const PROVIDERS = [
     { slug: 'hanpass', name: 'Hanpass', nameKo: '한패스' },
-    { slug: 'sentbe', name: 'Sentbe', nameKo: '센트비' },
     { slug: 'gmoney-trans', name: 'GMoney Trans', nameKo: '지머니트랜스' },
     { slug: 'e9pay', name: 'E9Pay', nameKo: '이나인페이' },
-    { slug: 'wirebarley', name: 'Wirebarley', nameKo: '와이어바알리' },
-    { slug: 'cross', name: 'Cross', nameKo: '크로스' },
     { slug: 'gme-remit', name: 'GME Remit', nameKo: 'GME 송금' },
     { slug: 'jrf', name: 'JRF', nameKo: 'JRF' },
     { slug: 'moin', name: 'Moin', nameKo: '모인' },
-    { slug: 'finshot', name: 'Finshot', nameKo: '핀샷' },
     { slug: 'coinshot', name: 'Coinshot', nameKo: '코인샷' }
 ];
 

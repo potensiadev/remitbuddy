@@ -81,11 +81,11 @@ class QuoteResponse(BaseModel):
                         "link": "https://www.hanpass.com/",
                     },
                     {
-                        "provider": "Wirebarley",
+                        "provider": "GME Remit",
                         "exchange_rate": 17.85,
                         "fee": 5000,
                         "recipient_gets": 17760750,
-                        "link": "https://www.wirebarley.com/",
+                        "link": "https://www.gmeremit.com/",
                     },
                 ],
                 "best_rate_provider": {

@@ -35,21 +35,18 @@ export const OTHER_COUNTRIES = COUNTRIES.filter(c => !c.popular);
 // Flag assets for preloading
 export const FLAG_ASSETS = Array.from(new Set(COUNTRIES.map((country) => country.flag)));
 
-// Provider logo mapping
+// Provider logo mapping (7 active providers + Cross improving)
 export const PROVIDER_LOGO_MAP = {
   Hanpass: '/logos/hanpass.png',
   GmoneyTrans: '/logos/gmoneytrans.png',
   E9Pay: '/logos/e9pay.png',
-  Finshot: null,
   Coinshot: '/logos/coinshot.png',
-  Cross: '/logos/cross.png',
+  Cross: '/logos/cross.png', // TODO: 개선 중
   'GME Remit': '/logos/gme.png',
   JRF: '/logos/JRF.png',
   'JP Remit': '/logos/JRF.png',
-  Wirebarley: '/logos/wirebarley.png',
   Moin: '/logos/themoin.png',
-  'The Moin': '/logos/themoin.png',
-  Sentbe: '/logos/sentbe.png'
+  'The Moin': '/logos/themoin.png'
 };
 
 // Amount validation

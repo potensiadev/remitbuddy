@@ -11,6 +11,7 @@ from providers.jpremit import JpremitProvider
 from providers.themoin import ThemoinProvider
 from providers.e9pay import E9payProvider
 from providers.coinshot import CoinshotProvider
+from providers.airwallex import AirwallexProvider
 
 
 class ProviderRegistry:
@@ -31,6 +32,7 @@ class ProviderRegistry:
             ThemoinProvider,
             E9payProvider,
             CoinshotProvider,
+            AirwallexProvider,
         ]
 
         for provider_class in default_providers:

@@ -226,3 +226,23 @@ THEMOIN_CURRENCIES: Dict[str, str] = {
     "unitedkingdom": "GBP",
 }
 
+# Airwallex supported currencies (KRW to foreign currency)
+AIRWALLEX_CURRENCIES: Dict[str, str] = {
+    "vietnam": "VND",
+    "philippines": "PHP",
+    "nepal": "NPR",
+    "thailand": "THB",
+    "singapore": "SGD",
+    "united states": "USD",
+    "unitedstates": "USD",
+    "japan": "JPY",
+    "hong kong": "HKD",
+    "hongkong": "HKD",
+    "china": "CNY",
+    "united kingdom": "GBP",
+    "unitedkingdom": "GBP",
+    "indonesia": "IDR",
+    "malaysia": "MYR",
+    "bangladesh": "BDT",
+}
+

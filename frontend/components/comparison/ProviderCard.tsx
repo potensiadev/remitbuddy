@@ -51,7 +51,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
       <div className="p-3.5 sm:p-5 flex flex-col md:flex-row items-center gap-3 md:gap-6">
 
         {/* 1. Identity Column */}
-        <div className="flex flex-col items-center justify-center md:w-[15%] gap-0.5 md:gap-2 pt-1 md:pt-0">
+        <div className="flex flex-col items-center justify-center self-center md:w-[15%] gap-0.5 md:gap-2 pt-1 md:pt-0">
           <h3 className={`font-black text-lg md:text-2xl ${isBest ? 'text-blue-600' : 'text-slate-700'}`}>
             {displayName}
           </h3>

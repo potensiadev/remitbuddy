@@ -7,10 +7,35 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { getPostBySlug, getPublishedPosts, getRelatedPosts } from '../../lib/notion';
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
+import { trackEvent } from '../../utils/analytics';
+
+// UTM 파라미터를 포함한 CTA 링크 생성
+const buildCtaLink = (basePath, slug, ctaType) => {
+    const params = new URLSearchParams({
+        utm_source: 'blog',
+        utm_medium: 'cta',
+        utm_campaign: slug,
+        utm_content: ctaType
+    });
+    return `${basePath}?${params.toString()}`;
+};
+
+// CTA 클릭 추적
+const trackCtaClick = (slug, ctaType, amount) => {
+    trackEvent('blog_cta_click', {
+        blog_slug: slug,
+        cta_type: ctaType,
+        amount: amount
+    });
+};
 
 // Inline CTA Component (Contextual, not aggressive)
-const InlineCTA = ({ type, lang }) => {
+const InlineCTA = ({ type, lang, slug }) => {
     const isKo = lang === 'ko';
+
+    const handleCtaClick = (ctaType, amount) => {
+        trackCtaClick(slug, ctaType, amount);
+    };
 
     if (type === 'compare') {
         return (
@@ -27,7 +52,8 @@ const InlineCTA = ({ type, lang }) => {
                                 : 'See how much your family receives when you send ₩1,000,000'}
                         </p>
                         <Link
-                            href="/?amount=1000000"
+                            href={buildCtaLink('/', slug, 'inline_compare') + '&amount=1000000'}
+                            onClick={() => handleCtaClick('inline_compare', 1000000)}
                             className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
                         >
                             {isKo ? '비교 결과 보기 →' : 'View comparison →'}
@@ -48,9 +74,27 @@ const InlineCTA = ({ type, lang }) => {
                             {isKo ? '내 송금액으로 계산해보기' : 'Calculate with your amount'}
                         </p>
                         <div className="flex flex-wrap gap-2">
-                            <Link href="/?amount=500000" className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-sm hover:bg-green-50">₩500,000</Link>
-                            <Link href="/?amount=1000000" className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-sm hover:bg-green-50">₩1,000,000</Link>
-                            <Link href="/?amount=2000000" className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-sm hover:bg-green-50">₩2,000,000</Link>
+                            <Link
+                                href={buildCtaLink('/', slug, 'inline_calc_500k') + '&amount=500000'}
+                                onClick={() => handleCtaClick('inline_calc', 500000)}
+                                className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-sm hover:bg-green-50"
+                            >
+                                ₩500,000
+                            </Link>
+                            <Link
+                                href={buildCtaLink('/', slug, 'inline_calc_1m') + '&amount=1000000'}
+                                onClick={() => handleCtaClick('inline_calc', 1000000)}
+                                className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-sm hover:bg-green-50"
+                            >
+                                ₩1,000,000
+                            </Link>
+                            <Link
+                                href={buildCtaLink('/', slug, 'inline_calc_2m') + '&amount=2000000'}
+                                onClick={() => handleCtaClick('inline_calc', 2000000)}
+                                className="px-3 py-1.5 bg-white border border-green-200 rounded-lg text-sm hover:bg-green-50"
+                            >
+                                ₩2,000,000
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -300,10 +344,10 @@ const BlogPost = ({ post, relatedPosts }) => {
 
                 // If callout contains CTA markers, render inline CTA instead
                 if (ctaIcon === '🎯' || calloutText.includes('[cta:compare]')) {
-                    return <InlineCTA type="compare" lang={i18n.language} />;
+                    return <InlineCTA type="compare" lang={i18n.language} slug={post.slug} />;
                 }
                 if (ctaIcon === '🧮' || calloutText.includes('[cta:calculator]')) {
-                    return <InlineCTA type="calculator" lang={i18n.language} />;
+                    return <InlineCTA type="calculator" lang={i18n.language} slug={post.slug} />;
                 }
 
                 return (
@@ -742,7 +786,8 @@ const BlogPost = ({ post, relatedPosts }) => {
                                     </p>
                                     <div className="flex flex-wrap gap-2">
                                         <Link
-                                            href="/?amount=1000000"
+                                            href={buildCtaLink('/', post.slug, 'bottom_cta') + '&amount=1000000'}
+                                            onClick={() => trackCtaClick(post.slug, 'bottom_cta', 1000000)}
                                             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm"
                                         >
                                             {i18n.language === 'ko' ? '비교 도구 열기 →' : 'Open comparison tool →'}

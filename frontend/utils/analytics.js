@@ -8,6 +8,7 @@ export const ANALYTICS_EVENTS = {
   CLICK_PROVIDER: "click_provider",
   VIEW_RESULTS: "view_results",
   SESSION_START: "session_start",
+  BLOG_CTA_CLICK: "blog_cta_click",
 };
 
 /**

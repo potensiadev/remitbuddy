@@ -52,7 +52,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
 
         {/* 1. Identity Column */}
         <div className="flex flex-col items-center justify-center md:w-[15%] md:min-h-full gap-0.5 md:gap-2 pt-1 md:pt-0">
-          <h3 className={`font-black text-lg md:text-2xl ${isBest ? 'text-blue-600' : 'text-slate-700'}`}>
+          <h3 className={`font-black text-lg md:text-2xl whitespace-nowrap ${isBest ? 'text-blue-600' : 'text-slate-700'}`}>
             {displayName}
           </h3>
         </div>

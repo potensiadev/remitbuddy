@@ -124,6 +124,7 @@ export default function HomePage({ buildTimestamp, posts }) {
   const [amount, setAmount] = useState('1000000');
 
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+  const [hasChangedCountry, setHasChangedCountry] = useState(false); // 사용자가 국가를 변경했는지 추적
   const [showDropdown, setShowDropdown] = useState(false);
   const [lastComparison, setLastComparison] = useState(null);
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
@@ -137,7 +138,10 @@ export default function HomePage({ buildTimestamp, posts }) {
   useEffect(() => {
     if (router.query.country) {
       const country = getCountryByCode(router.query.country);
-      if (country) setSelectedCountry(country);
+      if (country) {
+        setSelectedCountry(country);
+        setHasChangedCountry(true); // URL로 국가가 지정된 경우도 의도적 선택으로 간주
+      }
     }
     if (router.query.amount) {
       const queryAmount = parseInt(router.query.amount, 10);
@@ -273,11 +277,18 @@ export default function HomePage({ buildTimestamp, posts }) {
         return '3M+';
       };
 
+      // 브라우저 언어 가져오기
+      const browserLanguage = typeof navigator !== 'undefined'
+        ? (navigator.language || navigator.userLanguage || 'unknown')
+        : 'unknown';
+
       trackEvent(ANALYTICS_EVENTS.SEARCH_RATES, {
         corridor: `KRW-${selectedCountry.currency}`,
         amount: numericAmount,
         amount_range: getAmountRange(numericAmount),
-        target_country: selectedCountry.code
+        target_country: selectedCountry.code,
+        is_default_country: !hasChangedCountry, // default(베트남) 그대로인지 여부
+        browser_language: browserLanguage // 브라우저 언어
       });
 
       saveComparison(amount, selectedCountry);
@@ -454,6 +465,7 @@ export default function HomePage({ buildTimestamp, posts }) {
                                   type="button"
                                   onClick={() => {
                                     setSelectedCountry(country);
+                                    setHasChangedCountry(true); // 사용자가 직접 국가 선택
                                     setShowDropdown(false);
                                   }}
                                   className={`w-full flex items-center justify-between px-3 py-3 border-b border-gray-50 last:border-0 transition-colors duration-150 group cursor-pointer hover:bg-blue-50 ${selectedCountry.code === country.code
@@ -487,6 +499,7 @@ export default function HomePage({ buildTimestamp, posts }) {
                                   type="button"
                                   onClick={() => {
                                     setSelectedCountry(country);
+                                    setHasChangedCountry(true); // 사용자가 직접 국가 선택
                                     setShowDropdown(false);
                                   }}
                                   className={`w-full flex items-center justify-between px-3 py-3 border-b border-gray-50 last:border-0 transition-colors duration-150 group cursor-pointer hover:bg-blue-50 ${selectedCountry.code === country.code

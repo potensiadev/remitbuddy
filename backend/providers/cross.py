@@ -107,14 +107,16 @@ class CrossProvider(BaseProvider):
                     return None
 
                 fee = quote_data.get("fee", 0)
-                
-                # User requested specific formula: send_amount / receiving_amount
-                # This gives the rate in "KRW per 1 Unit of Foreign Currency"
-                # e.g., 1,000,000 / 17,959,500 = 0.055... (1 VND = ~0.06 KRW)
+
+                # Use service_rate from API response (exchange rate: 1 receiving currency = X KRW)
+                # e.g., service_rate: 8.432 means 1 IDR = 8.432 KRW
+                service_rate = quote_data.get("service_rate", 0)
+
+                # Calculate exchange rate as send_amount / receiving_amount for consistency
                 if receiving_amount > 0:
                     exchange_rate = send_amount / receiving_amount
                 else:
-                    exchange_rate = 0
+                    exchange_rate = service_rate if service_rate else 0
 
                 self._log_debug(
                     "quote_received",

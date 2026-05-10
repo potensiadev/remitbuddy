@@ -63,6 +63,7 @@
 | 12 | 2026 Remittance Tax Incentive Guide for Foreign Workers | `/blog/remittance-tax-incentive-guide-foreign-workers-2026` | Tax |
 | 13 | How to Send Money to GCash from Korea: Complete Guide for 2026 | `/blog/send-money-gcash-korea-philippines` | Philippines |
 | 14 | Send Money to Cambodia from Korea: ABA Bank, Wing & Complete Guide | `/blog/send-money-korea-to-cambodia-guide` | Cambodia |
+| 15 | Hanpass vs GME Remit vs E9Pay: 2026 Fee Comparison | `/blog/hanpass-vs-gme-vs-e9pay-comparison` | Service Comparison |
 
 ### Full URLs
 ```
@@ -80,6 +81,7 @@ https://www.remitbuddy.com/blog/real-time-remittance-guide-vietnam-2026
 https://www.remitbuddy.com/blog/remittance-tax-incentive-guide-foreign-workers-2026
 https://www.remitbuddy.com/blog/send-money-gcash-korea-philippines
 https://www.remitbuddy.com/blog/send-money-korea-to-cambodia-guide
+https://www.remitbuddy.com/blog/hanpass-vs-gme-vs-e9pay-comparison
 ```
 
 ### docs/blog-content/ Files
@@ -91,6 +93,8 @@ https://www.remitbuddy.com/blog/send-money-korea-to-cambodia-guide
 | 4 | `remittance-tax-incentive-guide-foreign-workers-2026.md` | remittance-tax-incentive-guide-foreign-workers-2026 |
 | 5 | `send-money-gcash-korea-philippines.md` | send-money-gcash-korea-philippines |
 | 6 | `send-money-korea-to-cambodia-guide.md` | send-money-korea-to-cambodia-guide |
+| 7 | `hanpass-vs-gme-vs-e9pay-comparison.md` | hanpass-vs-gme-vs-e9pay-comparison |
+| 8 | `momo-vietnam-send-money-korea.md` | momo-vietnam-send-money-korea |
 
 ---
 
@@ -110,7 +114,7 @@ https://www.remitbuddy.com/blog/send-money-korea-to-cambodia-guide
 #### Type A: RemitBuddy 입점 업체 직접 비교 (핵심)
 | # | Title | Slug | Target Country | Status |
 |---|-------|------|----------------|--------|
-| 5 | **Hanpass vs GME Remit vs E9Pay: 2026 Fee Comparison** | hanpass-vs-gme-vs-e9pay-comparison | All Countries | **6월 예정** |
+| 5 | **Hanpass vs GME Remit vs E9Pay: 2026 Fee Comparison** | hanpass-vs-gme-vs-e9pay-comparison | All Countries | ✅ Published (2026-05-10) |
 | 6 | **Hanpass vs GME Remit: Best for Vietnam Transfers in 2026** | hanpass-vs-gme-remit-vietnam | Vietnam | Backlog |
 | 7 | **Gmoneytrans vs E9Pay: Which Is Better for E-9 Workers?** | gmoneytrans-vs-e9pay-comparison | All Countries | Backlog |
 | 8 | **Moin vs Coinshot: Speed & Fee Comparison** | moin-vs-coinshot-comparison | All Countries | Backlog |
@@ -384,34 +388,160 @@ When writing new content:
 ## 6개월 SEO 집중 전략 (2026.05 - 2026.10)
 
 **전략 결정일**: 2026-05-09
+**발행 빈도**: 주 2개 (양질의 콘텐츠)
 **집중 채널**: SEO + 블로그 콘텐츠 Only
 **제외**: 페이스북 커뮤니티, 인플루언서, 유료 광고
-**목표**: 월 오가닉 트래픽 5,000 방문, 블로그 15개+
+**목표**: 월 오가닉 트래픽 5,000 방문, 6개월 총 48개+ 콘텐츠
 
 ---
 
-## 6개월 콘텐츠 캘린더 (Top 10 주제)
+## 📅 2026년 5월 콘텐츠 일정 (주 2개)
 
-> **Note**: 키워드는 내부 SEO 리서치용. 실제 콘텐츠는 영어만 사용.
+> **원칙**: 양질의 콘텐츠 > 수량. 각 포스트 2,000-3,000 단어, 철저한 리서치 기반.
 
-### 월별 발행 계획
+| 주차 | 발행일 | 제목 | Slug | 카테고리 | 상태 |
+|------|--------|------|------|----------|------|
+| **W1** | 5/9 (금) | How to Send Money to GCash from Korea | `send-money-gcash-korea-philippines` | 🇵🇭 Philippines | ✅ Published |
+| **W1** | 5/9 (금) | Send Money to Cambodia: ABA Bank, Wing Guide | `send-money-korea-to-cambodia-guide` | 🇰🇭 Cambodia | ✅ Published |
+| **W2** | 5/10 (토) | Hanpass vs GME vs E9Pay: 2026 Fee Comparison | `hanpass-vs-gme-vs-e9pay-comparison` | 📊 Comparison | ✅ Published |
+| **W2** | 5/14 (수) | MoMo Vietnam: Send Money from Korea | `momo-vietnam-send-money-korea` | 🇻🇳 Vietnam | ✅ 작성완료 |
+| **W3** | 5/19 (월) | Send Money to eSewa Nepal: Complete Guide | `send-money-esewa-nepal-korea` | 🇳🇵 Nepal | 📝 예정 |
+| **W3** | 5/22 (목) | Emergency Money Transfer: Under 1 Hour | `emergency-money-transfer-1-hour` | ⚡ Problem | 📝 예정 |
+| **W4** | 5/26 (월) | GCash vs Maya vs Bank: Philippines Comparison | `gcash-vs-maya-bank-transfer-philippines` | 🇵🇭 Comparison | 📝 예정 |
+| **W4** | 5/29 (목) | Money Transfer Stuck: What to Do | `money-transfer-stuck-delayed-solution` | ⚡ Problem | 📝 예정 |
 
-| 월 | 순위 | 제목 (English Only) | Slug | 타겟 국가 | 상태 |
-|---|-----|------|------|----------|--------|
-| **5월** | 1 | How to Send Money to GCash from Korea | send-money-gcash-korea-philippines | Philippines | ✅ Published (Notion) |
-| **5월** | 2 | Send Money to Cambodia from Korea: ABA Bank, Wing & Complete Guide | send-money-korea-to-cambodia-guide | Cambodia | ✅ Published (Notion) |
-| **6월** | 3 | Hanpass vs GME Remit vs E9Pay: 2026 Fee Comparison | hanpass-vs-gme-vs-e9pay-comparison | All | Backlog |
-| **6월** | 4 | MoMo Vietnam: How to Send Money from Korea | momo-vietnam-send-money-korea | Vietnam | Backlog |
-| **7월** | 5 | Emergency Money Transfer: Send to Family in Under 1 Hour | emergency-money-transfer-1-hour | All | Backlog |
-| **7월** | 6 | My Money Transfer Is Stuck: What to Do When Delayed | money-transfer-stuck-delayed-solution | All | Backlog |
-| **8월** | 7 | eSewa vs IME Pay vs Khalti: Nepal Mobile Wallet Comparison | esewa-ime-khalti-nepal-comparison | Nepal | Backlog |
-| **8월** | 8 | Foreign Worker Tax & Remittance: Everything You Need to Know | foreign-worker-tax-remittance-korea | All | Backlog |
-| **9월** | 9 | Best Time to Send Money: Chuseok & Holiday Timing Guide | best-time-send-money-holiday-timing | All | Backlog |
-| **10월** | 10 | First-Time Remittance Guide for Foreign Workers in Korea | first-time-remittance-guide-foreign-workers | All | Backlog |
+### 5월 현황
+- **완료**: 3개 (GCash, Cambodia, Hanpass vs GME vs E9Pay)
+- **예정**: 5개
+- **5월 목표**: 8개 발행 → 총 22개 콘텐츠
 
 ---
 
-### 주제별 상세 정보
+## 📅 2026년 6월 콘텐츠 일정 (주 2개)
+
+| 주차 | 발행일 | 제목 | Slug | 카테고리 | 상태 |
+|------|--------|------|------|----------|------|
+| **W1** | 6/2 (월) | Wing Money vs ABA Bank: Cambodia Comparison | `wing-money-vs-aba-bank-cambodia` | 🇰🇭 Comparison | 📝 Backlog |
+| **W1** | 6/5 (목) | eSewa vs IME Pay vs Khalti: Nepal Wallets | `esewa-ime-khalti-nepal-comparison` | 🇳🇵 Comparison | 📝 Backlog |
+| **W2** | 6/9 (월) | Wrong Account Number? How to Recover | `wrong-account-recover-failed-transfer` | ⚡ Problem | 📝 Backlog |
+| **W2** | 6/12 (목) | Why Was My Remittance Rejected? | `remittance-rejected-reasons-solutions` | ⚡ Problem | 📝 Backlog |
+| **W3** | 6/16 (월) | Looking for Wise in Korea? Try These Apps | `wise-alternatives-korea` | 📊 Alternatives | 📝 Backlog |
+| **W3** | 6/19 (목) | Best Day and Time to Send Money Home | `best-day-time-send-money-factory-worker` | 👷 E-9 Workers | 📝 Backlog |
+| **W4** | 6/23 (월) | Gmoneytrans vs E9Pay: Which Is Better? | `gmoneytrans-vs-e9pay-comparison` | 📊 Comparison | 📝 Backlog |
+| **W4** | 6/26 (목) | Pay Family's Hospital Bills from Korea | `send-money-hospital-bills-philippines` | 🇵🇭 Situation | 📝 Backlog |
+
+### 6월 목표
+- **발행 목표**: 8개
+- **누적 콘텐츠**: 30개
+
+---
+
+## 📅 2026년 7월 콘텐츠 일정 (주 2개)
+
+| 주차 | 발행일 | 제목 | Slug | 카테고리 | 상태 |
+|------|--------|------|------|----------|------|
+| **W1** | 7/1 (화) | Remitly Not Available? Best Alternatives | `remitly-alternatives-korea` | 📊 Alternatives | 📝 Backlog |
+| **W1** | 7/4 (금) | E-9 Visa: Send Money Without Getting Scammed | `e9-visa-send-money-avoid-scams` | 👷 E-9 Workers | 📝 Backlog |
+| **W2** | 7/8 (화) | Moin vs Coinshot: Speed & Fee Comparison | `moin-vs-coinshot-comparison` | 📊 Comparison | 📝 Backlog |
+| **W2** | 7/11 (금) | Wing Money Cambodia: Send from Korea | `wing-money-cambodia-korea-guide` | 🇰🇭 Wallet | 📝 Backlog |
+| **W3** | 7/15 (화) | Budgeting Guide for Foreign Workers | `budgeting-guide-foreign-workers-remittance` | 👷 E-9 Workers | 📝 Backlog |
+| **W3** | 7/18 (금) | Large Money Transfer to Cambodia | `large-money-transfer-cambodia-property` | 🇰🇭 Situation | 📝 Backlog |
+| **W4** | 7/22 (화) | Hanpass vs GME: Best for Vietnam | `hanpass-vs-gme-remit-vietnam` | 🇻🇳 Comparison | 📝 Backlog |
+| **W4** | 7/25 (금) | Send Money to ZaloPay Vietnam | `zalopay-vietnam-send-money-korea` | 🇻🇳 Wallet | 📝 Backlog |
+
+### 7월 목표
+- **발행 목표**: 8개
+- **누적 콘텐츠**: 38개
+
+---
+
+## 📅 2026년 8월 콘텐츠 일정 (주 2개)
+
+| 주차 | 발행일 | 제목 | Slug | 카테고리 | 상태 |
+|------|--------|------|------|----------|------|
+| **W1** | 8/4 (월) | Thailand Remittance Guide from Korea | `send-money-korea-to-thailand-guide` | 🇹🇭 Thailand | 📝 Backlog |
+| **W1** | 8/7 (목) | Myanmar Remittance Guide from Korea | `send-money-korea-to-myanmar-guide` | 🇲🇲 Myanmar | 📝 Backlog |
+| **W2** | 8/11 (월) | Foreign Worker Tax & Remittance Guide | `foreign-worker-tax-remittance-korea` | 📋 Tax | 📝 Backlog |
+| **W2** | 8/14 (목) | Tax Filing for E-9 Workers: Complete Guide | `e9-worker-tax-filing-guide-korea` | 📋 Tax | 📝 Backlog |
+| **W3** | 8/18 (월) | Sri Lanka Remittance Guide from Korea | `send-money-korea-to-sri-lanka-guide` | 🇱🇰 Sri Lanka | 📝 Backlog |
+| **W3** | 8/21 (목) | Pakistan Remittance Guide from Korea | `send-money-korea-to-pakistan-guide` | 🇵🇰 Pakistan | 📝 Backlog |
+| **W4** | 8/25 (월) | Chuseok Money: Best Time to Send | `best-time-send-money-holiday-timing` | 🎎 Seasonal | 📝 Backlog |
+| **W4** | 8/28 (목) | Dashain Nepal: Festival Remittance Guide | `dashain-tihar-nepal-festival-remittance` | 🇳🇵 Seasonal | 📝 Backlog |
+
+### 8월 목표
+- **발행 목표**: 8개
+- **누적 콘텐츠**: 46개
+- **시즌 준비**: 추석(10/5), Dashain(10/11) 콘텐츠 미리 발행
+
+---
+
+## 📅 2026년 9월 콘텐츠 일정 (주 2개)
+
+| 주차 | 발행일 | 제목 | Slug | 카테고리 | 상태 |
+|------|--------|------|------|----------|------|
+| **W1** | 9/1 (월) | Tet Vietnam: Best Time to Send Money | `tet-lunar-new-year-vietnam-remittance` | 🇻🇳 Seasonal | 📝 Backlog |
+| **W1** | 9/4 (목) | Khmer New Year: Cambodia Remittance Guide | `khmer-new-year-cambodia-remittance` | 🇰🇭 Seasonal | 📝 Backlog |
+| **W2** | 9/8 (월) | Christmas Philippines: Holiday Remittance | `christmas-philippines-remittance-guide` | 🇵🇭 Seasonal | 📝 Backlog |
+| **W2** | 9/11 (목) | First-Time Remittance Guide for Workers | `first-time-remittance-guide-foreign-workers` | 👷 E-9 Workers | 📝 Backlog |
+| **W3** | 9/15 (월) | Bangladesh Remittance Guide from Korea | `send-money-korea-to-bangladesh-guide` | 🇧🇩 Bangladesh | 📝 Backlog |
+| **W3** | 9/18 (목) | Uzbekistan Remittance Guide from Korea | `send-money-korea-to-uzbekistan-guide` | 🇺🇿 Uzbekistan | 📝 Backlog |
+| **W4** | 9/22 (월) | Mongolia Remittance Guide from Korea | `send-money-korea-to-mongolia-guide` | 🇲🇳 Mongolia | 📝 Backlog |
+| **W4** | 9/25 (목) | India Remittance Guide from Korea | `send-money-korea-to-india-guide` | 🇮🇳 India | 📝 Backlog |
+
+### 9월 목표
+- **발행 목표**: 8개
+- **누적 콘텐츠**: 54개
+
+---
+
+## 📅 2026년 10월 콘텐츠 일정 (주 2개)
+
+| 주차 | 발행일 | 제목 | Slug | 카테고리 | 상태 |
+|------|--------|------|------|----------|------|
+| **W1** | 10/1 (수) | Tihar Nepal: Festival Money Transfer Guide | `tihar-nepal-festival-remittance` | 🇳🇵 Seasonal | 📝 Backlog |
+| **W1** | 10/3 (금) | Year-End Remittance Tax Tips | `year-end-remittance-tax-tips-korea` | 📋 Tax | 📝 Backlog |
+| **W2** | 10/8 (수) | Best Remittance Apps 2026: Full Review | `best-remittance-apps-korea-2026-review` | 📊 Review | 📝 Backlog |
+| **W2** | 10/10 (금) | Remittance Fee Comparison: All Services | `remittance-fee-comparison-all-services` | 📊 Comparison | 📝 Backlog |
+| **W3** | 10/15 (수) | Japan Remittance Guide from Korea | `send-money-korea-to-japan-guide` | 🇯🇵 Japan | 📝 Backlog |
+| **W3** | 10/17 (금) | China Remittance Guide from Korea | `send-money-korea-to-china-guide` | 🇨🇳 China | 📝 Backlog |
+| **W4** | 10/22 (수) | 6-Month SEO Review & Next Steps | `remitbuddy-6-month-seo-review` | 📈 Review | 📝 Backlog |
+| **W4** | 10/24 (금) | How to Choose Remittance Service: Guide | `how-to-choose-remittance-service-guide` | 📖 Guide | 📝 Backlog |
+
+### 10월 목표
+- **발행 목표**: 8개
+- **누적 콘텐츠**: 62개
+- **6개월 리뷰**: 성과 분석 및 전략 조정
+
+---
+
+## 6개월 콘텐츠 요약
+
+| 월 | 발행 목표 | 누적 | 핵심 테마 |
+|---|----------|------|----------|
+| 5월 | 8개 | 22개 | 주요 국가 가이드 + 업체 비교 |
+| 6월 | 8개 | 30개 | 월렛 비교 + 문제 해결 |
+| 7월 | 8개 | 38개 | E-9 특화 + 추가 국가 |
+| 8월 | 8개 | 46개 | 세금 가이드 + 시즌 준비 |
+| 9월 | 8개 | 54개 | 시즌 콘텐츠 + 신규 국가 |
+| 10월 | 8개 | 62개 | 종합 리뷰 + 전략 조정 |
+
+**6개월 총 목표**: 48개 신규 발행 → 총 62개 콘텐츠
+
+---
+
+## 콘텐츠 유형별 분포 (6개월)
+
+| 유형 | 수량 | 비율 |
+|------|------|------|
+| 🌍 국가별 가이드 | 18개 | 37% |
+| 📊 업체/월렛 비교 | 14개 | 29% |
+| ⚡ 문제 해결 | 6개 | 13% |
+| 👷 E-9 특화 | 5개 | 10% |
+| 🎎 시즌 콘텐츠 | 5개 | 10% |
+
+---
+
+### 주제별 상세 정보 (레퍼런스)
 
 #### 1. GCash 필리핀 송금 (5월 1주) ✅ 완료
 - **근거**: 필리핀 근로자 6만명+, GCash 국민 앱

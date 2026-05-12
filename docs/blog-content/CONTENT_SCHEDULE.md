@@ -64,6 +64,7 @@
 | 13 | How to Send Money to GCash from Korea: Complete Guide for 2026 | `/blog/send-money-gcash-korea-philippines` | Philippines |
 | 14 | Send Money to Cambodia from Korea: ABA Bank, Wing & Complete Guide | `/blog/send-money-korea-to-cambodia-guide` | Cambodia |
 | 15 | Hanpass vs GME Remit vs E9Pay: 2026 Fee Comparison | `/blog/hanpass-vs-gme-vs-e9pay-comparison` | Service Comparison |
+| 16 | Send Money to eSewa Nepal: Complete Guide for Korean Workers | `/blog/send-money-esewa-nepal-korea` | Nepal |
 
 ### Full URLs
 ```
@@ -82,6 +83,7 @@ https://www.remitbuddy.com/blog/remittance-tax-incentive-guide-foreign-workers-2
 https://www.remitbuddy.com/blog/send-money-gcash-korea-philippines
 https://www.remitbuddy.com/blog/send-money-korea-to-cambodia-guide
 https://www.remitbuddy.com/blog/hanpass-vs-gme-vs-e9pay-comparison
+https://www.remitbuddy.com/blog/send-money-esewa-nepal-korea
 ```
 
 ### docs/blog-content/ Files
@@ -95,6 +97,7 @@ https://www.remitbuddy.com/blog/hanpass-vs-gme-vs-e9pay-comparison
 | 6 | `send-money-korea-to-cambodia-guide.md` | send-money-korea-to-cambodia-guide |
 | 7 | `hanpass-vs-gme-vs-e9pay-comparison.md` | hanpass-vs-gme-vs-e9pay-comparison |
 | 8 | `momo-vietnam-send-money-korea.md` | momo-vietnam-send-money-korea |
+| 9 | `send-money-esewa-nepal-korea.md` | send-money-esewa-nepal-korea |
 
 ---
 
@@ -162,7 +165,7 @@ https://www.remitbuddy.com/blog/hanpass-vs-gme-vs-e9pay-comparison
 
 | # | Title | Slug | Target Country | Status |
 |---|-------|------|----------------|--------|
-| 24 | **Send Money to eSewa Nepal: Complete Guide for Korean Workers** | send-money-esewa-nepal-korea | Nepal | Backlog |
+| 24 | **Send Money to eSewa Nepal: Complete Guide for Korean Workers** | send-money-esewa-nepal-korea | Nepal | ✅ Published (2026-05-19) |
 | 25 | **Wing Money Cambodia: How to Send and Receive from Korea** | wing-money-cambodia-korea-guide | Cambodia | Backlog |
 | 26 | **MoMo Vietnam: Can You Send Money from Korea to MoMo Wallet?** | momo-vietnam-send-money-korea | Vietnam | Backlog |
 
@@ -405,7 +408,7 @@ When writing new content:
 | **W1** | 5/9 (금) | Send Money to Cambodia: ABA Bank, Wing Guide | `send-money-korea-to-cambodia-guide` | 🇰🇭 Cambodia | ✅ Published |
 | **W2** | 5/10 (토) | Hanpass vs GME vs E9Pay: 2026 Fee Comparison | `hanpass-vs-gme-vs-e9pay-comparison` | 📊 Comparison | ✅ Published |
 | **W2** | 5/14 (수) | MoMo Vietnam: Send Money from Korea | `momo-vietnam-send-money-korea` | 🇻🇳 Vietnam | ✅ 작성완료 |
-| **W3** | 5/19 (월) | Send Money to eSewa Nepal: Complete Guide | `send-money-esewa-nepal-korea` | 🇳🇵 Nepal | 📝 예정 |
+| **W3** | 5/19 (월) | Send Money to eSewa Nepal: Complete Guide | `send-money-esewa-nepal-korea` | 🇳🇵 Nepal | ✅ Published (Notion) |
 | **W3** | 5/22 (목) | Emergency Money Transfer: Under 1 Hour | `emergency-money-transfer-1-hour` | ⚡ Problem | 📝 예정 |
 | **W4** | 5/26 (월) | GCash vs Maya vs Bank: Philippines Comparison | `gcash-vs-maya-bank-transfer-philippines` | 🇵🇭 Comparison | 📝 예정 |
 | **W4** | 5/29 (목) | Money Transfer Stuck: What to Do | `money-transfer-stuck-delayed-solution` | ⚡ Problem | 📝 예정 |

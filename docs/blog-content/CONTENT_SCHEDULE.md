@@ -65,6 +65,8 @@
 | 14 | Send Money to Cambodia from Korea: ABA Bank, Wing & Complete Guide | `/blog/send-money-korea-to-cambodia-guide` | Cambodia |
 | 15 | Hanpass vs GME Remit vs E9Pay: 2026 Fee Comparison | `/blog/hanpass-vs-gme-vs-e9pay-comparison` | Service Comparison |
 | 16 | Send Money to eSewa Nepal: Complete Guide for Korean Workers | `/blog/send-money-esewa-nepal-korea` | Nepal |
+| 17 | Foreign Worker Tax Refund Korea: How to Get Money Back | `/blog/foreign-worker-tax-refund-korea-guide` | Tax Refund |
+| 18 | E-9 Visa Salary & Severance Pay Calculator Guide | `/blog/e9-visa-salary-severance-pay-korea` | E-9 Workers |
 
 ### Full URLs
 ```
@@ -84,6 +86,8 @@ https://www.remitbuddy.com/blog/send-money-gcash-korea-philippines
 https://www.remitbuddy.com/blog/send-money-korea-to-cambodia-guide
 https://www.remitbuddy.com/blog/hanpass-vs-gme-vs-e9pay-comparison
 https://www.remitbuddy.com/blog/send-money-esewa-nepal-korea
+https://www.remitbuddy.com/blog/foreign-worker-tax-refund-korea-guide
+https://www.remitbuddy.com/blog/e9-visa-salary-severance-pay-korea
 ```
 
 ### docs/blog-content/ Files
@@ -98,6 +102,9 @@ https://www.remitbuddy.com/blog/send-money-esewa-nepal-korea
 | 7 | `hanpass-vs-gme-vs-e9pay-comparison.md` | hanpass-vs-gme-vs-e9pay-comparison |
 | 8 | `momo-vietnam-send-money-korea.md` | momo-vietnam-send-money-korea |
 | 9 | `send-money-esewa-nepal-korea.md` | send-money-esewa-nepal-korea |
+| 10 | `emergency-money-transfer-1-hour.md` | emergency-money-transfer-1-hour |
+| 11 | `foreign-worker-tax-refund-korea-guide.md` | foreign-worker-tax-refund-korea-guide |
+| 12 | `e9-visa-salary-severance-pay-korea.md` | e9-visa-salary-severance-pay-korea |
 
 ---
 
@@ -139,7 +146,7 @@ https://www.remitbuddy.com/blog/send-money-esewa-nepal-korea
 
 | # | Title | Slug | Target | Status |
 |---|-------|------|--------|--------|
-| 13 | **How to Send Emergency Money to Family Back Home in Under 1 Hour** | emergency-money-transfer-1-hour | All Countries | Backlog |
+| 13 | **How to Send Emergency Money to Family Back Home in Under 1 Hour** | emergency-money-transfer-1-hour | All Countries | ✅ Published (2026-05-15) |
 | 14 | **Tet & Chuseok Money: Best Time to Send Remittance to Vietnam** | tet-lunar-new-year-vietnam-remittance | Vietnam | Backlog |
 | 15 | **Sending Money for Dashain & Tihar: Nepal Festival Remittance Guide** | dashain-tihar-nepal-festival-remittance | Nepal | Backlog |
 | 16 | **How to Pay Your Family's Hospital Bills in Philippines from Korea** | send-money-hospital-bills-philippines | Philippines | Backlog |
@@ -160,6 +167,8 @@ https://www.remitbuddy.com/blog/send-money-esewa-nepal-korea
 | 21 | **E-9 Visa Workers: How to Send Money Home Without Getting Scammed** | e9-visa-send-money-avoid-scams | All Countries | Backlog |
 | 22 | **Factory Worker's Guide: Best Day and Time to Send Money Home** | best-day-time-send-money-factory-worker | All Countries | Backlog |
 | 23 | **How Much Should You Send Home? Budgeting Guide for Foreign Workers** | budgeting-guide-foreign-workers-remittance | All Countries | Backlog |
+| 24 | **Foreign Worker Tax Refund Korea: How to Get Money Back** | foreign-worker-tax-refund-korea-guide | All Countries | ✅ Published (2026-05-15) |
+| 25 | **E-9 Visa Salary & Severance Pay Calculator Guide** | e9-visa-salary-severance-pay-korea | All Countries | ✅ Published (2026-05-15) |
 
 ### Priority 6: Mobile Wallet Deep Dives
 
@@ -339,12 +348,15 @@ created_date: YYYY-MM-DD
 - [2026 Tax incentive for foreign workers](/blog/remittance-tax-incentive-guide-foreign-workers-2026)
 - [Korea's new transfer rules 2026](/blog/korea-international-money-transfer-limit-2026)
 - [Indonesia tax exemption](/blog/indonesia-remittance-tax-exemption-guide)
+- [Foreign worker tax refund guide](/blog/foreign-worker-tax-refund-korea-guide)
 ```
 
 #### When Writing About E-9/FOREIGN WORKERS:
 ```markdown
 - [Foreign worker fee saving guide](/blog/foreign-worker-remittance-fee-save)
 - [2026 Tax incentive guide](/blog/remittance-tax-incentive-guide-foreign-workers-2026)
+- [Foreign worker tax refund guide](/blog/foreign-worker-tax-refund-korea-guide)
+- [E-9 salary & severance pay calculator](/blog/e9-visa-salary-severance-pay-korea)
 ```
 
 #### When Writing About STUDENTS:
@@ -407,16 +419,29 @@ When writing new content:
 | **W1** | 5/9 (금) | How to Send Money to GCash from Korea | `send-money-gcash-korea-philippines` | 🇵🇭 Philippines | ✅ Published |
 | **W1** | 5/9 (금) | Send Money to Cambodia: ABA Bank, Wing Guide | `send-money-korea-to-cambodia-guide` | 🇰🇭 Cambodia | ✅ Published |
 | **W2** | 5/10 (토) | Hanpass vs GME vs E9Pay: 2026 Fee Comparison | `hanpass-vs-gme-vs-e9pay-comparison` | 📊 Comparison | ✅ Published |
-| **W2** | 5/14 (수) | MoMo Vietnam: Send Money from Korea | `momo-vietnam-send-money-korea` | 🇻🇳 Vietnam | ✅ 작성완료 |
+| **W2** | 5/14 (수) | MoMo Vietnam: Send Money from Korea | `momo-vietnam-send-money-korea` | 🇻🇳 Vietnam | ✅ Published (Notion) |
 | **W3** | 5/19 (월) | Send Money to eSewa Nepal: Complete Guide | `send-money-esewa-nepal-korea` | 🇳🇵 Nepal | ✅ Published (Notion) |
-| **W3** | 5/22 (목) | Emergency Money Transfer: Under 1 Hour | `emergency-money-transfer-1-hour` | ⚡ Problem | 📝 예정 |
-| **W4** | 5/26 (월) | GCash vs Maya vs Bank: Philippines Comparison | `gcash-vs-maya-bank-transfer-philippines` | 🇵🇭 Comparison | 📝 예정 |
-| **W4** | 5/29 (목) | Money Transfer Stuck: What to Do | `money-transfer-stuck-delayed-solution` | ⚡ Problem | 📝 예정 |
+| **W3** | 5/22 (목) | Emergency Money Transfer: Under 1 Hour | `emergency-money-transfer-1-hour` | ⚡ Problem | ✅ Published (Notion) |
+| **W4** | 5/26 (월) | Foreign Worker Tax Refund Korea Guide | `foreign-worker-tax-refund-korea-guide` | 📋 Tax | ✅ Published (Notion) |
+| **W4** | 5/29 (목) | E-9 Visa Salary & Severance Pay Calculator | `e9-visa-salary-severance-pay-korea` | 👷 E-9 Workers | ✅ Published (Notion) |
 
-### 5월 현황
-- **완료**: 3개 (GCash, Cambodia, Hanpass vs GME vs E9Pay)
-- **예정**: 5개
-- **5월 목표**: 8개 발행 → 총 22개 콘텐츠
+### 5월 현황 (업데이트: 2026-05-15)
+- **완료**: 8개 (GCash, Cambodia, Hanpass vs GME vs E9Pay, MoMo Vietnam, eSewa Nepal, Emergency Transfer, Tax Refund, E-9 Salary)
+- **예정**: 0개
+- **5월 목표**: 8개 발행 → 총 24개 콘텐츠 ✅ 달성!
+
+### GSC 데이터 기반 인사이트 (5/15)
+> 상세 분석: `docs/analytics/gsc-insights-2026-05-15.md`
+
+**핵심 발견**:
+- 영문 메인페이지 CTR 28.2% (우수)
+- **블로그 CTR 0% 문제** - 메타데이터 최적화 필요
+- 주중 > 주말 트래픽 (외국인 근로자 패턴)
+
+**콘텐츠 전략 조정**:
+1. **P0**: 기존 블로그 메타 타이틀/설명 개선 (CTR 0% → 5%+ 목표)
+2. **P1**: 5/29 콘텐츠 변경 - "Best Days to Send Money" (범용 키워드, 높은 검색량 예상)
+3. 영문 콘텐츠 발행 가속화 유지
 
 ---
 
@@ -521,7 +546,7 @@ When writing new content:
 
 | 월 | 발행 목표 | 누적 | 핵심 테마 |
 |---|----------|------|----------|
-| 5월 | 8개 | 22개 | 주요 국가 가이드 + 업체 비교 |
+| 5월 | 8개 | 24개 | 주요 국가 가이드 + 업체 비교 + E-9 특화 |
 | 6월 | 8개 | 30개 | 월렛 비교 + 문제 해결 |
 | 7월 | 8개 | 38개 | E-9 특화 + 추가 국가 |
 | 8월 | 8개 | 46개 | 세금 가이드 + 시즌 준비 |

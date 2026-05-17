@@ -1,9 +1,9 @@
 ---
 title: "2026 Remittance Tax Incentive Guide for Foreign Workers"
 slug: remittance-tax-incentive-guide-foreign-workers-2026
-meta_title: "2026 Remittance Tax Incentive: Save Up to $18,000 Annually"
-meta_description: "Korea's new remittance tax incentive for foreign workers starts May 2026. Get up to 15% income tax reduction when you send money home. Complete eligibility guide."
-excerpt: "Korea launches a new remittance tax incentive program in May 2026. Foreign workers can save $3,600-$18,000 annually with income tax reductions of 10-15% on money sent home. Learn eligibility requirements, application steps, and how to maximize your savings."
+meta_title: "Korea Tax Incentive for Remittance 2026: Save $3,600+ Yearly"
+meta_description: "New Korea tax incentive for foreign workers. Get 10-15% income tax reduction when you send money home. E-9, E-7, H-2 visa eligible. Free application guide."
+excerpt: "Korea's 2026 tax incentive gives foreign workers 10-15% income tax reduction for remittances. Save $3,600-$18,000 yearly. E-9, E-7, H-2 visa eligible. Step-by-step application guide."
 language: en
 category: Remittance Guides
 tags: [Tax Incentive, Foreign Workers, Korea, E-9 Visa, Income Tax, 2026, Remittance]

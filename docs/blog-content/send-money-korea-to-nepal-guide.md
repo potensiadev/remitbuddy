@@ -1,7 +1,9 @@
 ---
 title: "How to Send Money from Korea to Nepal: Complete Guide for 2026"
 slug: send-money-korea-to-nepal-guide
-meta_description: "Send money from Korea to Nepal with the best rates and lowest fees. Compare Wise, SentBe, IME Remit & more. Step-by-step guide for Nepali workers & students."
+meta_title: "Send Money to Nepal from Korea: Cheapest Methods 2026"
+meta_description: "Send money from Korea to Nepal with the best rates and lowest fees. Compare IME Remit, eSewa, RupeeSend & more. Nepali workers save $10-15 per transfer."
+excerpt: "Compare top remittance services for Nepal transfers from Korea. See real fees, exchange rates, and transfer times for eSewa, IME Pay, and bank deposits. Workers save $10-15 per transfer."
 language: en
 category: Remittance Guides
 tags: [Nepal, Korea, International Transfer, Remittance Comparison, eSewa, IME Pay]

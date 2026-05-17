@@ -1,9 +1,9 @@
 ---
 title: "How to Send Money to GCash from Korea: Complete Guide for 2026"
 slug: send-money-gcash-korea-philippines
-meta_title: "Send Money to GCash from Korea: Step-by-Step Guide 2026"
-meta_description: "Send money to GCash Philippines from Korea fast and cheap. Compare fees, exchange rates, and transfer times. Complete guide for Filipino workers in Korea."
-excerpt: "Filipino workers in Korea can send money to GCash in minutes. Compare top remittance services for speed, fees, and exchange rates. Learn step-by-step how to transfer money to GCash Philippines from Korea and save on every transaction."
+meta_title: "Send Money to GCash from Korea: Save 50% on Fees (2026)"
+meta_description: "Compare 5 services to send money to GCash Philippines from Korea. Find the cheapest fees and best rates. Filipino workers save $10-15 per transfer."
+excerpt: "Compare GCash transfer services from Korea. Find the cheapest fees and best exchange rates. Filipino workers save $10-15 per transfer with our comparison tool."
 language: en
 category: Remittance Guides
 tags: [Philippines, GCash, Korea, International Transfer, Remittance Comparison, E-wallet]

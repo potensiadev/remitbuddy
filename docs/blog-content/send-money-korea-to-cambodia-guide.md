@@ -1,9 +1,9 @@
 ---
 title: "Send Money to Cambodia from Korea: ABA Bank, Wing & Complete Guide 2026"
 slug: send-money-korea-to-cambodia-guide
-meta_title: "Send Money to Cambodia from Korea: ABA Bank, Wing Guide 2026"
-meta_description: "Send money to Cambodia from Korea fast and cheap. Compare fees, exchange rates for ABA Bank, Wing Money. Complete guide for Cambodian workers in Korea."
-excerpt: "Cambodian workers in Korea can send money home to ABA Bank, Wing Money, and ACLEDA in minutes. Compare top remittance services for speed, fees, and exchange rates. Learn step-by-step how to transfer money to Cambodia and save on every transaction."
+meta_title: "Send Money to Cambodia from Korea: Cheapest Options 2026"
+meta_description: "Compare 6 services to send money to Cambodia from Korea. ABA Bank, Wing Money fees side-by-side. Cambodian workers save $8-12 per transfer."
+excerpt: "Compare Cambodia remittance services from Korea. See real fees for ABA Bank, Wing Money, ACLEDA transfers. Workers save $8-12 per transfer with our comparison."
 language: en
 category: Remittance Guides
 tags: [Cambodia, ABA Bank, Wing Money, Korea, International Transfer, Remittance Comparison, Mobile Wallet]

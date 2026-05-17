@@ -1,9 +1,9 @@
 ---
 title: "E-9 Visa Salary & Severance Pay Calculator: Know Your Real Income"
 slug: e9-visa-salary-severance-pay-korea
-meta_title: "E-9 Visa Salary Guide: Calculate Overtime & Severance Pay 2026"
-meta_description: "Complete E-9 visa salary guide for Korea. Calculate your overtime pay, severance pay, and real income. Learn how to maximize earnings and send money home."
-excerpt: "E-9 visa workers in Korea earn ₩2-3 million monthly including overtime. This guide explains salary structure, overtime calculations, severance pay rights, and how to maximize your income. Learn what you should really earn and how much you can send home to your family."
+meta_title: "E-9 Visa Salary Korea: Overtime & Severance Calculator 2026"
+meta_description: "Calculate your E-9 visa salary, overtime pay (1.5x), and severance pay. Know your real income ₩2-3 million/month. Free calculator inside."
+excerpt: "Calculate your E-9 visa salary, overtime pay (1.5x rate), and severance pay in Korea. Earn ₩2-3 million monthly. Know your rights and maximize your income."
 language: en
 category: Remittance Guides
 tags: [E-9 Visa, Salary, Severance Pay, Foreign Workers, Korea, Overtime Pay, Income Calculator]

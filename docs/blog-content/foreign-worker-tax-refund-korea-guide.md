@@ -1,9 +1,9 @@
 ---
 title: "Foreign Worker Tax Refund Korea: How to Get Money Back and Send It Home"
 slug: foreign-worker-tax-refund-korea-guide
-meta_title: "Foreign Worker Tax Refund Korea Guide: Get Money Back in 2026"
-meta_description: "Foreign workers in Korea can get tax refunds up to ₩2 million. Learn how to claim your refund, what documents you need, and the best way to send it home."
-excerpt: "Foreign workers in Korea may be eligible for tax refunds ranging from ₩500,000 to ₩2 million or more. This complete guide explains who qualifies, how to file for a refund, required documents, and the smartest way to send your refund money home to your family."
+meta_title: "Foreign Worker Tax Refund Korea: Get ₩500K-2M Back (2026)"
+meta_description: "Claim your Korea tax refund as a foreign worker. Get ₩500,000 to ₩2 million back. E-9, H-2, E-7 visa eligible. Step-by-step filing guide with documents."
+excerpt: "Get your Korea tax refund as a foreign worker. Claim ₩500,000 to ₩2 million back. E-9, H-2, E-7 visa eligible. Step-by-step guide with required documents list."
 language: en
 category: Remittance Guides
 tags: [Tax Refund, Foreign Workers, Korea, E-9 Visa, Income Tax, Year-End Settlement, Remittance]

@@ -1,9 +1,9 @@
 ---
 title: "How to Send Emergency Money to Family Back Home in Under 1 Hour"
 slug: emergency-money-transfer-1-hour
-meta_title: "Emergency Money Transfer from Korea: Send in Under 1 Hour"
-meta_description: "Need to send money home urgently? Learn the fastest ways to transfer emergency funds from Korea to Philippines, Vietnam, Nepal, Cambodia in under 1 hour."
-excerpt: "When family emergencies happen, every minute counts. Learn how to send emergency money from Korea to your family in under 1 hour using the fastest remittance services."
+meta_title: "Send Emergency Money in Under 1 Hour from Korea (2026)"
+meta_description: "Need urgent money transfer? Send to Philippines, Vietnam, Nepal, Cambodia in under 1 hour. Compare fastest services for emergencies. 24/7 available."
+excerpt: "Send emergency money from Korea in under 1 hour. Compare fastest services for Philippines, Vietnam, Nepal, Cambodia. Available 24/7 for urgent family needs."
 language: en
 category: Remittance Guides
 tags: [Emergency, Fast Transfer, Remittance]

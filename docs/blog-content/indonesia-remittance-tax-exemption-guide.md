@@ -1,7 +1,9 @@
 ---
 title: "Indonesia Remittance Tax Exemption Guide - Save More in 2026"
 slug: indonesia-remittance-tax-exemption-guide
-meta_description: "Indonesia's new tax exemption for remittances under $1,000 helps your family receive more money. Learn how to maximize savings and choose the best transfer services."
+meta_title: "Indonesia Remittance Tax-Free 2026: Save $80 Per Transfer"
+meta_description: "Indonesia's new tax exemption for remittances under $1,000. Your family receives 100% of the money. Learn how to maximize savings with the best transfer services."
+excerpt: "Indonesia's 2026 tax exemption means your family receives 100% of transfers under $1,000. No more 5-15% tax deductions. Learn how to maximize savings and choose the cheapest remittance service."
 language: en
 category: Remittance Guides
 tags: [Indonesia, Tax Exemption, Remittance, Korea, Money Transfer, 2026]

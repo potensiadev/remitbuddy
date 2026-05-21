@@ -184,7 +184,22 @@
 
 ## Weekly Performance Log
 
-### Week 1 Results (5/24)
+### Week 1 Mid-Check Results (5/20) - 3 Days After Optimization
+| Page | Before (5/15) | After (5/20) | Impressions | Clicks | CTR | Position |
+|------|---------------|--------------|-------------|--------|-----|----------|
+| Vietnam Guide | 24 | 93 | +288% | 0 | 0% | 6.2 |
+| MoMo Guide | N/A | 10 | N/A | 0 | 0% | 7.6 |
+| Exchange Rate (EN) | 7 | 8 | +14% | 0 | 0% | 5.8 |
+| GCash Guide | N/A | 2 | N/A | 0 | 0% | 29.5 |
+| E9 Salary Guide | N/A | 5 | N/A | 0 | 0% | 26.4 |
+
+**Mid-Check Analysis**:
+- Impressions increased significantly (Vietnam +288%)
+- CTR remains at 0% - meta optimization alone not sufficient
+- Position maintained or slightly improved
+- **Action Needed**: Review search intent mismatch, consider title rewrites
+
+### Week 1 Full Results (5/24)
 | Page | Impressions | Clicks | CTR | Position | Change |
 |------|-------------|--------|-----|----------|--------|
 | Vietnam Guide | - | - | - | - | - |
@@ -192,7 +207,7 @@
 | Cambodia Guide | - | - | - | - | - |
 | Nepal Guide | - | - | - | - | - |
 
-*Fill in after GSC data collection*
+*Fill in on 5/24*
 
 ### Week 2 Results (5/31)
 *To be filled*
@@ -217,14 +232,21 @@
 
 ## Learnings & Insights
 
-### What Worked
-*Document after testing*
+### What Worked (5/20 Update)
+- Google indexing confirmed - impressions increased significantly
+- Position maintained in first page (5.8 - 7.6 range)
+- Optimization formula being applied correctly
 
-### What Didn't Work
-*Document after testing*
+### What Didn't Work (5/20 Update)
+- **CTR still 0%** after 3 days - meta optimization alone not sufficient
+- "Real-time remittance" keyword may have search intent mismatch
+- Power words (Save, Compare, Cheapest) not driving clicks yet
 
-### Pattern Recommendations
-*Document after testing*
+### Pattern Recommendations (5/20 Update)
+1. **Search Intent Analysis Required**: Before optimizing meta, analyze what searchers actually want
+2. **Title Should Match Exact Search Query**: "Send Money to Vietnam from Korea" > "Real-time Remittance Guide"
+3. **Allow 1-2 Weeks**: Google may need more time to update SERP snippets
+4. **Consider Content Rewrite**: If CTR doesn't improve in 2 weeks, content itself may need updating
 
 ---
 

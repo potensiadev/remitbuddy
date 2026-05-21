@@ -105,6 +105,17 @@ https://www.remitbuddy.com/blog/e9-visa-salary-severance-pay-korea
 | 10 | `emergency-money-transfer-1-hour.md` | emergency-money-transfer-1-hour |
 | 11 | `foreign-worker-tax-refund-korea-guide.md` | foreign-worker-tax-refund-korea-guide |
 | 12 | `e9-visa-salary-severance-pay-korea.md` | e9-visa-salary-severance-pay-korea |
+| 13 | `send-money-vietnam-bank-momo-comparison.md` | send-money-vietnam-bank-momo-comparison |
+| 14 | `send-money-vietnam-korea-cheapest-2026.md` | send-money-vietnam-korea-cheapest-2026 |
+| 15 | `cost-send-500-dollars-vietnam-korea.md` | cost-send-500-dollars-vietnam-korea |
+| 16 | `send-cash-salary-vietnam-legally.md` | send-cash-salary-vietnam-legally |
+| 17 | `why-vietnam-transfer-takes-3-days.md` | why-vietnam-transfer-takes-3-days |
+| 18 | `best-time-send-money-vietnam-exchange-rate.md` | best-time-send-money-vietnam-exchange-rate |
+| 19 | `cheapest-way-send-money-vietnam-test-comparison.md` | cheapest-way-send-money-vietnam-test-comparison |
+| 20 | `vietnam-tet-2027-best-time-send-money.md` | vietnam-tet-2027-best-time-send-money |
+| 21 | `send-money-vietnam-no-bank-account.md` | send-money-vietnam-no-bank-account |
+| 22 | `send-money-vietnam-night-24-7-apps.md` | send-money-vietnam-night-24-7-apps |
+| 23 | `send-money-korea-to-india-guide.md` | send-money-korea-to-india-guide |
 
 ---
 
@@ -117,7 +128,7 @@ https://www.remitbuddy.com/blog/e9-visa-salary-severance-pay-korea
 | 1 | **How to Send Money to GCash from Korea: Step-by-Step Guide** | send-money-gcash-korea-philippines | Philippines | send money to gcash from korea | ✅ Published (2026-05-09) |
 | 2 | **Send Money to Cambodia from Korea: ABA Bank, Wing & Complete Guide** | send-money-korea-to-cambodia-guide | Cambodia | send money to cambodia from korea | ✅ Published (2026-05-09) |
 | 3 | **Best Ways to Send Money to Philippines: GCash, BDO & Remitly Compared** | best-ways-send-money-philippines-korea | Philippines | best way to send money to philippines | Backlog |
-| 4 | **How to Send Money to Vietnam: Bank vs MoMo vs Cash Pickup** | send-money-vietnam-bank-momo-comparison | Vietnam | send money to vietnam from korea | Backlog |
+| 4 | **How to Send Money to Vietnam: Bank vs MoMo vs Cash Pickup** | send-money-vietnam-bank-momo-comparison | Vietnam | send money to vietnam from korea | ✅ Published (2026-05-19) |
 
 ### Priority 2: Service Comparison Content (High Conversion)
 

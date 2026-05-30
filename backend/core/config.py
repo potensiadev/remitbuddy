@@ -67,6 +67,8 @@ class Settings(BaseSettings):
     cors_allowed_origins: List[str] = [
         "https://www.remitbuddy.com",
         "https://remitbuddy.com",
+        "https://www.koreayo.com",
+        "https://koreayo.com",
     ]
     # CORS - Development origins (localhost only, no private IP ranges)
     cors_dev_origins: List[str] = [
@@ -76,6 +78,8 @@ class Settings(BaseSettings):
         "http://127.0.0.1:3001",
         "https://www.remitbuddy.com",
         "https://remitbuddy.com",
+        "https://www.koreayo.com",
+        "https://koreayo.com",
     ]
     # CORS - Staging origins
     cors_staging_origins: List[str] = [

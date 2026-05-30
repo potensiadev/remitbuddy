@@ -48,3 +48,5 @@ remitbuddy/
 
 # Ignored submodules
 skills
+mcp-servers/google-analytics/credentials.json
+mcp-servers/google-analytics/token.json

@@ -64,8 +64,35 @@
       "Bash(pkill:*)",
       "Bash(git reset:*)",
       "Bash(netstat:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "WebSearch",
+      "WebFetch(domain:www.airwallex.com)",
+      "mcp__notion__notion-fetch",
+      "WebFetch(domain:www.utransfer.com)",
+      "mcp__notion__notion-create-pages",
+      "mcp__claude_ai_Notion__notion-fetch",
+      "mcp__claude_ai_Notion__notion-create-pages",
+      "mcp__notion__notion-search",
+      "mcp__notion__notion-update-page",
+      "mcp__claude_ai_Notion__notion-search",
+      "mcp__claude_ai_Notion__notion-update-page",
+      "mcp__remitbuddy-analytics__gsc_get_search_queries",
+      "mcp__remitbuddy-analytics__gsc_get_country_performance",
+      "mcp__remitbuddy-analytics__get_content_insights",
+      "mcp__remitbuddy-analytics__ga4_get_traffic_by_country",
+      "mcp__remitbuddy-analytics__gsc_get_page_performance",
+      "mcp__remitbuddy-analytics__ga4_get_traffic_overview",
+      "mcp__remitbuddy-analytics__ga4_get_top_pages",
+      "mcp__remitbuddy-analytics__ga4_get_currency_events",
+      "mcp__remitbuddy-analytics__ga4_get_events",
+      "mcp__remitbuddy-analytics__gsc_get_queries_by_page",
+      "mcp__notion__notion-update-data-source",
+      "mcp__remitbuddy-analytics__ga4_get_provider_clicks"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "remitbuddy-analytics"
+  ]
 }

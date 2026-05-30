@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "remitbuddy-analytics": {
+      "command": "python",
+      "args": ["D:/remitbuddy/mcp-servers/google-analytics/server.py"],
+      "env": {
+        "PYTHONPATH": "D:/remitbuddy"
+      }
+    }
+  }
+}

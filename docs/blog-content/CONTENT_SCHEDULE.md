@@ -116,6 +116,8 @@ https://www.remitbuddy.com/blog/e9-visa-salary-severance-pay-korea
 | 21 | `send-money-vietnam-no-bank-account.md` | send-money-vietnam-no-bank-account |
 | 22 | `send-money-vietnam-night-24-7-apps.md` | send-money-vietnam-night-24-7-apps |
 | 23 | `send-money-korea-to-india-guide.md` | send-money-korea-to-india-guide |
+| 24 | `send-money-korea-to-malaysia-guide.md` | send-money-korea-to-malaysia-guide |
+| 25 | `send-money-korea-to-sri-lanka-guide.md` | send-money-korea-to-sri-lanka-guide |
 
 ---
 
@@ -502,7 +504,7 @@ When writing new content:
 | **W1** | 8/7 (목) | Myanmar Remittance Guide from Korea | `send-money-korea-to-myanmar-guide` | 🇲🇲 Myanmar | 📝 Backlog |
 | **W2** | 8/11 (월) | Foreign Worker Tax & Remittance Guide | `foreign-worker-tax-remittance-korea` | 📋 Tax | 📝 Backlog |
 | **W2** | 8/14 (목) | Tax Filing for E-9 Workers: Complete Guide | `e9-worker-tax-filing-guide-korea` | 📋 Tax | 📝 Backlog |
-| **W3** | 8/18 (월) | Sri Lanka Remittance Guide from Korea | `send-money-korea-to-sri-lanka-guide` | 🇱🇰 Sri Lanka | 📝 Backlog |
+| **W3** | 8/18 (월) | Sri Lanka Remittance Guide from Korea | `send-money-korea-to-sri-lanka-guide` | 🇱🇰 Sri Lanka | ✅ Written (2026-05-30) |
 | **W3** | 8/21 (목) | Pakistan Remittance Guide from Korea | `send-money-korea-to-pakistan-guide` | 🇵🇰 Pakistan | 📝 Backlog |
 | **W4** | 8/25 (월) | Chuseok Money: Best Time to Send | `best-time-send-money-holiday-timing` | 🎎 Seasonal | 📝 Backlog |
 | **W4** | 8/28 (목) | Dashain Nepal: Festival Remittance Guide | `dashain-tihar-nepal-festival-remittance` | 🇳🇵 Seasonal | 📝 Backlog |

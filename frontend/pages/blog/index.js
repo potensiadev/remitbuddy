@@ -9,6 +9,12 @@ import Head from 'next/head';
 
 const BlogIndex = ({ posts }) => {
   const { t, i18n } = useTranslation('common');
+  const [failedImages, setFailedImages] = React.useState({});
+
+  // 이미지 로드 실패 핸들러
+  const handleImageError = (postId) => {
+    setFailedImages(prev => ({ ...prev, [postId]: true }));
+  };
 
   // Helper date formatter
   const formatDate = (dateString) => {
@@ -75,15 +81,12 @@ const BlogIndex = ({ posts }) => {
                 <Link href={`/blog/${post.slug}`} key={post.id} className="group flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100">
                   {/* Image Container */}
                   <div className="relative h-48 sm:h-56 bg-gradient-to-br from-blue-50 to-indigo-100 overflow-hidden">
-                    {post.cover ? (
+                    {post.cover && !failedImages[post.id] ? (
                       <img
                         src={post.cover}
                         alt=""
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          // 이미지 로드 실패시 숨기고 배경 그라데이션만 표시
-                          e.target.style.display = 'none';
-                        }}
+                        onError={() => handleImageError(post.id)}
                       />
                     ) : null}
                     {/* 기본 배경 아이콘 (이미지 없거나 로드 실패시 보임) */}

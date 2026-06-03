@@ -533,7 +533,17 @@ const BlogPost = ({ post, relatedPosts }) => {
                 const imgCaption = value.caption ? text(value.caption) : '';
                 return (
                     <figure className="my-8">
-                        <img src={imgUrl} alt={getPlainText(value.caption) || ''} className="w-full rounded-2xl shadow-sm border border-gray-100" loading="lazy" />
+                        <img
+                            src={imgUrl}
+                            alt={getPlainText(value.caption) || ''}
+                            className="w-full rounded-2xl shadow-sm border border-gray-100"
+                            loading="lazy"
+                            onError={(e) => {
+                                // 이미지 로드 실패시 플레이스홀더로 대체
+                                e.target.style.display = 'none';
+                                e.target.parentElement.classList.add('bg-gradient-to-br', 'from-blue-50', 'to-indigo-100', 'h-48', 'flex', 'items-center', 'justify-center');
+                            }}
+                        />
                         {imgCaption && <figcaption className="text-center text-sm text-gray-500 mt-3">{imgCaption}</figcaption>}
                     </figure>
                 );

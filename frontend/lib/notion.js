@@ -4,9 +4,10 @@ const notion = new Client({
   auth: process.env.NOTION_API_KEY,
 });
 
-const DATABASE_ID = process.env.BLOG_DATABASE_ID;
-const DATABASE_ID_KO = process.env.BLOG_DATABASE_ID_KO;
-const DATABASE_ID_EN = process.env.BLOG_DATABASE_ID_EN;
+// 데이터베이스 ID 하드코딩 (환경변수 우선, 없으면 기본값 사용)
+const DATABASE_ID = process.env.BLOG_DATABASE_ID || '2d61bac13f5280a7a460f98df9036e4b';
+const DATABASE_ID_KO = process.env.BLOG_DATABASE_ID_KO || '2d61bac13f5280a7a460f98df9036e4b';
+const DATABASE_ID_EN = process.env.BLOG_DATABASE_ID_EN || '3081bac13f5281c589f4e9ccd21156dc';
 
 // 모든 블록을 페이지네이션으로 가져오고, 중첩 블록도 재귀적으로 조회
 async function getAllBlocks(blockId) {

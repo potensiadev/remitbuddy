@@ -1,7 +1,10 @@
 const { Client } = require('@notionhq/client');
 
+// API 키 하드코딩 (환경변수 우선, 없으면 기본값 사용)
+const NOTION_API_KEY = process.env.NOTION_API_KEY || 'ntn_s74281941307zJZLvlmqLpvbUGg6TPAVZAguzsTyJbD5TK';
+
 const notion = new Client({
-  auth: process.env.NOTION_API_KEY,
+  auth: NOTION_API_KEY,
 });
 
 // 데이터베이스 ID 하드코딩 (환경변수 우선, 없으면 기본값 사용)

@@ -13,7 +13,7 @@ This n8n workflow automates the entire blog content creation process for RemitBu
 
 ```
 ┌──────────────┐
-│   Schedule   │ (Daily 9:00 AM KST)
+│   Schedule   │ (Mon/Thu 9:00 AM KST)
 │   Trigger    │
 └──────┬───────┘
        │
@@ -153,10 +153,10 @@ To change the recipient email, edit the "Email Notification" node:
 
 | Item | Monthly Cost |
 |------|-------------|
-| Claude API (~120 calls/month) | ~$15-25 |
+| Claude API (~8 calls/month) | ~$3-5 |
 | n8n (Railway Hobby) | ~$5 |
 | Notion | Free |
-| **Total** | **~$20-30/month** |
+| **Total** | **~$8-10/month** |
 
 ## Troubleshooting
 
@@ -183,8 +183,8 @@ To change the recipient email, edit the "Email Notification" node:
 ### Change Schedule
 
 Edit the Schedule Trigger node:
-- Current: Every day at 9:00 AM KST
-- Cron: `0 9 * * *`
+- Current: Monday and Thursday at 9:00 AM KST
+- Cron: `0 9 * * 1,4`
 
 ### Add More Languages
 

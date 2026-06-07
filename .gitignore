@@ -39,6 +39,7 @@ __pycache__/
 venv/
 
 # Sensitive configuration files
+.mcp.json
 backend/proxy_config.json
 backend/test_*.py
 test_*.py

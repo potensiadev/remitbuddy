@@ -20,21 +20,18 @@ const COUNTRIES = [
     { code: 'BD', currency: 'BDT', name: 'Bangladesh', labelKey: 'countries.bd', flag: '/images/flags/bd.png' },
 ];
 
-// Provider logo mapping
+// Provider logo mapping (7 active providers)
 const PROVIDER_LOGO_MAP = {
     'Hanpass': '/logos/hanpass.png',
     'GmoneyTrans': '/logos/gmoneytrans.png',
     'E9Pay': '/logos/e9pay.png',
-    'Finshot': null,
     'Coinshot': '/logos/coinshot.png',
     'Cross': '/logos/cross.png',
     'GME Remit': '/logos/gme.png',
     'JRF': '/logos/JRF.png',
     'JP Remit': '/logos/JRF.png',
-    'Wirebarley': '/logos/wirebarley.png',
     'Moin': '/logos/themoin.png',
-    'The Moin': '/logos/themoin.png',
-    'Sentbe': '/logos/sentbe.png'
+    'The Moin': '/logos/themoin.png'
 };
 
 // Icon Components

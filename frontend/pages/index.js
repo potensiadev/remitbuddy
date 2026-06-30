@@ -27,8 +27,6 @@ import HowItWorks from '../components/landing/HowItWorks';
 import FAQ from '../components/landing/FAQ';
 import BlogSection from '../components/landing/BlogSection';
 import { getPublishedPosts } from '../lib/notion';
-import AdSlot from '../components/AdSlot';
-import StickyBottomAd from '../components/StickyBottomAd';
 
 // Sub-components remaining in file (to be moved later if needed)
 const PWAInstallPrompt = ({ onDismiss }) => {
@@ -565,20 +563,12 @@ export default function HomePage({ buildTimestamp, posts }) {
           </div>
         </section>
 
-        {/* P0: Hero 아래 광고 - 최고 CTR 예상 영역 */}
-        <div className="max-w-4xl mx-auto px-5 sm:px-8">
-          <AdSlot position="in-feed" />
-        </div>
-
         <HowItWorks />
         <FAQ />
         <BlogSection posts={posts} />
 
         <Footer />
         <PWAInstallPrompt />
-
-        {/* 모바일 Sticky Bottom 광고 */}
-        <StickyBottomAd />
       </div>
     </>
   );

@@ -77,5 +77,9 @@
       "Bash(python3 -m json.tool:*)"
     ],
     "deny": []
-  }
+  },
+  "enabledMcpjsonServers": [
+    "remitbuddy-analytics"
+  ],
+  "enableAllProjectMcpServers": true
 }
